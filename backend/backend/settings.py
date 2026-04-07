@@ -151,9 +151,7 @@ STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'
-MEDIA_ROOT = (
-    '/var/www/django/static' if DJANGO_ENV == 'production' else BASE_DIR / 'media'
-)
+MEDIA_ROOT = '/var/www/django/static' if DJANGO_ENV == 'production' else BASE_DIR / 'media'
 
 # REST Framework
 REST_FRAMEWORK = {
