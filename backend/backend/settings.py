@@ -16,6 +16,12 @@ except FileNotFoundError:
 # Security
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
+DJANGO_ENV = config('DJANGO_ENV', default='development')
+
+
+if DJANGO_ENV == 'production':
+    DEBUG = False
+
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
@@ -145,7 +151,9 @@ STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = (
+    '/var/www/django/static' if DJANGO_ENV == 'production' else BASE_DIR / 'media'
+)
 
 # REST Framework
 REST_FRAMEWORK = {
