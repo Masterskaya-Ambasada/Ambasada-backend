@@ -16,7 +16,7 @@ except FileNotFoundError:
 # Security
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-APP_ENV = config('DJANGO_ENV', default='development')
+APP_ENV = config('APP_ENV', default='development')
 
 
 if APP_ENV == 'production':
