@@ -5,16 +5,16 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("users", "0002_alter_user_options_user_first_name_en_and_more"),
+        ('users', '0002_alter_user_options_user_first_name_en_and_more'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="user",
+            name='user',
             options={
-                "ordering": ["username"],
-                "verbose_name": "User",
-                "verbose_name_plural": "Users",
+                'ordering': ['username'],
+                'verbose_name': 'User',
+                'verbose_name_plural': 'Users',
             },
         ),
     ]
