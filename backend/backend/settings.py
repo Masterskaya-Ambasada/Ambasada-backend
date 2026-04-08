@@ -13,10 +13,15 @@ except FileNotFoundError:
     print('Error: .env file not found!', file=sys.stderr)
     sys.exit(1)
 
-
 # Security
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
+APP_ENV = config('APP_ENV', default='development')
+
+
+if APP_ENV == 'production':
+    DEBUG = False
+
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
@@ -41,6 +46,9 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'drf_spectacular',
+    'projects',
+    'users',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +107,8 @@ else:
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
+AUTH_USER_MODEL = 'users.User'
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -138,6 +148,10 @@ _COLLECTSTATIC_DRYRUN = config(
     default=False,
 )
 STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
+
+# Media files (User uploaded content)
+MEDIA_URL = 'media/'
+MEDIA_ROOT = '/var/www/django/static' if APP_ENV == 'production' else BASE_DIR / 'media'
 
 # REST Framework
 REST_FRAMEWORK = {
