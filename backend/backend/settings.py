@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 from decouple import Config, RepositoryEnv
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,6 +34,7 @@ ALLOWED_HOSTS = config(
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,6 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -128,7 +131,27 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'ru'
+
+LANGUAGES = [
+    ('ru', _('Russian')),
+    ('en', _('English')),
+    ('sr-latn', _('Serbian (Latin)')),
+    ('sr-cyrl', _('Serbian (Cyrillic)')),
+]
+
+MODELTRANSLATION_FALLBACK_LANGUAGES = {
+    'sr-latn': ('sr-cyrl', 'ru', 'en'),
+    'sr-cyrl': ('sr-latn', 'ru', 'en'),
+    'default': ('ru', 'en'),
+}
+
+MODELTRANSLATION_FALLBACK_VALUES = None
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
+MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
+
+LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -151,7 +174,7 @@ STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'
-MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else BASE_DIR / 'media'
+MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DIR / 'media')
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -186,6 +209,7 @@ REST_FRAMEWORK = {
         'anon': '100/day',
         'user': '1000/day',
     },
+    'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'rest_framework.negotiation.DefaultContentNegotiation',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'COERCE_DECIMAL_TO_STRING': False,
