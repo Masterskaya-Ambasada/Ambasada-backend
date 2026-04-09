@@ -5,6 +5,7 @@ from __future__ import annotations
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Max
+from django.utils.translation import gettext_lazy as _
 
 from projects.constants import (
     BLOCK_VARIANT_IMAGE_WITH_BUTTONS,
@@ -28,20 +29,20 @@ class ProjectType(models.Model):
     """Справочник типов проектов для карточек и фильтров."""
 
     slug = models.SlugField(
-        'Идентификатор',
+        _('Идентификатор'),
         max_length=REFERENCE_SLUG_MAX_LENGTH,
         unique=True,
-        help_text='Уникальный идентификатор типа проекта для API и фильтров.',
+        help_text=_('Уникальный идентификатор типа проекта для API и фильтров.'),
     )
     label = models.CharField(
-        'Название',
+        _('Название'),
         max_length=LABEL_MAX_LENGTH,
-        help_text='Отображаемое название типа проекта.',
+        help_text=_('Отображаемое название типа проекта.'),
     )
 
     class Meta:
-        verbose_name = 'Тип проекта'
-        verbose_name_plural = 'Типы проектов'
+        verbose_name = _('Тип проекта')
+        verbose_name_plural = _('Типы проектов')
         ordering = ('label', 'pk')
 
     def __str__(self) -> str:
@@ -52,20 +53,20 @@ class Tag(models.Model):
     """Справочник тегов для фильтрации и маркировки проектов."""
 
     slug = models.SlugField(
-        'Идентификатор',
+        _('Идентификатор'),
         max_length=REFERENCE_SLUG_MAX_LENGTH,
         unique=True,
-        help_text='Уникальный идентификатор тега для API и фильтров.',
+        help_text=_('Уникальный идентификатор тега для API и фильтров.'),
     )
     label = models.CharField(
-        'Название',
+        _('Название'),
         max_length=LABEL_MAX_LENGTH,
-        help_text='Отображаемое название тега.',
+        help_text=_('Отображаемое название тега.'),
     )
 
     class Meta:
-        verbose_name = 'Тег'
-        verbose_name_plural = 'Теги'
+        verbose_name = _('Тег')
+        verbose_name_plural = _('Теги')
         ordering = ('label', 'pk')
 
     def __str__(self) -> str:
@@ -76,53 +77,53 @@ class Project(models.Model):
     """Проект, который показывается в каталоге и на детальной странице."""
 
     slug = models.SlugField(
-        'Slug',
+        _('Slug'),
         max_length=PROJECT_SLUG_MAX_LENGTH,
         unique=True,
-        help_text='Уникальный идентификатор проекта для URL.',
+        help_text=_('Уникальный идентификатор проекта для URL.'),
     )
     title = models.CharField(
-        'Название',
+        _('Название'),
         max_length=TITLE_MAX_LENGTH,
         db_index=True,
-        help_text='Название проекта для списка и детальной страницы.',
+        help_text=_('Название проекта для списка и детальной страницы.'),
     )
     description = models.CharField(
-        'Краткое описание',
+        _('Краткое описание'),
         max_length=DESCRIPTION_MAX_LENGTH,
-        help_text=('Описание проекта для карточек и верхнего блока детальной страницы.'),
+        help_text=_('Описание проекта для карточек и верхнего блока детальной страницы.'),
     )
     year = models.PositiveSmallIntegerField(
-        'Год',
-        help_text='Год реализации или публикации проекта.',
+        _('Год'),
+        help_text=_('Год реализации или публикации проекта.'),
     )
     cover_image = models.URLField(
-        'Обложка',
+        _('Обложка'),
         max_length=URL_MAX_LENGTH,
-        help_text='URL главного изображения проекта.',
+        help_text=_('URL главного изображения проекта.'),
     )
     project_type = models.ForeignKey(
         ProjectType,
         on_delete=models.PROTECT,
         related_name='projects',
-        verbose_name='Тип проекта',
+        verbose_name=_('Тип проекта'),
     )
     tags = models.ManyToManyField(
         Tag,
         related_name='projects',
-        verbose_name='Теги',
+        verbose_name=_('Теги'),
         blank=True,
     )
     is_published = models.BooleanField(
-        'Опубликован',
+        _('Опубликован'),
         default=True,
         db_index=True,
-        help_text='Неопубликованные проекты не попадают в публичный API.',
+        help_text=_('Неопубликованные проекты не попадают в публичный API.'),
     )
 
     class Meta:
-        verbose_name = 'Проект'
-        verbose_name_plural = 'Проекты'
+        verbose_name = _('Проект')
+        verbose_name_plural = _('Проекты')
         ordering = ('title', 'pk')
         indexes = [
             models.Index(fields=('is_published', 'slug')),
@@ -139,63 +140,63 @@ class ProjectContentBlock(models.Model):
     class Variant(models.IntegerChoices):
         """Поддерживаемые варианты разметки контентного блока."""
 
-        IMAGE_WITH_LIST = BLOCK_VARIANT_IMAGE_WITH_LIST, 'Изображение и список'
-        TWO_IMAGES = BLOCK_VARIANT_TWO_IMAGES, 'Два изображения'
-        IMAGE_WITH_BUTTONS = BLOCK_VARIANT_IMAGE_WITH_BUTTONS, 'Изображение и кнопки'
+        IMAGE_WITH_LIST = BLOCK_VARIANT_IMAGE_WITH_LIST, _('Изображение и список')
+        TWO_IMAGES = BLOCK_VARIANT_TWO_IMAGES, _('Два изображения')
+        IMAGE_WITH_BUTTONS = BLOCK_VARIANT_IMAGE_WITH_BUTTONS, _('Изображение и кнопки')
 
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
         related_name='content_blocks',
-        verbose_name='Проект',
+        verbose_name=_('Проект'),
     )
     variant = models.PositiveSmallIntegerField(
-        'Вариант',
+        _('Вариант'),
         choices=Variant.choices,
-        help_text='Вариант разметки, который использует фронтенд.',
+        help_text=_('Вариант разметки, который использует фронтенд.'),
     )
     order = models.PositiveIntegerField(
-        'Порядок',
+        _('Порядок'),
         default=DEFAULT_ORDER,
         db_index=True,
-        help_text=('Порядок блока внутри проекта. Используется для сортировки и генерации index.'),
+        help_text=_('Порядок блока внутри проекта. Используется для сортировки и генерации index.'),
     )
     title = models.CharField(
-        'Заголовок',
+        _('Заголовок'),
         max_length=CONTENT_BLOCK_TITLE_MAX_LENGTH,
-        help_text='Заголовок секции проекта.',
+        help_text=_('Заголовок секции проекта.'),
     )
     image = models.URLField(
-        'Основное изображение',
+        _('Основное изображение'),
         max_length=URL_MAX_LENGTH,
-        help_text='Основное изображение блока.',
+        help_text=_('Основное изображение блока.'),
     )
     left_image = models.URLField(
-        'Дополнительное изображение',
+        _('Дополнительное изображение'),
         max_length=URL_MAX_LENGTH,
         blank=True,
-        help_text='Второе изображение для варианта с двумя картинками.',
+        help_text=_('Второе изображение для варианта с двумя картинками.'),
     )
     string_list = models.JSONField(
-        'Список тезисов',
+        _('Список тезисов'),
         default=list,
         blank=True,
-        help_text='Список строк для варианта с изображением и списком.',
+        help_text=_('Список строк для варианта с изображением и списком.'),
     )
     text = models.TextField(
-        'Текст',
+        _('Текст'),
         blank=True,
-        help_text='Основной HTML-текст блока.',
+        help_text=_('Основной HTML-текст блока.'),
     )
     accented_text = models.TextField(
-        'Акцентный текст',
+        _('Акцентный текст'),
         blank=True,
-        help_text='Дополнительный акцентный HTML-текст блока.',
+        help_text=_('Дополнительный акцентный HTML-текст блока.'),
     )
 
     class Meta:
-        verbose_name = 'Контентный блок проекта'
-        verbose_name_plural = 'Контентные блоки проектов'
+        verbose_name = _('Контентный блок проекта')
+        verbose_name_plural = _('Контентные блоки проектов')
         ordering = ('order', 'pk')
         indexes = [
             models.Index(fields=('project', 'order')),
@@ -240,43 +241,43 @@ class ProjectBlockButton(models.Model):
     class ButtonType(models.TextChoices):
         """Поддерживаемые типы кнопок блока."""
 
-        DOWNLOAD = 'download', 'Скачать файл'
-        REDIRECT = 'redirect', 'Перейти по ссылке'
+        DOWNLOAD = 'download', _('Скачать файл')
+        REDIRECT = 'redirect', _('Перейти по ссылке')
 
     block = models.ForeignKey(
         ProjectContentBlock,
         on_delete=models.CASCADE,
         related_name='buttons',
-        verbose_name='Контентный блок',
+        verbose_name=_('Контентный блок'),
     )
     order = models.PositiveIntegerField(
-        'Порядок',
+        _('Порядок'),
         default=DEFAULT_ORDER,
         db_index=True,
-        help_text='Порядок кнопки внутри блока.',
+        help_text=_('Порядок кнопки внутри блока.'),
     )
     label = models.CharField(
-        'Подпись',
+        _('Подпись'),
         max_length=LABEL_MAX_LENGTH,
-        help_text='Текст кнопки для фронтенда.',
+        help_text=_('Текст кнопки для фронтенда.'),
     )
     type = models.CharField(
-        'Тип',
+        _('Тип'),
         max_length=BUTTON_TYPE_MAX_LENGTH,
         choices=ButtonType.choices,
-        help_text='Тип действия кнопки.',
+        help_text=_('Тип действия кнопки.'),
     )
     url = models.URLField(
-        'URL',
+        _('URL'),
         max_length=URL_MAX_LENGTH,
-        help_text='Ссылка для скачивания или перехода.',
+        help_text=_('Ссылка для скачивания или перехода.'),
     )
 
     class Meta:
-        verbose_name = 'Кнопка контентного блока'
-        verbose_name_plural = 'Кнопки контентных блоков'
+        verbose_name = _('Кнопка контентного блока')
+        verbose_name_plural = _('Кнопки контентных блоков')
         ordering = ('order', 'pk')
-        indexes = [models.Index(fields=('block', 'order')),]
+        indexes = [models.Index(fields=('block', 'order'))]
 
     def __str__(self) -> str:
         return self.label
