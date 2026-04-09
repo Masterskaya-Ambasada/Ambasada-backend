@@ -31,7 +31,7 @@ class ProjectListView(ListAPIView):
     pagination_class = ProjectLimitOffsetPagination
 
     def get_queryset(self):
-        tag_queryset = Tag.objects.only('label').order_by('label', 'pk')
+        tag_queryset = Tag.objects.order_by('label', 'pk')
         queryset = (
             Project.objects.filter(is_published=True)
             .select_related('project_type')
@@ -58,7 +58,7 @@ class ProjectDetailView(RetrieveAPIView):
     lookup_url_kwarg = 'project_id'
 
     def get_queryset(self):
-        tag_queryset = Tag.objects.only('label').order_by('label', 'pk')
+        tag_queryset = Tag.objects.order_by('label', 'pk')
         button_queryset = ProjectBlockButton.objects.order_by('order', 'pk')
         block_queryset = ProjectContentBlock.objects.prefetch_related(
             Prefetch('buttons', queryset=button_queryset)
@@ -79,7 +79,7 @@ class ProjectTagListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
-        queryset = Tag.objects.filter(projects__is_published=True).only('label').order_by('label', 'pk').distinct()
+        queryset = Tag.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
         tags = [tag.label for tag in queryset]
         return Response(tags)
 
@@ -90,11 +90,6 @@ class ProjectTypeListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
-        queryset = (
-            ProjectType.objects.filter(projects__is_published=True)
-            .only('slug', 'label')
-            .order_by('label', 'pk')
-            .distinct()
-        )
+        queryset = ProjectType.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
         serializer = ProjectTypeSerializer(queryset, many=True)
         return Response({'types': serializer.data})
