@@ -140,6 +140,14 @@ LANGUAGES = [
     ('sr-cyrl', _('Serbian (Cyrillic)')),
 ]
 
+MODELTRANSLATION_FALLBACK_LANGUAGES = {
+    'sr-latn': ('sr-cyrl', 'ru', 'en'),
+    'sr-cyrl': ('sr-latn', 'ru', 'en'),
+    'default': ('ru', 'en'),
+}
+
+MODELTRANSLATION_FALLBACK_VALUES = None
+
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
 
@@ -201,6 +209,7 @@ REST_FRAMEWORK = {
         'anon': '100/day',
         'user': '1000/day',
     },
+    'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'rest_framework.negotiation.DefaultContentNegotiation',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'COERCE_DECIMAL_TO_STRING': False,
