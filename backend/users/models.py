@@ -3,12 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
-    """Custom user model extending Django's AbstractUser."""
+    """Модель пользователя, расширяющая модель AbstractUser."""
 
     class Meta:
         verbose_name = _('User')
         verbose_name_plural = _('Users')
         ordering = ['username']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username

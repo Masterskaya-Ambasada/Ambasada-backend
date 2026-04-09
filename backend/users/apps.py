@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UsersConfig(AppConfig):
-    """Application configuration for user management."""
+    """Настройки приложения для управления пользователями."""
 
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'users'

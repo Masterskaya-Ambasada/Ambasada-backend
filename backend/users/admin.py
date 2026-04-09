@@ -6,4 +6,4 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(TranslationAdmin):
-    pass
+    """Административный интерфейс для модели User, с поддержкой перевода."""
