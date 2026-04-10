@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections import defaultdict
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Max
@@ -23,6 +25,77 @@ from projects.constants import (
     URL_MAX_LENGTH,
 )
 from projects.validators import validate_string_list
+
+
+class OrderedValidationQuerySet(models.QuerySet):
+    """QuerySet с валидацией и автонумерацией при массовом создании."""
+
+    related_field_name: str | None = None
+
+    def _set_missing_orders(self, objs: list[models.Model]) -> None:
+        """Заполняет пропущенные порядковые номера в пределах связанного объекта."""
+        if not self.related_field_name:
+            return
+
+        pending_orders: defaultdict[int, int] = defaultdict(int)
+        max_orders: dict[int, int] = {}
+        related_field_name = self.related_field_name
+
+        for obj in objs:
+            if obj.order:
+                continue
+
+            related_id = getattr(obj, f'{related_field_name}_id')
+            if related_id is None:
+                continue
+
+            if related_id not in max_orders:
+                max_orders[related_id] = (
+                    self.filter(**{f'{related_field_name}_id': related_id})
+                    .aggregate(max_order=Max('order'))
+                    .get('max_order')
+                    or DEFAULT_ORDER
+                )
+
+            pending_orders[related_id] += ORDER_STEP
+            obj.order = max_orders[related_id] + pending_orders[related_id]
+
+    def bulk_create(
+        self,
+        objs,
+        batch_size=None,
+        ignore_conflicts=False,
+        update_conflicts=False,
+        update_fields=None,
+        unique_fields=None,
+    ):
+        """Проверяет и подготавливает объекты перед массовым созданием."""
+        objs = list(objs)
+        self._set_missing_orders(objs)
+
+        for obj in objs:
+            obj.full_clean()
+
+        return super().bulk_create(
+            objs,
+            batch_size=batch_size,
+            ignore_conflicts=ignore_conflicts,
+            update_conflicts=update_conflicts,
+            update_fields=update_fields,
+            unique_fields=unique_fields,
+        )
+
+
+class ProjectContentBlockQuerySet(OrderedValidationQuerySet):
+    """QuerySet для контентных блоков проекта."""
+
+    related_field_name = 'project'
+
+
+class ProjectBlockButtonQuerySet(OrderedValidationQuerySet):
+    """QuerySet для кнопок контентного блока."""
+
+    related_field_name = 'block'
 
 
 class ProjectType(models.Model):
@@ -88,6 +161,8 @@ class Project(models.Model):
         db_index=True,
         help_text=_('Название проекта для списка и детальной страницы.'),
     )
+    # По контракту description - короткое описание верхнего блока, оно не подразумевает html.
+    # Предлагаю оставить CharField, пока не будет известно обратное
     description = models.CharField(
         _('Краткое описание'),
         max_length=DESCRIPTION_MAX_LENGTH,
@@ -95,6 +170,7 @@ class Project(models.Model):
     )
     year = models.PositiveSmallIntegerField(
         _('Год'),
+        db_index=True,
         help_text=_('Год реализации или публикации проекта.'),
     )
     cover_image = models.URLField(
@@ -137,6 +213,8 @@ class Project(models.Model):
 class ProjectContentBlock(models.Model):
     """Контентный блок детальной страницы проекта."""
 
+    objects = ProjectContentBlockQuerySet.as_manager()
+
     class Variant(models.IntegerChoices):
         """Поддерживаемые варианты разметки контентного блока."""
 
@@ -166,6 +244,7 @@ class ProjectContentBlock(models.Model):
         max_length=CONTENT_BLOCK_TITLE_MAX_LENGTH,
         help_text=_('Заголовок секции проекта.'),
     )
+    # Пока оставлю так, но да, стоит предполагать возможное использование ImageField
     image = models.URLField(
         _('Основное изображение'),
         max_length=URL_MAX_LENGTH,
@@ -237,6 +316,8 @@ class ProjectContentBlock(models.Model):
 
 class ProjectBlockButton(models.Model):
     """Кнопка действия внутри контентного блока проекта."""
+
+    objects = ProjectBlockButtonQuerySet.as_manager()
 
     class ButtonType(models.TextChoices):
         """Поддерживаемые типы кнопок блока."""
