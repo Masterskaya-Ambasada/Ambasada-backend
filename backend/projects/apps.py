@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ProjectsConfig(AppConfig):
-    """Конфигурация приложения с проектами."""
+    """Настройки приложения для управления урбанистическими проектами."""
 
     name = 'projects'
-    verbose_name = _('Проекты Амбасада за урбанизм.')
+    verbose_name = _('Урбанистические проекты')

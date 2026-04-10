@@ -38,6 +38,7 @@ dotenv-linter = "^0.7.0"
 gunicorn = "^23.0.0"
 yamllint = "^1.37.1"
 psycopg2 = "^2.9.11"
+django-modeltranslation = "^0.20.2"
 
 [tool.poetry.group.dev.dependencies]
 # Code quality and formatting
