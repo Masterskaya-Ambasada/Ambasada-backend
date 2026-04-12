@@ -1,17 +1,18 @@
-from rest_framework import serializers
-from .models import SiteConfig, Language, Social
+from rest_framework import serializers  # type: ignore
+
+from .models import Language, SiteConfig, Social
 
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
-        fields = ["code", "label"]
+        fields = ['code', 'label']
 
 
 class SocialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Social
-        fields = ["type", "url"]
+        fields = ['type', 'url']
 
 
 class SiteConfigSerializer(serializers.ModelSerializer):
@@ -21,9 +22,9 @@ class SiteConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteConfig
         fields = [
-            "site_name",
-            "seo_description",
-            "languages",
-            "socials",
-            "copyright",
+            'site_name',
+            'seo_description',
+            'languages',
+            'socials',
+            'copyright',
         ]

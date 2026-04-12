@@ -22,8 +22,8 @@ class SiteConfig(models.Model):
     seo_description = models.CharField(max_length=250)
     copyright = models.CharField(max_length=150)
 
-    languages = models.ManyToManyField("Language", blank=True)
-    socials = models.ManyToManyField("Social", blank=True)
+    languages = models.ManyToManyField('Language', blank=True)
+    socials = models.ManyToManyField('Social', blank=True)
 
     def __str__(self):
         return self.site_name

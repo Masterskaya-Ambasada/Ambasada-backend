@@ -10,54 +10,54 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Language",
+            name='Language',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("code", models.CharField(max_length=10)),
-                ("label", models.CharField(max_length=50)),
+                ('code', models.CharField(max_length=10)),
+                ('label', models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name="Social",
+            name='Social',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("type", models.CharField(max_length=50)),
-                ("url", models.URLField()),
+                ('type', models.CharField(max_length=50)),
+                ('url', models.URLField()),
             ],
         ),
         migrations.CreateModel(
-            name="SiteConfig",
+            name='SiteConfig',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("site_name", models.CharField(max_length=100)),
-                ("seo_description", models.CharField(max_length=250)),
-                ("copyright", models.CharField(max_length=150)),
-                ("languages", models.ManyToManyField(blank=True, to="api.language")),
-                ("socials", models.ManyToManyField(blank=True, to="api.social")),
+                ('site_name', models.CharField(max_length=100)),
+                ('seo_description', models.CharField(max_length=250)),
+                ('copyright', models.CharField(max_length=150)),
+                ('languages', models.ManyToManyField(blank=True, to='api.language')),
+                ('socials', models.ManyToManyField(blank=True, to='api.social')),
             ],
         ),
     ]
