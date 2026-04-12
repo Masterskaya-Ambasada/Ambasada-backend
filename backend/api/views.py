@@ -1,3 +1,4 @@
+from rest_framework import status  # type: ignore
 from rest_framework.response import Response  # type: ignore
 from rest_framework.views import APIView  # type: ignore
 
@@ -16,11 +17,15 @@ class InitView(APIView):
     - ссылки на соцсети
     - копирайт
     """
+
     def get(self, request):
-        config = SiteConfig.objects.first()
+        config = SiteConfig.objects.prefetch_related('languages', 'socials').first()
 
         if not config:
-            return Response({'detail': 'Config not found'}, status=404)
+            return Response(
+                {'status': 404, 'code': 'NOT_FOUND', 'message': 'Site config not found'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
         serializer = SiteConfigSerializer(config)
         return Response(serializer.data)
