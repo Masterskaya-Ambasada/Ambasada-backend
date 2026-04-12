@@ -6,6 +6,16 @@ from .serializers import SiteConfigSerializer
 
 
 class InitView(APIView):
+    """
+    Возвращает константы сайта.
+
+    Содержит:
+    - название сайта
+    - SEO-описание
+    - список языков
+    - ссылки на соцсети
+    - копирайт
+    """
     def get(self, request):
         config = SiteConfig.objects.first()
 
