@@ -23,12 +23,68 @@ APP_ENV = config('APP_ENV', default='development')
 if APP_ENV == 'production':
     DEBUG = False
 
+    # Cookies
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    CSRF_COOKIE_SAMESITE = 'Lax'
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # Content Security Policy
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_SCRIPT_SRC = ("'self'",)
+    CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+    CSP_IMG_SRC = ("'self'", 'data:')
+    CSP_FONT_SRC = ("'self'",)
+    CSP_CONNECT_SRC = ("'self'",)
+    CSP_FRAME_ANCESTORS = ("'none'",)
+    SECURE_SSL_REDIRECT = False
+    # HSTS is managed by Caddy — Django must not add its own header.
+    # Set to 0 to disable. Change to 31536000 only if Django terminates TLS directly.
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+
+SESSION_COOKIE_NAME = 'ambasada_sessionid'
+CSRF_COOKIE_NAME = 'ambasada_csrftoken'
+
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
     cast=lambda v: [s.strip() for s in v.split(',')],
     default='localhost,127.0.0.1',
 )
+
+# CORS
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    cast=lambda v: [s.strip() for s in v.split(',')],
+    default='http://localhost:3000',
+)
+
+CORS_ALLOW_CREDENTIALS = False
+
+# Allowed headers - adding Accept-Language for localization
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'accept-language',  # needed for i18n, the front transmits the language
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Permitted methods are only those that are actually used.
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',  # for /contact
+    'OPTIONS',  # preflight
+]
 
 
 # Application definition
@@ -55,7 +111,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'core.middleware.AdminLoginThrottleMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,6 +124,18 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'backend.urls'
+
+# Cache — Redis
+CACHE_BACKEND = config('CACHE_BACKEND', default='django.core.cache.backends.locmem.LocMemCache')
+
+CACHES = {
+    'default': {
+        'BACKEND': CACHE_BACKEND,
+        'LOCATION': config('CACHE_LOCATION', default=''),
+        # OPTIONS только для Redis
+        **({'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'}} if 'redis' in CACHE_BACKEND else {}),
+    }
+}
 
 TEMPLATES = [
     {
@@ -176,6 +247,11 @@ STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DIR / 'media')
 
+# File upload limit
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB — up to this size is stored in memory
+
+
 # REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -183,7 +259,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -204,10 +280,13 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day',
+        'anon': '120/hour',
+        'user': '600/hour',
+        'contact': '5/hour',  # форма обратной связи
+        'auth': '10/minute',  # вход в Admin — защита от brute-force
     },
     'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'rest_framework.negotiation.DefaultContentNegotiation',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
@@ -215,7 +294,6 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGGING = {
     'version': 1,
@@ -231,33 +309,45 @@ LOGGING = {
         },
     },
     'handlers': {
+        # Always active — writes to stdout in both dev and production
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'console',
-            'filters': ['require_debug_false'],
             'level': 'DEBUG',
         },
+        # Production only — writes WARNING+ to file
         'file': {
             'class': 'logging.FileHandler',
             'formatter': 'console',
             'filters': ['require_debug_false'],
-            'level': 'INFO',
+            'level': 'WARNING',
             'filename': 'debug.log',
         },
     },
     'loggers': {
+        # Django internals
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
         },
+        # SQL queries — INFO to avoid flooding in dev, switch to DEBUG when needed
         'django.db.backends': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
+            'propagate': False,
         },
+        # Email sending — useful to trace in both dev and production
         'django.core.mail': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
+            'propagate': False,
+        },
+        # Security events: admin brute-force, honeypot, invalid form attempts
+        'security': {
+            'handlers': ['console', 'file'],
+            'level': 'WARNING',
+            'propagate': False,
         },
     },
 }
