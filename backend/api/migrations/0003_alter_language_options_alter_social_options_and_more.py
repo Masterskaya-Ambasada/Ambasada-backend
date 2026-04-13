@@ -5,75 +5,73 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("api", "0002_alter_siteconfig_options_siteconfig_copyright_en_and_more"),
+        ('api', '0002_alter_siteconfig_options_siteconfig_copyright_en_and_more'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="language",
+            name='language',
             options={
-                "ordering": ["label"],
-                "verbose_name": "Язык",
-                "verbose_name_plural": "Языки",
+                'ordering': ['label'],
+                'verbose_name': 'Язык',
+                'verbose_name_plural': 'Языки',
             },
         ),
         migrations.AlterModelOptions(
-            name="social",
+            name='social',
             options={
-                "verbose_name": "Социальная сеть",
-                "verbose_name_plural": "Социальные сети",
+                'verbose_name': 'Социальная сеть',
+                'verbose_name_plural': 'Социальные сети',
             },
         ),
         migrations.RemoveField(
-            model_name="social",
-            name="type",
+            model_name='social',
+            name='type',
         ),
         migrations.AddField(
-            model_name="social",
-            name="social_type",
+            model_name='social',
+            name='social_type',
             field=models.CharField(
-                choices=[("telegram", "Telegram"), ("instagram", "Instagram")],
+                choices=[('telegram', 'Telegram'), ('instagram', 'Instagram')],
                 db_index=True,
-                default="telegram",
+                default='telegram',
                 max_length=20,
-                verbose_name="Тип соцсети",
+                verbose_name='Тип соцсети',
             ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name="language",
-            name="code",
+            model_name='language',
+            name='code',
             field=models.CharField(max_length=10, unique=True),
         ),
         migrations.AlterField(
-            model_name="language",
-            name="label",
+            model_name='language',
+            name='label',
             field=models.CharField(max_length=50, unique=True),
         ),
         migrations.AlterField(
-            model_name="siteconfig",
-            name="languages",
+            model_name='siteconfig',
+            name='languages',
             field=models.ManyToManyField(
                 blank=True,
-                related_name="site_configs",
-                to="api.language",
-                verbose_name="Языки",
+                related_name='site_configs',
+                to='api.language',
+                verbose_name='Языки',
             ),
         ),
         migrations.AlterField(
-            model_name="siteconfig",
-            name="socials",
+            model_name='siteconfig',
+            name='socials',
             field=models.ManyToManyField(
                 blank=True,
-                related_name="site_configs",
-                to="api.social",
-                verbose_name="Соцсети",
+                related_name='site_configs',
+                to='api.social',
+                verbose_name='Соцсети',
             ),
         ),
         migrations.AddConstraint(
-            model_name="social",
-            constraint=models.UniqueConstraint(
-                fields=("social_type", "url"), name="unique_social_type_url"
-            ),
+            model_name='social',
+            constraint=models.UniqueConstraint(fields=('social_type', 'url'), name='unique_social_type_url'),
         ),
     ]
