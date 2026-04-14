@@ -23,8 +23,6 @@ APP_ENV = config('APP_ENV', default='development')
 if APP_ENV == 'production':
     DEBUG = False
 
-
-
     CSRF_COOKIE_HTTPONLY = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     # Content Security Policy
@@ -124,7 +122,7 @@ if 'redis' in CACHE_LOCATION:
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
             'LOCATION': CACHE_LOCATION,
-            'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'}
+            'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
         }
     }
 
