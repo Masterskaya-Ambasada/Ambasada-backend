@@ -46,6 +46,7 @@ RUN apt-get update && apt-get upgrade -y \
     gettext \
     git \
     libpq-dev \
+    libmagic1 \
   # Installing `tini` utility:
   # https://github.com/krallin/tini
   # Get architecture to download appropriate tini release:
