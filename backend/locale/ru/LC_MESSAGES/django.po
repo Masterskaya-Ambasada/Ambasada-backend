@@ -2,48 +2,134 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-08 17:31+0300\n"
-"PO-Revision-Date: 2026-04-08 17:55+0300\n"
+"POT-Creation-Date: 2026-04-15 00:00+0300\n"
+"PO-Revision-Date: 2026-04-15 00:15+0300\n"
 "Last-Translator: Dzmitry <email@address>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: backend/api/apps.py:6
+#: backend/api/apps.py:7
 msgid "Интерфейс API"
 msgstr "Интерфейс API"
 
-#: backend/backend/settings.py:137
+#: backend/backend/settings.py:196
 msgid "Russian"
 msgstr "Русский"
 
-#: backend/backend/settings.py:138
+#: backend/backend/settings.py:197
 msgid "English"
 msgstr "Английский"
 
-#: backend/backend/settings.py:139
+#: backend/backend/settings.py:198
 msgid "Serbian (Latin)"
 msgstr "Сербский (латиница)"
 
-#: backend/backend/settings.py:140
+#: backend/backend/settings.py:199
 msgid "Serbian (Cyrillic)"
 msgstr "Сербский (кириллица)"
 
-#: backend/projects/apps.py:6
+#: backend/core/validators.py:112
+msgid "HTML tags are not allowed."
+msgstr "Использование HTML-тегов запрещено."
+
+#: backend/core/validators.py:125
+msgid "Links in messages are not allowed."
+msgstr "Ссылки в сообщениях запрещены."
+
+#: backend/core/validators.py:172
+#, python-format
+msgid "File size %(size).1f MB exceeds the limit of %(max)d MB."
+msgstr "Размер файла %(size).1f МБ превышает лимит в %(max)d МБ."
+
+#: backend/core/validators.py:186
+#, python-format
+msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
+msgstr "Тип файла \"%(mime)s\" не разрешен. Допустимые: %(allowed)s."
+
+#: backend/projects/apps.py:9
 msgid "Урбанистические проекты"
 msgstr "Урбанистические проекты"
 
-#: backend/users/apps.py:7
-msgid "Управление пользователями"
-msgstr "Управление пользователями"
+#: backend/users/apps.py:10
+msgid "User Management"
+msgstr ""
 
-#: backend/users/models.py:8
-msgid "Пользователь"
+#: backend/users/models.py:29
+msgid "Email address is required"
+msgstr "Email обязателен"
+
+#: backend/users/models.py:54
+msgid "Superuser must have is_staff=True"
+msgstr "is_staff=True обязательно"
+
+#: backend/users/models.py:56
+msgid "Superuser must have is_superuser=True"
+msgstr "is_superuser=True обязательно"
+
+#: backend/users/models.py:64 backend/users/models.py:121
+msgid "User"
 msgstr "Пользователь"
 
-#: backend/users/models.py:9
-msgid "Пользователи"
+#: backend/users/models.py:65
+msgid "Content Editor"
+msgstr "Редактор контента"
+
+#: backend/users/models.py:66
+msgid "Administrator"
+msgstr "Администратор"
+
+#: backend/users/models.py:71
+msgid "email address"
+msgstr "адрес электронной почты"
+
+#: backend/users/models.py:76
+msgid "first name"
+msgstr "имя"
+
+#: backend/users/models.py:77
+msgid "last name"
+msgstr "фамилия"
+
+#: backend/users/models.py:80
+msgid "role"
+msgstr "роль"
+
+#: backend/users/models.py:88
+msgid "position"
+msgstr "должность"
+
+#: backend/users/models.py:91
+msgid "Team role (e.g. architect, designer, etc.)"
+msgstr "Роль в команде (архитектор, дизайнер и т.д.)"
+
+#: backend/users/models.py:95
+msgid "photo"
+msgstr "фото"
+
+#: backend/users/models.py:102
+msgid "biography"
+msgstr "биография"
+
+#: backend/users/models.py:105
+msgid "Short team member description"
+msgstr "Краткое описание участника команды"
+
+#: backend/users/models.py:109
+msgid "public status"
+msgstr "публичный статус"
+
+#: backend/users/models.py:112
+msgid "Display in the team block on the website"
+msgstr "Отображать в блоке команды на сайте"
+
+#: backend/users/models.py:122
+msgid "Users"
 msgstr "Пользователи"
+
+#~ msgid "Управление пользователями"
+#~ msgstr "Управление пользователями"

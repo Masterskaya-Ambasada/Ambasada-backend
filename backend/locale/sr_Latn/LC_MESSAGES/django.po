@@ -2,48 +2,134 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-08 17:31+0300\n"
-"PO-Revision-Date: 2026-04-08 17:50+0300\n"
+"POT-Creation-Date: 2026-04-15 00:00+0300\n"
+"PO-Revision-Date: 2026-04-15 00:05+0300\n"
 "Last-Translator: Dzmitry <email@address>\n"
 "Language-Team: Serbian (Latin)\n"
 "Language: sr_Latn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: backend/api/apps.py:6
+#: backend/api/apps.py:7
 msgid "Интерфейс API"
 msgstr "API Interfejs"
 
-#: backend/backend/settings.py:137
+#: backend/backend/settings.py:196
 msgid "Russian"
 msgstr "Ruski"
 
-#: backend/backend/settings.py:138
+#: backend/backend/settings.py:197
 msgid "English"
 msgstr "Engleski"
 
-#: backend/backend/settings.py:139
+#: backend/backend/settings.py:198
 msgid "Serbian (Latin)"
 msgstr "Srpski (latinica)"
 
-#: backend/backend/settings.py:140
+#: backend/backend/settings.py:199
 msgid "Serbian (Cyrillic)"
 msgstr "Srpski (ćirilica)"
 
-#: backend/projects/apps.py:6
+#: backend/core/validators.py:112
+msgid "HTML tags are not allowed."
+msgstr "HTML tagovi nisu dozvoljeni."
+
+#: backend/core/validators.py:125
+msgid "Links in messages are not allowed."
+msgstr "Linkovi u porukama nisu dozvoljeni."
+
+#: backend/core/validators.py:172
+#, python-format
+msgid "File size %(size).1f MB exceeds the limit of %(max)d MB."
+msgstr "Veličina datoteke %(size).1f MB premašuje limit od %(max)d MB."
+
+#: backend/core/validators.py:186
+#, python-format
+msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
+msgstr "Tip datoteke \"%(mime)s\" nije dozvoljen. Prihvaćeni: %(allowed)s."
+
+#: backend/projects/apps.py:9
 msgid "Урбанистические проекты"
 msgstr "Urbanistički projekti"
 
-#: backend/users/apps.py:7
-msgid "Управление пользователями"
-msgstr "Upravljanje korisnicima"
+#: backend/users/apps.py:10
+msgid "User Management"
+msgstr ""
 
-#: backend/users/models.py:8
-msgid "Пользователь"
+#: backend/users/models.py:29
+msgid "Email address is required"
+msgstr "Email adresa je obavezna"
+
+#: backend/users/models.py:54
+msgid "Superuser must have is_staff=True"
+msgstr "Superkorisnik mora imati is_staff=True"
+
+#: backend/users/models.py:56
+msgid "Superuser must have is_superuser=True"
+msgstr "Superkorisnik mora imati is_superuser=True"
+
+#: backend/users/models.py:64 backend/users/models.py:121
+msgid "User"
 msgstr "Korisnik"
 
-#: backend/users/models.py:9
-msgid "Пользователи"
+#: backend/users/models.py:65
+msgid "Content Editor"
+msgstr "Urednik sadržaja"
+
+#: backend/users/models.py:66
+msgid "Administrator"
+msgstr "Administrator"
+
+#: backend/users/models.py:71
+msgid "email address"
+msgstr "email adresa"
+
+#: backend/users/models.py:76
+msgid "first name"
+msgstr "ime"
+
+#: backend/users/models.py:77
+msgid "last name"
+msgstr "prezime"
+
+#: backend/users/models.py:80
+msgid "role"
+msgstr "uloga"
+
+#: backend/users/models.py:88
+msgid "position"
+msgstr "pozicija"
+
+#: backend/users/models.py:91
+msgid "Team role (e.g. architect, designer, etc.)"
+msgstr "Uloga u timu (npr. arhitekta, dizajner, itd.)"
+
+#: backend/users/models.py:95
+msgid "photo"
+msgstr "fotografija"
+
+#: backend/users/models.py:102
+msgid "biography"
+msgstr "biografija"
+
+#: backend/users/models.py:105
+msgid "Short team member description"
+msgstr "Kratak opis člana tima"
+
+#: backend/users/models.py:109
+msgid "public status"
+msgstr "javni status"
+
+#: backend/users/models.py:112
+msgid "Display in the team block on the website"
+msgstr "Prikaži u bloku tima na sajtu"
+
+#: backend/users/models.py:122
+msgid "Users"
 msgstr "Korisnici"
+
+#~ msgid "Управление пользователями"
+#~ msgstr "Upravljanje korisnicima"

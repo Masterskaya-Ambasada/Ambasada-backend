@@ -1,6 +1,7 @@
 """Base settings."""
 
 import sys
+from datetime import timedelta
 from pathlib import Path
 
 from decouple import Config, RepositoryEnv
@@ -88,7 +89,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third-party
     'rest_framework',
-    'rest_framework.authtoken',
     'corsheaders',
     'django_filters',
     'django_extensions',
@@ -236,8 +236,7 @@ MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DI
 # REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
@@ -269,6 +268,11 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 LOGGING = {
     'version': 1,

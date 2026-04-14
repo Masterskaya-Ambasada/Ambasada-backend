@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-08 17:31+0300\n"
-"PO-Revision-Date: 2026-04-08 17:40+0300\n"
+"POT-Creation-Date: 2026-04-15 00:00+0300\n"
+"PO-Revision-Date: 2026-04-15 00:20+0300\n"
 "Last-Translator: Dzmitry <email@address>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -12,38 +12,123 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: backend/api/apps.py:6
+#: backend/api/apps.py:7
 msgid "Интерфейс API"
 msgstr "API Interface"
 
-#: backend/backend/settings.py:137
+#: backend/backend/settings.py:196
 msgid "Russian"
 msgstr "Russian"
 
-#: backend/backend/settings.py:138
+#: backend/backend/settings.py:197
 msgid "English"
 msgstr "English"
 
-#: backend/backend/settings.py:139
+#: backend/backend/settings.py:198
 msgid "Serbian (Latin)"
 msgstr "Serbian (Latin)"
 
-#: backend/backend/settings.py:140
+#: backend/backend/settings.py:199
 msgid "Serbian (Cyrillic)"
 msgstr "Serbian (Cyrillic)"
 
-#: backend/projects/apps.py:6
+#: backend/core/validators.py:112
+msgid "HTML tags are not allowed."
+msgstr "HTML tags are not allowed."
+
+#: backend/core/validators.py:125
+msgid "Links in messages are not allowed."
+msgstr "Links in messages are not allowed."
+
+#: backend/core/validators.py:172
+#, python-format
+msgid "File size %(size).1f MB exceeds the limit of %(max)d MB."
+msgstr "File size %(size).1f MB exceeds the limit of %(max)d MB."
+
+#: backend/core/validators.py:186
+#, python-format
+msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
+msgstr "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
+
+#: backend/projects/apps.py:9
 msgid "Урбанистические проекты"
 msgstr "Urban Projects"
 
-#: backend/users/apps.py:7
-msgid "Управление пользователями"
-msgstr "User Management"
+#: backend/users/apps.py:10
+msgid "User Management"
+msgstr ""
 
-#: backend/users/models.py:8
-msgid "Пользователь"
+#: backend/users/models.py:29
+msgid "Email address is required"
+msgstr "Email address is required"
+
+#: backend/users/models.py:54
+msgid "Superuser must have is_staff=True"
+msgstr "Superuser must have is_staff=True"
+
+#: backend/users/models.py:56
+msgid "Superuser must have is_superuser=True"
+msgstr "Superuser must have is_superuser=True"
+
+#: backend/users/models.py:64 backend/users/models.py:121
+msgid "User"
 msgstr "User"
 
-#: backend/users/models.py:9
-msgid "Пользователи"
+#: backend/users/models.py:65
+msgid "Content Editor"
+msgstr "Content Editor"
+
+#: backend/users/models.py:66
+msgid "Administrator"
+msgstr "Administrator"
+
+#: backend/users/models.py:71
+msgid "email address"
+msgstr "email address"
+
+#: backend/users/models.py:76
+msgid "first name"
+msgstr "first name"
+
+#: backend/users/models.py:77
+msgid "last name"
+msgstr "last name"
+
+#: backend/users/models.py:80
+msgid "role"
+msgstr "role"
+
+#: backend/users/models.py:88
+msgid "position"
+msgstr "position"
+
+#: backend/users/models.py:91
+msgid "Team role (e.g. architect, designer, etc.)"
+msgstr "Team role (e.g. architect, designer, etc.)"
+
+#: backend/users/models.py:95
+msgid "photo"
+msgstr "photo"
+
+#: backend/users/models.py:102
+msgid "biography"
+msgstr "biography"
+
+#: backend/users/models.py:105
+msgid "Short team member description"
+msgstr "Short team member description"
+
+#: backend/users/models.py:109
+msgid "public status"
+msgstr "public status"
+
+#: backend/users/models.py:112
+msgid "Display in the team block on the website"
+msgstr "Display in the team block on the website"
+
+#: backend/users/models.py:122
+msgid "Users"
 msgstr "Users"
+
+#~ msgid "Управление пользователями"
+#~ msgstr "User Management"
