@@ -23,16 +23,9 @@ APP_ENV = config('APP_ENV', default='development')
 if APP_ENV == 'production':
     DEBUG = False
 
-    # Cookies
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_HTTPONLY = True
+
+
     CSRF_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Lax'
-    CSRF_COOKIE_SAMESITE = 'Lax'
-    X_FRAME_OPTIONS = 'DENY'
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_REFERRER_POLICY = 'same-origin'
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     # Content Security Policy
     CSP_DEFAULT_SRC = ("'self'",)
@@ -42,12 +35,10 @@ if APP_ENV == 'production':
     CSP_FONT_SRC = ("'self'",)
     CSP_CONNECT_SRC = ("'self'",)
     CSP_FRAME_ANCESTORS = ("'none'",)
+    # SSL redirect is disabled because Caddy handles HTTPS termination
     SECURE_SSL_REDIRECT = False
-    # HSTS is managed by Caddy — Django must not add its own header.
-    # Set to 0 to disable. Change to 31536000 only if Django terminates TLS directly.
-    SECURE_HSTS_SECONDS = 0
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-    SECURE_HSTS_PRELOAD = False
+    # HSTS is managed by Caddy — Django must not add its own header
+    # SECURE_HSTS_SECONDS = 0 (default)
 
 SESSION_COOKIE_NAME = 'ambasada_sessionid'
 CSRF_COOKIE_NAME = 'ambasada_csrftoken'
@@ -126,16 +117,16 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'backend.urls'
 
 # Cache — Redis
-CACHE_BACKEND = config('CACHE_BACKEND', default='django.core.cache.backends.locmem.LocMemCache')
+CACHE_LOCATION = config('CACHE_LOCATION', default='')
 
-CACHES = {
-    'default': {
-        'BACKEND': CACHE_BACKEND,
-        'LOCATION': config('CACHE_LOCATION', default=''),
-        # OPTIONS только для Redis
-        **({'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'}} if 'redis' in CACHE_BACKEND else {}),
+if 'redis' in CACHE_LOCATION:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': CACHE_LOCATION,
+            'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'}
+        }
     }
-}
 
 TEMPLATES = [
     {
@@ -226,10 +217,6 @@ LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BAS
 
 TIME_ZONE = 'Europe/Moscow'
 
-USE_I18N = True
-
-USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
@@ -247,10 +234,6 @@ STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DIR / 'media')
 
-# File upload limit
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
-FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB — up to this size is stored in memory
-
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -263,11 +246,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-    ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser',
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -288,7 +266,6 @@ REST_FRAMEWORK = {
         'contact': '5/hour',  # форма обратной связи
         'auth': '10/minute',  # вход в Admin — защита от brute-force
     },
-    'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'rest_framework.negotiation.DefaultContentNegotiation',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'COERCE_DECIMAL_TO_STRING': False,
