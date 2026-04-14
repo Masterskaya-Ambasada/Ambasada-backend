@@ -18,8 +18,8 @@ class InitView(APIView):
     - копирайт
     """
 
-    def get(self, request):
-        config = SiteConfig.objects.prefetch_related('languages', 'socials').first()
+    def get(self, request, *args, **kwargs):
+        config = SiteConfig.objects.prefetch_related('languages', 'socials').order_by('id').first()
 
         if not config:
             return Response(

@@ -10,17 +10,20 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 
 class SocialSerializer(serializers.ModelSerializer):
+    social_type = serializers.CharField(source='get_social_type_display')
+
     class Meta:
         model = Social
-        fields = ['type', 'url']
+        fields = ['social_type', 'url']
 
 
 class SiteConfigSerializer(serializers.ModelSerializer):
-    languages = LanguageSerializer(many=True)
-    socials = SocialSerializer(many=True)
+    languages = LanguageSerializer(many=True, read_only=True)
+    socials = SocialSerializer(many=True, read_only=True)
 
     class Meta:
         model = SiteConfig
+
         fields = [
             'site_name',
             'seo_description',
