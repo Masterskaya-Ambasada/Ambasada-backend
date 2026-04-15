@@ -64,19 +64,19 @@ services:
 #      --loglevel=info
 #      --scheduler django_celery_beat.schedulers:DatabaseScheduler
 #
-#  redis:
-#    image: redis:7-alpine
-#    volumes:
-#      - redis_data:/data
-#    restart: unless-stopped
-#    healthcheck:
-#      test: redis-cli --raw incr ping
-#      interval: 3s
-#      timeout: 30s
-#      retries: 5
-#      start_period: 2s
-#    networks:
-#      - web-net
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: redis-cli --raw incr ping
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 2s
+    networks:
+      - web-net
 #
 #  rabbitmq:
 #    image: rabbitmq:3-management-alpine
@@ -102,5 +102,5 @@ networks:
 volumes:
   postgres-data:
   django-static:
-#  redis_data:
+  redis_data:
 #  rabbitmq_data:
