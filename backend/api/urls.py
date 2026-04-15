@@ -12,6 +12,7 @@ from projects.views import (
     ProjectTagListView,
     ProjectTypeListView,
 )
+
 from .views import AboutAPIView
 
 app_name = 'api'
@@ -46,8 +47,7 @@ project_urlpatterns = [
 ]
 
 about_urlpatterns = [
-    path('about/', AboutAPIView.as_view(), name='about'),
+    path('v1/about', AboutAPIView.as_view(), name='about'),
 ]
 
 urlpatterns = doc_urlpatterns + project_urlpatterns + about_urlpatterns
-

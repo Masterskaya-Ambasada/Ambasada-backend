@@ -1,12 +1,4 @@
-"""
-Сериализаторы для API.
-
-Anti-spam techniques (for public forms):
-
-Honeypot field — hidden via CSS (display: none), NOT type="hidden".
-Bots fill all visible fields automatically; humans never touch it.
-If the field arrives non-empty — silently reject the submission.
-"""
+"""Сериализаторы для API."""
 
 from rest_framework import serializers
 
@@ -38,57 +30,44 @@ class GalleryImageSerializer(serializers.ModelSerializer):
 
 
 class AboutPageSerializer(serializers.ModelSerializer):
-    """Сериализация основной страницы 'О сообществе'."""
+    """Сериализация страницы 'О сообществе' с вложенной структурой согласно ТЗ."""
 
     def to_representation(self, instance):
+        ctx = self.context
+        values = ctx.get('values', Value.objects.all())
+        members = ctx.get('members', TeamMember.objects.all())
+        images = ctx.get('images', GalleryImage.objects.all())
+
         return {
-            "hero": {
-                "title": instance.hero_title,
-                "description": instance.hero_description,
-                "image_left": (
-                    instance.image_left.url if instance.image_left else None
-                ),
-                "image_right": (
-                    instance.image_right.url if instance.image_right else None
-                ),
+            'hero': {
+                'title': instance.hero_title,
+                'description': instance.hero_description,
+                'image_left': instance.image_left.url if instance.image_left else None,
+                'image_right': instance.image_right.url if instance.image_right else None,
             },
-            "about_section": {
-                "title": instance.about_title,
-                "paragraphs": [
-                    instance.paragraph_1,
-                    instance.paragraph_2,
-                ],
-                "action_button": {
-                    "label": instance.button_label,
-                    "link": instance.button_link,
+            'about_section': {
+                'title': instance.about_title,
+                'paragraphs': [instance.paragraph_1, instance.paragraph_2],
+                'action_button': {
+                    'label': instance.button_label,
+                    'link': instance.button_link,
                 },
             },
-            "values": {
-                "title": instance.values_title,
-                "items": ValueSerializer(
-                    Value.objects.all(), many=True
-                ).data,
+            'values': {
+                'title': instance.values_title,
+                'items': ValueSerializer(values, many=True).data,
             },
-            "team": {
-                "title": instance.team_title,
-                "members": TeamMemberSerializer(
-                    TeamMember.objects.all(), many=True
-                ).data,
-                "action_button": {
-                    "label": instance.team_button_label,
-                    "link": instance.team_button_link,
+            'team': {
+                'title': instance.team_title,
+                'members': TeamMemberSerializer(members, many=True).data,
+                'action_button': {
+                    'label': instance.team_button_label,
+                    'link': instance.team_button_link,
                 },
             },
-            "gallery_carousel": {
-                "title": instance.gallery_title,
-                "images": [
-                    {
-                        "id": f"img_{img.id}",
-                        "url": img.image.url,
-                        "alt": img.alt,
-                    }
-                    for img in GalleryImage.objects.all()
-                ],
+            'gallery_carousel': {
+                'title': instance.gallery_title,
+                'images': [{'id': f'img_{img.id}', 'url': img.image.url, 'alt': img.alt} for img in images],
             },
         }
 
