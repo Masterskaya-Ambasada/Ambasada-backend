@@ -116,7 +116,7 @@ flake8-quotes.inline-quotes = "single"
 
 
 [tool.ruff.lint.per-file-ignores]
-"*/migrations/*.py" = ["D101", "E501", "RUF012"]
+"*/migrations/*.py" = ["D101", "E501", "RUF012", "Q000"]
 "tests/*.py" = ["S101"]
 "*/models.py" = ["D105"]
 
@@ -124,6 +124,7 @@ flake8-quotes.inline-quotes = "single"
 quote-style = "single"
 docstring-code-format = true
 skip-magic-trailing-comma = false
+exclude = ["*/migrations/*.py"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
