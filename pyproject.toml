@@ -117,6 +117,7 @@ flake8-quotes.inline-quotes = "single"
 
 [tool.ruff.lint.per-file-ignores]
 "*/migrations/*.py" = ["D101", "E501", "RUF012"]
+"backend/projects/migrations/0004_rename_projects_pr_is_publ_27cef9_idx_prj_pub_slug_idx_and_more.py" = ["Q000"]
 "tests/*.py" = ["S101"]
 "*/models.py" = ["D105"]
 
@@ -124,6 +125,8 @@ flake8-quotes.inline-quotes = "single"
 quote-style = "single"
 docstring-code-format = true
 skip-magic-trailing-comma = false
+exclude = ["backend/projects/migrations/0004_rename_projects_pr_is_publ_27cef9_idx_prj_pub_slug_idx_and_more.py"]
+
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
