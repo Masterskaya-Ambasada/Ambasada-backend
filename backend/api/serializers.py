@@ -1,4 +1,12 @@
-"""Сериализаторы для API раздела 'О сообществе'."""
+"""
+Сериализаторы для API.
+
+Anti-spam techniques (for public forms):
+
+Honeypot field — hidden via CSS (display: none), NOT type="hidden".
+Bots fill all visible fields automatically; humans never touch it.
+If the field arrives non-empty — silently reject the submission.
+"""
 
 from rest_framework import serializers
 
@@ -30,17 +38,20 @@ class GalleryImageSerializer(serializers.ModelSerializer):
 
 
 class AboutPageSerializer(serializers.ModelSerializer):
-    """Сериализация основной страницы 'О нас'."""
+    """Сериализация основной страницы 'О сообществе'."""
 
     def to_representation(self, instance):
         return {
             "hero": {
                 "title": instance.hero_title,
                 "description": instance.hero_description,
-                "image_left": instance.image_left.url if instance.image_left else None,
-                "image_right": instance.image_right.url if instance.image_right else None,
+                "image_left": (
+                    instance.image_left.url if instance.image_left else None
+                ),
+                "image_right": (
+                    instance.image_right.url if instance.image_right else None
+                ),
             },
-
             "about_section": {
                 "title": instance.about_title,
                 "paragraphs": [
@@ -52,24 +63,22 @@ class AboutPageSerializer(serializers.ModelSerializer):
                     "link": instance.button_link,
                 },
             },
-
             "values": {
                 "title": instance.values_title,
-                "items": ValueSerializer(Value.objects.all(), many=True).data,
+                "items": ValueSerializer(
+                    Value.objects.all(), many=True
+                ).data,
             },
-
             "team": {
                 "title": instance.team_title,
                 "members": TeamMemberSerializer(
-                    TeamMember.objects.all(),
-                    many=True
+                    TeamMember.objects.all(), many=True
                 ).data,
                 "action_button": {
                     "label": instance.team_button_label,
                     "link": instance.team_button_link,
                 },
             },
-
             "gallery_carousel": {
                 "title": instance.gallery_title,
                 "images": [
@@ -82,7 +91,6 @@ class AboutPageSerializer(serializers.ModelSerializer):
                 ],
             },
         }
-
 
     class Meta:
         model = AboutPage
