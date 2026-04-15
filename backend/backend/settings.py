@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'drf_spectacular',
+    # local
     'projects',
     'users',
     'api',
@@ -271,7 +272,11 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
 }
 
 LOGGING = {

@@ -5,11 +5,10 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
 )
 
-# from .views import UserMeView
+from .views import AmbasadaTokenObtainPairView
 
 app_name = 'api'
 
@@ -20,9 +19,8 @@ doc_urlpatterns = [
 ]
 
 auth_urlpatterns = [
-    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', AmbasadaTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # path('me/', UserMeView.as_view(), name='user_me'),
 ]
 
 v1_urlpatterns = [
