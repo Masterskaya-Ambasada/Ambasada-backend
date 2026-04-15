@@ -231,6 +231,7 @@ import sys
 from pathlib import Path
 
 from decouple import Config, RepositoryEnv
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -249,6 +250,24 @@ APP_ENV = config('APP_ENV', default='development')
 if APP_ENV == 'production':
     DEBUG = False
 
+    CSRF_COOKIE_HTTPONLY = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # Content Security Policy
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_SCRIPT_SRC = ("'self'",)
+    CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+    CSP_IMG_SRC = ("'self'", 'data:')
+    CSP_FONT_SRC = ("'self'",)
+    CSP_CONNECT_SRC = ("'self'",)
+    CSP_FRAME_ANCESTORS = ("'none'",)
+    # SSL redirect is disabled because Caddy handles HTTPS termination
+    SECURE_SSL_REDIRECT = False
+    # HSTS is managed by Caddy — Django must not add its own header
+    # SECURE_HSTS_SECONDS = 0 (default)
+
+SESSION_COOKIE_NAME = 'ambasada_sessionid'
+CSRF_COOKIE_NAME = 'ambasada_csrftoken'
+
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
@@ -256,10 +275,38 @@ ALLOWED_HOSTS = config(
     default='localhost,127.0.0.1',
 )
 
+# CORS
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    cast=lambda v: [s.strip() for s in v.split(',')],
+    default='http://localhost:3000',
+)
+
+CORS_ALLOW_CREDENTIALS = False
+
+# Allowed headers - adding Accept-Language for localization
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'accept-language',  # needed for i18n, the front transmits the language
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Permitted methods are only those that are actually used.
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',  # for /contact
+    'OPTIONS',  # preflight
+]
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -280,7 +327,11 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'core.middleware.AdminLoginThrottleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -289,6 +340,18 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'backend.urls'
+
+# Cache — Redis
+CACHE_LOCATION = config('CACHE_LOCATION', default='')
+
+if 'redis' in CACHE_LOCATION:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': CACHE_LOCATION,
+            'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
+        }
+    }
 
 TEMPLATES = [
     {
@@ -355,13 +418,29 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'ru'
+
+LANGUAGES = [
+    ('ru', _('Russian')),
+    ('en', _('English')),
+    ('sr-latn', _('Serbian (Latin)')),
+    ('sr-cyrl', _('Serbian (Cyrillic)')),
+]
+
+MODELTRANSLATION_FALLBACK_LANGUAGES = {
+    'sr-latn': ('sr-cyrl', 'ru', 'en'),
+    'sr-cyrl': ('sr-latn', 'ru', 'en'),
+    'default': ('ru', 'en'),
+}
+
+MODELTRANSLATION_FALLBACK_VALUES = None
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
+MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
+
+LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
 
 TIME_ZONE = 'Europe/Moscow'
-
-USE_I18N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -378,7 +457,8 @@ STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'
-MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else BASE_DIR / 'media'
+MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DIR / 'media')
+
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -387,15 +467,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-    ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser',
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -408,17 +483,19 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day',
+        'anon': '120/hour',
+        'user': '600/hour',
+        'contact': '5/hour',  # форма обратной связи
+        'auth': '10/minute',  # вход в Admin — защита от brute-force
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGGING = {
     'version': 1,
@@ -434,34 +511,56 @@ LOGGING = {
         },
     },
     'handlers': {
+        # Always active — writes to stdout in both dev and production
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'console',
-            'filters': ['require_debug_false'],
             'level': 'DEBUG',
         },
+        # Production only — writes WARNING+ to file
         'file': {
             'class': 'logging.FileHandler',
             'formatter': 'console',
             'filters': ['require_debug_false'],
-            'level': 'INFO',
+            'level': 'WARNING',
             'filename': 'debug.log',
         },
     },
     'loggers': {
+        # Django internals
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
         },
+        # SQL queries — INFO to avoid flooding in dev, switch to DEBUG when needed
         'django.db.backends': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
+            'propagate': False,
         },
+        # Email sending — useful to trace in both dev and production
         'django.core.mail': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
+            'propagate': False,
+        },
+        # Security events: admin brute-force, honeypot, invalid form attempts
+        'security': {
+            'handlers': ['console', 'file'],
+            'level': 'WARNING',
+            'propagate': False,
         },
     },
+}
+<<<<<<< HEAD
+>>>>>>> develop
+=======
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Backend API',
+    'DESCRIPTION': 'API documentation',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 >>>>>>> develop
