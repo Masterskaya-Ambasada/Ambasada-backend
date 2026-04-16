@@ -43,6 +43,7 @@ psycopg2 = "^2.9.11"
 django-modeltranslation = "^0.20.2"
 python-magic = "^0.4.27"
 Pillow = "^11.0"
+djangorestframework-simplejwt = "^5.5.1"
 
 [tool.poetry.group.dev.dependencies]
 # Code quality and formatting
