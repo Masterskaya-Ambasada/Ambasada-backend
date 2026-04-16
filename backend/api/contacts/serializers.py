@@ -30,5 +30,3 @@ Anti-spam techniques (for public forms):
 
 ...
 """
-
-

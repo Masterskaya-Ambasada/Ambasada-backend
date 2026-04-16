@@ -6,13 +6,13 @@ from drf_spectacular.views import (
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from projects.views import (
+from api.projects.views import (
     ProjectDetailView,
     ProjectListView,
     ProjectTagListView,
     ProjectTypeListView,
 )
-from users.views import AmbasadaTokenObtainPairView
+from api.users.views import AmbasadaTokenObtainPairView
 
 app_name = 'api'
 
@@ -38,9 +38,13 @@ project_urlpatterns = [
 ]
 
 # Объединение всех эндпоинтов версии v1
-v1_urlpatterns = [
-    path('auth/', include(auth_urlpatterns)),
-] + doc_urlpatterns + project_urlpatterns
+v1_urlpatterns = (
+    [
+        path('auth/', include(auth_urlpatterns)),
+    ]
+    + doc_urlpatterns
+    + project_urlpatterns
+)
 
 # Главный список путей
 urlpatterns = [

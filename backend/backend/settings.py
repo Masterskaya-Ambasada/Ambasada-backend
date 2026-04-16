@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     # local
     'projects',
     'users',
+    'contacts',
     'api',
 ]
 

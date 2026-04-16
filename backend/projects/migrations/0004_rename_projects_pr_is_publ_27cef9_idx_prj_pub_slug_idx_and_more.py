@@ -5,38 +5,38 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("projects", "0003_alter_project_year"),
+        ('projects', '0003_alter_project_year'),
     ]
 
     operations = [
         migrations.RenameIndex(
-            model_name="project",
-            new_name="prj_pub_slug_idx",
-            old_name="projects_pr_is_publ_27cef9_idx",
+            model_name='project',
+            new_name='prj_pub_slug_idx',
+            old_name='projects_pr_is_publ_27cef9_idx',
         ),
         migrations.RenameIndex(
-            model_name="project",
-            new_name="prj_pub_title_idx",
-            old_name="projects_pr_is_publ_0d60b6_idx",
+            model_name='project',
+            new_name='prj_pub_title_idx',
+            old_name='projects_pr_is_publ_0d60b6_idx',
         ),
         migrations.RenameIndex(
-            model_name="project",
-            new_name="prj_pub_title_idx-ru",
-            old_name="projects_pr_is_publ_d0f22f_idx",
+            model_name='project',
+            new_name='prj_pub_title_idx-ru',
+            old_name='projects_pr_is_publ_d0f22f_idx',
         ),
         migrations.RenameIndex(
-            model_name="project",
-            new_name="prj_pub_title_idx-en",
-            old_name="projects_pr_is_publ_96f4fd_idx",
+            model_name='project',
+            new_name='prj_pub_title_idx-en',
+            old_name='projects_pr_is_publ_96f4fd_idx',
         ),
         migrations.RenameIndex(
-            model_name="project",
-            new_name="prj_pub_title_idx-sr-latn",
-            old_name="projects_pr_is_publ_57a8cd_idx",
+            model_name='project',
+            new_name='prj_pub_title_idx-sr-latn',
+            old_name='projects_pr_is_publ_57a8cd_idx',
         ),
         migrations.RenameIndex(
-            model_name="project",
-            new_name="prj_pub_title_idx-sr-cyrl",
-            old_name="projects_pr_is_publ_b54cbb_idx",
+            model_name='project',
+            new_name='prj_pub_title_idx-sr-cyrl',
+            old_name='projects_pr_is_publ_b54cbb_idx',
         ),
     ]
