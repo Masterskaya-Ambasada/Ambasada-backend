@@ -1,6 +1,5 @@
-
-from django.urls import include, path
 from csp.decorators import csp_update
+from django.urls import include, path
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -61,15 +60,11 @@ project_urlpatterns = [
 ]
 
 # Объединение всех эндпоинтов версии v1
-v1_urlpatterns = (
-    [
-        path('auth/', include(auth_urlpatterns)),
-        path('users/', include(user_urlpatterns)),
-        path('projects/', include(project_urlpatterns)),
-    ]
-    + doc_urlpatterns
-    
-)
+v1_urlpatterns = [
+    path('auth/', include(auth_urlpatterns)),
+    path('users/', include(user_urlpatterns)),
+    path('projects/', include(project_urlpatterns)),
+] + doc_urlpatterns
 
 # Главный список путей
 urlpatterns = [
