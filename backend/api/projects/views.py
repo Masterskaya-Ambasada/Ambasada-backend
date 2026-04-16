@@ -15,8 +15,8 @@ from projects.models import (
     ProjectType,
     Tag,
 )
-from projects.pagination import ProjectLimitOffsetPagination
-from projects.serializers import (
+from api.projects.pagination import ProjectLimitOffsetPagination
+from api.projects.serializers import (
     ProjectCardSerializer,
     ProjectDetailSerializer,
     ProjectTypeSerializer,

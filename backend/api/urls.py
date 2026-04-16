@@ -6,7 +6,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from projects.views import (
+from api.projects.views import (
     ProjectDetailView,
     ProjectListView,
     ProjectTagListView,

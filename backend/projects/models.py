@@ -24,7 +24,7 @@ from projects.constants import (
     TITLE_MAX_LENGTH,
     URL_MAX_LENGTH,
 )
-from projects.validators import validate_string_list
+from .validators import validate_string_list
 
 
 class OrderedValidationQuerySet(models.QuerySet):
