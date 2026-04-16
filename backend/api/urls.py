@@ -12,7 +12,7 @@ from api.projects.views import (
     ProjectTagListView,
     ProjectTypeListView,
 )
-from api.users.views import AmbasadaTokenObtainPairView
+from api.users.views import AmbasadaTokenObtainPairView, TeamListView
 
 app_name = 'api'
 
@@ -28,6 +28,10 @@ auth_urlpatterns = [
     path('login/', AmbasadaTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
+# Эндпоинты пользователей и команды
+user_urlpatterns = [
+    path('team/', TeamListView.as_view(), name='team_list'),
+]
 
 # Эндпоинты проектов
 project_urlpatterns = [
@@ -41,9 +45,11 @@ project_urlpatterns = [
 v1_urlpatterns = (
     [
         path('auth/', include(auth_urlpatterns)),
+        path('users/', include(user_urlpatterns)),
+        path('projects/', include(project_urlpatterns)),
     ]
     + doc_urlpatterns
-    + project_urlpatterns
+    
 )
 
 # Главный список путей
