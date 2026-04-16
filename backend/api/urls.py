@@ -53,10 +53,10 @@ user_urlpatterns = [
 
 # Эндпоинты проектов
 project_urlpatterns = [
-    path('projects/', ProjectListView.as_view(), name='projects-list'),
-    path('projects/tags/', ProjectTagListView.as_view(), name='projects-tags'),
-    path('projects/types/', ProjectTypeListView.as_view(), name='projects-types'),
-    path('projects/<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
+    path('', ProjectListView.as_view(), name='projects-list'),
+    path('tags/', ProjectTagListView.as_view(), name='projects-tags'),
+    path('types/', ProjectTypeListView.as_view(), name='projects-types'),
+    path('<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
 ]
 
 # Объединение всех эндпоинтов версии v1

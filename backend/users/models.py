@@ -14,7 +14,8 @@ TUser = TypeVar('TUser', bound='User')
 
 def team_photo_path(instance: 'User', filename: str) -> str:
     """Путь загрузки фото участника команды."""
-    return f'team_photos/{instance.id}/{filename}'
+    folder_name = instance.email.replace('@', '_at_')
+    return f'team_photos/{folder_name}/{filename}'
 
 
 class UserQuerySet(models.QuerySet):
@@ -111,6 +112,7 @@ class User(AbstractUser):
     bio = models.TextField(
         _('биография'),
         blank=True,
+        max_length=BIO_MAX_LENGTH,
         validators=[MaxLengthValidator(BIO_MAX_LENGTH)],
         help_text=_('Краткое описание участника команды'),
     )
