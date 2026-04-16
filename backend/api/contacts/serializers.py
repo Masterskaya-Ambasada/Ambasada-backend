@@ -14,5 +14,5 @@ class ContactRequestSerializer(serializers.ModelSerializer):
 
     def validate_message(self, value):
         if len(value) > MAX_MESSAGE_LENGTH:
-            raise serializers.ValidationError(f'Message must not be longer than {MAX_MESSAGE_LENGTH} characters.')
+            raise serializers.ValidationError(f'Сообщение не должно быть длиннее {MAX_MESSAGE_LENGTH} символов.')
         return value
