@@ -1,6 +1,6 @@
-from rest_framework import status  # type: ignore
-from rest_framework.response import Response  # type: ignore
-from rest_framework.views import APIView  # type: ignore
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import SiteConfig
 from .serializers import SiteConfigSerializer
@@ -19,7 +19,7 @@ class InitView(APIView):
     """
 
     def get(self, request, *args, **kwargs):
-        config = SiteConfig.objects.prefetch_related('languages', 'socials').order_by('id').first()
+        config = SiteConfig.objects.prefetch_related('languages', 'socials').first()
 
         if not config:
             return Response(
@@ -28,4 +28,4 @@ class InitView(APIView):
             )
 
         serializer = SiteConfigSerializer(config)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)

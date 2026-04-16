@@ -4,8 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Language(models.Model):
-    code = models.CharField(max_length=10, unique=True)
-    label = models.CharField(max_length=50, unique=True)
+    code = models.CharField(max_length=10, unique=True, verbose_name=_('Код'))
+    label = models.CharField(max_length=50, unique=True, verbose_name=_('Название'))
 
     class Meta:
         verbose_name = _('Язык')
@@ -18,13 +18,15 @@ class Language(models.Model):
 
 class Social(models.Model):
     class SocialType(models.TextChoices):
-        TELEGRAM = 'telegram', 'Telegram'
-        INSTAGRAM = 'instagram', 'Instagram'
+        TELEGRAM = 'telegram', _('Telegram')
+        INSTAGRAM = 'instagram', _('Instagram')
+        FACEBOOK = 'facebook', _('Facebook')
+        LINKEDIN = 'linkedin', _('LinkedIn')
 
     social_type = models.CharField(
         max_length=20, choices=SocialType.choices, verbose_name=_('Тип соцсети'), db_index=True
     )
-    url = models.URLField()
+    url = models.URLField(verbose_name=_('URL'))
 
     class Meta:
         verbose_name = _('Социальная сеть')
@@ -47,7 +49,7 @@ class SiteConfig(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk and SiteConfig.objects.exists():
-            raise ValidationError('Может существовать только один объект настроек сайта')
+            raise ValidationError(_('Может существовать только один объект настроек сайта'))
         return super().save(*args, **kwargs)
 
     def __str__(self):
