@@ -10,16 +10,18 @@ from projects.models import (
     ProjectType,
     Tag,
 )
+
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from api.projects.pagination import ProjectLimitOffsetPagination
 from api.projects.serializers import (
     ProjectCardSerializer,
     ProjectDetailSerializer,
     ProjectTypeSerializer,
 )
-from rest_framework.generics import ListAPIView, RetrieveAPIView
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 
 class ProjectListView(ListAPIView):
