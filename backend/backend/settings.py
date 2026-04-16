@@ -203,9 +203,9 @@ LANGUAGES = [
 ]
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
-    'sr-latn': ('sr-cyrl', 'ru', 'en'),
-    'sr-cyrl': ('sr-latn', 'ru', 'en'),
-    'default': ('ru', 'en'),
+    'sr-latn': ('sr-cyrl', 'en', 'ru'),
+    'sr-cyrl': ('sr-latn', 'en', 'ru'),
+    'default': ('ru',),
 }
 
 MODELTRANSLATION_FALLBACK_VALUES = None

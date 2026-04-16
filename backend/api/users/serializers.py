@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -6,7 +7,11 @@ User = get_user_model()
 
 
 class AmbasadaTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """Расширенный сериализатор токенов c объектом user ."""
+    """Расширенный сериализатор токенов с данными пользователя и понятными ошибками."""
+
+    default_error_messages = {
+        'no_active_account': _('Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова.')
+    }
 
     def validate(self, attrs):
         data = super().validate(attrs)
