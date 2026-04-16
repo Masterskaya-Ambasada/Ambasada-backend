@@ -6,39 +6,39 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("contacts", "0002_alter_contactrequest_message"),
+        ('contacts', '0002_alter_contactrequest_message'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="contactrequest",
+            name='contactrequest',
             options={
-                "verbose_name": "Запрос обратной связи",
-                "verbose_name_plural": "Запросы обратной связи",
+                'verbose_name': 'Запрос обратной связи',
+                'verbose_name_plural': 'Запросы обратной связи',
             },
         ),
         migrations.AlterField(
-            model_name="contactrequest",
-            name="email",
-            field=models.EmailField(max_length=254, verbose_name="Email"),
+            model_name='contactrequest',
+            name='email',
+            field=models.EmailField(max_length=254, verbose_name='Email'),
         ),
         migrations.AlterField(
-            model_name="contactrequest",
-            name="message",
+            model_name='contactrequest',
+            name='message',
             field=models.TextField(
-                help_text="Введите сообщение",
+                help_text='Введите сообщение',
                 validators=[django.core.validators.MaxLengthValidator(500)],
-                verbose_name="Сообщение",
+                verbose_name='Сообщение',
             ),
         ),
         migrations.AlterField(
-            model_name="contactrequest",
-            name="name",
-            field=models.CharField(max_length=255, verbose_name="Имя"),
+            model_name='contactrequest',
+            name='name',
+            field=models.CharField(max_length=255, verbose_name='Имя'),
         ),
         migrations.AlterField(
-            model_name="contactrequest",
-            name="reason",
-            field=models.CharField(max_length=255, verbose_name="Причина обращения"),
+            model_name='contactrequest',
+            name='reason',
+            field=models.CharField(max_length=255, verbose_name='Причина обращения'),
         ),
     ]
