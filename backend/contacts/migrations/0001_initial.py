@@ -10,21 +10,21 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="ContactRequest",
+            name='ContactRequest',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("name", models.CharField(max_length=255)),
-                ("email", models.EmailField(max_length=254)),
-                ("message", models.TextField()),
-                ("reason", models.CharField(max_length=255)),
+                ('name', models.CharField(max_length=255)),
+                ('email', models.EmailField(max_length=254)),
+                ('message', models.TextField()),
+                ('reason', models.CharField(max_length=255)),
             ],
         ),
     ]
