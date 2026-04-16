@@ -64,9 +64,9 @@ v1_urlpatterns = [
     path('auth/', include(auth_urlpatterns)),
     path('users/', include(user_urlpatterns)),
     path('projects/', include(project_urlpatterns)),
-] + doc_urlpatterns
+]
 
 # Главный список путей
 urlpatterns = [
     path('v1/', include((v1_urlpatterns, 'v1'))),
-]
+] + doc_urlpatterns

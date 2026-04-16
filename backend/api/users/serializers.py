@@ -6,8 +6,23 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 User = get_user_model()
 
 
+class UserLoginResponseSerializer(serializers.Serializer):
+    """Схема данных пользователя. Используется для корректной генерации документации Swagger."""
+
+    id = serializers.IntegerField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    full_name = serializers.CharField(read_only=True)
+    role = serializers.CharField(read_only=True)
+    photo = serializers.URLField(read_only=True, allow_null=True)
+    is_staff = serializers.BooleanField(read_only=True)
+
+
 class AmbasadaTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """Расширенный сериализатор токенов с данными пользователя и понятными ошибками."""
+    """Расширенный сериализатор токенов с данными пользователя."""
+
+    access = serializers.CharField(read_only=True)
+    refresh = serializers.CharField(read_only=True)
+    user = UserLoginResponseSerializer(read_only=True)
 
     default_error_messages = {
         'no_active_account': _('Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова.')

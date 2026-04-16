@@ -123,7 +123,7 @@ from .models import Project
 @register(Project)
 class ProjectTranslationOptions(TranslationOptions):
     fields = ('title', 'description')
-    required_languages = ('ru', 'en') # уточнят у заказчика
+    required_languages = ('ru',) # уточнят у заказчика
 ```
 
 После этого библиотека создаёт дополнительные поля в базе:
