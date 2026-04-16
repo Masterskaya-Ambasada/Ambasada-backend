@@ -1,3 +1,5 @@
+"""Маршруты API приложения Ambasada."""
+
 from csp.decorators import csp_update
 from django.urls import include, path
 from drf_spectacular.views import (
@@ -40,6 +42,7 @@ doc_urlpatterns = [
         name='redoc',
     ),
 ]
+
 
 # Эндпоинты авторизации
 auth_urlpatterns = [

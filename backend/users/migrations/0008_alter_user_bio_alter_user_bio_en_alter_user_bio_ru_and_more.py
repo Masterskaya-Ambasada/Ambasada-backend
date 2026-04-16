@@ -6,67 +6,67 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("users", "0007_alter_user_options_alter_user_bio_alter_user_bio_en_and_more"),
+        ('users', '0007_alter_user_options_alter_user_bio_alter_user_bio_en_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="user",
-            name="bio",
+            model_name='user',
+            name='bio',
             field=models.TextField(
                 blank=True,
-                help_text="Краткое описание участника команды",
+                help_text='Краткое описание участника команды',
                 max_length=500,
                 validators=[django.core.validators.MaxLengthValidator(500)],
-                verbose_name="биография",
+                verbose_name='биография',
             ),
         ),
         migrations.AlterField(
-            model_name="user",
-            name="bio_en",
+            model_name='user',
+            name='bio_en',
             field=models.TextField(
                 blank=True,
-                help_text="Краткое описание участника команды",
+                help_text='Краткое описание участника команды',
                 max_length=500,
                 null=True,
                 validators=[django.core.validators.MaxLengthValidator(500)],
-                verbose_name="биография",
+                verbose_name='биография',
             ),
         ),
         migrations.AlterField(
-            model_name="user",
-            name="bio_ru",
+            model_name='user',
+            name='bio_ru',
             field=models.TextField(
                 blank=True,
-                help_text="Краткое описание участника команды",
+                help_text='Краткое описание участника команды',
                 max_length=500,
                 null=True,
                 validators=[django.core.validators.MaxLengthValidator(500)],
-                verbose_name="биография",
+                verbose_name='биография',
             ),
         ),
         migrations.AlterField(
-            model_name="user",
-            name="bio_sr_cyrl",
+            model_name='user',
+            name='bio_sr_cyrl',
             field=models.TextField(
                 blank=True,
-                help_text="Краткое описание участника команды",
+                help_text='Краткое описание участника команды',
                 max_length=500,
                 null=True,
                 validators=[django.core.validators.MaxLengthValidator(500)],
-                verbose_name="биография",
+                verbose_name='биография',
             ),
         ),
         migrations.AlterField(
-            model_name="user",
-            name="bio_sr_latn",
+            model_name='user',
+            name='bio_sr_latn',
             field=models.TextField(
                 blank=True,
-                help_text="Краткое описание участника команды",
+                help_text='Краткое описание участника команды',
                 max_length=500,
                 null=True,
                 validators=[django.core.validators.MaxLengthValidator(500)],
-                verbose_name="биография",
+                verbose_name='биография',
             ),
         ),
     ]
