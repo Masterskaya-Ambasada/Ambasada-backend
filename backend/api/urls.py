@@ -48,17 +48,13 @@ project_urlpatterns = [
     path('projects/<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
 ]
 
-<<<<<<< HEAD
 contact_urlpatterns = [
-    path('v1/contacts/', ContactCreateView.as_view(), name='contact-create'),
+    path('contact/', ContactCreateView.as_view(), name='contact-create'),
 ]
 
-
-urlpatterns = doc_urlpatterns + project_urlpatterns + contact_urlpatterns
-=======
 v1_urlpatterns = [
     path('', include(project_urlpatterns)),
+    path('', include(contact_urlpatterns)),
 ]
 
 urlpatterns = [path('v1/', include(v1_urlpatterns))] + doc_urlpatterns
->>>>>>> develop

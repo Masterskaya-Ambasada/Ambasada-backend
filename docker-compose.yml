@@ -41,8 +41,7 @@ services:
         - postgres-net
       env_file: .env
 
-    #command: python -We -bb backend/manage.py runserver 0.0.0.0:8000
-    command: python -bb backend/manage.py runserver 0.0.0.0:8000
+    command: python -We -bb backend/manage.py runserver 0.0.0.0:8000
 
 
 #  celery_worker:
