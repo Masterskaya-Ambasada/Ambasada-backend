@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from rest_framework import serializers
-
 from projects.constants import CONTENT_BLOCK_INDEX_WIDTH
 from projects.models import (
     Project,
@@ -11,6 +9,7 @@ from projects.models import (
     ProjectContentBlock,
     ProjectType,
 )
+from rest_framework import serializers
 
 
 class ProjectTypeSerializer(serializers.ModelSerializer):

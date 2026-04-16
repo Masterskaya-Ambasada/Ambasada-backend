@@ -24,6 +24,7 @@ from projects.constants import (
     TITLE_MAX_LENGTH,
     URL_MAX_LENGTH,
 )
+
 from .validators import validate_string_list
 
 

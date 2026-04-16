@@ -3,11 +3,6 @@
 from __future__ import annotations
 
 from django.db.models import Prefetch
-from rest_framework.generics import ListAPIView, RetrieveAPIView
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from projects.models import (
     Project,
     ProjectBlockButton,
@@ -15,6 +10,11 @@ from projects.models import (
     ProjectType,
     Tag,
 )
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from api.projects.pagination import ProjectLimitOffsetPagination
 from api.projects.serializers import (
     ProjectCardSerializer,
