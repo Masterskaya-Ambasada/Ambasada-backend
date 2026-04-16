@@ -24,7 +24,8 @@ from projects.constants import (
     TITLE_MAX_LENGTH,
     URL_MAX_LENGTH,
 )
-from projects.validators import validate_string_list
+
+from .validators import validate_string_list
 
 
 class OrderedValidationQuerySet(models.QuerySet):
@@ -202,8 +203,14 @@ class Project(models.Model):
         verbose_name_plural = _('Проекты')
         ordering = ('title', 'pk')
         indexes = [
-            models.Index(fields=('is_published', 'slug')),
-            models.Index(fields=('is_published', 'title')),
+            models.Index(
+                fields=('is_published', 'slug'),
+                name='prj_pub_slug_idx',
+            ),
+            models.Index(
+                fields=('is_published', 'title'),
+                name='prj_pub_title_idx',
+            ),
         ]
 
     def __str__(self) -> str:

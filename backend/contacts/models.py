@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.core.validators import MaxLengthValidator
 from django.db import models
 
@@ -14,3 +15,6 @@ class ContactRequest(models.Model):
 
     def __str__(self):
         return f'{self.name} <{self.email}> - {self.reason}'
+=======
+
+>>>>>>> develop
