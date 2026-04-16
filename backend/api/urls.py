@@ -4,9 +4,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-
 from rest_framework_simplejwt.views import TokenRefreshView
-
 
 from api.projects.views import (
     ProjectDetailView,

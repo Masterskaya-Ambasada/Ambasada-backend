@@ -17,13 +17,25 @@ def team_photo_path(instance: 'User', filename: str) -> str:
     return f'team_photos/{instance.id}/{filename}'
 
 
+class UserQuerySet(models.QuerySet):
+    def public(self):
+        """Возвращает только тех, кто отмечен для показа на сайте."""
+        return self.filter(is_public=True, is_active=True)
+
+
 class UserManager(BaseUserManager):
     """Менеджер пользователей (создание user/superuser)."""
+
+    def get_queryset(self):
+        return UserQuerySet(self.model, using=self._db)
+
+    def public(self):
+        return self.get_queryset().public()
 
     def _create_user(self, email: str, password: str | None, **extra_fields: Any) -> TUser:
         """Базовая логика создания пользователя."""
         if not email:
-            raise ValueError(_('Email address is required'))
+            raise ValueError(_('Электронная почта обязательна'))
 
         email = self.normalize_email(email).lower()
         user = self.model(email=email, **extra_fields)
@@ -48,9 +60,9 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('role', User.Role.ADMIN)
 
         if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True'))
+            raise ValueError(_('Суперпользователь должен иметь is_staff=True'))
         if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True'))
+            raise ValueError(_('Суперпользователь должен иметь is_superuser=True'))
 
         return self._create_user(email, password, **extra_fields)
 
@@ -59,23 +71,23 @@ class User(AbstractUser):
     """Модель пользователя (используется как участник команды)."""
 
     class Role(models.TextChoices):
-        USER = 'USER', _('User')
-        EDITOR = 'EDITOR', _('Content Editor')
-        ADMIN = 'ADMIN', _('Administrator')
+        USER = 'USER', _('Пользователь')
+        EDITOR = 'EDITOR', _('Контент-редактор')
+        ADMIN = 'ADMIN', _('Администратор')
 
     username = None
 
     email = models.EmailField(
-        _('email address'),
+        _('адрес электронной почты'),
         unique=True,
         db_index=True,
     )
 
-    first_name = models.CharField(_('first name'), max_length=NAME_MAX_LENGTH)
-    last_name = models.CharField(_('last name'), max_length=NAME_MAX_LENGTH)
+    first_name = models.CharField(_('имя'), max_length=NAME_MAX_LENGTH)
+    last_name = models.CharField(_('фамилия'), max_length=NAME_MAX_LENGTH)
 
     role = models.CharField(
-        _('role'),
+        _('роль'),
         max_length=ROLE_MAX_LENGTH,
         choices=Role.choices,
         default=Role.USER,
@@ -83,31 +95,31 @@ class User(AbstractUser):
     )
 
     position = models.CharField(
-        _('position'),
+        _('должность'),
         max_length=POSITION_MAX_LENGTH,
         blank=True,
-        help_text=_('Team role (e.g. architect, designer, etc.)'),
+        help_text=_('Роль в команде (например: архитектор, дизайнер и т.д.)'),
     )
 
     photo = models.ImageField(
-        _('photo'),
+        _('фотография'),
         upload_to=team_photo_path,
         blank=True,
         null=True,
     )
 
     bio = models.TextField(
-        _('biography'),
+        _('биография'),
         blank=True,
         validators=[MaxLengthValidator(BIO_MAX_LENGTH)],
-        help_text=_('Short team member description'),
+        help_text=_('Краткое описание участника команды'),
     )
 
     is_public = models.BooleanField(
-        _('public status'),
+        _('публичный статус'),
         default=False,
         db_index=True,
-        help_text=_('Display in the team block on the website'),
+        help_text=_('Отображать в блоке команды на сайте'),
     )
 
     objects = UserManager()
@@ -116,8 +128,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     class Meta:
-        verbose_name = _('User')
-        verbose_name_plural = _('Users')
+        verbose_name = _('Пользователь')
+        verbose_name_plural = _('Пользователи')
         ordering = ('email',)
         constraints = [
             UniqueConstraint(

@@ -7,4 +7,4 @@ class UsersConfig(AppConfig):
 
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'users'
-    verbose_name = _('User Management')
+    verbose_name = _('Управление пользователями')

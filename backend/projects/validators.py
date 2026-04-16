@@ -6,6 +6,7 @@ from typing import Any
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+
 from .constants import STRING_LIST_ITEM_MAX_LENGTH, STRING_LIST_MAX_ITEMS
 
 

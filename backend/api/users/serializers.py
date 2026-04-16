@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 User = get_user_model()
@@ -29,37 +30,12 @@ class AmbasadaTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
-""" # Ниже написал некоторые примеры сериализаторов, можно изменять под свой код.
 class TeamMemberSerializer(serializers.ModelSerializer):
-    \"""
-    Сериализатор для краткого отображения члена команды.
-    Используется в HomeView и AboutView.
-    \"""
-    name = serializers.CharField(source='full_name', read_only=True)
-    role = serializers.CharField(source='get_role_display', read_only=True) 
+    """Для блоков команды на главной и странице 'О нас'."""
 
-    class Meta:
-        model = User
-        fields = (
-            'id', 
-            'name', 
-            'role', 
-            'photo'
-        )
-
-
-class UserDetailSerializer(serializers.ModelSerializer):
-    \"""Детальный вывод участника команды.\"""
     name = serializers.CharField(source='full_name', read_only=True)
     role = serializers.CharField(source='get_role_display', read_only=True)
 
     class Meta:
         model = User
-        fields = (
-            'id', 
-            'name', 
-            'role', 
-            'position', 
-            'bio', 
-            'photo'
-        ) """
+        fields = ('id', 'name', 'role', 'photo')
