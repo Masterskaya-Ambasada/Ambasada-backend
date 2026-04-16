@@ -15,11 +15,11 @@ class ContactRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactRequest
-        fields = ["name", "email", "message", "reason", "contact_preference"]
+        fields = ['name', 'email', 'message', 'reason', 'contact_preference']
 
     def validate_message(self, value):
         if len(value) > MAX_MESSAGE_LENGTH:
             raise serializers.ValidationError(
-                f"Message must not be longer than {MAX_MESSAGE_LENGTH} characters."
+                f'Message must not be longer than {MAX_MESSAGE_LENGTH} characters.'
             )
         return value
