@@ -1,7 +1,7 @@
-"""Маршруты API приложения."""
+"""Маршруты API приложения Ambasada."""
 
 from csp.decorators import csp_update
-from django.urls import path
+from django.urls import include, path
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -42,23 +42,23 @@ doc_urlpatterns = [
 ]
 
 project_urlpatterns = [
-    path('v1/projects', ProjectListView.as_view(), name='projects-list'),
-    path('v1/projects/tags', ProjectTagListView.as_view(), name='projects-tags'),
-    path(
-        'v1/projects/types',
-        ProjectTypeListView.as_view(),
-        name='projects-types',
-    ),
-    path(
-        'v1/projects/<slug:project_id>',
-        ProjectDetailView.as_view(),
-        name='projects-detail',
-    ),
+    path('projects/', ProjectListView.as_view(), name='projects-list'),
+    path('projects/tags/', ProjectTagListView.as_view(), name='projects-tags'),
+    path('projects/types/', ProjectTypeListView.as_view(), name='projects-types'),
+    path('projects/<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
 ]
 
+<<<<<<< HEAD
 contact_urlpatterns = [
     path('v1/contacts/', ContactCreateView.as_view(), name='contact-create'),
 ]
 
 
 urlpatterns = doc_urlpatterns + project_urlpatterns + contact_urlpatterns
+=======
+v1_urlpatterns = [
+    path('', include(project_urlpatterns)),
+]
+
+urlpatterns = [path('v1/', include(v1_urlpatterns))] + doc_urlpatterns
+>>>>>>> develop
