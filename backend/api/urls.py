@@ -1,53 +1,28 @@
 """Маршруты API приложения."""
 
-from django.urls import path
+from django.urls import include, path
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from projects.views import (
-    ProjectDetailView,
-    ProjectListView,
-    ProjectTagListView,
-    ProjectTypeListView,
-)
 
-from .views import AboutAPIView
+from api.projects.urls import urlpatterns as project_urls
+from api.about.urls import urlpatterns as about_urls
 
 app_name = 'api'
 
 doc_urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path(
-        'docs/',
-        SpectacularSwaggerView.as_view(url_name='api:schema'),
-        name='swagger',
-    ),
-    path(
-        'redoc/',
-        SpectacularRedocView.as_view(url_name='api:schema'),
-        name='redoc',
-    ),
+    path('docs/', SpectacularSwaggerView.as_view(url_name='api:schema'), name='swagger'),
+    path('redoc/', SpectacularRedocView.as_view(url_name='api:schema'), name='redoc'),
 ]
 
-project_urlpatterns = [
-    path('v1/projects', ProjectListView.as_view(), name='projects-list'),
-    path('v1/projects/tags', ProjectTagListView.as_view(), name='projects-tags'),
-    path(
-        'v1/projects/types',
-        ProjectTypeListView.as_view(),
-        name='projects-types',
-    ),
-    path(
-        'v1/projects/<slug:project_id>',
-        ProjectDetailView.as_view(),
-        name='projects-detail',
-    ),
+v1_urlpatterns = [
+    path('', include(project_urls)),
+    path('', include(about_urls)),
 ]
 
-about_urlpatterns = [
-    path('v1/about', AboutAPIView.as_view(), name='about'),
-]
-
-urlpatterns = doc_urlpatterns + project_urlpatterns + about_urlpatterns
+urlpatterns = [
+    path('v1/', include(v1_urlpatterns)),
+] + doc_urlpatterns

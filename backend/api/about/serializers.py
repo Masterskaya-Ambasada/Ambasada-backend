@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from .models import AboutPage, GalleryImage, TeamMember, Value
+from backend.about.models import AboutPage, GalleryImage, TeamMember, Value
 
 
 class ValueSerializer(serializers.ModelSerializer):

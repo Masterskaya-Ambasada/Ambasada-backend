@@ -1,10 +1,11 @@
 """APIView для получения данных страницы 'О нас'."""
 
+from django.utils.translation import gettext_lazy as _
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import AboutPage, GalleryImage, TeamMember, Value
+from backend.about.models import AboutPage, GalleryImage, TeamMember, Value
 from .serializers import AboutPageSerializer
 
 
@@ -16,7 +17,10 @@ class AboutAPIView(APIView):
     def get(self, request):
         about = AboutPage.objects.first()
         if not about:
-            return Response({'detail': 'About page not found.'}, status=404)
+            return Response(
+                {'detail': _('Страница "О нас" не найдена.')},
+                status=404
+                )
 
         values = Value.objects.all()
         members = TeamMember.objects.all()
