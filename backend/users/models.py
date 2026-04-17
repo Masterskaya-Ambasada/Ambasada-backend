@@ -1,3 +1,4 @@
+import uuid
 from typing import Any, TypeVar
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -14,8 +15,7 @@ TUser = TypeVar('TUser', bound='User')
 
 def team_photo_path(instance: 'User', filename: str) -> str:
     """Путь загрузки фото участника команды."""
-    folder_name = instance.email.replace('@', '_at_')
-    return f'team_photos/{folder_name}/{filename}'
+    return f'team_photos/{instance.uuid}/{filename}'
 
 
 class UserQuerySet(models.QuerySet):
@@ -79,9 +79,16 @@ class User(AbstractUser):
     username = None
 
     email = models.EmailField(
-        _('адрес электронной почты'),
+        _('Адрес электронной почты'),
         unique=True,
         db_index=True,
+    )
+
+    uuid = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        verbose_name=_('Уникальный идентификатор'),
     )
 
     first_name = models.CharField(_('имя'), max_length=NAME_MAX_LENGTH)
@@ -103,14 +110,14 @@ class User(AbstractUser):
     )
 
     photo = models.ImageField(
-        _('фотография'),
+        _('Фотография'),
         upload_to=team_photo_path,
         blank=True,
         null=True,
     )
 
     bio = models.TextField(
-        _('биография'),
+        _('Биография'),
         blank=True,
         max_length=BIO_MAX_LENGTH,
         validators=[MaxLengthValidator(BIO_MAX_LENGTH)],
@@ -118,7 +125,7 @@ class User(AbstractUser):
     )
 
     is_public = models.BooleanField(
-        _('публичный статус'),
+        _('Публичный статус'),
         default=False,
         db_index=True,
         help_text=_('Отображать в блоке команды на сайте'),

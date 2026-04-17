@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-16 14:56+0300\n"
-"PO-Revision-Date: 2026-04-16 15:05+0300\n"
-"Last-Translator: Dzmitry <email@address>\n"
+"POT-Creation-Date: 2026-04-17 13:02+0300\n"
+"PO-Revision-Date: 2026-04-17 13:15+0300\n"
+"Last-Translator: Gemini\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -17,10 +17,11 @@ msgstr ""
 msgid "Интерфейс API"
 msgstr "Интерфейс API"
 
-#: backend/api/users/serializers.py:13
+#: backend/api/users/serializers.py:28
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
-msgstr "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
+msgstr ""
+"Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 
 #: backend/backend/settings.py:199
 msgid "Russian"
@@ -103,7 +104,7 @@ msgstr "Теги"
 
 #: backend/projects/models.py:154
 msgid "Slug"
-msgstr "Slug"
+msgstr "ЧПУ (slug)"
 
 #: backend/projects/models.py:157
 msgid "Уникальный идентификатор проекта для URL."
@@ -139,7 +140,7 @@ msgstr "URL главного изображения проекта."
 
 #: backend/projects/models.py:195
 msgid "Опубликован"
-msgstr "Опубликован"
+msgstr "Опубликовано"
 
 #: backend/projects/models.py:198
 msgid "Неопубликованные проекты не попадают в публичный API."
@@ -180,7 +181,8 @@ msgstr "Порядок"
 #: backend/projects/models.py:247
 msgid ""
 "Порядок блока внутри проекта. Используется для сортировки и генерации index."
-msgstr "Порядок блока внутри проекта. Используется для сортировки и генерации index."
+msgstr ""
+"Порядок блока внутри проекта. Используется для сортировки и генерации index."
 
 #: backend/projects/models.py:250
 msgid "Заголовок"
@@ -256,7 +258,7 @@ msgstr "Второе изображение допустимо только дл
 
 #: backend/projects/models.py:332
 msgid "Скачать файл"
-msgstr "Скачать файл"
+msgstr "Скачать"
 
 #: backend/projects/models.py:333
 msgid "Перейти по ссылке"
@@ -288,7 +290,7 @@ msgstr "Тип действия кнопки."
 
 #: backend/projects/models.py:359
 msgid "URL"
-msgstr "URL"
+msgstr "Ссылка"
 
 #: backend/projects/models.py:361
 msgid "Ссылка для скачивания или перехода."
@@ -319,80 +321,85 @@ msgstr "Каждый элемент списка должен быть стро�
 #, python-format
 msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
-msgstr "Длина каждого элемента списка не должна превышать %(max_length)s символов."
+msgstr ""
+"Длина каждого элемента списка не должна превышать %(max_length)s символов."
 
 #: backend/users/apps.py:10
 msgid "Управление пользователями"
 msgstr "Управление пользователями"
 
-#: backend/users/models.py:38
+#: backend/users/models.py:37
 msgid "Электронная почта обязательна"
 msgstr "Электронная почта обязательна"
 
-#: backend/users/models.py:63
+#: backend/users/models.py:62
 msgid "Суперпользователь должен иметь is_staff=True"
 msgstr "Суперпользователь должен иметь is_staff=True"
 
-#: backend/users/models.py:65
+#: backend/users/models.py:64
 msgid "Суперпользователь должен иметь is_superuser=True"
 msgstr "Суперпользователь должен иметь is_superuser=True"
 
-#: backend/users/models.py:74 backend/users/models.py:131
+#: backend/users/models.py:73 backend/users/models.py:138
 msgid "Пользователь"
 msgstr "Пользователь"
 
-#: backend/users/models.py:75
+#: backend/users/models.py:74
 msgid "Контент-редактор"
 msgstr "Контент-редактор"
 
-#: backend/users/models.py:76
+#: backend/users/models.py:75
 msgid "Администратор"
 msgstr "Администратор"
 
-#: backend/users/models.py:81
-msgid "адрес электронной почты"
-msgstr "адрес электронной почты"
+#: backend/users/models.py:80
+msgid "Адрес электронной почты"
+msgstr "Адрес электронной почты"
 
-#: backend/users/models.py:86
+#: backend/users/models.py:89
+msgid "Уникальный идентификатор"
+msgstr "Уникальный идентификатор"
+
+#: backend/users/models.py:92
 msgid "имя"
-msgstr "имя"
+msgstr "Имя"
 
-#: backend/users/models.py:87
+#: backend/users/models.py:93
 msgid "фамилия"
-msgstr "фамилия"
+msgstr "Фамилия"
 
-#: backend/users/models.py:90
+#: backend/users/models.py:96
 msgid "роль"
-msgstr "роль"
+msgstr "Роль"
 
-#: backend/users/models.py:98
+#: backend/users/models.py:104
 msgid "должность"
-msgstr "должность"
+msgstr "Должность"
 
-#: backend/users/models.py:101
+#: backend/users/models.py:107
 msgid "Роль в команде (например: архитектор, дизайнер и т.д.)"
 msgstr "Роль в команде (например: архитектор, дизайнер и т.д.)"
 
-#: backend/users/models.py:105
-msgid "фотография"
-msgstr "фотография"
+#: backend/users/models.py:111
+msgid "Фотография"
+msgstr "Фотография"
 
-#: backend/users/models.py:112
-msgid "биография"
-msgstr "биография"
+#: backend/users/models.py:118
+msgid "Биография"
+msgstr "Биография"
 
-#: backend/users/models.py:115
+#: backend/users/models.py:122
 msgid "Краткое описание участника команды"
 msgstr "Краткое описание участника команды"
 
-#: backend/users/models.py:119
-msgid "публичный статус"
-msgstr "публичный статус"
+#: backend/users/models.py:126
+msgid "Публичный статус"
+msgstr "Публичный статус"
 
-#: backend/users/models.py:122
+#: backend/users/models.py:129
 msgid "Отображать в блоке команды на сайте"
 msgstr "Отображать в блоке команды на сайте"
 
-#: backend/users/models.py:132
+#: backend/users/models.py:139
 msgid "Пользователи"
 msgstr "Пользователи"

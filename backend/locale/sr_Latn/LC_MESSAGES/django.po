@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-16 14:56+0300\n"
-"PO-Revision-Date: 2026-04-16 15:40+0300\n"
-"Last-Translator: Dzmitry <email@address>\n"
+"POT-Creation-Date: 2026-04-17 13:02+0300\n"
+"PO-Revision-Date: 2026-04-17 13:50+0300\n"
+"Last-Translator: Gemini\n"
 "Language-Team: Serbian (Latin)\n"
 "Language: sr_Latn\n"
 "MIME-Version: 1.0\n"
@@ -15,12 +15,12 @@ msgstr ""
 
 #: backend/api/apps.py:7
 msgid "Интерфейс API"
-msgstr "API Interfejs"
+msgstr "API interfejs"
 
-#: backend/api/users/serializers.py:13
+#: backend/api/users/serializers.py:28
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
-msgstr "Pogrešan email ili lozinka. Proverite podatke i pokušajte ponovo."
+msgstr "Pogrešna adresa e-pošte ili lozinka. Proverite podatke i pokušajte ponovo."
 
 #: backend/backend/settings.py:199
 msgid "Russian"
@@ -49,12 +49,12 @@ msgstr "Linkovi u porukama nisu dozvoljeni."
 #: backend/core/validators.py:172
 #, python-format
 msgid "File size %(size).1f MB exceeds the limit of %(max)d MB."
-msgstr "Veličina datoteke %(size).1f MB premašuje limit od %(max)d MB."
+msgstr "Veličina fajla %(size).1f MB premašuje limit od %(max)d MB."
 
 #: backend/core/validators.py:186
 #, python-format
 msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
-msgstr "Tip datoteke \"%(mime)s\" nije dozvoljen. Prihvaćeni: %(allowed)s."
+msgstr "Tip fajla \"%(mime)s\" nije dozvoljen. Dozvoljeni: %(allowed)s."
 
 #: backend/projects/apps.py:11
 msgid "Урбанистические проекты"
@@ -292,7 +292,7 @@ msgstr "URL"
 
 #: backend/projects/models.py:361
 msgid "Ссылка для скачивания или перехода."
-msgstr "Link za preuzimanje ili prelazak."
+msgstr "Link za preuzimanje ili navigaciju."
 
 #: backend/projects/models.py:365
 msgid "Кнопка контентного блока"
@@ -304,7 +304,7 @@ msgstr "Dugmad sadržajnih blokova"
 
 #: backend/projects/validators.py:16
 msgid "Поле string_list должно быть списком строк."
-msgstr "Polje string_list mora biti lista stringova."
+msgstr "Polje string_list mora biti lista niski."
 
 #: backend/projects/validators.py:19
 #, python-format
@@ -313,7 +313,7 @@ msgstr "Dozvoljeno je najviše %(max_items)s stavki u listi."
 
 #: backend/projects/validators.py:24
 msgid "Каждый элемент списка должен быть строкой."
-msgstr "Svaka stavka u listi mora biti string."
+msgstr "Svaka stavka u listi mora biti niska."
 
 #: backend/projects/validators.py:27
 #, python-format
@@ -325,74 +325,78 @@ msgstr "Dužina svake stavke liste ne sme prelaziti %(max_length)s karaktera."
 msgid "Управление пользователями"
 msgstr "Upravljanje korisnicima"
 
-#: backend/users/models.py:38
+#: backend/users/models.py:37
 msgid "Электронная почта обязательна"
-msgstr "Email adresa je obavezna"
+msgstr "E-mail adresa je obavezna"
 
-#: backend/users/models.py:63
+#: backend/users/models.py:62
 msgid "Суперпользователь должен иметь is_staff=True"
 msgstr "Superkorisnik mora imati is_staff=True"
 
-#: backend/users/models.py:65
+#: backend/users/models.py:64
 msgid "Суперпользователь должен иметь is_superuser=True"
 msgstr "Superkorisnik mora imati is_superuser=True"
 
-#: backend/users/models.py:74 backend/users/models.py:131
+#: backend/users/models.py:73 backend/users/models.py:138
 msgid "Пользователь"
 msgstr "Korisnik"
 
-#: backend/users/models.py:75
+#: backend/users/models.py:74
 msgid "Контент-редактор"
 msgstr "Urednik sadržaja"
 
-#: backend/users/models.py:76
+#: backend/users/models.py:75
 msgid "Администратор"
 msgstr "Administrator"
 
-#: backend/users/models.py:81
-msgid "адрес электронной почты"
-msgstr "email adresa"
+#: backend/users/models.py:80
+msgid "Адрес электронной почты"
+msgstr "E-mail adresa"
 
-#: backend/users/models.py:86
+#: backend/users/models.py:89
+msgid "Уникальный идентификатор"
+msgstr "Jedinstveni identifikator"
+
+#: backend/users/models.py:92
 msgid "имя"
-msgstr "ime"
+msgstr "Ime"
 
-#: backend/users/models.py:87
+#: backend/users/models.py:93
 msgid "фамилия"
-msgstr "prezime"
+msgstr "Prezime"
 
-#: backend/users/models.py:90
+#: backend/users/models.py:96
 msgid "роль"
-msgstr "uloga"
+msgstr "Uloga"
 
-#: backend/users/models.py:98
+#: backend/users/models.py:104
 msgid "должность"
-msgstr "pozicija"
+msgstr "Pozicija"
 
-#: backend/users/models.py:101
+#: backend/users/models.py:107
 msgid "Роль в команде (например: архитектор, дизайнер и т.д.)"
 msgstr "Uloga u timu (npr. arhitekta, dizajner, itd.)"
 
-#: backend/users/models.py:105
-msgid "фотография"
-msgstr "fotografija"
+#: backend/users/models.py:111
+msgid "Фотография"
+msgstr "Fotografija"
 
-#: backend/users/models.py:112
-msgid "биография"
-msgstr "biografija"
+#: backend/users/models.py:118
+msgid "Биография"
+msgstr "Biografija"
 
-#: backend/users/models.py:115
+#: backend/users/models.py:122
 msgid "Краткое описание участника команды"
 msgstr "Kratak opis člana tima"
 
-#: backend/users/models.py:119
-msgid "публичный статус"
-msgstr "javni status"
+#: backend/users/models.py:126
+msgid "Публичный статус"
+msgstr "Javni status"
 
-#: backend/users/models.py:122
+#: backend/users/models.py:129
 msgid "Отображать в блоке команды на сайте"
 msgstr "Prikaži u bloku tima na sajtu"
 
-#: backend/users/models.py:132
+#: backend/users/models.py:139
 msgid "Пользователи"
 msgstr "Korisnici"

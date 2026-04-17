@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-16 15:25+0300\n"
-"PO-Revision-Date: 2026-04-16 15:35+0300\n"
+"POT-Creation-Date: 2026-04-17 13:02+0300\n"
+"PO-Revision-Date: 2026-04-17 13:45+0300\n"
 "Last-Translator: Dzmitry <email@address>\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Language: sr_Cyrl\n"
@@ -17,10 +17,11 @@ msgstr ""
 msgid "Интерфейс API"
 msgstr "АПИ интерфејс"
 
-#: backend/api/users/serializers.py:13
+#: backend/api/users/serializers.py:28
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
-msgstr "Погрешан емаил или лозинка. Проверите податке и покушајте поново."
+msgstr ""
+"Погрешна адреса е-поште или лозинка. Проверите податке и покушајте поново."
 
 #: backend/backend/settings.py:199
 msgid "Russian"
@@ -87,19 +88,19 @@ msgstr "Типови пројеката"
 
 #: backend/projects/models.py:133
 msgid "Уникальный идентификатор тега для API и фильтров."
-msgstr "Јединствени идентификатор тага за АПИ и филтере."
+msgstr "Јединствени идентификатор ознаке за АПИ и филтере."
 
 #: backend/projects/models.py:138
 msgid "Отображаемое название тега."
-msgstr "Приказано име тага."
+msgstr "Приказано име ознаке."
 
 #: backend/projects/models.py:142
 msgid "Тег"
-msgstr "Таг"
+msgstr "Ознака"
 
 #: backend/projects/models.py:143 backend/projects/models.py:191
 msgid "Теги"
-msgstr "Тагови"
+msgstr "Ознаке"
 
 #: backend/projects/models.py:154
 msgid "Slug"
@@ -180,7 +181,8 @@ msgstr "Редослед"
 #: backend/projects/models.py:247
 msgid ""
 "Порядок блока внутри проекта. Используется для сортировки и генерации index."
-msgstr "Редослед блока унутар пројекта. Користи се за сортирање и генерисање индекса."
+msgstr ""
+"Редослед блока унутар пројекта. Користи се за сортирање и генерисање индекса."
 
 #: backend/projects/models.py:250
 msgid "Заголовок"
@@ -304,7 +306,7 @@ msgstr "Дугмад садржајних блокова"
 
 #: backend/projects/validators.py:16
 msgid "Поле string_list должно быть списком строк."
-msgstr "Поље string_list мора бити листа ниски (стрингова)."
+msgstr "Поље string_list мора бити листа ниски."
 
 #: backend/projects/validators.py:19
 #, python-format
@@ -313,7 +315,7 @@ msgstr "Дозвољено је највише %(max_items)s ставки у л�
 
 #: backend/projects/validators.py:24
 msgid "Каждый элемент списка должен быть строкой."
-msgstr "Свака ставка у листи мора бити ниска (стринг)."
+msgstr "Свака ставка у листи мора бити ниска."
 
 #: backend/projects/validators.py:27
 #, python-format
@@ -325,74 +327,78 @@ msgstr "Дужина сваке ставке листе не сме прелаз
 msgid "Управление пользователями"
 msgstr "Управљање корисницима"
 
-#: backend/users/models.py:38
+#: backend/users/models.py:37
 msgid "Электронная почта обязательна"
-msgstr "Емаил адреса је обавезна"
+msgstr "Адреса е-поште је обавезна"
 
-#: backend/users/models.py:63
+#: backend/users/models.py:62
 msgid "Суперпользователь должен иметь is_staff=True"
 msgstr "Суперкорисник мора имати is_staff=True"
 
-#: backend/users/models.py:65
+#: backend/users/models.py:64
 msgid "Суперпользователь должен иметь is_superuser=True"
 msgstr "Суперкорисник мора имати is_superuser=True"
 
-#: backend/users/models.py:74 backend/users/models.py:131
+#: backend/users/models.py:73 backend/users/models.py:138
 msgid "Пользователь"
 msgstr "Корисник"
 
-#: backend/users/models.py:75
+#: backend/users/models.py:74
 msgid "Контент-редактор"
 msgstr "Уредник садржаја"
 
-#: backend/users/models.py:76
+#: backend/users/models.py:75
 msgid "Администратор"
 msgstr "Администратор"
 
-#: backend/users/models.py:81
-msgid "адрес электронной почты"
-msgstr "емаил адреса"
+#: backend/users/models.py:80
+msgid "Адрес электронной почты"
+msgstr "Адреса е-поште"
 
-#: backend/users/models.py:86
+#: backend/users/models.py:89
+msgid "Уникальный идентификатор"
+msgstr "Јединствени идентификатор"
+
+#: backend/users/models.py:92
 msgid "имя"
-msgstr "име"
+msgstr "Име"
 
-#: backend/users/models.py:87
+#: backend/users/models.py:93
 msgid "фамилия"
-msgstr "презиме"
+msgstr "Презиме"
 
-#: backend/users/models.py:90
+#: backend/users/models.py:96
 msgid "роль"
-msgstr "улога"
+msgstr "Улога"
 
-#: backend/users/models.py:98
+#: backend/users/models.py:104
 msgid "должность"
-msgstr "позиција"
+msgstr "Позиција"
 
-#: backend/users/models.py:101
+#: backend/users/models.py:107
 msgid "Роль в команде (например: архитектор, дизайнер и т.д.)"
-msgstr "Улога у тиму (нпр. архитекта, дизајнер, итд.)"
+msgstr "Улога у тиму (нпр. архитекта, дизајнер итд.)"
 
-#: backend/users/models.py:105
-msgid "фотография"
-msgstr "фотографија"
+#: backend/users/models.py:111
+msgid "Фотография"
+msgstr "Фотографија"
 
-#: backend/users/models.py:112
-msgid "биография"
-msgstr "биографија"
+#: backend/users/models.py:118
+msgid "Биография"
+msgstr "Биографија"
 
-#: backend/users/models.py:115
+#: backend/users/models.py:122
 msgid "Краткое описание участника команды"
 msgstr "Кратак опис члана тима"
 
-#: backend/users/models.py:119
-msgid "публичный статус"
-msgstr "јавни статус"
+#: backend/users/models.py:126
+msgid "Публичный статус"
+msgstr "Јавни статус"
 
-#: backend/users/models.py:122
+#: backend/users/models.py:129
 msgid "Отображать в блоке команды на сайте"
 msgstr "Прикажи у блоку тима на сајту"
 
-#: backend/users/models.py:132
+#: backend/users/models.py:139
 msgid "Пользователи"
 msgstr "Корисници"
