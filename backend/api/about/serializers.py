@@ -1,8 +1,7 @@
 """Сериализаторы для API."""
 
+from about.models import AboutPage, GalleryImage, TeamMember, Value
 from rest_framework import serializers
-
-from backend.about.models import AboutPage, GalleryImage, TeamMember, Value
 
 
 class ValueSerializer(serializers.ModelSerializer):
@@ -67,7 +66,10 @@ class AboutPageSerializer(serializers.ModelSerializer):
             },
             'gallery_carousel': {
                 'title': instance.gallery_title,
-                'images': [{'id': f'img_{img.id}', 'url': img.image.url, 'alt': img.alt} for img in images],
+                'images': [
+                    {'id': f'img_{img.id}', 'url': img.image.url if img.image else None, 'alt': img.alt}
+                    for img in images
+                ],
             },
         }
 

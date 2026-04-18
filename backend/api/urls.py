@@ -8,14 +8,13 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
+from api.about.views import AboutAPIView
 from api.projects.views import (
     ProjectDetailView,
     ProjectListView,
     ProjectTagListView,
     ProjectTypeListView,
 )
-
-from api.about.views import AboutAPIView
 
 app_name = 'api'
 

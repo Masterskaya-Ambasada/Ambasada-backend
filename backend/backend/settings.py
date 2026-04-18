@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'projects',
     'users',
+    'about',
     'api',
 ]
 
