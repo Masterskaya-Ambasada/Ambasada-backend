@@ -1,10 +1,8 @@
-from django.shortcuts import render
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from site_config.models import SiteConfig
 
-from backend.site_config.models import SiteConfig
 from .serializers import SiteConfigSerializer
 
 
@@ -31,4 +29,3 @@ class InitView(APIView):
 
         serializer = SiteConfigSerializer(config)
         return Response(serializer.data, status=status.HTTP_200_OK)
-

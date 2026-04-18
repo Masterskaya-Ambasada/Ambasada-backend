@@ -1,6 +1,5 @@
 from rest_framework import serializers
-
-from .models import Language, SiteConfig, Social
+from site_config.models import Language, SiteConfig, Social
 
 
 class LanguageSerializer(serializers.ModelSerializer):

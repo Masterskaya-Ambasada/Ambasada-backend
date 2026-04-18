@@ -2,14 +2,11 @@
 
 from csp.decorators import csp_update
 from django.urls import include, path
-
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-
-from api.site_config.views import InitView
 
 from api.projects.views import (
     ProjectDetailView,
@@ -17,6 +14,7 @@ from api.projects.views import (
     ProjectTagListView,
     ProjectTypeListView,
 )
+from api.site_config.views import InitView
 
 app_name = 'api'
 
