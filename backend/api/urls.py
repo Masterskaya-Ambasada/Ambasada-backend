@@ -1,19 +1,58 @@
-from django.urls import path  # type: ignore
+"""Маршруты API приложения Ambasada."""
+
+from csp.decorators import csp_update
+from django.urls import include, path
+
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
 
-from .views import InitView
+from api.site_config.views import InitView
+
+from api.projects.views import (
+    ProjectDetailView,
+    ProjectListView,
+    ProjectTagListView,
+    ProjectTypeListView,
+)
 
 app_name = 'api'
 
 doc_urlpatterns = [
     path('init/', InitView.as_view(), name='init'),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('docs/', SpectacularSwaggerView.as_view(url_name='api:schema'), name='swagger'),
-    path('redoc/', SpectacularRedocView.as_view(url_name='api:schema'), name='redoc'),
+    path(
+        'docs/',
+        csp_update(
+            SCRIPT_SRC=("'unsafe-inline'", 'cdn.jsdelivr.net'),
+            STYLE_SRC=("'unsafe-inline'", 'cdn.jsdelivr.net'),
+            IMG_SRC=('data:', 'cdn.jsdelivr.net'),
+        )(SpectacularSwaggerView.as_view(url_name='api:schema')),
+        name='swagger',
+    ),
+    path(
+        'redoc/',
+        csp_update(
+            SCRIPT_SRC=('cdn.jsdelivr.net',),
+            STYLE_SRC=("'unsafe-inline'", 'fonts.googleapis.com'),
+            FONT_SRC=('fonts.gstatic.com',),
+            IMG_SRC=('data:',),
+        )(SpectacularRedocView.as_view(url_name='api:schema')),
+        name='redoc',
+    ),
 ]
 
-urlpatterns = [] + doc_urlpatterns
+project_urlpatterns = [
+    path('projects/', ProjectListView.as_view(), name='projects-list'),
+    path('projects/tags/', ProjectTagListView.as_view(), name='projects-tags'),
+    path('projects/types/', ProjectTypeListView.as_view(), name='projects-types'),
+    path('projects/<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
+]
+
+v1_urlpatterns = [
+    path('', include(project_urlpatterns)),
+]
+
+urlpatterns = [path('v1/', include(v1_urlpatterns))] + doc_urlpatterns

@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     'projects',
     'users',
     'api',
+    'site_config',
 ]
 
 MIDDLEWARE = [
