@@ -16,12 +16,14 @@ from api.projects.views import (
     ProjectTagListView,
     ProjectTypeListView,
 )
+from api.site_config.views import InitView
 from api.users.views import AmbasadaTokenObtainPairView, TeamListView
 
 app_name = 'api'
 
 # Эндпоинты документации
 doc_urlpatterns = [
+    path('init/', InitView.as_view(), name='init'),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path(
         'docs/',
