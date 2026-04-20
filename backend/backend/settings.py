@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     'projects',
     'users',
     'api',
+    'contacts',
 ]
 
 MIDDLEWARE = [

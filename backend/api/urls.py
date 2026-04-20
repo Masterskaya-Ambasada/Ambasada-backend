@@ -8,6 +8,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
+from api.contacts.views import ContactCreateView
 from api.projects.views import (
     ProjectDetailView,
     ProjectListView,
@@ -47,8 +48,13 @@ project_urlpatterns = [
     path('projects/<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
 ]
 
+contact_urlpatterns = [
+    path('contact/', ContactCreateView.as_view(), name='contact-create'),
+]
+
 v1_urlpatterns = [
     path('', include(project_urlpatterns)),
+    path('', include(contact_urlpatterns)),
 ]
 
 urlpatterns = [path('v1/', include(v1_urlpatterns))] + doc_urlpatterns
