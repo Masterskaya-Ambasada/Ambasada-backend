@@ -10,6 +10,16 @@ from projects.models import (
 )
 
 
+@pytest.fixture(autouse=True)
+def disable_rest_framework_throttling(settings):
+    """Отключает throttling в тестах, чтобы они не зависели от Redis."""
+    settings.REST_FRAMEWORK = {
+        **settings.REST_FRAMEWORK,
+        'DEFAULT_THROTTLE_CLASSES': [],
+        'DEFAULT_THROTTLE_RATES': {},
+    }
+
+
 @pytest.fixture
 def api_client():
     return APIClient()
