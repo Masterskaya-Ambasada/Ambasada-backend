@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 13:08+0300\n"
-"PO-Revision-Date: 2026-04-17 13:10+0300\n"
+"POT-Creation-Date: 2026-04-20 08:34+0300\n"
+"PO-Revision-Date: 2026-04-20 09:00+0300\n"
 "Last-Translator: Gemini AI\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -22,19 +22,19 @@ msgid ""
 msgstr ""
 "Incorrect email or password. Please check your credentials and try again."
 
-#: backend/backend/settings.py:199
+#: backend/backend/settings.py:198
 msgid "Russian"
 msgstr "Russian"
 
-#: backend/backend/settings.py:200
+#: backend/backend/settings.py:199
 msgid "English"
 msgstr "English"
 
-#: backend/backend/settings.py:201
+#: backend/backend/settings.py:200
 msgid "Serbian (Latin)"
 msgstr "Serbian (Latin)"
 
-#: backend/backend/settings.py:202
+#: backend/backend/settings.py:201
 msgid "Serbian (Cyrillic)"
 msgstr "Serbian (Cyrillic)"
 
@@ -400,3 +400,53 @@ msgstr "Display in the team section on the website"
 #: backend/users/models.py:139
 msgid "Пользователи"
 msgstr "Users"
+
+#: backend/api/contacts/views.py:11
+msgid "Создание запроса обратной связи"
+msgstr "Submit a contact request"
+
+#: backend/api/contacts/views.py:13
+msgid ""
+"Принимает данные формы и сохраняет их.Поле `contact_preference` — "
+"техническое антиспам-поле (honeypot). Фронтенд должен передавать его пустым. "
+"Если поле заполнено, запрос считается спамом и игнорируется."
+msgstr ""
+"Accepts form data and saves it. The `contact_preference` field is a "
+"technical anti-spam field (honeypot). The frontend must send it empty. "
+"If the field is filled, the request is considered spam and is ignored."
+
+#: backend/api/contacts/views.py:40
+msgid "Получено"
+msgstr "Received"
+
+#: backend/contacts/models.py:13
+msgid "Имя"
+msgstr "Name"
+
+#: backend/contacts/models.py:16
+msgid "Email"
+msgstr "Email"
+
+#: backend/contacts/models.py:20
+msgid "Сообщение"
+msgstr "Message"
+
+#: backend/contacts/models.py:22
+msgid "Введите сообщение"
+msgstr "Enter a message"
+
+#: backend/contacts/models.py:26
+msgid "Причина обращения"
+msgstr "Reason for contact"
+
+#: backend/contacts/models.py:29
+msgid "Дата создания"
+msgstr "Creation date"
+
+#: backend/contacts/models.py:32
+msgid "Запрос обратной связи"
+msgstr "Feedback request"
+
+#: backend/contacts/models.py:33
+msgid "Запросы обратной связи"
+msgstr "Feedback requests"

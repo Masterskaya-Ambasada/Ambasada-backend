@@ -96,8 +96,8 @@ INSTALLED_APPS = [
     # local
     'projects',
     'users',
-    'contacts',
     'api',
+    'contacts',
 ]
 
 MIDDLEWARE = [

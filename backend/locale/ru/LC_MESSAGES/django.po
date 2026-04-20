@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 13:02+0300\n"
-"PO-Revision-Date: 2026-04-17 13:15+0300\n"
+"POT-Creation-Date: 2026-04-20 08:34+0300\n"
+"PO-Revision-Date: 2026-04-20 09:15+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -23,19 +23,19 @@ msgid ""
 msgstr ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 
-#: backend/backend/settings.py:199
+#: backend/backend/settings.py:198 backend/backend/settings.py:199
 msgid "Russian"
 msgstr "Русский"
 
-#: backend/backend/settings.py:200
+#: backend/backend/settings.py:199 backend/backend/settings.py:200
 msgid "English"
 msgstr "Английский"
 
-#: backend/backend/settings.py:201
+#: backend/backend/settings.py:200 backend/backend/settings.py:201
 msgid "Serbian (Latin)"
 msgstr "Сербский (латиница)"
 
-#: backend/backend/settings.py:202
+#: backend/backend/settings.py:201 backend/backend/settings.py:202
 msgid "Serbian (Cyrillic)"
 msgstr "Сербский (кириллица)"
 
@@ -403,3 +403,53 @@ msgstr "Отображать в блоке команды на сайте"
 #: backend/users/models.py:139
 msgid "Пользователи"
 msgstr "Пользователи"
+
+#: backend/api/contacts/views.py:11
+msgid "Создание запроса обратной связи"
+msgstr "Создание запроса обратной связи"
+
+#: backend/api/contacts/views.py:13
+msgid ""
+"Принимает данные формы и сохраняет их. Поле `contact_preference` — "
+"техническое антиспам-поле (honeypot). Фронтенд должен передавать его пустым. "
+"Если поле заполнено, запрос считается спамом и игнорируется."
+msgstr ""
+"Принимает данные формы и сохраняет их. Поле `contact_preference` — "
+"техническое антиспам-поле (honeypot). Фронтенд должен передавать его пустым. "
+"Если поле заполнено, запрос считается спамом и игнорируется."
+
+#: backend/api/contacts/views.py:40
+msgid "Получено"
+msgstr "Получено"
+
+#: backend/contacts/models.py:13
+msgid "Имя"
+msgstr "Имя"
+
+#: backend/contacts/models.py:16
+msgid "Email"
+msgstr "Email"
+
+#: backend/contacts/models.py:20
+msgid "Сообщение"
+msgstr "Сообщение"
+
+#: backend/contacts/models.py:22
+msgid "Введите сообщение"
+msgstr "Введите сообщение"
+
+#: backend/contacts/models.py:26
+msgid "Причина обращения"
+msgstr "Причина обращения"
+
+#: backend/contacts/models.py:29
+msgid "Дата создания"
+msgstr "Дата создания"
+
+#: backend/contacts/models.py:32
+msgid "Запрос обратной связи"
+msgstr "Запрос обратной связи"
+
+#: backend/contacts/models.py:33
+msgid "Запросы обратной связи"
+msgstr "Запросы обратной связи"

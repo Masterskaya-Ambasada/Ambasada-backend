@@ -9,6 +9,7 @@ from drf_spectacular.views import (
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
+from api.contacts.views import ContactCreateView
 from api.projects.views import (
     ProjectDetailView,
     ProjectListView,
@@ -62,12 +63,19 @@ project_urlpatterns = [
     path('<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
 ]
 
+# Эндпоинты контактов
+contact_urlpatterns = [
+    path('', ContactCreateView.as_view(), name='contact-create'),
+]
+
 # Объединение всех эндпоинтов версии v1
 v1_urlpatterns = [
     path('auth/', include(auth_urlpatterns)),
     path('users/', include(user_urlpatterns)),
     path('projects/', include(project_urlpatterns)),
+    path('contact/', include(contact_urlpatterns)),
 ]
+
 
 # Главный список путей
 urlpatterns = [

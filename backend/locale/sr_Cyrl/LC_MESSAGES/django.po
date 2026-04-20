@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 13:02+0300\n"
-"PO-Revision-Date: 2026-04-17 13:45+0300\n"
+"POT-Creation-Date: 2026-04-20 08:34+0300\n"
+"PO-Revision-Date: 2026-04-20 09:30+0300\n"
 "Last-Translator: Dzmitry <email@address>\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Language: sr_Cyrl\n"
@@ -17,27 +17,77 @@ msgstr ""
 msgid "Интерфейс API"
 msgstr "АПИ интерфејс"
 
+#: backend/api/contacts/views.py:11
+msgid "Создание запроса обратной связи"
+msgstr "Креирање захтева за повратне информације"
+
+#: backend/api/contacts/views.py:13
+msgid ""
+"Принимает данные формы и сохраняет их. Поле `contact_preference` — "
+"техническое антиспам-поле (honeypot). Фронтенд должен передавать его пустым. "
+"Если поле заполнено, запрос считается спамом и игнорируется."
+msgstr ""
+"Прихвата податке из форме и чува их. Поље `contact_preference` је техничко "
+"анти-спам поље (honeypot). Фронтенд треба да га пошаље празно. Ако је поље "
+"попуњено, захтев се сматра спамом и игнорише се."
+
+#: backend/api/contacts/views.py:40
+msgid "Получено"
+msgstr "Примљено"
+
 #: backend/api/users/serializers.py:28
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 msgstr ""
 "Погрешна адреса е-поште или лозинка. Проверите податке и покушајте поново."
 
-#: backend/backend/settings.py:199
+#: backend/backend/settings.py:198 backend/backend/settings.py:199
 msgid "Russian"
 msgstr "Руски"
 
-#: backend/backend/settings.py:200
+#: backend/backend/settings.py:199 backend/backend/settings.py:200
 msgid "English"
 msgstr "Енглески"
 
-#: backend/backend/settings.py:201
+#: backend/backend/settings.py:200 backend/backend/settings.py:201
 msgid "Serbian (Latin)"
 msgstr "Српски (латиница)"
 
-#: backend/backend/settings.py:202
+#: backend/backend/settings.py:201 backend/backend/settings.py:202
 msgid "Serbian (Cyrillic)"
 msgstr "Српски (ћирилица)"
+
+#: backend/contacts/models.py:13
+msgid "Имя"
+msgstr "Име"
+
+#: backend/contacts/models.py:16
+msgid "Email"
+msgstr "Е-пошта"
+
+#: backend/contacts/models.py:20
+msgid "Сообщение"
+msgstr "Порука"
+
+#: backend/contacts/models.py:22
+msgid "Введите сообщение"
+msgstr "Унесите поруку"
+
+#: backend/contacts/models.py:26
+msgid "Причина обращения"
+msgstr "Разлог обраћања"
+
+#: backend/contacts/models.py:29
+msgid "Дата создания"
+msgstr "Датум креирања"
+
+#: backend/contacts/models.py:32
+msgid "Запрос обратной связи"
+msgstr "Захтев за повратне информације"
+
+#: backend/contacts/models.py:33
+msgid "Запросы обратной связи"
+msgstr "Захтеви за повратне информације"
 
 #: backend/core/validators.py:112
 msgid "HTML tags are not allowed."

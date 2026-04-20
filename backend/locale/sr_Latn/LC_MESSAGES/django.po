@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 13:02+0300\n"
-"PO-Revision-Date: 2026-04-17 13:50+0300\n"
+"POT-Creation-Date: 2026-04-20 08:34+0300\n"
+"PO-Revision-Date: 2026-04-20 09:45+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: Serbian (Latin)\n"
 "Language: sr_Latn\n"
@@ -17,26 +17,72 @@ msgstr ""
 msgid "Интерфейс API"
 msgstr "API interfejs"
 
+#: backend/api/contacts/views.py:11
+msgid "Создание запроса обратной связи"
+msgstr "Kreiranje zahteva za povratne informacije"
+
+#: backend/api/contacts/views.py:13
+msgid ""
+"Принимает данные формы и сохраняет их. Поле `contact_preference` — "
+"техническое антиспам-поле (honeypot). Фронтенд должен передавать его пустым. "
+"Если поле заполнено, запрос считается спамом и игнорируется."
+msgstr ""
+"Prihvata podatke iz forme i čuva ih. Polje `contact_preference` je tehničko "
+"anti-spam polje (honeypot). Frontend treba da ga pošalje prazno. Ako je polje "
+"popunjeno, zahtev se smatra spamom i ignoriše se."
+
+#: backend/api/contacts/views.py:40
+msgid "Получено"
+msgstr "Primljeno"
+
 #: backend/api/users/serializers.py:28
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 msgstr "Pogrešna adresa e-pošte ili lozinka. Proverite podatke i pokušajte ponovo."
 
-#: backend/backend/settings.py:199
+#: backend/backend/settings.py:198 backend/backend/settings.py:199
 msgid "Russian"
 msgstr "Ruski"
 
-#: backend/backend/settings.py:200
+#: backend/backend/settings.py:199 backend/backend/settings.py:200
 msgid "English"
 msgstr "Engleski"
 
-#: backend/backend/settings.py:201
+#: backend/backend/settings.py:200 backend/backend/settings.py:201
 msgid "Serbian (Latin)"
 msgstr "Srpski (latinica)"
 
-#: backend/backend/settings.py:202
+#: backend/backend/settings.py:201 backend/backend/settings.py:202
 msgid "Serbian (Cyrillic)"
 msgstr "Srpski (ćirilica)"
+
+#: backend/contacts/models.py:13
+msgid "Имя"
+msgstr "Ime"
+
+#: backend/contacts/models.py:16
+msgid "Email"
+msgstr "Email"
+
+#: backend/contacts/models.py:20
+msgid "Сообщение"
+msgstr "Poruka"
+
+#: backend/contacts/models.py:22
+msgid "Введите сообщение"
+msgstr "Unesite poruku"
+
+#: backend/contacts/models.py:26
+msgid "Причина обращения"
+msgstr "Razlog obraćanja"
+
+#: backend/contacts/models.py:29
+msgid "Дата создания"
+msgstr "Datum kreiranja"
+
+#: backend/contacts/models.py:32
+msgid "Запрос обратной связи"
+msgstr "Zahtev za povratne informacije"
 
 #: backend/core/validators.py:112
 msgid "HTML tags are not allowed."
@@ -56,7 +102,7 @@ msgstr "Veličina fajla %(size).1f MB premašuje limit od %(max)d MB."
 msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
 msgstr "Tip fajla \"%(mime)s\" nije dozvoljen. Dozvoljeni: %(allowed)s."
 
-#: backend/projects/apps.py:11
+#: backend/projects/apps.py:6 backend/projects/apps.py:11
 msgid "Урбанистические проекты"
 msgstr "Urbanistički projekti"
 
