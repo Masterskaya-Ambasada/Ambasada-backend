@@ -29,7 +29,7 @@ class ProjectCardSerializer(serializers.ModelSerializer):
     project_type = serializers.CharField(source='project_type.label', read_only=True)
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='label')
     year = serializers.SerializerMethodField()
-    image = serializers.URLField(source='cover_image', read_only=True)
+    image = serializers.ImageField(source='cover_image', read_only=True)
 
     class Meta:
         model = Project
