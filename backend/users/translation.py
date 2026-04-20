@@ -5,4 +5,9 @@ from .models import User
 
 @register(User)
 class UserTranslationOptions(TranslationOptions):
-    """Модель перевода для модели User, с указанием переводимых полей."""
+    """Настройки перевода для модели User."""
+
+    fields = (
+        'position',
+        'bio',
+    )
