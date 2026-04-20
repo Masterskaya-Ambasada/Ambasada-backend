@@ -16,6 +16,7 @@ class ContactRequest(models.Model):
         verbose_name=_('Email'),
     )
     message = models.TextField(
+        max_length=MAX_MESSAGE_LENGTH,
         verbose_name=_('Сообщение'),
         validators=[MaxLengthValidator(MAX_MESSAGE_LENGTH)],
         help_text=_('Введите сообщение'),
@@ -25,9 +26,12 @@ class ContactRequest(models.Model):
         verbose_name=_('Причина обращения'),
     )
 
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Дата создания'))
+
     class Meta:
         verbose_name = _('Запрос обратной связи')
         verbose_name_plural = _('Запросы обратной связи')
+        ordering = ('-created_at',)
 
     def __str__(self):
         return f'{self.name} <{self.email}> - {self.reason}'

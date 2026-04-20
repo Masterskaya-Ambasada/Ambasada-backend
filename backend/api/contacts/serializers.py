@@ -1,4 +1,3 @@
-from contacts.constants import MAX_MESSAGE_LENGTH
 from contacts.models import ContactRequest
 from rest_framework import serializers
 
@@ -11,8 +10,3 @@ class ContactRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactRequest
         fields = ['name', 'email', 'message', 'reason', 'contact_preference']
-
-    def validate_message(self, value):
-        if len(value) > MAX_MESSAGE_LENGTH:
-            raise serializers.ValidationError(f'Сообщение не должно быть длиннее {MAX_MESSAGE_LENGTH} символов.')
-        return value

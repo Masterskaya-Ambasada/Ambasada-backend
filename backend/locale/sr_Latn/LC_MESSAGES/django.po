@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-08 17:31+0300\n"
+"POT-Creation-Date: 2026-04-20 08:34+0300\n"
 "PO-Revision-Date: 2026-04-08 17:50+0300\n"
 "Last-Translator: Dzmitry <email@address>\n"
 "Language-Team: Serbian (Latin)\n"
@@ -10,27 +10,71 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: backend/api/apps.py:6
+#: backend/api/apps.py:7
 msgid "Интерфейс API"
 msgstr "API Interfejs"
 
-#: backend/backend/settings.py:137
+#: backend/api/contacts/views.py:11
+msgid "Создание запроса обратной связи"
+msgstr ""
+
+#: backend/api/contacts/views.py:13
+msgid ""
+"Принимает данные формы и сохраняет их.Поле `contact_preference` — "
+"техническое антиспам-поле (honeypot). Фронтенд должен передавать его пустым. "
+"Если поле заполнено, запрос считается спамом и игнорируется."
+msgstr ""
+
+#: backend/api/contacts/views.py:40
+msgid "Получено"
+msgstr ""
+
+#: backend/backend/settings.py:198
 msgid "Russian"
 msgstr "Ruski"
 
-#: backend/backend/settings.py:138
+#: backend/backend/settings.py:199
 msgid "English"
 msgstr "Engleski"
 
-#: backend/backend/settings.py:139
+#: backend/backend/settings.py:200
 msgid "Serbian (Latin)"
 msgstr "Srpski (latinica)"
 
-#: backend/backend/settings.py:140
+#: backend/backend/settings.py:201
 msgid "Serbian (Cyrillic)"
 msgstr "Srpski (ćirilica)"
+
+#: backend/contacts/models.py:13
+msgid "Имя"
+msgstr ""
+
+#: backend/contacts/models.py:16
+msgid "Email"
+msgstr ""
+
+#: backend/contacts/models.py:20
+msgid "Сообщение"
+msgstr ""
+
+#: backend/contacts/models.py:22
+msgid "Введите сообщение"
+msgstr ""
+
+#: backend/contacts/models.py:26
+msgid "Причина обращения"
+msgstr ""
+
+#: backend/contacts/models.py:29
+msgid "Дата создания"
+msgstr ""
+
+#: backend/contacts/models.py:32
+msgid "Запрос обратной связи"
+msgstr ""
 
 #: backend/projects/apps.py:6
 msgid "Урбанистические проекты"
