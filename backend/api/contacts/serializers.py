@@ -1,33 +1,12 @@
+from contacts.models import ContactRequest
 from rest_framework import serializers
 
-from .models import Language, SiteConfig, Social
 
+class ContactRequestSerializer(serializers.ModelSerializer):
+    """Сериалайзер для формы обратной связи со встроенным антиспамом."""
 
-class LanguageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Language
-        fields = ['code', 'label']
-
-
-class SocialSerializer(serializers.ModelSerializer):
-    social_type = serializers.CharField(source='get_social_type_display', read_only=True)
+    contact_preference = serializers.CharField(required=False, allow_blank=True, write_only=True)
 
     class Meta:
-        model = Social
-        fields = ['social_type', 'url']
-
-
-class SiteConfigSerializer(serializers.ModelSerializer):
-    languages = LanguageSerializer(many=True, read_only=True)
-    socials = SocialSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = SiteConfig
-
-        fields = [
-            'site_name',
-            'seo_description',
-            'languages',
-            'socials',
-            'copyright',
-        ]
+        model = ContactRequest
+        fields = ['name', 'email', 'message', 'reason', 'contact_preference']
