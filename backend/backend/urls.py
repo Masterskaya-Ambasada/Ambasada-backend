@@ -7,7 +7,7 @@ from django.urls import include, path
 urlpatterns = [] + i18n_patterns(
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
-    path('api/', include('api.urls', namespace='api')),
+    path('api/v1/', include('api.urls', namespace='api')),
     prefix_default_language=False,
 )
 

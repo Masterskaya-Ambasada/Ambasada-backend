@@ -43,6 +43,7 @@ psycopg2 = "^2.9.11"
 django-modeltranslation = "^0.20.2"
 python-magic = "^0.4.27"
 Pillow = "^11.0"
+djangorestframework-simplejwt = "^5.5.1"
 
 [tool.poetry.group.dev.dependencies]
 # Code quality and formatting
@@ -116,7 +117,7 @@ flake8-quotes.inline-quotes = "single"
 
 
 [tool.ruff.lint.per-file-ignores]
-"*/migrations/*.py" = ["D101", "E501", "RUF012"]
+"*/migrations/*.py" = ["D101", "E501", "RUF012", "Q000"]
 "backend/projects/migrations/0004_rename_projects_pr_is_publ_27cef9_idx_prj_pub_slug_idx_and_more.py" = ["Q000"]
 "tests/*.py" = ["S101"]
 "*/models.py" = ["D105"]

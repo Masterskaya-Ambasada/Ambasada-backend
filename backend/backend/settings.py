@@ -1,6 +1,7 @@
 """Base settings."""
 
 import sys
+from datetime import timedelta
 from pathlib import Path
 
 from decouple import Config, RepositoryEnv
@@ -88,14 +89,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third-party
     'rest_framework',
-    'rest_framework.authtoken',
     'corsheaders',
     'django_filters',
     'django_extensions',
     'drf_spectacular',
+    # local
     'projects',
     'users',
     'api',
+    'site_config',
+    'contacts',
 ]
 
 MIDDLEWARE = [
@@ -201,9 +204,9 @@ LANGUAGES = [
 ]
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
-    'sr-latn': ('sr-cyrl', 'ru', 'en'),
-    'sr-cyrl': ('sr-latn', 'ru', 'en'),
-    'default': ('ru', 'en'),
+    'sr-latn': ('sr-cyrl', 'en', 'ru'),
+    'sr-cyrl': ('sr-latn', 'en', 'ru'),
+    'default': ('ru',),
 }
 
 MODELTRANSLATION_FALLBACK_VALUES = None
@@ -236,8 +239,7 @@ MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DI
 # REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
@@ -269,6 +271,15 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+}
 
 LOGGING = {
     'version': 1,
