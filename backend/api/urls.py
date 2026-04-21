@@ -23,7 +23,6 @@ app_name = 'api'
 
 # Эндпоинты документации
 doc_urlpatterns = [
-    path('init/', InitView.as_view(), name='init'),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path(
         'docs/',
@@ -72,6 +71,7 @@ contact_urlpatterns = [
 
 # Объединение всех эндпоинтов версии v1
 v1_urlpatterns = [
+    path('init/', InitView.as_view(), name='init'),
     path('auth/', include(auth_urlpatterns)),
     path('users/', include(user_urlpatterns)),
     path('projects/', include(project_urlpatterns)),
