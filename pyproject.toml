@@ -44,6 +44,9 @@ django-modeltranslation = "^0.20.2"
 python-magic = "^0.4.27"
 Pillow = "^11.0"
 djangorestframework-simplejwt = "^5.5.1"
+django-import-export = "^4.4.0"
+deep-translator = "^1.11.4"
+google-trans-new = "^1.1.9"
 
 [tool.poetry.group.dev.dependencies]
 # Code quality and formatting

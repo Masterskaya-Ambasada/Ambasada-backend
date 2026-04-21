@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'api',
     'site_config',
     'contacts',
+    'import_export',
 ]
 
 MIDDLEWARE = [
