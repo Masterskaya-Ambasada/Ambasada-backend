@@ -1,11 +1,10 @@
+from django.utils.translation import gettext_lazy as _
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from site_config.models import SiteConfig
-from rest_framework.permissions import AllowAny
-
-from drf_spectacular.utils import extend_schema
-from django.utils.translation import gettext_lazy as _
 
 from .serializers import SiteConfigSerializer
 
