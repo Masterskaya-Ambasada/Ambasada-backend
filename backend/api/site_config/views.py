@@ -4,9 +4,17 @@ from rest_framework.views import APIView
 from site_config.models import SiteConfig
 from rest_framework.permissions import AllowAny
 
+from drf_spectacular.utils import extend_schema
+from django.utils.translation import gettext_lazy as _
+
 from .serializers import SiteConfigSerializer
 
 
+@extend_schema(
+    summary=_('Инициализация сайта'),
+    description=_('Возвращает глобальные настройки: название, SEO, языки и соцсети.'),
+    responses={200: SiteConfigSerializer},
+)
 class InitView(APIView):
     """
     Возвращает константы сайта.
