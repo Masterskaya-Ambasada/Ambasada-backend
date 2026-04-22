@@ -28,6 +28,7 @@ class InitView(APIView):
     """
 
     permission_classes = [AllowAny]
+
     def get(self, request, *args, **kwargs):
         config = SiteConfig.objects.prefetch_related('languages', 'socials').first()
 
