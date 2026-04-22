@@ -87,6 +87,4 @@ v1_urlpatterns = [
 ]
 
 # Главный список путей
-urlpatterns = [
-    path('v1/', include(v1_urlpatterns)),
-]
+urlpatterns = v1_urlpatterns

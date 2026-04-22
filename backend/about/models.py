@@ -29,35 +29,6 @@ class Value(models.Model):
         return Truncator(self.title).chars(50)
 
 
-class TeamMember(models.Model):
-    """Сущность члена команды."""
-
-    name = models.CharField(
-        max_length=255,
-        verbose_name=_('Имя'),
-        default='',
-    )
-    role = models.CharField(
-        max_length=255,
-        verbose_name=_('Роль'),
-        default='',
-    )
-    photo = models.ImageField(
-        upload_to='team/',
-        verbose_name=_('Фото'),
-        blank=True,
-        null=True,
-    )
-
-    class Meta:
-        verbose_name = _('Участник команды')
-        verbose_name_plural = _('Участники команды')
-        ordering = ['id']
-
-    def __str__(self):
-        return Truncator(self.name).chars(50)
-
-
 class GalleryImage(models.Model):
     """Сущность изображения для галереи."""
 
@@ -101,17 +72,6 @@ class AboutPage(models.Model):
         verbose_name=_('Заголовок блока "О нас"'),
         default='',
     )
-    paragraph_1 = models.TextField(
-        validators=[MaxLengthValidator(250)],
-        verbose_name=_('Параграф 1'),
-        default='',
-    )
-    paragraph_2 = models.TextField(
-        validators=[MaxLengthValidator(250)],
-        verbose_name=_('Параграф 2'),
-        default='',
-    )
-
     image_left = models.ImageField(
         upload_to='about/',
         verbose_name=_('Левое изображение hero'),
@@ -168,5 +128,36 @@ class AboutPage(models.Model):
         verbose_name = _('Страница "О нас"')
         verbose_name_plural = _('Страницы "О нас"')
 
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.hero_title or 'Страница "О нас"'
+
+
+class AboutParagraph(models.Model):
+    """Параграф страницы 'О нас' (разделён на акцент и основной текст)."""
+
+    about = models.ForeignKey(
+        AboutPage,
+        on_delete=models.CASCADE,
+        related_name='paragraphs',
+        verbose_name=_('Страница "О нас"'),
+    )
+    first_sentence = models.CharField(
+        max_length=255,
+        verbose_name=_('Акцент (первое предложение)'),
+    )
+    main_text = models.TextField(
+        verbose_name=_('Основной текст'),
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_('Порядок'),
+    )
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = _('Параграф')
+        verbose_name_plural = _('Параграфы')

@@ -1,7 +1,9 @@
 """Сериализаторы для API."""
 
-from about.models import AboutPage, GalleryImage, TeamMember, Value
+from about.models import AboutPage, GalleryImage, Value
+from api.users.serializers import TeamMemberSerializer
 from rest_framework import serializers
+from users.models import User
 
 
 class ValueSerializer(serializers.ModelSerializer):
@@ -10,14 +12,6 @@ class ValueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Value
         fields = ['id', 'title', 'text']
-
-
-class TeamMemberSerializer(serializers.ModelSerializer):
-    """Сериализация членов команды."""
-
-    class Meta:
-        model = TeamMember
-        fields = ['id', 'name', 'role', 'photo']
 
 
 class GalleryImageSerializer(serializers.ModelSerializer):
@@ -34,7 +28,7 @@ class AboutPageSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         ctx = self.context
         values = ctx.get('values', Value.objects.all())
-        members = ctx.get('members', TeamMember.objects.all())
+        members = ctx.get('members', User.objects.public())
         images = ctx.get('images', GalleryImage.objects.all())
 
         return {
@@ -46,7 +40,13 @@ class AboutPageSerializer(serializers.ModelSerializer):
             },
             'about_section': {
                 'title': instance.about_title,
-                'paragraphs': [instance.paragraph_1, instance.paragraph_2],
+                'paragraphs': [
+                    {
+                        'first_sentence': p.first_sentence,
+                        'main_text': p.main_text,
+                    }
+                    for p in instance.paragraphs.order_by('order')
+                ],
                 'action_button': {
                     'label': instance.button_label,
                     'link': instance.button_link,
