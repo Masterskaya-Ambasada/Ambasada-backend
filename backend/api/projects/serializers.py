@@ -48,6 +48,42 @@ class ProjectCardSerializer(serializers.ModelSerializer):
         return str(obj.year)
 
 
+class ProjectDetailInfoSerializer(ProjectCardSerializer):
+    """Сериализатор верхнего блока детальной страницы проекта."""
+
+    image = serializers.SerializerMethodField()
+
+    def _build_image_url(self, image) -> str | None:
+        """Преобразует ImageFieldFile в URL в формате DRF."""
+        if not image:
+            return None
+
+        image_url = image.url
+        request = self.context.get('request')
+        if request is not None:
+            return request.build_absolute_uri(image_url)
+        return image_url
+
+    def get_image(self, obj: Project) -> list[str]:
+        """
+        Возвращает массив изображений для карусели детальной страницы.
+
+        Приоритет отдается изображениям из связанной галереи.
+        Если галерея пуста, используется cover_image как fallback.
+        """
+        image_urls: list[str] = []
+        for gallery_image in obj.gallery_images.all():
+            image_url = self._build_image_url(gallery_image.image)
+            if image_url:
+                image_urls.append(image_url)
+
+        if image_urls:
+            return image_urls
+
+        cover_image_url = self._build_image_url(obj.cover_image)
+        return [cover_image_url] if cover_image_url else []
+
+
 class ProjectBlockButtonSerializer(serializers.ModelSerializer):
     """Сериализатор кнопки контентного блока проекта."""
 
@@ -96,7 +132,7 @@ class ProjectContentBlockSerializer(serializers.ModelSerializer):
 class ProjectDetailSerializer(serializers.ModelSerializer):
     """Сериализатор детальной страницы проекта."""
 
-    info = ProjectCardSerializer(source='*', read_only=True)
+    info = ProjectDetailInfoSerializer(source='*', read_only=True)
     content_blocks = ProjectContentBlockSerializer(many=True, read_only=True)
 
     class Meta:

@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from projects.models import (
     Project,
     ProjectBlockButton,
     ProjectContentBlock,
+    ProjectGalleryImage,
     ProjectType,
     Tag,
 )
@@ -30,6 +31,22 @@ class ProjectListView(ListAPIView):
     serializer_class = ProjectCardSerializer
     pagination_class = ProjectLimitOffsetPagination
 
+    def _normalize_tag_filters(self) -> list[str]:
+        """
+        Возвращает список значений tag из query params.
+
+        Поддерживает оба формата:
+        - повторяемый параметр: ?tag=urban&tag=belgrade
+        - CSV в одном параметре: ?tag=urban,belgrade
+        """
+        tags: list[str] = []
+        for raw_tag in self.request.query_params.getlist('tag'):
+            for tag in raw_tag.split(','):
+                normalized_tag = tag.strip()
+                if normalized_tag:
+                    tags.append(normalized_tag)
+        return tags
+
     def get_queryset(self):
         tag_queryset = Tag.objects.order_by('label', 'pk')
         queryset = (
@@ -37,12 +54,17 @@ class ProjectListView(ListAPIView):
             .select_related('project_type')
             .prefetch_related(Prefetch('tags', queryset=tag_queryset))
         )
-        project_type = self.request.query_params.get('project_type')
+        project_type = (self.request.query_params.get('project_type') or '').strip()
         if project_type:
-            queryset = queryset.filter(project_type__slug=project_type)
-        tags = [tag for tag in self.request.query_params.getlist('tag') if tag]
+            queryset = queryset.filter(Q(project_type__slug=project_type) | Q(project_type__label__iexact=project_type))
+
+        tags = self._normalize_tag_filters()
         if tags:
-            queryset = queryset.filter(tags__slug__in=tags)
+            tag_filter = Q()
+            for tag in tags:
+                tag_filter |= Q(tags__slug=tag) | Q(tags__label__iexact=tag)
+            queryset = queryset.filter(tag_filter)
+
         search = (self.request.query_params.get('search') or '').strip()
         if search:
             queryset = queryset.filter(title__icontains=search)
@@ -60,6 +82,7 @@ class ProjectDetailView(RetrieveAPIView):
     def get_queryset(self):
         tag_queryset = Tag.objects.order_by('label', 'pk')
         button_queryset = ProjectBlockButton.objects.order_by('order', 'pk')
+        gallery_queryset = ProjectGalleryImage.objects.order_by('order', 'pk')
         block_queryset = ProjectContentBlock.objects.prefetch_related(
             Prefetch('buttons', queryset=button_queryset)
         ).order_by('order', 'pk')
@@ -68,6 +91,7 @@ class ProjectDetailView(RetrieveAPIView):
             .select_related('project_type')
             .prefetch_related(
                 Prefetch('tags', queryset=tag_queryset),
+                Prefetch('gallery_images', queryset=gallery_queryset),
                 Prefetch('content_blocks', queryset=block_queryset),
             )
         )
