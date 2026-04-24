@@ -8,6 +8,8 @@ class UserTranslationOptions(TranslationOptions):
     """Настройки перевода для модели User."""
 
     fields = (
+        'first_name',
+        'last_name',
         'position',
         'bio',
     )

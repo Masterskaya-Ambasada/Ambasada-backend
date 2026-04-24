@@ -82,31 +82,49 @@ class User(AbstractUser):
         _('Адрес электронной почты'),
         unique=True,
         db_index=True,
+        help_text=_('Используется для входа в систему. Должен быть уникальным.'),
     )
 
     uuid = models.UUIDField(
+        _('Уникальный идентификатор'),
         default=uuid.uuid4,
         editable=False,
         unique=True,
-        verbose_name=_('Уникальный идентификатор'),
+        help_text=_('Системный номер. Генерируется автоматически и не подлежит изменению.'),
     )
 
-    first_name = models.CharField(_('имя'), max_length=NAME_MAX_LENGTH)
-    last_name = models.CharField(_('фамилия'), max_length=NAME_MAX_LENGTH)
+    first_name = models.CharField(
+        _('Имя'),
+        max_length=NAME_MAX_LENGTH,
+        help_text=_('Укажите имя участника. Оно будет отображаться на сайте в блоке команды.'),
+    )
+    last_name = models.CharField(
+        _('Фамилия'),
+        max_length=NAME_MAX_LENGTH,
+        help_text=_('Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте.'),
+    )
 
     role = models.CharField(
-        _('роль'),
+        _('Роль'),
         max_length=ROLE_MAX_LENGTH,
         choices=Role.choices,
         default=Role.USER,
         db_index=True,
+        help_text=_(
+            'Определяет уровень доступа к панели управления: '
+            'Пользователь — нет доступа, Редактор — управление контентом, '
+            'Администратор — полный доступ.'
+        ),
     )
 
     position = models.CharField(
-        _('должность'),
+        _('Должность'),
         max_length=POSITION_MAX_LENGTH,
         blank=True,
-        help_text=_('Роль в команде (например: архитектор, дизайнер и т.д.)'),
+        help_text=_(
+            'Укажите профессиональную роль (например: «Ведущий архитектор»). '
+            'Отображается в карточке сотрудника на сайте.'
+        ),
     )
 
     photo = models.ImageField(
@@ -121,14 +139,14 @@ class User(AbstractUser):
         blank=True,
         max_length=BIO_MAX_LENGTH,
         validators=[MaxLengthValidator(BIO_MAX_LENGTH)],
-        help_text=_('Краткое описание участника команды'),
+        help_text=_('Расскажите об опыте и ключевых компетенциях. ' 'Максимум 500 символов.'),
     )
 
     is_public = models.BooleanField(
         _('Публичный статус'),
         default=False,
         db_index=True,
-        help_text=_('Отображать в блоке команды на сайте'),
+        help_text=_('Если галочка стоит, пользователь будет виден в списке команды на сайте.'),
     )
 
     objects = UserManager()
@@ -138,7 +156,7 @@ class User(AbstractUser):
 
     class Meta:
         verbose_name = _('Пользователь')
-        verbose_name_plural = _('Пользователи')
+        verbose_name_plural = _('Пользователи и команда')
         ordering = ('email',)
         constraints = [
             UniqueConstraint(
