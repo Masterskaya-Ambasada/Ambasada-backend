@@ -132,6 +132,7 @@ class User(AbstractUser):
         upload_to=team_photo_path,
         blank=True,
         null=True,
+        help_text=_('Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, размер до 2 МБ.'),
     )
 
     bio = models.TextField(

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:05+0300\n"
+"POT-Creation-Date: 2026-04-24 17:33+0300\n"
 "PO-Revision-Date: 2026-04-24 10:10+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: English\n"
@@ -58,7 +58,7 @@ msgstr "Serbian (Latin)"
 msgid "Serbian (Cyrillic)"
 msgstr "Serbian (Cyrillic)"
 
-#: backend/contacts/models.py:13 backend/users/models.py:98
+#: backend/contacts/models.py:13 backend/users/models.py:97
 msgid "Имя"
 msgstr "First Name"
 
@@ -465,7 +465,7 @@ msgstr "Superuser must have is_staff=True"
 msgid "Суперпользователь должен иметь is_superuser=True"
 msgstr "Superuser must have is_superuser=True"
 
-#: backend/users/models.py:75 backend/users/models.py:156
+#: backend/users/models.py:75 backend/users/models.py:159
 msgid "Пользователь"
 msgstr "User"
 
@@ -485,28 +485,30 @@ msgstr "Email Address"
 msgid "Используется для входа в систему. Должен быть уникальным."
 msgstr "Used for logging in. Must be unique."
 
-#: backend/users/models.py:90
+#: backend/users/models.py:89
 msgid "Уникальный идентификатор"
 msgstr "Unique Identifier"
 
-#: backend/users/models.py:94
+#: backend/users/models.py:93
 msgid "Системный номер. Генерируется автоматически и не подлежит изменению."
 msgstr "System ID. Generated automatically and cannot be changed."
 
-#: backend/users/models.py:100
+#: backend/users/models.py:99
 msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
-msgstr "Specify the member's first name. It will be displayed in the team section."
+msgstr ""
+"Specify the member's first name. It will be displayed in the team section."
 
-#: backend/users/models.py:103
+#: backend/users/models.py:102
 msgid "Фамилия"
 msgstr "Last Name"
 
-#: backend/users/models.py:105
+#: backend/users/models.py:104
 msgid ""
 "Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
-msgstr "Specify the last name. Combined with the first name, it forms the full name."
+msgstr ""
+"Specify the last name. Combined with the first name, it forms the full name."
 
-#: backend/users/models.py:109
+#: backend/users/models.py:108
 msgid "Роль"
 msgstr "Role"
 
@@ -515,40 +517,49 @@ msgid ""
 "Определяет уровень доступа к панели управления: Пользователь — нет доступа, "
 "Редактор — управление контентом, Администратор — полный доступ."
 msgstr ""
-"Determines management panel access: User — no access, Editor — content management, "
-"Administrator — full access."
+"Determines management panel access: User — no access, Editor — content "
+"management, Administrator — full access."
 
-#: backend/users/models.py:120
+#: backend/users/models.py:121
 msgid "Должность"
 msgstr "Position"
 
-#: backend/users/models.py:123
+#: backend/users/models.py:125
 msgid ""
 "Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
 "в карточке сотрудника на сайте."
 msgstr ""
-"Specify the professional role (e.g., 'Lead Architect'). Displayed on the staff card."
+"Specify the professional role (e.g., 'Lead Architect'). Displayed on the "
+"staff card."
 
-#: backend/users/models.py:128
+#: backend/users/models.py:131
 msgid "Фотография"
 msgstr "Photo"
 
 #: backend/users/models.py:135
+msgid ""
+"Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, "
+"размер до 2 МБ."
+msgstr ""
+"Upload a portrait photo of the member. Recommended format: JPG or PNG, "
+"size up to 2 MB."
+
+#: backend/users/models.py:139
 msgid "Биография"
 msgstr "Biography"
 
-#: backend/users/models.py:139
+#: backend/users/models.py:143
 msgid "Расскажите об опыте и ключевых компетенциях. Максимум 500 символов."
 msgstr "Describe experience and key competencies. Maximum 500 characters."
 
-#: backend/users/models.py:144
+#: backend/users/models.py:147
 msgid "Публичный статус"
 msgstr "Public Status"
 
-#: backend/users/models.py:147
+#: backend/users/models.py:150
 msgid "Если галочка стоит, пользователь будет виден в списке команды на сайте."
 msgstr "If checked, the user will be visible in the team list on the website."
 
-#: backend/users/models.py:157
+#: backend/users/models.py:160
 msgid "Пользователи и команда"
 msgstr "Users and Team"

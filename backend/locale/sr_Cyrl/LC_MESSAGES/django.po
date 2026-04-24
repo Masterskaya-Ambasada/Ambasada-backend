@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:05+0300\n"
+"POT-Creation-Date: 2026-04-24 17:33+0300\n"
 "PO-Revision-Date: 2026-04-24 10:10+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -59,7 +59,7 @@ msgstr "Српски (латиница)"
 msgid "Serbian (Cyrillic)"
 msgstr "Српски (ћирилица)"
 
-#: backend/contacts/models.py:13 backend/users/models.py:98
+#: backend/contacts/models.py:13 backend/users/models.py:97
 msgid "Имя"
 msgstr "Име"
 
@@ -467,7 +467,7 @@ msgstr "Суперкорисник мора имати is_staff=True"
 msgid "Суперпользователь должен иметь is_superuser=True"
 msgstr "Суперкорисник мора имати is_superuser=True"
 
-#: backend/users/models.py:75 backend/users/models.py:156
+#: backend/users/models.py:75 backend/users/models.py:159
 msgid "Пользователь"
 msgstr "Корисник"
 
@@ -487,29 +487,29 @@ msgstr "Адреса е-поште"
 msgid "Используется для входа в систему. Должен быть уникальным."
 msgstr "Користи се за пријаву на систем. Мора бити јединствено."
 
-#: backend/users/models.py:90
+#: backend/users/models.py:89
 msgid "Уникальный идентификатор"
 msgstr "Јединствени идентификатор"
 
-#: backend/users/models.py:94
+#: backend/users/models.py:93
 msgid "Системный номер. Генерируется автоматически и не подлежит изменению."
 msgstr "Системски број. Генерише се аутоматски и не може се мењати."
 
-#: backend/users/models.py:100
+#: backend/users/models.py:99
 msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
 msgstr "Наведите име учесника. Оно ће бити приказано на сајту у блоку тима."
 
-#: backend/users/models.py:103
+#: backend/users/models.py:102
 msgid "Фамилия"
 msgstr "Презиме"
 
-#: backend/users/models.py:105
+#: backend/users/models.py:104
 msgid ""
 "Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
 msgstr ""
 "Наведите презиме. Заједно са именом оно чини пуно име учесника на сајту."
 
-#: backend/users/models.py:109
+#: backend/users/models.py:108
 msgid "Роль"
 msgstr "Улога"
 
@@ -518,14 +518,14 @@ msgid ""
 "Определяет уровень доступа к панели управления: Пользователь — нет доступа, "
 "Редактор — управление контентом, Администратор — полный доступ."
 msgstr ""
-"Одређује ниво приступа контролној табли: Корисник — нема приступ, "
-"Уредник — управљање садржајем, Администратор — потпуни приступ."
+"Одређује ниво приступа контролној табли: Корисник — нема приступ, Уредник — "
+"управљање садржајем, Администратор — потпуни приступ."
 
-#: backend/users/models.py:120
+#: backend/users/models.py:121
 msgid "Должность"
 msgstr "Позиција"
 
-#: backend/users/models.py:123
+#: backend/users/models.py:125
 msgid ""
 "Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
 "в карточке сотрудника на сайте."
@@ -533,26 +533,34 @@ msgstr ""
 "Наведите професионалну улогу (нпр. „Водећи архитекта“). Приказује се на "
 "картици запосленог на сајту."
 
-#: backend/users/models.py:128
+#: backend/users/models.py:131
 msgid "Фотография"
 msgstr "Фотографија"
 
 #: backend/users/models.py:135
+msgid ""
+"Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, "
+"размер до 2 МБ."
+msgstr ""
+"Отпремите портретну фотографију учесника. Препоручени формат: JPG или PNG, "
+"величина до 2 MB."
+
+#: backend/users/models.py:139
 msgid "Биография"
 msgstr "Биографија"
 
-#: backend/users/models.py:139
+#: backend/users/models.py:143
 msgid "Расскажите об опыте и ключевых компетенциях. Максимум 500 символов."
 msgstr "Опишите искуство и кључне компетенције. Највише 500 карактера."
 
-#: backend/users/models.py:144
+#: backend/users/models.py:147
 msgid "Публичный статус"
 msgstr "Јавни статус"
 
-#: backend/users/models.py:147
+#: backend/users/models.py:150
 msgid "Если галочка стоит, пользователь будет виден в списке команды на сайте."
 msgstr "Ако је означено, корисник ће бити видљив у листи тима на сајту."
 
-#: backend/users/models.py:157
+#: backend/users/models.py:160
 msgid "Пользователи и команда"
 msgstr "Корисници и тим"
