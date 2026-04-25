@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from django.utils.translation import gettext as _
 from projects.constants import CONTENT_BLOCK_INDEX_WIDTH
 from projects.models import (
     Project,
@@ -23,13 +24,14 @@ class ProjectTypeSerializer(serializers.ModelSerializer):
 
 
 class ProjectCardSerializer(serializers.ModelSerializer):
-    """Сериализатор карточки проекта для списка и верхнего блока detail."""
+    """Сериализатор карточки проекта для списка проектов."""
 
     id = serializers.CharField(source='slug', read_only=True)
     project_type = serializers.CharField(source='project_type.label', read_only=True)
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='label')
     year = serializers.SerializerMethodField()
     image = serializers.ImageField(source='cover_image', read_only=True)
+    action_button = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
@@ -41,17 +43,36 @@ class ProjectCardSerializer(serializers.ModelSerializer):
             'tags',
             'year',
             'image',
+            'action_button',
         )
 
     def get_year(self, obj: Project) -> str:
         """Возвращает год строкой в формате, ожидаемом фронтендом."""
         return str(obj.year)
 
+    def get_action_button(self, obj: Project) -> dict[str, str]:
+        """Возвращает кнопку перехода к детальной странице проекта."""
+        return {
+            'label': _('Перейти к проекту'),
+            'link': f'/projects/{obj.slug}',
+        }
+
 
 class ProjectDetailInfoSerializer(ProjectCardSerializer):
     """Сериализатор верхнего блока детальной страницы проекта."""
 
     image = serializers.SerializerMethodField()
+
+    class Meta(ProjectCardSerializer.Meta):
+        fields = (
+            'id',
+            'title',
+            'description',
+            'project_type',
+            'tags',
+            'year',
+            'image',
+        )
 
     def _build_image_url(self, image) -> str | None:
         """Преобразует ImageFieldFile в URL в формате DRF."""
