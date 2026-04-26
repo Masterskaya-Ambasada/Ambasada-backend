@@ -14,7 +14,7 @@ class InitViewTests(APITestCase):
         SiteConfig.objects.create(
             site_name='Test Site',
             seo_description='SEO text',
-            copyright='© 2026'
+            copyright='2026'
         )
 
         response = self.client.get(self.url)
