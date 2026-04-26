@@ -30,3 +30,10 @@ class SiteConfigSerializer(serializers.ModelSerializer):
             'socials',
             'copyright',
         ]
+
+
+class ErrorSerializer(serializers.Serializer):
+    status = serializers.IntegerField()
+    code = serializers.CharField()
+    message = serializers.CharField()
+
