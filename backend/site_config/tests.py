@@ -1,10 +1,18 @@
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
+from django.test import override_settings
 from rest_framework.test import APITestCase
 
 from site_config.models import Language, SiteConfig, Social
 
 
+@override_settings(
+    CACHES={
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+)
 class InitViewTests(APITestCase):
     def setUp(self):
         cache.clear()

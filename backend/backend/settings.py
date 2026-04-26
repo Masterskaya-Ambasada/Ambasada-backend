@@ -344,14 +344,3 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
-
-TESTING = 'test' in sys.argv
-
-if TESTING:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        }
-    }
-
-    REST_FRAMEWORK['DEFAULT_THROTTLE_CLASSES'] = []
