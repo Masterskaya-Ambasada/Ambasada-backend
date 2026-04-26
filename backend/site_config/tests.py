@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
@@ -6,6 +7,7 @@ from site_config.models import Language, SiteConfig, Social
 
 class InitViewTests(APITestCase):
     def setUp(self):
+        cache.clear()
         self.url = '/api/v1/init/'
         SiteConfig.objects.all().delete()
 
