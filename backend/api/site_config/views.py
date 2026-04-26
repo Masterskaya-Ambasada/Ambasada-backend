@@ -1,12 +1,12 @@
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from site_config.models import SiteConfig
 
-from .serializers import SiteConfigSerializer, ErrorSerializer
+from .serializers import ErrorSerializer, SiteConfigSerializer
 
 
 @extend_schema(
@@ -14,28 +14,21 @@ from .serializers import SiteConfigSerializer, ErrorSerializer
     description=_('Возвращает глобальные настройки: название, SEO, языки и соцсети.'),
     responses={
         200: SiteConfigSerializer,
-        404: OpenApiResponse(
-            response=ErrorSerializer,
-            description="Конфигурация сайта не найдена"
-        ),
+        404: OpenApiResponse(response=ErrorSerializer, description='Конфигурация сайта не найдена'),
     },
     examples=[
         OpenApiExample(
             'Успешный ответ',
             value={
-                "site_name": "My Site",
-                "seo_description": "Best site",
-                "languages": [
-                    {"code": "en", "label": "English"}
-                ],
-                "socials": [
-                    {"social_type": "Telegram", "url": "https://t.me/test"}
-                ],
-                "copyright": "© 2026"
+                'site_name': 'My Site',
+                'seo_description': 'Best site',
+                'languages': [{'code': 'en', 'label': 'English'}],
+                'socials': [{'social_type': 'Telegram', 'url': 'https://t.me/test'}],
+                'copyright': '© 2026',
             },
-            response_only=True
+            response_only=True,
         )
-    ]
+    ],
 )
 class InitView(APIView):
     """

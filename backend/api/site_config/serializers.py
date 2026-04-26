@@ -36,4 +36,3 @@ class ErrorSerializer(serializers.Serializer):
     status = serializers.IntegerField()
     code = serializers.CharField()
     message = serializers.CharField()
-
