@@ -3,7 +3,6 @@
 from about.models import AboutPage, GalleryImage, Value
 from api.users.serializers import TeamMemberSerializer
 from rest_framework import serializers
-from users.models import User
 
 
 class ValueSerializer(serializers.ModelSerializer):
@@ -17,9 +16,11 @@ class ValueSerializer(serializers.ModelSerializer):
 class GalleryImageSerializer(serializers.ModelSerializer):
     """Сериализация изображений галереи."""
 
+    url = serializers.ImageField(source='image', read_only=True)
+
     class Meta:
         model = GalleryImage
-        fields = ['id', 'image', 'alt']
+        fields = ['id', 'url', 'alt']
 
 
 class AboutPageSerializer(serializers.ModelSerializer):
@@ -27,9 +28,9 @@ class AboutPageSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ctx = self.context
-        values = ctx.get('values', Value.objects.all())
-        members = ctx.get('members', User.objects.public())
-        images = ctx.get('images', GalleryImage.objects.all())
+        values = ctx.get('values', [])
+        members = ctx.get('members', [])
+        images = ctx.get('images', [])
 
         return {
             'hero': {
@@ -45,10 +46,10 @@ class AboutPageSerializer(serializers.ModelSerializer):
                         'first_sentence': p.first_sentence,
                         'main_text': p.main_text,
                     }
-                    for p in instance.paragraphs.order_by('order')
+                    for p in instance.paragraphs.all()
                 ],
                 'action_button': {
-                    'label': instance.button_label,
+                    'text': instance.button_label,
                     'link': instance.button_link,
                 },
             },
@@ -66,10 +67,7 @@ class AboutPageSerializer(serializers.ModelSerializer):
             },
             'gallery_carousel': {
                 'title': instance.gallery_title,
-                'images': [
-                    {'id': f'img_{img.id}', 'url': img.image.url if img.image else None, 'alt': img.alt}
-                    for img in images
-                ],
+                'images': GalleryImageSerializer(images, many=True).data,
             },
         }
 

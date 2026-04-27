@@ -37,6 +37,25 @@ class AboutPageAdmin(admin.ModelAdmin):
         (_('Hero'), {'fields': ('hero_title', 'hero_description', 'image_left', 'image_right')}),
         (_('About'), {'fields': ('about_title', 'button_label', 'button_link')}),
         (_('Values'), {'fields': ('values_title',)}),
-        (_('Team'), {'fields': ('team_title', 'team_button_label', 'team_button_link')}),
+        (
+            _('Team'),
+            {
+                'fields': (
+                    'team_title',
+                    'team_members',
+                    'team_button_label',
+                    'team_button_link',
+                )
+            },
+        ),
         (_('Gallery'), {'fields': ('gallery_title',)}),
+        (
+            _('Contacts'),
+            {
+                'fields': (
+                    'email',
+                    'contact_link',
+                )
+            },
+        ),
     )

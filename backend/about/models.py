@@ -1,9 +1,11 @@
 """Модели для раздела 'О сообществе'."""
 
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
+from users.models import User
 
 
 class Value(models.Model):
@@ -118,6 +120,26 @@ class AboutPage(models.Model):
         default='',
     )
 
+    team_members = models.ManyToManyField(
+        User,
+        blank=True,
+        related_name='about_pages',
+        verbose_name=_('Участники команды'),
+    )
+
+    email = models.EmailField(
+        verbose_name=_('Email'),
+        blank=True,
+        default='',
+    )
+
+    contact_link = models.CharField(
+        max_length=255,
+        verbose_name=_('Ссылка для связи'),
+        blank=True,
+        default='',
+    )
+
     gallery_title = models.CharField(
         max_length=100,
         verbose_name=_('Заголовок галереи'),
@@ -128,9 +150,9 @@ class AboutPage(models.Model):
         verbose_name = _('Страница "О нас"')
         verbose_name_plural = _('Страницы "О нас"')
 
-    def save(self, *args, **kwargs):
-        self.pk = 1
-        super().save(*args, **kwargs)
+    def clean(self):
+        if not self.pk and AboutPage.objects.exists():
+            raise ValidationError(_('Может существовать только одна страница "О нас".'))
 
     def __str__(self):
         return self.hero_title or 'Страница "О нас"'
