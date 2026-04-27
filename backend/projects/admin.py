@@ -10,11 +10,19 @@ from import_export.formats.base_formats import CSV
 from modeltranslation.admin import TranslationAdmin
 from tinymce.widgets import TinyMCE
 
-from .form_admin import (ProjectConfirmImportForm, ProjectImportForm,
-                         ProjectTypeConfirmImportForm, ProjectTypeImportForm)
+from .form_admin import (
+    ProjectConfirmImportForm,
+    ProjectImportForm,
+    ProjectTypeConfirmImportForm,
+    ProjectTypeImportForm,
+)
 from .models import Project, ProjectContentBlock, ProjectType, Tag
-from .resources_admin import (ProjectContentBlockResource, ProjectResource,
-                              ProjectTypeResource, TagResource)
+from .resources_admin import (
+    ProjectContentBlockResource,
+    ProjectResource,
+    ProjectTypeResource,
+    TagResource,
+)
 
 
 class BaseAdmin(ImportExportModelAdmin, TranslationAdmin):
