@@ -16,8 +16,6 @@ services:
     networks:
       - postgres-net
     env_file: .env
-    ports:
-      - "5433:5432" 
     healthcheck:
       test: pg_isready
       interval: 5s
