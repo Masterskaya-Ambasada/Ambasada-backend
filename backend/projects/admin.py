@@ -8,11 +8,13 @@ from django.utils.translation import gettext_lazy as _
 from import_export.admin import ImportExportModelAdmin, ImportMixin
 from import_export.formats.base_formats import CSV
 from modeltranslation.admin import TranslationAdmin
-
-from .form_admin import ProjectTypeConfirmImportForm, ProjectTypeImportForm, ProjectImportForm, ProjectConfirmImportForm
-from .models import Project, ProjectContentBlock, ProjectType, Tag
-from .resources_admin import ProjectContentBlockResource, ProjectResource, ProjectTypeResource, TagResource
 from tinymce.widgets import TinyMCE
+
+from .form_admin import (ProjectConfirmImportForm, ProjectImportForm,
+                         ProjectTypeConfirmImportForm, ProjectTypeImportForm)
+from .models import Project, ProjectContentBlock, ProjectType, Tag
+from .resources_admin import (ProjectContentBlockResource, ProjectResource,
+                              ProjectTypeResource, TagResource)
 
 
 class BaseAdmin(ImportExportModelAdmin, TranslationAdmin):
@@ -26,14 +28,14 @@ class BaseAdmin(ImportExportModelAdmin, TranslationAdmin):
     import_error_display = ('message',)
     ordering = ('slug',)
     tinymce_fields = []
-    
+
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         for field_name in self.tinymce_fields:
             if field_name in form.base_fields:
                 form.base_fields[field_name].widget = TinyMCE()
         return form
-   
+
     def get_import_formats(self):
         """Ограничение формата импорта только CSV."""
         return [CSV]
@@ -48,8 +50,8 @@ class BaseAdmin(ImportExportModelAdmin, TranslationAdmin):
         if image_field:
             photo_url = f'{settings.MEDIA_URL}{image_field}'
             return format_html(
-                '<img src="{}" width="40" height="40" style="object-fit: cover; border-radius: 4px;" />', 
-                photo_url)
+                '<img src="{}" width="40" height="40" style="object-fit: cover; border-radius: 4px;" />', photo_url
+            )
         return '-empty-'
 
 
@@ -58,13 +60,7 @@ class TagAdmin(BaseAdmin):
     """Класс администрирования Тегов."""
 
     resource_classes = [TagResource]
-    list_display = [
-        'slug',
-        'label_ru',
-        'label_en',
-        'label_sr_latn',
-        'label_sr_cyrl'
-        ]
+    list_display = ['slug', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl']
 
     search_fields = ['slug']
     ordering = ['slug']
@@ -91,34 +87,40 @@ class ProjectAdmin(BaseAdmin, ImportMixin):
         'get_project_type',
         'is_published',
         'cover_image_thumbnail',
-        'get_view_on_site'
-        ]
-    list_filter = [
-        'project_type',
-        'year',
-        'is_published'
+        'get_view_on_site',
     ]
-    ordering = ('-is_published', '-year')    
+    list_filter = ['project_type', 'year', 'is_published']
+    ordering = ('-is_published', '-year')
     fieldsets = (
-        ('Основная информация', {
-            'fields': ('slug', 'year', 'project_type', 'tags', 'cover_image', 'is_published')
-        }),
-        ('Переводы (Русский)', {
-            'fields': ('title_ru', 'description_ru'),
-            'classes': ('collapse',),
-        }),
-        ('Переводы (English)', {
-            'fields': ('title_en', 'description_en'),
-            'classes': ('collapse',),
-        }),
-        ('Prevodi (Srpski - Latinica)', {
-            'fields': ('title_sr_latn', 'description_sr_latn'),
-            'classes': ('collapse',),
-        }),
-        ('Преводи (Српски - Ћирилица)', {
-            'fields': ('title_sr_cyrl', 'description_sr_cyrl'),
-            'classes': ('collapse',),
-        }),
+        ('Основная информация', {'fields': ('slug', 'year', 'project_type', 'tags', 'cover_image', 'is_published')}),
+        (
+            'Переводы (Русский)',
+            {
+                'fields': ('title_ru', 'description_ru'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Переводы (English)',
+            {
+                'fields': ('title_en', 'description_en'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Prevodi (Srpski - Latinica)',
+            {
+                'fields': ('title_sr_latn', 'description_sr_latn'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Преводи (Српски - Ћирилица)',
+            {
+                'fields': ('title_sr_cyrl', 'description_sr_cyrl'),
+                'classes': ('collapse',),
+            },
+        ),
     )
 
     def get_project_type(self, obj):
@@ -135,8 +137,12 @@ class ProjectAdmin(BaseAdmin, ImportMixin):
             absolute_url = f'{frontend_url}/projects/{obj.slug}/'
             return format_html(
                 '<a href="{}" target="_blank" rel="noopener noreferrer">{} {}</a>',
-                absolute_url, '🔗', _('Просмотр на сайте'))
+                absolute_url,
+                '🔗',
+                _('Просмотр на сайте'),
+            )
         return '-empty-'
+
     get_view_on_site.short_description = _('Ссылка')
 
     def delete_queryset(self, request, queryset):
@@ -153,6 +159,7 @@ class ProjectAdmin(BaseAdmin, ImportMixin):
     def cover_image_thumbnail(self, obj):
         """Метод для отображения миниатюры изображения в списке."""
         return self.get_image_thumbnail(obj, 'cover_image')
+
     cover_image_thumbnail.short_description = Project._meta.get_field('cover_image').verbose_name
 
     def get_confirm_form_initial(self, request, import_form):
@@ -173,12 +180,13 @@ class ProjectContentBlockAdmin(BaseAdmin, ImportMixin):
     resource_classes = [ProjectContentBlockResource]
     import_form_class = ProjectImportForm
     confirm_form_class = ProjectConfirmImportForm
-    ordering = ('order', 'title',)
+    ordering = (
+        'order',
+        'title',
+    )
     list_display = [
         'order',
         'title',
-        'accented_text',
-        'text',
         'project__title',
         'main_image_thumbnail',
         'left_image_thumbnail',
@@ -193,28 +201,38 @@ class ProjectContentBlockAdmin(BaseAdmin, ImportMixin):
         'accented_text_en',
         'accented_text_sr_latn',
         'accented_text_sr_cyrl',
-        ]
-    
+    ]
+
     fieldsets = (
-        ('Основная информация', {
-            'fields': ('project', 'variant', 'order', 'image', 'left_image')
-        }),
-        ('Переводы (Русский)', {
-            'fields': ('title_ru', 'text_ru', 'accented_text_ru', 'string_list_ru'),
-            'classes': ('collapse',),
-        }),
-        ('Переводы (English)', {
-            'fields': ('title_en', 'text_en', 'accented_text_en', 'string_list_en'),
-            'classes': ('collapse',),
-        }),
-        ('Prevodi (Srpski - Latinica)', {
-            'fields': ('title_sr_latn', 'text_sr_latn', 'accented_text_sr_latn', 'string_list_sr_latn'),
-            'classes': ('collapse',),
-        }),
-        ('Преводи (Српски - Ћирилица)', {
-            'fields': ('title_sr_cyrl', 'text_sr_cyrl', 'accented_text_sr_cyrl', 'string_list_sr_cyrl'),
-            'classes': ('collapse',),
-        }),
+        ('Основная информация', {'fields': ('project', 'variant', 'order', 'image', 'left_image')}),
+        (
+            'Переводы (Русский)',
+            {
+                'fields': ('title_ru', 'text_ru', 'accented_text_ru', 'string_list_ru'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Переводы (English)',
+            {
+                'fields': ('title_en', 'text_en', 'accented_text_en', 'string_list_en'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Prevodi (Srpski - Latinica)',
+            {
+                'fields': ('title_sr_latn', 'text_sr_latn', 'accented_text_sr_latn', 'string_list_sr_latn'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Преводи (Српски - Ћирилица)',
+            {
+                'fields': ('title_sr_cyrl', 'text_sr_cyrl', 'accented_text_sr_cyrl', 'string_list_sr_cyrl'),
+                'classes': ('collapse',),
+            },
+        ),
     )
 
     def delete_queryset(self, request, queryset):
@@ -234,18 +252,24 @@ class ProjectContentBlockAdmin(BaseAdmin, ImportMixin):
         return initial
 
     def get_import_data_kwargs(self, request, *args, **kwargs):
-        form = kwargs.get("form", None)
-        if form and hasattr(form, "cleaned_data"):
-            kwargs.update({"project": form.cleaned_data.get("project", None),
-                           "variant": form.cleaned_data.get("variant", None),})
+        form = kwargs.get('form', None)
+        if form and hasattr(form, 'cleaned_data'):
+            kwargs.update(
+                {
+                    'project': form.cleaned_data.get('project', None),
+                    'variant': form.cleaned_data.get('variant', None),
+                }
+            )
         return kwargs
 
     def main_image_thumbnail(self, obj):
         """Метод для отображения миниатюры изображения в списке."""
         return self.get_image_thumbnail(obj, 'image')
+
     main_image_thumbnail.short_description = ProjectContentBlock._meta.get_field('image').verbose_name
-    
+
     def left_image_thumbnail(self, obj):
         """Метод для отображения миниатюры левого изображения в списке."""
         return self.get_image_thumbnail(obj, 'left_image')
+
     main_image_thumbnail.short_description = ProjectContentBlock._meta.get_field('left_image').verbose_name

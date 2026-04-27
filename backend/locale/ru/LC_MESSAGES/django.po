@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 05:07+0300\n"
+"POT-Creation-Date: 2026-04-27 09:37+0300\n"
 "PO-Revision-Date: 2026-04-22 10:00+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: Russian\n"
@@ -44,19 +44,19 @@ msgstr ""
 "Неверный логин или пароль. Пожалуйста, проверьте правильность введённых "
 "данных и попробуйте снова."
 
-#: backend/backend/settings.py:201
+#: backend/backend/settings.py:202
 msgid "Russian"
 msgstr "Русский"
 
-#: backend/backend/settings.py:202
+#: backend/backend/settings.py:203
 msgid "English"
 msgstr "Английский"
 
-#: backend/backend/settings.py:203
+#: backend/backend/settings.py:204
 msgid "Serbian (Latin)"
 msgstr "Сербский (латиница)"
 
-#: backend/backend/settings.py:204
+#: backend/backend/settings.py:205
 msgid "Serbian (Cyrillic)"
 msgstr "Сербский (кириллица)"
 
@@ -103,34 +103,56 @@ msgstr "Использование ссылок в сообщениях запр
 #: backend/core/validators.py:172
 #, python-format
 msgid "File size %(size).1f MB exceeds the limit of %(max)d MB."
-msgstr "Размер файла %(size).1f МБ превышает максимально допустимый (%(max)d МБ)."
+msgstr ""
+"Размер файла %(size).1f МБ превышает максимально допустимый (%(max)d МБ)."
 
 #: backend/core/validators.py:186
 #, python-format
 msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
 msgstr "Тип файла \"%(mime)s\" не разрешён. Допустимые типы: %(allowed)s."
 
-#: backend/projects/admin.py:97 backend/projects/form_admin.py:12
-#: backend/projects/form_admin.py:21 backend/projects/models.py:129
+#: backend/projects/admin.py:128 backend/projects/form_admin.py:14
+#: backend/projects/form_admin.py:25 backend/projects/models.py:129
 #: backend/projects/models.py:198
 msgid "Тип проекта"
 msgstr "Тип проекта"
 
-#: backend/projects/admin.py:105
+#: backend/projects/admin.py:138
+#, fuzzy
+#| msgid "Настройки сайта"
+msgid "Просмотр на сайте"
+msgstr "Настройки сайта"
+
+#: backend/projects/admin.py:140
 msgid "Ссылка"
 msgstr "Ссылка"
-
-#: backend/projects/admin.py:116 backend/users/admin.py:78
-msgid "Фото"
-msgstr "Фото"
 
 #: backend/projects/apps.py:11
 msgid "Урбанистические проекты"
 msgstr "Урбанистические проекты"
 
-#: backend/projects/form_admin.py:13 backend/projects/form_admin.py:22
+#: backend/projects/form_admin.py:15 backend/projects/form_admin.py:26
 msgid " будет применен ко всем импортируемым проектам"
 msgstr "будет применён ко всем импортируемым проектам"
+
+#: backend/projects/form_admin.py:36 backend/projects/form_admin.py:54
+#, fuzzy
+#| msgid "Контентный блок"
+msgid "Проект в блоке"
+msgstr "Контентный блок"
+
+#: backend/projects/form_admin.py:37 backend/projects/form_admin.py:43
+#: backend/projects/form_admin.py:55 backend/projects/form_admin.py:61
+#, fuzzy
+#| msgid " будет применен ко всем импортируемым проектам"
+msgid " будет применен ко всем импортируемым блокам"
+msgstr "будет применён ко всем импортируемым проектам"
+
+#: backend/projects/form_admin.py:42 backend/projects/form_admin.py:60
+#, fuzzy
+#| msgid "Вариант"
+msgid "Вариант разметки"
+msgstr "Вариант"
 
 #: backend/projects/models.py:117 backend/projects/models.py:141
 msgid "Идентификатор"
@@ -310,19 +332,25 @@ msgstr "Контентные блоки проектов"
 
 #: backend/projects/models.py:315
 msgid "Для варианта 1 требуется хотя бы один элемент списка."
-msgstr "Для варианта «Изображение и список» требуется хотя бы один элемент списка."
+msgstr ""
+"Для варианта «Изображение и список» требуется хотя бы один элемент списка."
 
 #: backend/projects/models.py:317
 msgid "Список тезисов допустим только для варианта 1."
-msgstr "Список тезисов используется только для варианта «Изображение и список»."
+msgstr ""
+"Список тезисов используется только для варианта «Изображение и список»."
 
 #: backend/projects/models.py:319
 msgid "Для варианта 2 требуется второе изображение."
-msgstr "Для варианта «Два изображения» требуется заполнить поле «Дополнительное изображение»."
+msgstr ""
+"Для варианта «Два изображения» требуется заполнить поле «Дополнительное "
+"изображение»."
 
 #: backend/projects/models.py:321
 msgid "Второе изображение допустимо только для варианта 2."
-msgstr "Поле «Дополнительное изображение» используется только для варианта «Два изображения»."
+msgstr ""
+"Поле «Дополнительное изображение» используется только для варианта «Два "
+"изображения»."
 
 #: backend/projects/models.py:345
 msgid "Скачать файл"
@@ -472,7 +500,7 @@ msgstr "В системе может существовать только од�
 msgid "Настройки сайта"
 msgstr "Настройки сайта"
 
-#: backend/users/admin.py:67
+#: backend/users/admin.py:70
 msgid "Полное имя"
 msgstr "Полное имя"
 
@@ -555,3 +583,6 @@ msgstr "Отображать участника в блоке «Команда»
 #: backend/users/models.py:141
 msgid "Пользователи"
 msgstr "Пользователи"
+
+#~ msgid "Фото"
+#~ msgstr "Фото"

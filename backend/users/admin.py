@@ -13,7 +13,7 @@ from .models import User
 
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin, TranslationAdmin): 
+class UserAdmin(BaseUserAdmin, TranslationAdmin):
     """Административный интерфейс для модели User, с поддержкой перевода."""
 
     date_hierarchy = 'date_joined'
@@ -44,8 +44,7 @@ class UserAdmin(BaseUserAdmin, TranslationAdmin):
             None,
             {
                 'classes': ('wide',),
-                'fields': ('email', 'password1', 'password2',
-                           'photo', 'is_public'),
+                'fields': ('email', 'password1', 'password2', 'photo', 'is_public'),
             },
         ),
     )
@@ -77,4 +76,5 @@ class UserAdmin(BaseUserAdmin, TranslationAdmin):
                 '<img src="{}" width="40" height="40" style="object-fit: cover; border-radius: 4px;" />', photo_url
             )
         return '-empty-'
+
     image_thumbnail.short_description = User._meta.get_field('photo').verbose_name

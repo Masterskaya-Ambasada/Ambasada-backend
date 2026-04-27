@@ -26,12 +26,7 @@ class TagResource(BaseResource):
     class Meta(BaseResource.Meta):
         model = Tag
         import_id_fields = ['slug']
-        fields = [
-            'slug',
-            'label_ru',
-            'label_en',
-            'label_sr_latn'
-            ]
+        fields = ['slug', 'label_ru', 'label_en', 'label_sr_latn']
 
 
 class ProjectTypeResource(TagResource):
@@ -56,7 +51,7 @@ class ProjectResource(BaseResource):
             'description_en',
             'description_sr_latn',
             'year',
-            ]
+        ]
 
     def after_init_instance(self, instance, new, row, **kwargs):
         if 'project_type' in kwargs:
@@ -86,8 +81,8 @@ class ProjectContentBlockResource(resources.ModelResource):
         ]
 
     def after_init_instance(self, instance, new, row, **kwargs):
-        if "project" in kwargs:
-            instance.project = kwargs["project"]
-        if "variant" in kwargs:
-            instance.variant = kwargs["variant"]
+        if 'project' in kwargs:
+            instance.project = kwargs['project']
+        if 'variant' in kwargs:
+            instance.variant = kwargs['variant']
         return instance

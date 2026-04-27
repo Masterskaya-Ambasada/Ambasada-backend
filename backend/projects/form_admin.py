@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 from import_export.forms import ConfirmImportForm, ImportForm
 
-from .models import ProjectType, Project, ProjectContentBlock
+from .models import Project, ProjectContentBlock, ProjectType
 
 
 class ProjectTypeImportForm(ImportForm):

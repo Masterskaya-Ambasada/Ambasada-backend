@@ -352,9 +352,9 @@ TINYMCE_DEFAULT_CONFIG = {
     'height': 200,
     'menubar': False,
     'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
-               'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
-               'code,help,wordcount',
+    'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
+    'code,help,wordcount',
     'toolbar': 'undo redo | formatselect | bold italic backcolor | '
-               'alignleft aligncenter alignright alignjustify | '
-               'bullist numlist outdent indent | removeformat | help',
+    'alignleft aligncenter alignright alignjustify | '
+    'bullist numlist outdent indent | removeformat | help',
 }

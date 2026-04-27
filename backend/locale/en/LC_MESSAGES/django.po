@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 05:07+0300\n"
+"POT-Creation-Date: 2026-04-27 09:37+0300\n"
 "PO-Revision-Date: 2026-04-22 10:00+0300\n"
 "Last-Translator: Gemini AI\n"
 "Language-Team: English\n"
@@ -42,19 +42,19 @@ msgid ""
 msgstr ""
 "Incorrect email or password. Please check your credentials and try again."
 
-#: backend/backend/settings.py:201
+#: backend/backend/settings.py:202
 msgid "Russian"
 msgstr "Russian"
 
-#: backend/backend/settings.py:202
+#: backend/backend/settings.py:203
 msgid "English"
 msgstr "English"
 
-#: backend/backend/settings.py:203
+#: backend/backend/settings.py:204
 msgid "Serbian (Latin)"
 msgstr "Serbian (Latin)"
 
-#: backend/backend/settings.py:204
+#: backend/backend/settings.py:205
 msgid "Serbian (Cyrillic)"
 msgstr "Serbian (Cyrillic)"
 
@@ -108,27 +108,44 @@ msgstr "File size %(size).1f MB exceeds the limit of %(max)d MB."
 msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
 msgstr "File type \"%(mime)s\" is not allowed. Accepted types: %(allowed)s."
 
-#: backend/projects/admin.py:97 backend/projects/form_admin.py:12
-#: backend/projects/form_admin.py:21 backend/projects/models.py:129
+#: backend/projects/admin.py:128 backend/projects/form_admin.py:14
+#: backend/projects/form_admin.py:25 backend/projects/models.py:129
 #: backend/projects/models.py:198
 msgid "Тип проекта"
 msgstr "Project Type"
 
-#: backend/projects/admin.py:105
+#: backend/projects/admin.py:138
+#| msgid "Настройки сайта"
+msgid "Просмотр на сайте"
+msgstr "View on site"
+
+#: backend/projects/admin.py:140
 msgid "Ссылка"
 msgstr "Link"
-
-#: backend/projects/admin.py:116 backend/users/admin.py:78
-msgid "Фото"
-msgstr "Photo"
 
 #: backend/projects/apps.py:11
 msgid "Урбанистические проекты"
 msgstr "Urban Projects"
 
-#: backend/projects/form_admin.py:13 backend/projects/form_admin.py:22
+#: backend/projects/form_admin.py:15 backend/projects/form_admin.py:26
 msgid " будет применен ко всем импортируемым проектам"
 msgstr "will be applied to all imported projects"
+
+#: backend/projects/form_admin.py:36 backend/projects/form_admin.py:54
+#| msgid "Контентный блок"
+msgid "Проект в блоке"
+msgstr "Content Block"
+
+#: backend/projects/form_admin.py:37 backend/projects/form_admin.py:43
+#: backend/projects/form_admin.py:55 backend/projects/form_admin.py:61
+#| msgid " будет применен ко всем импортируемым проектам"
+msgid " будет применен ко всем импортируемым блокам"
+msgstr "will be applied to all imported projects"
+
+#: backend/projects/form_admin.py:42 backend/projects/form_admin.py:60
+#| msgid "Вариант"
+msgid "Вариант разметки"
+msgstr "Variant"
 
 #: backend/projects/models.py:117 backend/projects/models.py:141
 msgid "Идентификатор"
@@ -467,7 +484,7 @@ msgstr "Only one site configuration object can exist"
 msgid "Настройки сайта"
 msgstr "Site Settings"
 
-#: backend/users/admin.py:67
+#: backend/users/admin.py:70
 msgid "Полное имя"
 msgstr "Full Name"
 
@@ -550,3 +567,6 @@ msgstr "Display in the team section on the website"
 #: backend/users/models.py:141
 msgid "Пользователи"
 msgstr "Users"
+
+#~ msgid "Фото"
+#~ msgstr "Photo"
