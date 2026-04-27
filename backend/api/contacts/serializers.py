@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 
 class ContactRequestSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для формы обратной связи со встроенным антиспамом.'''
+    """Сериалайзер для формы обратной связи со встроенным антиспамом."""
 
     contact_preference = serializers.CharField(required=False, allow_blank=True, write_only=True)
 
@@ -17,7 +17,7 @@ class ContactRequestSerializer(serializers.ModelSerializer):
 
 
 class ContactSocialLinkSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для для ссылок на соцсети и мессенджеры.'''
+    """Сериалайзер для для ссылок на соцсети и мессенджеры."""
 
     class Meta:
         model = ContactSocialLink
@@ -25,7 +25,7 @@ class ContactSocialLinkSerializer(serializers.ModelSerializer):
 
 
 class ContactPageContentSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для редактируемой ссылки на пожертвования.'''
+    """Сериалайзер для редактируемой ссылки на пожертвования."""
 
     class Meta:
         model = ContactPageContent

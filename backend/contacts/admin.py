@@ -6,7 +6,7 @@ from contacts.models import ContactPageContent, ContactRequest, ContactSocialLin
 
 
 class IsActiveOnSiteFilter(admin.SimpleListFilter):
-    '''Кастомный фильтр для отображения ссылок по статусу показа на сайте.'''
+    """Кастомный фильтр для отображения ссылок по статусу показа на сайте."""
 
     title = _('Отображение на сайте')
     parameter_name = 'is_active'
@@ -58,14 +58,14 @@ except ImportError:
 
 
 class ContactPageContentAdminForm(forms.ModelForm):
-    '''Форма админки для блока пожертвований.'''
+    """Форма админки для блока пожертвований."""
 
     class Meta:
         model = ContactPageContent
         fields = '__all__'
 
     def clean(self):
-        '''Гарантирует, что активной может быть только одна запись.'''
+        """Гарантирует, что активной может быть только одна запись."""
         cleaned_data = super().clean()
         is_active = cleaned_data.get('is_active')
 
@@ -107,7 +107,7 @@ class ContactPageContentAdminForm(forms.ModelForm):
 
 @admin.register(ContactPageContent)
 class ContactPageContentAdmin(admin.ModelAdmin):
-    '''Админка для управления текстовым блоком пожертвований.'''
+    """Админка для управления текстовым блоком пожертвований."""
 
     form = ContactPageContentAdminForm
     list_display = ('id', 'is_active', 'updated_at')
@@ -117,7 +117,7 @@ class ContactPageContentAdmin(admin.ModelAdmin):
 
 @admin.register(ContactSocialLink)
 class ContactSocialLinkAdmin(admin.ModelAdmin):
-    '''Админка для управления ссылками на соцсети и мессенджеры.'''
+    """Админка для управления ссылками на соцсети и мессенджеры."""
 
     list_display = ('id', 'social_type', 'url', 'order', 'is_active')
     list_editable = ('order', 'is_active')

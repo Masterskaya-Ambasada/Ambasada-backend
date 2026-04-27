@@ -14,7 +14,7 @@ from api.contacts.serializers import (
 
 
 class ContactView(APIView):
-    '''API для формы обратной связи и получения контактного блока.'''
+    """API для формы обратной связи и получения контактного блока."""
 
     permission_classes = [AllowAny]
     throttle_scope = 'contact'
@@ -41,7 +41,7 @@ class ContactView(APIView):
         },
     )
     def post(self, request, *args, **kwargs):
-        '''Создаёт запрос обратной связи.'''
+        """Создаёт запрос обратной связи."""
         if not request.data.get('contact_preference'):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -57,7 +57,7 @@ class ContactView(APIView):
         responses={200: None},
     )
     def get(self, request, *args, **kwargs):
-        '''Возвращает текст пожертвований и список активных соцсетей.'''
+        """Возвращает текст пожертвований и список активных соцсетей."""
         content = ContactPageContent.objects.filter(is_active=True).first()
         links = ContactSocialLink.objects.filter(is_active=True)
 
