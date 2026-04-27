@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'site_config',
     'contacts',
     'import_export',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -344,4 +345,16 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API documentation',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+}
+
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 200,
+    'menubar': False,
+    'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
+               'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
+               'code,help,wordcount',
+    'toolbar': 'undo redo | formatselect | bold italic backcolor | '
+               'alignleft aligncenter alignright alignjustify | '
+               'bullist numlist outdent indent | removeformat | help',
 }

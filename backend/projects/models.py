@@ -267,6 +267,7 @@ class ProjectContentBlock(models.Model):
         _('Основное изображение'),
         upload_to=project_block_image_path,
         max_length=URL_MAX_LENGTH,
+        blank=True,         # добавил из-за проблем с импортом csv
         help_text=_('Основное изображение блока.'),
     )
     left_image = models.ImageField(
