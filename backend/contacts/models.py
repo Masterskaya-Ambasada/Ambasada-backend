@@ -7,7 +7,7 @@ from contacts.constants import MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH, MAX_REASON_L
 
 
 class ContactRequest(models.Model):
-    """Модель для формы обратной связи."""
+    '''Модель для формы обратной связи.'''
 
     name = models.CharField(
         max_length=MAX_NAME_LENGTH,
@@ -39,7 +39,7 @@ class ContactRequest(models.Model):
 
 
 class ContactPageContent(models.Model):
-    """Ссылка на пожертвования с возможностью редактирования в админке."""
+    '''Ссылка на пожертвования с возможностью редактирования в админке.'''
 
     donation_text = models.TextField(
         blank=True,
@@ -76,7 +76,7 @@ class ContactPageContent(models.Model):
 
 
 class ContactSocialLink(models.Model):
-    """Ссылки на соцсети и мессенджеры проекта."""
+    '''Ссылки на соцсети и мессенджеры проекта.'''
 
     class SocialType(models.TextChoices):
         TELEGRAM = 'telegram', 'Telegram'
