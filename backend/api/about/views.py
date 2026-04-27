@@ -29,6 +29,7 @@ class AboutAPIView(APIView):
         serializer = AboutPageSerializer(
             about,
             context={
+                'request': request,
                 'values': values,
                 'members': members,
                 'images': images,
