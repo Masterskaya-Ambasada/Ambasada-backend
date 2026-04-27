@@ -5,16 +5,16 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("contacts", "0007_alter_contactpagecontent_options_and_more"),
+        ('contacts', '0007_alter_contactpagecontent_options_and_more'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="contactpagecontent",
+            name='contactpagecontent',
             options={
-                "ordering": ("-updated_at",),
-                "verbose_name": "Редактируемая ссылка на пожертвования",
-                "verbose_name_plural": "Редактируемые ссылки на пожертвования",
+                'ordering': ('-updated_at',),
+                'verbose_name': 'Редактируемая ссылка на пожертвования',
+                'verbose_name_plural': 'Редактируемые ссылки на пожертвования',
             },
         ),
     ]
