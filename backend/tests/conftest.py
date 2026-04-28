@@ -1,4 +1,8 @@
+"""Pytest configuration for test environment."""
+
 import pytest
+from django.core.cache import cache
+from django.test import override_settings
 from rest_framework.test import APIClient
 
 from projects.models import (
@@ -10,14 +14,25 @@ from projects.models import (
 )
 
 
-@pytest.fixture(autouse=True)
-def disable_rest_framework_throttling(settings):
-    """Отключает throttling в тестах, чтобы они не зависели от Redis."""
-    settings.REST_FRAMEWORK = {
-        **settings.REST_FRAMEWORK,
-        'DEFAULT_THROTTLE_CLASSES': [],
-        'DEFAULT_THROTTLE_RATES': {},
+# Test settings with local memory cache instead of Redis
+TEST_CACHE_SETTINGS = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
     }
+}
+
+
+@pytest.fixture(autouse=True)
+def configure_cache(settings):
+    """Configure local memory cache for tests instead of Redis."""
+    with override_settings(CACHES=TEST_CACHE_SETTINGS):
+        # Reconfigure cache with new settings
+        from django.core.cache import caches
+        cache.close()
+        caches['default'].close()
+        yield
+        cache.clear()
 
 
 @pytest.fixture
