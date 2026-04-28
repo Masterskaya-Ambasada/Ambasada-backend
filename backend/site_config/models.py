@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -50,7 +51,14 @@ class SiteConfig(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk and SiteConfig.objects.exists():
             raise ValidationError(_('Может существовать только один объект настроек сайта'))
-        return super().save(*args, **kwargs)
+        result = super().save(*args, **kwargs)
+        cache.delete('site_config_init')
+        return result
+
+    def delete(self, *args, **kwargs):
+        result = super().delete(*args, **kwargs)
+        cache.delete('site_config_init')
+        return result
 
     def __str__(self):
         return self.site_name
