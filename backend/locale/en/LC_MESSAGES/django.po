@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-20 08:34+0300\n"
-"PO-Revision-Date: 2026-04-20 09:00+0300\n"
-"Last-Translator: Gemini AI\n"
+"POT-Creation-Date: 2026-04-24 17:33+0300\n"
+"PO-Revision-Date: 2026-04-24 10:10+0300\n"
+"Last-Translator: Gemini\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -16,412 +16,51 @@ msgstr ""
 msgid "Интерфейс API"
 msgstr "API Interface"
 
-#: backend/api/users/serializers.py:28
-msgid ""
-"Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
-msgstr ""
-"Incorrect email or password. Please check your credentials and try again."
-
-#: backend/backend/settings.py:198
-msgid "Russian"
-msgstr "Russian"
-
-#: backend/backend/settings.py:199
-msgid "English"
-msgstr "English"
-
-#: backend/backend/settings.py:200
-msgid "Serbian (Latin)"
-msgstr "Serbian (Latin)"
-
-#: backend/backend/settings.py:201
-msgid "Serbian (Cyrillic)"
-msgstr "Serbian (Cyrillic)"
-
-#: backend/core/validators.py:112
-msgid "HTML tags are not allowed."
-msgstr "HTML tags are not allowed."
-
-#: backend/core/validators.py:125
-msgid "Links in messages are not allowed."
-msgstr "Links in messages are not allowed."
-
-#: backend/core/validators.py:172
-#, python-format
-msgid "File size %(size).1f MB exceeds the limit of %(max)d MB."
-msgstr "File size %(size).1f MB exceeds the limit of %(max)d MB."
-
-#: backend/core/validators.py:186
-#, python-format
-msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
-msgstr "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
-
-#: backend/projects/apps.py:11
-msgid "Урбанистические проекты"
-msgstr "Urban Projects"
-
-#: backend/projects/models.py:106 backend/projects/models.py:130
-msgid "Идентификатор"
-msgstr "Identifier"
-
-#: backend/projects/models.py:109
-msgid "Уникальный идентификатор типа проекта для API и фильтров."
-msgstr "Unique project type identifier for API and filters."
-
-#: backend/projects/models.py:112 backend/projects/models.py:136
-#: backend/projects/models.py:160
-msgid "Название"
-msgstr "Title"
-
-#: backend/projects/models.py:114
-msgid "Отображаемое название типа проекта."
-msgstr "Display name of the project type."
-
-#: backend/projects/models.py:118 backend/projects/models.py:186
-msgid "Тип проекта"
-msgstr "Project Type"
-
-#: backend/projects/models.py:119
-msgid "Типы проектов"
-msgstr "Project Types"
-
-#: backend/projects/models.py:133
-msgid "Уникальный идентификатор тега для API и фильтров."
-msgstr "Unique tag identifier for API and filters."
-
-#: backend/projects/models.py:138
-msgid "Отображаемое название тега."
-msgstr "Display name of the tag."
-
-#: backend/projects/models.py:142
-msgid "Тег"
-msgstr "Tag"
-
-#: backend/projects/models.py:143 backend/projects/models.py:191
-msgid "Теги"
-msgstr "Tags"
-
-#: backend/projects/models.py:154
-msgid "Slug"
-msgstr "Slug"
-
-#: backend/projects/models.py:157
-msgid "Уникальный идентификатор проекта для URL."
-msgstr "Unique project identifier for URL."
-
-#: backend/projects/models.py:163
-msgid "Название проекта для списка и детальной страницы."
-msgstr "Project name for lists and detail pages."
-
-#: backend/projects/models.py:168
-msgid "Краткое описание"
-msgstr "Short Description"
-
-#: backend/projects/models.py:170
-msgid "Описание проекта для карточек и верхнего блока детальной страницы."
-msgstr "Project description for cards and the detail page header."
-
-#: backend/projects/models.py:173
-msgid "Год"
-msgstr "Year"
-
-#: backend/projects/models.py:175
-msgid "Год реализации или публикации проекта."
-msgstr "Project implementation or publication year."
-
-#: backend/projects/models.py:178
-msgid "Обложка"
-msgstr "Cover"
-
-#: backend/projects/models.py:180
-msgid "URL главного изображения проекта."
-msgstr "Main project image URL."
-
-#: backend/projects/models.py:195
-msgid "Опубликован"
-msgstr "Published"
-
-#: backend/projects/models.py:198
-msgid "Неопубликованные проекты не попадают в публичный API."
-msgstr "Unpublished projects are not included in the public API."
-
-#: backend/projects/models.py:202 backend/projects/models.py:236
-msgid "Проект"
-msgstr "Project"
-
-#: backend/projects/models.py:203
-msgid "Проекты"
-msgstr "Projects"
-
-#: backend/projects/models.py:228
-msgid "Изображение и список"
-msgstr "Image and List"
-
-#: backend/projects/models.py:229
-msgid "Два изображения"
-msgstr "Two Images"
-
-#: backend/projects/models.py:230
-msgid "Изображение и кнопки"
-msgstr "Image and Buttons"
-
-#: backend/projects/models.py:239
-msgid "Вариант"
-msgstr "Variant"
-
-#: backend/projects/models.py:241
-msgid "Вариант разметки, который использует фронтенд."
-msgstr "Layout variant used by the frontend."
-
-#: backend/projects/models.py:244 backend/projects/models.py:342
-msgid "Порядок"
-msgstr "Order"
-
-#: backend/projects/models.py:247
-msgid ""
-"Порядок блока внутри проекта. Используется для сортировки и генерации index."
-msgstr "Block order within the project; used for sorting and indexing."
-
-#: backend/projects/models.py:250
-msgid "Заголовок"
-msgstr "Heading"
-
-#: backend/projects/models.py:252
-msgid "Заголовок секции проекта."
-msgstr "Project section heading."
-
-#: backend/projects/models.py:256
-msgid "Основное изображение"
-msgstr "Main Image"
-
-#: backend/projects/models.py:258
-msgid "Основное изображение блока."
-msgstr "Primary image for the block."
-
-#: backend/projects/models.py:261
-msgid "Дополнительное изображение"
-msgstr "Additional Image"
-
-#: backend/projects/models.py:264
-msgid "Второе изображение для варианта с двумя картинками."
-msgstr "Secondary image for the two-image variant."
-
-#: backend/projects/models.py:267
-msgid "Список тезисов"
-msgstr "Bullet Points"
-
-#: backend/projects/models.py:270
-msgid "Список строк для варианта с изображением и списком."
-msgstr "List of strings for the image + list variant."
-
-#: backend/projects/models.py:273
-msgid "Текст"
-msgstr "Text"
-
-#: backend/projects/models.py:275
-msgid "Основной HTML-текст блока."
-msgstr "Main HTML text of the block."
-
-#: backend/projects/models.py:278
-msgid "Акцентный текст"
-msgstr "Accent Text"
-
-#: backend/projects/models.py:280
-msgid "Дополнительный акцентный HTML-текст блока."
-msgstr "Additional accent HTML text for the block."
-
-#: backend/projects/models.py:284
-msgid "Контентный блок проекта"
-msgstr "Project Content Block"
-
-#: backend/projects/models.py:285
-msgid "Контентные блоки проектов"
-msgstr "Project Content Blocks"
-
-#: backend/projects/models.py:302
-msgid "Для варианта 1 требуется хотя бы один элемент списка."
-msgstr "Variant 1 requires at least one list item."
-
-#: backend/projects/models.py:304
-msgid "Список тезисов допустим только для варианта 1."
-msgstr "Bullet points are only allowed for variant 1."
-
-#: backend/projects/models.py:306
-msgid "Для варианта 2 требуется второе изображение."
-msgstr "Variant 2 requires a second image."
-
-#: backend/projects/models.py:308
-msgid "Второе изображение допустимо только для варианта 2."
-msgstr "A second image is only allowed for variant 2."
-
-#: backend/projects/models.py:332
-msgid "Скачать файл"
-msgstr "Download File"
-
-#: backend/projects/models.py:333
-msgid "Перейти по ссылке"
-msgstr "Follow Link"
-
-#: backend/projects/models.py:339
-msgid "Контентный блок"
-msgstr "Content Block"
-
-#: backend/projects/models.py:345
-msgid "Порядок кнопки внутри блока."
-msgstr "Button order within the block."
-
-#: backend/projects/models.py:348
-msgid "Подпись"
-msgstr "Label"
-
-#: backend/projects/models.py:350
-msgid "Текст кнопки для фронтенда."
-msgstr "Button text for the frontend."
-
-#: backend/projects/models.py:353
-msgid "Тип"
-msgstr "Type"
-
-#: backend/projects/models.py:356
-msgid "Тип действия кнопки."
-msgstr "Button action type."
-
-#: backend/projects/models.py:359
-msgid "URL"
-msgstr "URL"
-
-#: backend/projects/models.py:361
-msgid "Ссылка для скачивания или перехода."
-msgstr "URL for downloading or navigation."
-
-#: backend/projects/models.py:365
-msgid "Кнопка контентного блока"
-msgstr "Content Block Button"
-
-#: backend/projects/models.py:366
-msgid "Кнопки контентных блоков"
-msgstr "Content Block Buttons"
-
-#: backend/projects/validators.py:16
-msgid "Поле string_list должно быть списком строк."
-msgstr "The string_list field must be a list of strings."
-
-#: backend/projects/validators.py:19
-#, python-format
-msgid "Допускается не более %(max_items)s элементов списка."
-msgstr "No more than %(max_items)s items are allowed."
-
-#: backend/projects/validators.py:24
-msgid "Каждый элемент списка должен быть строкой."
-msgstr "Each list item must be a string."
-
-#: backend/projects/validators.py:27
-#, python-format
-msgid ""
-"Длина каждого элемента списка не должна превышать %(max_length)s символов."
-msgstr "Each list item must not exceed %(max_length)s characters."
-
-#: backend/users/apps.py:10
-msgid "Управление пользователями"
-msgstr "User Management"
-
-#: backend/users/models.py:37
-msgid "Электронная почта обязательна"
-msgstr "Email is required"
-
-#: backend/users/models.py:62
-msgid "Суперпользователь должен иметь is_staff=True"
-msgstr "Superuser must have is_staff=True"
-
-#: backend/users/models.py:64
-msgid "Суперпользователь должен иметь is_superuser=True"
-msgstr "Superuser must have is_superuser=True"
-
-#: backend/users/models.py:73 backend/users/models.py:138
-msgid "Пользователь"
-msgstr "User"
-
-#: backend/users/models.py:74
-msgid "Контент-редактор"
-msgstr "Content Editor"
-
-#: backend/users/models.py:75
-msgid "Администратор"
-msgstr "Administrator"
-
-#: backend/users/models.py:80
-msgid "Адрес электронной почты"
-msgstr "Email Address"
-
-#: backend/users/models.py:89
-msgid "Уникальный идентификатор"
-msgstr "Unique Identifier"
-
-#: backend/users/models.py:92
-msgid "имя"
-msgstr "First Name"
-
-#: backend/users/models.py:93
-msgid "фамилия"
-msgstr "Last Name"
-
-#: backend/users/models.py:96
-msgid "роль"
-msgstr "Role"
-
-#: backend/users/models.py:104
-msgid "должность"
-msgstr "Position"
-
-#: backend/users/models.py:107
-msgid "Роль в команде (например: архитектор, дизайнер и т.д.)"
-msgstr "Team role (e.g., architect, designer, etc.)"
-
-#: backend/users/models.py:111
-msgid "Фотография"
-msgstr "Photo"
-
-#: backend/users/models.py:118
-msgid "Биография"
-msgstr "Biography"
-
-#: backend/users/models.py:122
-msgid "Краткое описание участника команды"
-msgstr "Short team member description"
-
-#: backend/users/models.py:126
-msgid "Публичный статус"
-msgstr "Public Status"
-
-#: backend/users/models.py:129
-msgid "Отображать в блоке команды на сайте"
-msgstr "Display in the team section on the website"
-
-#: backend/users/models.py:139
-msgid "Пользователи"
-msgstr "Users"
-
 #: backend/api/contacts/views.py:11
 msgid "Создание запроса обратной связи"
 msgstr "Submit a contact request"
 
 #: backend/api/contacts/views.py:13
 msgid ""
-"Принимает данные формы и сохраняет их.Поле `contact_preference` — "
-"техническое антиспам-поле (honeypot). Фронтенд должен передавать его пустым. "
-"Если поле заполнено, запрос считается спамом и игнорируется."
+"Принимает данные формы и сохраняет их. Поле `contact_preference` — "
+"техническое антиспам-поле (honeypot). Поле `contact_preference` фронтендерам "
+"надо спрятать, чтобы пользователь его не видел. Если поле заполнено, запрос "
+"считается спамом и игнорируется."
 msgstr ""
 "Accepts form data and saves it. The `contact_preference` field is a "
-"technical anti-spam field (honeypot). The frontend must send it empty. "
-"If the field is filled, the request is considered spam and is ignored."
+"technical anti-spam field (honeypot). Frontend developers should hide the "
+"`contact_preference` field so the user cannot see it. If the field is "
+"filled, the request is considered spam and is ignored."
 
 #: backend/api/contacts/views.py:40
 msgid "Получено"
 msgstr "Received"
 
-#: backend/contacts/models.py:13
+#: backend/api/users/serializers.py:26
+msgid ""
+"Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
+msgstr ""
+"Incorrect login or password. Please check your credentials and try again."
+
+#: backend/backend/settings.py:200
+msgid "Russian"
+msgstr "Russian"
+
+#: backend/backend/settings.py:201
+msgid "English"
+msgstr "English"
+
+#: backend/backend/settings.py:202
+msgid "Serbian (Latin)"
+msgstr "Serbian (Latin)"
+
+#: backend/backend/settings.py:203
+msgid "Serbian (Cyrillic)"
+msgstr "Serbian (Cyrillic)"
+
+#: backend/contacts/models.py:13 backend/users/models.py:97
 msgid "Имя"
-msgstr "Name"
+msgstr "First Name"
 
 #: backend/contacts/models.py:16
 msgid "Email"
@@ -450,3 +89,477 @@ msgstr "Feedback request"
 #: backend/contacts/models.py:33
 msgid "Запросы обратной связи"
 msgstr "Feedback requests"
+
+#: backend/core/validators.py:112
+msgid "HTML tags are not allowed."
+msgstr "HTML tags are not allowed."
+
+#: backend/core/validators.py:125
+msgid "Links in messages are not allowed."
+msgstr "Links in messages are not allowed."
+
+#: backend/core/validators.py:172
+#, python-format
+msgid "File size %(size).1f MB exceeds the limit of %(max)d MB."
+msgstr "File size %(size).1f MB exceeds the limit of %(max)d MB."
+
+#: backend/core/validators.py:186
+#, python-format
+msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
+msgstr "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
+
+#: backend/projects/apps.py:11
+msgid "Урбанистические проекты"
+msgstr "Urban Projects"
+
+#: backend/projects/models.py:117 backend/projects/models.py:141
+msgid "Идентификатор"
+msgstr "Identifier"
+
+#: backend/projects/models.py:120
+msgid "Уникальный идентификатор типа проекта для API и фильтров."
+msgstr "Unique project type identifier for API and filters."
+
+#: backend/projects/models.py:123 backend/projects/models.py:147
+#: backend/projects/models.py:171 backend/site_config/models.py:8
+msgid "Название"
+msgstr "Title"
+
+#: backend/projects/models.py:125
+msgid "Отображаемое название типа проекта."
+msgstr "Display name of the project type."
+
+#: backend/projects/models.py:129 backend/projects/models.py:198
+msgid "Тип проекта"
+msgstr "Project Type"
+
+#: backend/projects/models.py:130
+msgid "Типы проектов"
+msgstr "Project Types"
+
+#: backend/projects/models.py:144
+msgid "Уникальный идентификатор тега для API и фильтров."
+msgstr "Unique tag identifier for API and filters."
+
+#: backend/projects/models.py:149
+msgid "Отображаемое название тега."
+msgstr "Display name of the tag."
+
+#: backend/projects/models.py:153
+msgid "Тег"
+msgstr "Tag"
+
+#: backend/projects/models.py:154 backend/projects/models.py:203
+msgid "Теги"
+msgstr "Tags"
+
+#: backend/projects/models.py:165
+msgid "Slug"
+msgstr "Slug"
+
+#: backend/projects/models.py:168
+msgid "Уникальный идентификатор проекта для URL."
+msgstr "Unique project identifier for URL."
+
+#: backend/projects/models.py:174
+msgid "Название проекта для списка и детальной страницы."
+msgstr "Project name for lists and detail pages."
+
+#: backend/projects/models.py:179
+msgid "Краткое описание"
+msgstr "Short Description"
+
+#: backend/projects/models.py:181
+msgid "Описание проекта для карточек и верхнего блока детальной страницы."
+msgstr "Project description for cards and the detail page header."
+
+#: backend/projects/models.py:184
+msgid "Год"
+msgstr "Year"
+
+#: backend/projects/models.py:186
+msgid "Год реализации или публикации проекта."
+msgstr "Project implementation or publication year."
+
+#: backend/projects/models.py:189
+msgid "Обложка"
+msgstr "Cover Image"
+
+#: backend/projects/models.py:192
+msgid "URL главного изображения проекта."
+msgstr "URL of the main project image."
+
+#: backend/projects/models.py:207
+msgid "Опубликован"
+msgstr "Published"
+
+#: backend/projects/models.py:210
+msgid "Неопубликованные проекты не попадают в публичный API."
+msgstr "Unpublished projects are not included in the public API."
+
+#: backend/projects/models.py:214 backend/projects/models.py:248
+msgid "Проект"
+msgstr "Project"
+
+#: backend/projects/models.py:215
+msgid "Проекты"
+msgstr "Projects"
+
+#: backend/projects/models.py:240
+msgid "Изображение и список"
+msgstr "Image and List"
+
+#: backend/projects/models.py:241
+msgid "Два изображения"
+msgstr "Two Images"
+
+#: backend/projects/models.py:242
+msgid "Изображение и кнопки"
+msgstr "Image and Buttons"
+
+#: backend/projects/models.py:251
+msgid "Вариант"
+msgstr "Variant"
+
+#: backend/projects/models.py:253
+msgid "Вариант разметки, который использует фронтенд."
+msgstr "The layout variant used by the frontend."
+
+#: backend/projects/models.py:256 backend/projects/models.py:355
+msgid "Порядок"
+msgstr "Order"
+
+#: backend/projects/models.py:259
+msgid ""
+"Порядок блока внутри проекта. Используется для сортировки и генерации index."
+msgstr "Block order within the project. Used for sorting and index generation."
+
+#: backend/projects/models.py:262
+msgid "Заголовок"
+msgstr "Heading"
+
+#: backend/projects/models.py:264
+msgid "Заголовок секции проекта."
+msgstr "The heading of the project section."
+
+#: backend/projects/models.py:267
+msgid "Основное изображение"
+msgstr "Main Image"
+
+#: backend/projects/models.py:270
+msgid "Основное изображение блока."
+msgstr "Primary image for the block."
+
+#: backend/projects/models.py:273
+msgid "Дополнительное изображение"
+msgstr "Additional Image"
+
+#: backend/projects/models.py:277
+msgid "Второе изображение для варианта с двумя картинками."
+msgstr "Secondary image for the two-image layout variant."
+
+#: backend/projects/models.py:280
+msgid "Список тезисов"
+msgstr "Bullet Points"
+
+#: backend/projects/models.py:283
+msgid "Список строк для варианта с изображением и списком."
+msgstr "List of strings for the image and list variant."
+
+#: backend/projects/models.py:286
+msgid "Текст"
+msgstr "Text"
+
+#: backend/projects/models.py:288
+msgid "Основной HTML-текст блока."
+msgstr "Main HTML text of the block."
+
+#: backend/projects/models.py:291
+msgid "Акцентный текст"
+msgstr "Accent Text"
+
+#: backend/projects/models.py:293
+msgid "Дополнительный акцентный HTML-текст блока."
+msgstr "Additional accent HTML text for the block."
+
+#: backend/projects/models.py:297
+msgid "Контентный блок проекта"
+msgstr "Project Content Block"
+
+#: backend/projects/models.py:298
+msgid "Контентные блоки проектов"
+msgstr "Project Content Blocks"
+
+#: backend/projects/models.py:315
+msgid "Для варианта 1 требуется хотя бы один элемент списка."
+msgstr "Variant 1 requires at least one list item."
+
+#: backend/projects/models.py:317
+msgid "Список тезисов допустим только для варианта 1."
+msgstr "Bullet points are only allowed for variant 1."
+
+#: backend/projects/models.py:319
+msgid "Для варианта 2 требуется второе изображение."
+msgstr "Variant 2 requires a second image."
+
+#: backend/projects/models.py:321
+msgid "Второе изображение допустимо только для варианта 2."
+msgstr "A second image is only allowed for variant 2."
+
+#: backend/projects/models.py:345
+msgid "Скачать файл"
+msgstr "Download File"
+
+#: backend/projects/models.py:346
+msgid "Перейти по ссылке"
+msgstr "Follow Link"
+
+#: backend/projects/models.py:352
+msgid "Контентный блок"
+msgstr "Content Block"
+
+#: backend/projects/models.py:358
+msgid "Порядок кнопки внутри блока."
+msgstr "Button order within the block."
+
+#: backend/projects/models.py:361
+msgid "Подпись"
+msgstr "Label"
+
+#: backend/projects/models.py:363
+msgid "Текст кнопки для фронтенда."
+msgstr "Button text for the frontend."
+
+#: backend/projects/models.py:366
+msgid "Тип"
+msgstr "Type"
+
+#: backend/projects/models.py:369
+msgid "Тип действия кнопки."
+msgstr "Button action type."
+
+#: backend/projects/models.py:372 backend/site_config/models.py:29
+msgid "URL"
+msgstr "URL"
+
+#: backend/projects/models.py:374
+msgid "Ссылка для скачивания или перехода."
+msgstr "URL for downloading or navigation."
+
+#: backend/projects/models.py:378
+msgid "Кнопка контентного блока"
+msgstr "Content Block Button"
+
+#: backend/projects/models.py:379
+msgid "Кнопки контентных блоков"
+msgstr "Content Block Buttons"
+
+#: backend/projects/validators.py:16
+msgid "Поле string_list должно быть списком строк."
+msgstr "The string_list field must be a list of strings."
+
+#: backend/projects/validators.py:19
+#, python-format
+msgid "Допускается не более %(max_items)s элементов списка."
+msgstr "No more than %(max_items)s items are allowed."
+
+#: backend/projects/validators.py:24
+msgid "Каждый элемент списка должен быть строкой."
+msgstr "Each list item must be a string."
+
+#: backend/projects/validators.py:27
+#, python-format
+msgid ""
+"Длина каждого элемента списка не должна превышать %(max_length)s символов."
+msgstr "Length of each list item must not exceed %(max_length)s characters."
+
+#: backend/site_config/models.py:7
+msgid "Код"
+msgstr "Code"
+
+#: backend/site_config/models.py:11
+msgid "Язык"
+msgstr "Language"
+
+#: backend/site_config/models.py:12 backend/site_config/models.py:46
+msgid "Языки"
+msgstr "Languages"
+
+#: backend/site_config/models.py:21
+msgid "Telegram"
+msgstr "Telegram"
+
+#: backend/site_config/models.py:22
+msgid "Instagram"
+msgstr "Instagram"
+
+#: backend/site_config/models.py:23
+msgid "Facebook"
+msgstr "Facebook"
+
+#: backend/site_config/models.py:24
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#: backend/site_config/models.py:27
+msgid "Тип соцсети"
+msgstr "Social network type"
+
+#: backend/site_config/models.py:32
+msgid "Социальная сеть"
+msgstr "Social network"
+
+#: backend/site_config/models.py:33
+msgid "Социальные сети"
+msgstr "Social networks"
+
+#: backend/site_config/models.py:41
+msgid "Название сайта"
+msgstr "Website Name"
+
+#: backend/site_config/models.py:41
+msgid "Максимум 100 символов"
+msgstr "Maximum 100 characters"
+
+#: backend/site_config/models.py:43
+msgid "SEO описание"
+msgstr "SEO Description"
+
+#: backend/site_config/models.py:43
+msgid "Максимум 250 символов"
+msgstr "Maximum 250 characters"
+
+#: backend/site_config/models.py:45
+msgid "Копирайт"
+msgstr "Copyright"
+
+#: backend/site_config/models.py:45
+msgid "Максимум 150 символов"
+msgstr "Maximum 150 characters"
+
+#: backend/site_config/models.py:48
+msgid "Соцсети"
+msgstr "Social Media"
+
+#: backend/site_config/models.py:52
+msgid "Может существовать только один объект настроек сайта"
+msgstr "Only one site settings object can exist"
+
+#: backend/site_config/models.py:59 backend/site_config/models.py:60
+msgid "Настройки сайта"
+msgstr "Site Settings"
+
+#: backend/users/apps.py:10
+msgid "Управление пользователями"
+msgstr "User Management"
+
+#: backend/users/models.py:39
+msgid "Электронная почта обязательна"
+msgstr "Email is required"
+
+#: backend/users/models.py:64
+msgid "Суперпользователь должен иметь is_staff=True"
+msgstr "Superuser must have is_staff=True"
+
+#: backend/users/models.py:66
+msgid "Суперпользователь должен иметь is_superuser=True"
+msgstr "Superuser must have is_superuser=True"
+
+#: backend/users/models.py:75 backend/users/models.py:159
+msgid "Пользователь"
+msgstr "User"
+
+#: backend/users/models.py:76
+msgid "Контент-редактор"
+msgstr "Content Editor"
+
+#: backend/users/models.py:77
+msgid "Администратор"
+msgstr "Administrator"
+
+#: backend/users/models.py:82
+msgid "Адрес электронной почты"
+msgstr "Email Address"
+
+#: backend/users/models.py:85
+msgid "Используется для входа в систему. Должен быть уникальным."
+msgstr "Used for logging in. Must be unique."
+
+#: backend/users/models.py:89
+msgid "Уникальный идентификатор"
+msgstr "Unique Identifier"
+
+#: backend/users/models.py:93
+msgid "Системный номер. Генерируется автоматически и не подлежит изменению."
+msgstr "System ID. Generated automatically and cannot be changed."
+
+#: backend/users/models.py:99
+msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
+msgstr ""
+"Specify the member's first name. It will be displayed in the team section."
+
+#: backend/users/models.py:102
+msgid "Фамилия"
+msgstr "Last Name"
+
+#: backend/users/models.py:104
+msgid ""
+"Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
+msgstr ""
+"Specify the last name. Combined with the first name, it forms the full name."
+
+#: backend/users/models.py:108
+msgid "Роль"
+msgstr "Role"
+
+#: backend/users/models.py:114
+msgid ""
+"Определяет уровень доступа к панели управления: Пользователь — нет доступа, "
+"Редактор — управление контентом, Администратор — полный доступ."
+msgstr ""
+"Determines management panel access: User — no access, Editor — content "
+"management, Administrator — full access."
+
+#: backend/users/models.py:121
+msgid "Должность"
+msgstr "Position"
+
+#: backend/users/models.py:125
+msgid ""
+"Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
+"в карточке сотрудника на сайте."
+msgstr ""
+"Specify the professional role (e.g., 'Lead Architect'). Displayed on the "
+"staff card."
+
+#: backend/users/models.py:131
+msgid "Фотография"
+msgstr "Photo"
+
+#: backend/users/models.py:135
+msgid ""
+"Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, "
+"размер до 2 МБ."
+msgstr ""
+"Upload a portrait photo of the member. Recommended format: JPG or PNG, "
+"size up to 2 MB."
+
+#: backend/users/models.py:139
+msgid "Биография"
+msgstr "Biography"
+
+#: backend/users/models.py:143
+msgid "Расскажите об опыте и ключевых компетенциях. Максимум 500 символов."
+msgstr "Describe experience and key competencies. Maximum 500 characters."
+
+#: backend/users/models.py:147
+msgid "Публичный статус"
+msgstr "Public Status"
+
+#: backend/users/models.py:150
+msgid "Если галочка стоит, пользователь будет виден в списке команды на сайте."
+msgstr "If checked, the user will be visible in the team list on the website."
+
+#: backend/users/models.py:160
+msgid "Пользователи и команда"
+msgstr "Users and Team"
