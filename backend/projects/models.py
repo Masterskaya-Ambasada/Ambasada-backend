@@ -28,6 +28,22 @@ from projects.constants import (
 from .validators import validate_string_list
 
 
+def project_cover_image_path(instance: 'Project', filename: str) -> str:
+    """Путь загрузки обложки проекта."""
+    return f'projects/{instance.slug}/cover/{filename}'
+
+
+def project_gallery_image_path(instance: 'ProjectGalleryImage', filename: str) -> str:
+    """Путь загрузки изображений галереи проекта."""
+    return f'projects/{instance.project.slug}/gallery/{filename}'
+
+
+def project_block_image_path(instance: 'ProjectContentBlock', filename: str) -> str:
+    """Путь загрузки изображений контентных блоков проекта."""
+    project_slug = instance.project.slug if instance.project_id else 'project'
+    return f'projects/{project_slug}/blocks/{filename}'
+
+
 class OrderedValidationQuerySet(models.QuerySet):
     """QuerySet с валидацией и автонумерацией при массовом создании."""
 
@@ -174,8 +190,9 @@ class Project(models.Model):
         db_index=True,
         help_text=_('Год реализации или публикации проекта.'),
     )
-    cover_image = models.URLField(
+    cover_image = models.ImageField(
         _('Обложка'),
+        upload_to=project_cover_image_path,
         max_length=URL_MAX_LENGTH,
         help_text=_('URL главного изображения проекта.'),
     )
@@ -217,6 +234,51 @@ class Project(models.Model):
         return self.title
 
 
+class ProjectGalleryImage(models.Model):
+    """Изображение для карусели в верхнем блоке детальной страницы проекта."""
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='gallery_images',
+        verbose_name=_('Проект'),
+    )
+    image = models.ImageField(
+        _('Изображение'),
+        upload_to=project_gallery_image_path,
+        max_length=URL_MAX_LENGTH,
+        help_text=_('Изображение для карусели проекта.'),
+    )
+    order = models.PositiveIntegerField(
+        _('Порядок'),
+        default=DEFAULT_ORDER,
+        db_index=True,
+        help_text=_('Порядок изображения в карусели проекта.'),
+    )
+
+    class Meta:
+        verbose_name = _('Изображение карусели проекта')
+        verbose_name_plural = _('Изображения карусели проекта')
+        ordering = ('order', 'pk')
+        indexes = [models.Index(fields=('project', 'order'))]
+
+    def __str__(self) -> str:
+        return f'{self.project}: {self.order}'
+
+    def save(self, *args, **kwargs):
+        """Автоматически назначает порядок изображения в пределах проекта."""
+        if not self.order:
+            max_order = (
+                ProjectGalleryImage.objects.filter(project=self.project)
+                .aggregate(max_order=Max('order'))
+                .get('max_order')
+                or DEFAULT_ORDER
+            )
+            self.order = max_order + ORDER_STEP
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+
 class ProjectContentBlock(models.Model):
     """Контентный блок детальной страницы проекта."""
 
@@ -251,14 +313,15 @@ class ProjectContentBlock(models.Model):
         max_length=CONTENT_BLOCK_TITLE_MAX_LENGTH,
         help_text=_('Заголовок секции проекта.'),
     )
-    # Пока оставлю так, но да, стоит предполагать возможное использование ImageField
-    image = models.URLField(
+    image = models.ImageField(
         _('Основное изображение'),
+        upload_to=project_block_image_path,
         max_length=URL_MAX_LENGTH,
         help_text=_('Основное изображение блока.'),
     )
-    left_image = models.URLField(
+    left_image = models.ImageField(
         _('Дополнительное изображение'),
+        upload_to=project_block_image_path,
         max_length=URL_MAX_LENGTH,
         blank=True,
         help_text=_('Второе изображение для варианта с двумя картинками.'),

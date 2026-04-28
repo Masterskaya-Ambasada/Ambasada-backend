@@ -23,7 +23,7 @@ export DJANGO_ENV
 # docs/pages/template/production-checklist.rst
 python /code/backend/manage.py migrate --noinput
 python /code/backend/manage.py collectstatic --noinput --clear
-# python /code/backend/manage.py compilemessages
+python /code/backend/manage.py compilemessages
 
 # create superuser
 python /code/backend/manage.py createsuperuser --no-input --full_name Admin || true

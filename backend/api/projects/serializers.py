@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from django.utils.translation import gettext as _
 from projects.constants import CONTENT_BLOCK_INDEX_WIDTH
 from projects.models import (
     Project,
@@ -23,13 +24,14 @@ class ProjectTypeSerializer(serializers.ModelSerializer):
 
 
 class ProjectCardSerializer(serializers.ModelSerializer):
-    """Сериализатор карточки проекта для списка и верхнего блока detail."""
+    """Сериализатор карточки проекта для списка проектов."""
 
     id = serializers.CharField(source='slug', read_only=True)
     project_type = serializers.CharField(source='project_type.label', read_only=True)
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='label')
     year = serializers.SerializerMethodField()
-    image = serializers.URLField(source='cover_image', read_only=True)
+    image = serializers.ImageField(source='cover_image', read_only=True)
+    action_button = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
@@ -41,11 +43,66 @@ class ProjectCardSerializer(serializers.ModelSerializer):
             'tags',
             'year',
             'image',
+            'action_button',
         )
 
     def get_year(self, obj: Project) -> str:
         """Возвращает год строкой в формате, ожидаемом фронтендом."""
         return str(obj.year)
+
+    def get_action_button(self, obj: Project) -> dict[str, str]:
+        """Возвращает кнопку перехода к детальной странице проекта."""
+        return {
+            'label': _('Перейти к проекту'),
+            'link': f'/projects/{obj.slug}',
+        }
+
+
+class ProjectDetailInfoSerializer(ProjectCardSerializer):
+    """Сериализатор верхнего блока детальной страницы проекта."""
+
+    image = serializers.SerializerMethodField()
+
+    class Meta(ProjectCardSerializer.Meta):
+        fields = (
+            'id',
+            'title',
+            'description',
+            'project_type',
+            'tags',
+            'year',
+            'image',
+        )
+
+    def _build_image_url(self, image) -> str | None:
+        """Преобразует ImageFieldFile в URL в формате DRF."""
+        if not image:
+            return None
+
+        image_url = image.url
+        request = self.context.get('request')
+        if request is not None:
+            return request.build_absolute_uri(image_url)
+        return image_url
+
+    def get_image(self, obj: Project) -> list[str]:
+        """
+        Возвращает массив изображений для карусели детальной страницы.
+
+        Приоритет отдается изображениям из связанной галереи.
+        Если галерея пуста, используется cover_image как fallback.
+        """
+        image_urls: list[str] = []
+        for gallery_image in obj.gallery_images.all():
+            image_url = self._build_image_url(gallery_image.image)
+            if image_url:
+                image_urls.append(image_url)
+
+        if image_urls:
+            return image_urls
+
+        cover_image_url = self._build_image_url(obj.cover_image)
+        return [cover_image_url] if cover_image_url else []
 
 
 class ProjectBlockButtonSerializer(serializers.ModelSerializer):
@@ -96,7 +153,7 @@ class ProjectContentBlockSerializer(serializers.ModelSerializer):
 class ProjectDetailSerializer(serializers.ModelSerializer):
     """Сериализатор детальной страницы проекта."""
 
-    info = ProjectCardSerializer(source='*', read_only=True)
+    info = ProjectDetailInfoSerializer(source='*', read_only=True)
     content_blocks = ProjectContentBlockSerializer(many=True, read_only=True)
 
     class Meta:

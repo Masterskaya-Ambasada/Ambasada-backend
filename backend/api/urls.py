@@ -9,6 +9,7 @@ from drf_spectacular.views import (
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
+from api.about.views import AboutAPIView
 from api.contacts.views import ContactCreateView
 from api.projects.views import (
     ProjectDetailView,
@@ -45,12 +46,12 @@ doc_urlpatterns = [
     ),
 ]
 
-
 # Эндпоинты авторизации
 auth_urlpatterns = [
     path('login/', AmbasadaTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
+
 # Эндпоинты пользователей и команды
 user_urlpatterns = [
     path('team/', TeamListView.as_view(), name='team_list'),
@@ -62,6 +63,11 @@ project_urlpatterns = [
     path('tags/', ProjectTagListView.as_view(), name='projects-tags'),
     path('types/', ProjectTypeListView.as_view(), name='projects-types'),
     path('<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
+]
+
+# Эндпоинты страницы "О нас"
+about_urlpatterns = [
+    path('about/', AboutAPIView.as_view(), name='about'),
 ]
 
 # Эндпоинты контактов
@@ -76,10 +82,9 @@ v1_urlpatterns = [
     path('users/', include(user_urlpatterns)),
     path('projects/', include(project_urlpatterns)),
     path('contact/', include(contact_urlpatterns)),
+    path('', include(about_urlpatterns)),
+    path('', include(doc_urlpatterns)),
 ]
 
-
 # Главный список путей
-urlpatterns = [
-    path('v1/', include((v1_urlpatterns, 'v1'))),
-] + doc_urlpatterns
+urlpatterns = v1_urlpatterns
