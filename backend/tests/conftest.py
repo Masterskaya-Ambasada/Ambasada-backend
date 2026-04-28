@@ -72,7 +72,7 @@ def published_project(project_type_architecture, tag_urban, tag_social):
         title='Central Park',
         description='Public space improvement project.',
         year=2024,
-        cover_image='https://example.com/central-park.jpg',
+        cover_image='projects/central-park/cover/central-park.jpg',
         project_type=project_type_architecture,
         is_published=True,
     )
@@ -87,7 +87,7 @@ def second_published_project(project_type_research, tag_social):
         title='City Research',
         description='Research about city mobility.',
         year=2023,
-        cover_image='https://example.com/city-research.jpg',
+        cover_image='projects/city-research/cover/city-research.jpg',
         project_type=project_type_research,
         is_published=True,
     )
@@ -102,7 +102,7 @@ def unpublished_project(project_type_architecture, tag_hidden):
         title='Secret Project',
         description='This project must stay hidden.',
         year=2025,
-        cover_image='https://example.com/secret.jpg',
+        cover_image='projects/secret-project/cover/secret.jpg',
         project_type=project_type_architecture,
         is_published=False,
     )

@@ -94,7 +94,9 @@ def test_projects_list_returns_expected_card_fields(api_client, published_projec
     assert item['project_type'] == published_project.project_type.label
     assert item['tags'] == ['Social', 'Urban']
     assert item['year'] == str(published_project.year)
-    assert item['image'] == published_project.cover_image
+    assert item['image'] == (
+        f'http://testserver/media/{published_project.cover_image.name}'
+    )
 
 
 @pytest.mark.django_db
