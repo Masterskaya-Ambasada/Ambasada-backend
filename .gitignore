@@ -67,6 +67,7 @@ coverage/
 *.pyd
 *.sqlite3
 *.db
+*.mo
 
 # IDE configuration
 .idea/
