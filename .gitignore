@@ -130,3 +130,4 @@ htmlcov/
 .gitconfig
 
 .python_history
+.bash_history
