@@ -75,7 +75,7 @@ class ContactPageContentAdminForm(forms.ModelForm):
                 qs = qs.exclude(pk=self.instance.pk)
             if qs.exists():
                 raise forms.ValidationError(
-                    'Доступной может быть только одна ссылка! Оставьте галочку только на одной из них'
+                    _('Доступной может быть только одна ссылка! Оставьте галочку только на одной из них')
                 )
 
         return cleaned_data
@@ -122,4 +122,4 @@ class ContactSocialLinkAdmin(admin.ModelAdmin):
     list_display = ('id', 'social_type', 'url', 'order', 'is_active')
     list_editable = ('order', 'is_active')
     list_filter = ('social_type', IsActiveOnSiteFilter)
-    search_fields = ('label', 'url')
+    search_fields = ('url',)
