@@ -36,13 +36,23 @@ class TestAdminLoginThrottleMiddleware:
         """Test IP address."""
         return '192.168.1.100'
 
-    def test_normal_login_allowed(self, middleware, factory, test_ip):
-        """Test that normal login attempts are allowed under limit."""
-        request = factory.post('/admin/login/', {'username': 'admin', 'password': 'pass'})
-        request.META['REMOTE_ADDR'] = test_ip
+    @pytest.fixture
+    def create_login_request(self, factory):
+        """Helper fixture to create POST requests to admin login with IP."""
+        def _create_login_request(ip, data=None):
+            """Create a POST request to /admin/login/ with specified IP."""
+            if data is None:
+                data = {'username': 'admin', 'password': 'pass'}
+            request = factory.post('/admin/login/', data)
+            request.META['REMOTE_ADDR'] = ip
+            return request
+        return _create_login_request
 
+    def test_normal_login_allowed(self, middleware, create_login_request, test_ip):
+        """Test that normal login attempts are allowed under limit."""
         # Make 9 attempts (under the limit)
         for i in range(9):
+            request = create_login_request(test_ip)
             response = middleware(request)
             assert response.status_code == 200
             assert response.content == b'OK'
@@ -54,46 +64,44 @@ class TestAdminLoginThrottleMiddleware:
         assert cache.get(count_key) == 9
         assert cache.get(block_key) is None
 
-    def test_login_blocked_after_10_attempts(self, middleware, factory, test_ip):
+    def test_login_blocked_after_10_attempts(self, middleware, create_login_request, test_ip):
         """Test that login is blocked after 10 attempts."""
-        request = factory.post('/admin/login/', {'username': 'admin', 'password': 'pass'})
-        request.META['REMOTE_ADDR'] = test_ip
-
-        # Make 10 attempts (at the limit)
+        # Make 10 attempts (at the limit) - all should return 200
         for i in range(10):
+            request = create_login_request(test_ip)
             response = middleware(request)
-            if i < 9:  # First 9 should succeed
-                assert response.status_code == 200
-            else:  # 10th attempt triggers block
-                assert response.status_code == 200
+            assert response.status_code == 200, f"Attempt {i+1} should return 200"
+
+        # Next attempt (11th) should be blocked with 429
+        request = create_login_request(test_ip)
+        response = middleware(request)
+        assert response.status_code == 429, "11th attempt should return 429 after block"
+        assert b'Too many login attempts' in response.content
 
         # Check that block was set in cache
         block_key = f'admin_login_block:{test_ip}'
         assert cache.get(block_key) is True
 
-    def test_blocked_ip_returns_429(self, middleware, factory, test_ip):
+    def test_blocked_ip_returns_429(self, middleware, create_login_request, test_ip):
         """Test that blocked IP returns 429 status."""
         # Simulate blocked state
         block_key = f'admin_login_block:{test_ip}'
         cache.set(block_key, True, 300)
 
-        request = factory.post('/admin/login/', {'username': 'admin', 'password': 'pass'})
-        request.META['REMOTE_ADDR'] = test_ip
-
+        request = create_login_request(test_ip)
         response = middleware(request)
 
         assert response.status_code == 429
         assert b'Too many login attempts' in response.content
 
-    def test_different_ips_independent_throttling(self, middleware, factory):
+    def test_different_ips_independent_throttling(self, middleware, create_login_request):
         """Test that different IPs have independent throttling."""
         ip1 = '192.168.1.100'
         ip2 = '192.168.1.101'
 
         # Block first IP
         for _ in range(10):
-            request = factory.post('/admin/login/', {})
-            request.META['REMOTE_ADDR'] = ip1
+            request = create_login_request(ip1, {})
             middleware(request)
 
         # First IP should be blocked
@@ -101,8 +109,7 @@ class TestAdminLoginThrottleMiddleware:
         assert cache.get(block_key_1) is True
 
         # Second IP should still be allowed
-        request = factory.post('/admin/login/', {})
-        request.META['REMOTE_ADDR'] = ip2
+        request = create_login_request(ip2, {})
         response = middleware(request)
         assert response.status_code == 200
 
@@ -143,13 +150,11 @@ class TestAdminLoginThrottleMiddleware:
         count_key = f'admin_login_count:{test_ip}'
         assert cache.get(count_key) == 1
 
-    def test_count_key_expires_after_window(self, middleware, factory, test_ip):
+    def test_count_key_expires_after_window(self, middleware, create_login_request, test_ip):
         """Test that count key expires after the window period."""
-        request = factory.post('/admin/login/', {})
-        request.META['REMOTE_ADDR'] = test_ip
-
         # Make some attempts
         for _ in range(5):
+            request = create_login_request(test_ip, {})
             middleware(request)
 
         count_key = f'admin_login_count:{test_ip}'
@@ -159,19 +164,19 @@ class TestAdminLoginThrottleMiddleware:
         cache.set(count_key, None, 0)
 
         # Next attempt should start fresh count
+        request = create_login_request(test_ip, {})
         response = middleware(request)
         assert response.status_code == 200
         assert cache.get(count_key) == 1
 
-    def test_block_key_expires_after_block_period(self, middleware, factory, test_ip):
+    def test_block_key_expires_after_block_period(self, middleware, create_login_request, test_ip):
         """Test that block key expires after the block period."""
         # Set up blocked state
         block_key = f'admin_login_block:{test_ip}'
         cache.set(block_key, True, 300)
 
         # Verify blocked
-        request = factory.post('/admin/login/', {})
-        request.META['REMOTE_ADDR'] = test_ip
+        request = create_login_request(test_ip, {})
         response = middleware(request)
         assert response.status_code == 429
 
@@ -179,16 +184,15 @@ class TestAdminLoginThrottleMiddleware:
         cache.set(block_key, None, 0)
 
         # Should be allowed now
+        request = create_login_request(test_ip, {})
         response = middleware(request)
         assert response.status_code == 200
 
-    def test_concurrent_attempts_handling(self, middleware, factory, test_ip):
+    def test_concurrent_attempts_handling(self, middleware, create_login_request, test_ip):
         """Test that concurrent attempts are properly counted."""
-        request = factory.post('/admin/login/', {})
-        request.META['REMOTE_ADDR'] = test_ip
-
         # Simulate rapid attempts
         for _ in range(10):
+            request = create_login_request(test_ip, {})
             middleware(request)
 
         block_key = f'admin_login_block:{test_ip}'
@@ -199,6 +203,7 @@ class TestAdminLoginThrottleMiddleware:
         assert cache.get(count_key) == 10
 
         # Next attempt should be blocked
+        request = create_login_request(test_ip, {})
         response = middleware(request)
         assert response.status_code == 429
 
@@ -232,11 +237,9 @@ class TestAdminLoginThrottleMiddleware:
         assert AdminLoginThrottleMiddleware.WINDOW_SECONDS == 60
         assert AdminLoginThrottleMiddleware.BLOCK_SECONDS == 300
 
-    def test_cache_keys_format(self, middleware, factory, test_ip):
+    def test_cache_keys_format(self, middleware, create_login_request, test_ip):
         """Test that cache keys are formatted correctly."""
-        request = factory.post('/admin/login/', {})
-        request.META['REMOTE_ADDR'] = test_ip
-
+        request = create_login_request(test_ip, {})
         middleware(request)
 
         count_key = f'admin_login_count:{test_ip}'
@@ -252,13 +255,11 @@ class TestAdminLoginThrottleMiddleware:
         assert test_ip in count_key
         assert test_ip in block_key
 
-    def test_reset_after_block_expires(self, middleware, factory, test_ip):
+    def test_reset_after_block_expires(self, middleware, create_login_request, test_ip):
         """Test that user can login again after block expires."""
         # Make 10 attempts to trigger block
-        request = factory.post('/admin/login/', {})
-        request.META['REMOTE_ADDR'] = test_ip
-
         for _ in range(10):
+            request = create_login_request(test_ip, {})
             middleware(request)
 
         # Verify blocked
@@ -273,6 +274,7 @@ class TestAdminLoginThrottleMiddleware:
         cache.set(count_key, None, 0)
 
         # Should be able to login again
+        request = create_login_request(test_ip, {})
         response = middleware(request)
         assert response.status_code == 200
         assert cache.get(count_key) == 1
@@ -286,6 +288,12 @@ class TestAdminLoginThrottleMiddleware:
         response = middleware(request)
 
         assert response.status_code == 200
+        count_key = f'admin_login_count:{test_ip}'
+        assert cache.get(count_key) == 1
+
+        # Verify other IPs are not counted
+        other_ip_key = 'admin_login_count:203.0.113.11'
+        assert cache.get(other_ip_key) is None
         count_key = f'admin_login_count:{test_ip}'
         assert cache.get(count_key) == 1
 
