@@ -14,35 +14,6 @@ User = get_user_model()
 
 
 # =========================================================
-# TEST SETTINGS (DRF + CACHE)
-# =========================================================
-
-@pytest.fixture(autouse=True)
-def test_settings(settings):
-    """Тестовые настройки: отключаем throttling и используем локальный кэш вместо Redis."""
-    settings.REST_FRAMEWORK = {
-        **getattr(settings, 'REST_FRAMEWORK', {}),
-        'DEFAULT_THROTTLE_CLASSES': [],
-        'DEFAULT_THROTTLE_RATES': {},
-    }
-
-    settings.CACHES['default'] = {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'test-cache',
-    }
-
-
-@pytest.fixture(autouse=True)
-def disable_rest_framework_throttling(settings):
-    """Отключает DRF throttling, чтобы тесты не зависели от Redis и лимитов."""
-    settings.REST_FRAMEWORK = {
-        **settings.REST_FRAMEWORK,
-        'DEFAULT_THROTTLE_CLASSES': [],
-        'DEFAULT_THROTTLE_RATES': {},
-    }
-
-
-# =========================================================
 # USERS
 # =========================================================
 

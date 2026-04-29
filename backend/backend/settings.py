@@ -121,12 +121,25 @@ ROOT_URLCONF = 'backend.urls'
 # Cache — Redis
 CACHE_LOCATION = config('CACHE_LOCATION', default='')
 
-if 'redis' in CACHE_LOCATION:
+if APP_ENV == 'production':
+    # В продакшене только Redis. Если CACHE_LOCATION пуст — будет ошибка, и это ХОРОШО.
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': CACHE_LOCATION,
+            'LOCATION': config('CACHE_LOCATION'),
             'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
+        }
+    }
+elif 'test' in sys.argv:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         }
     }
 
