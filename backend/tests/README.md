@@ -4,6 +4,7 @@
 
 - API тесты: `backend/tests/api/`
 - Тесты моделей и валидаторов `projects`: `backend/tests/projects/`
+- Тесты моделей, менеджеров, QuerySet, пути сохранения фото `users`: `backend/tests/users/`
 - Общие фикстуры: `backend/tests/conftest.py`
 
 ## Базовый запуск
