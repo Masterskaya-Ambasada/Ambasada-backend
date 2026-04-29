@@ -14,22 +14,43 @@ from .serializers import ErrorSerializer, SiteConfigSerializer
     summary=_('Инициализация сайта'),
     description=_('Возвращает глобальные настройки: название, SEO, языки и соцсети.'),
     responses={
-        200: SiteConfigSerializer,
-        404: OpenApiResponse(response=ErrorSerializer, description='Конфигурация сайта не найдена'),
+        200: OpenApiResponse(
+            response=SiteConfigSerializer,
+            description='Успешный ответ',
+            examples=[
+                OpenApiExample(
+                    'Успешный ответ',
+                    value={
+                        'site_name': 'My Site',
+                        'seo_description': 'Best site',
+                        'languages': [
+                            {'code': 'en', 'label': 'English'},
+                            {'code': 'ru', 'label': 'Русский'},
+                        ],
+                        'socials': [
+                            {'social_type': 'Telegram', 'url': 'https://t.me/test'},
+                            {'social_type': 'Facebook', 'url': 'https://fb.com/test'},
+                        ],
+                        'copyright': '© 2026',
+                    },
+                )
+            ],
+        ),
+        404: OpenApiResponse(
+            response=ErrorSerializer,
+            description='Конфигурация сайта не найдена',
+            examples=[
+                OpenApiExample(
+                    'Ошибка',
+                    value={
+                        'status': 404,
+                        'code': 'NOT_FOUND',
+                        'message': 'Site config not found',
+                    },
+                )
+            ],
+        ),
     },
-    examples=[
-        OpenApiExample(
-            'Успешный ответ',
-            value={
-                'site_name': 'My Site',
-                'seo_description': 'Best site',
-                'languages': [{'code': 'en', 'label': 'English'}],
-                'socials': [{'social_type': 'Telegram', 'url': 'https://t.me/test'}],
-                'copyright': '© 2026',
-            },
-            response_only=True,
-        )
-    ],
 )
 class InitView(APIView):
     """
