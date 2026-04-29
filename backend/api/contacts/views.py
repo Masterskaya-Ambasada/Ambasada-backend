@@ -51,10 +51,7 @@ class ContactView(APIView):
 
     @extend_schema(
         summary=_('Получение контента блока контактов'),
-        description=_(
-            'Возвращает текстовый блок для пожертвований и список '
-            'активных ссылок на соцсети и мессенджеры.'
-        ),
+        description=_('Возвращает текстовый блок для пожертвований и список активных ссылок на соцсети и мессенджеры.'),
         responses={
             200: inline_serializer(
                 name='ContactGetResponse',
