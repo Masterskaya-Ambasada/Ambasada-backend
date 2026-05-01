@@ -1,77 +1,35 @@
+"""Регистрация моделей Project, ProjectContentBlock, Tag, ProjectType в админ-панели."""
+
 import os
 import shutil
 
+from core.base_admin import BaseAdmin, ImportExportMixin
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from import_export.admin import ImportExportModelAdmin, ImportMixin
-from import_export.formats.base_formats import CSV
-from modeltranslation.admin import TranslationAdmin
-from tinymce.widgets import TinyMCE
 
-from .form_admin import (
-    ProjectConfirmImportForm,
-    ProjectImportForm,
-    ProjectTypeConfirmImportForm,
-    ProjectTypeImportForm,
-)
 from .models import Project, ProjectContentBlock, ProjectType, Tag
 from .resources_admin import (
-    ProjectContentBlockResource,
-    ProjectResource,
     ProjectTypeResource,
     TagResource,
 )
 
 
-class BaseAdmin(ImportExportModelAdmin, TranslationAdmin):
-    """Базовый админ-класс."""
-
-    empty_value_display = '-empty-'
-    import_export_args = {
-        'import_formats': ['csv'],
-        'export_formats': ['csv'],
-    }
-    import_error_display = ('message',)
-    ordering = ('slug',)
-    tinymce_fields = []
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        for field_name in self.tinymce_fields:
-            if field_name in form.base_fields:
-                form.base_fields[field_name].widget = TinyMCE()
-        return form
-
-    def get_import_formats(self):
-        """Ограничение формата импорта только CSV."""
-        return [CSV]
-
-    def get_export_formats(self):
-        """Ограничение формата экспорта только CSV."""
-        return [CSV]
-
-    def get_image_thumbnail(self, obj, field_name):
-        """Универсальный метод для создания миниатюры из поля ImageField."""
-        image_field = getattr(obj, field_name, None)
-        if image_field:
-            photo_url = f'{settings.MEDIA_URL}{image_field}'
-            return format_html(
-                '<img src="{}" width="40" height="40" style="object-fit: cover; border-radius: 4px;" />', photo_url
-            )
-        return '-empty-'
-
-
 @admin.register(Tag)
-class TagAdmin(BaseAdmin):
+class TagAdmin(BaseAdmin, ImportExportMixin):
     """Класс администрирования Тегов."""
 
     resource_classes = [TagResource]
-    list_display = ['slug', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl']
+    list_display = [
+        'slug',
+        'label_ru',
+        'label_en',
+        'label_sr_latn',
+        'label_sr_cyrl',
+    ]
 
     search_fields = ['slug']
-    ordering = ['slug']
 
 
 @admin.register(ProjectType)
@@ -82,12 +40,9 @@ class ProjectTypeAdmin(TagAdmin):
 
 
 @admin.register(Project)
-class ProjectAdmin(BaseAdmin, ImportMixin):
+class ProjectAdmin(BaseAdmin):
     """Класс администрирования проектов."""
 
-    resource_classes = [ProjectResource]
-    import_form_class = ProjectTypeImportForm
-    confirm_form_class = ProjectTypeConfirmImportForm
     list_display = [
         'title',
         'slug',
@@ -170,36 +125,22 @@ class ProjectAdmin(BaseAdmin, ImportMixin):
 
     cover_image_thumbnail.short_description = Project._meta.get_field('cover_image').verbose_name
 
-    def get_confirm_form_initial(self, request, import_form):
-        initial = super().get_confirm_form_initial(request, import_form)
-        if import_form:
-            initial['project_type'] = import_form.cleaned_data['project_type'].id
-        return initial
-
-    def get_import_data_kwargs(self, request, *args, **kwargs):
-        form = kwargs.get('form', None)
-        if form and hasattr(form, 'cleaned_data'):
-            kwargs.update({'project_type': form.cleaned_data.get('project_type', None)})
-        return kwargs
-
 
 @admin.register(ProjectContentBlock)
-class ProjectContentBlockAdmin(BaseAdmin, ImportMixin):
-    resource_classes = [ProjectContentBlockResource]
-    import_form_class = ProjectImportForm
-    confirm_form_class = ProjectConfirmImportForm
+class ProjectContentBlockAdmin(BaseAdmin):
+    """Класс администрирования детальной страницы проектов."""
+
     ordering = (
+        'project__slug',
         'order',
-        'title',
     )
     list_display = [
         'order',
-        'title',
         'project__title',
+        'title',
         'main_image_thumbnail',
         'left_image_thumbnail',
     ]
-
     tinymce_fields = [
         'text_ru',
         'text_en',
@@ -252,24 +193,6 @@ class ProjectContentBlockAdmin(BaseAdmin, ImportMixin):
                 os.remove(project_block.left_image.path)
             project_block.delete()
 
-    def get_confirm_form_initial(self, request, import_form):
-        initial = super().get_confirm_form_initial(request, import_form)
-        if import_form:
-            initial['project'] = import_form.cleaned_data['project'].id
-            initial['variant'] = import_form.cleaned_data['variant']
-        return initial
-
-    def get_import_data_kwargs(self, request, *args, **kwargs):
-        form = kwargs.get('form', None)
-        if form and hasattr(form, 'cleaned_data'):
-            kwargs.update(
-                {
-                    'project': form.cleaned_data.get('project', None),
-                    'variant': form.cleaned_data.get('variant', None),
-                }
-            )
-        return kwargs
-
     def main_image_thumbnail(self, obj):
         """Метод для отображения миниатюры изображения в списке."""
         return self.get_image_thumbnail(obj, 'image')
@@ -280,4 +203,4 @@ class ProjectContentBlockAdmin(BaseAdmin, ImportMixin):
         """Метод для отображения миниатюры левого изображения в списке."""
         return self.get_image_thumbnail(obj, 'left_image')
 
-    main_image_thumbnail.short_description = ProjectContentBlock._meta.get_field('left_image').verbose_name
+    left_image_thumbnail.short_description = ProjectContentBlock._meta.get_field('left_image').verbose_name

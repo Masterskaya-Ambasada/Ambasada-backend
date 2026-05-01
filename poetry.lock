@@ -817,6 +817,21 @@ xlsx = ["tablib[xlsx]"]
 yaml = ["tablib[yaml]"]
 
 [[package]]
+name = "django-jsonform"
+version = "2.23.2"
+description = "A user-friendly JSON editing form for Django admin."
+optional = false
+python-versions = ">=3.4"
+groups = ["main"]
+files = [
+    {file = "django_jsonform-2.23.2-py3-none-any.whl", hash = "sha256:1b7f94c5a2bd22c844e035a9940a9c8586f7b8fc3346ef2a6a13ba608e0059d7"},
+    {file = "django_jsonform-2.23.2.tar.gz", hash = "sha256:6fa2ba7c082be51d738e6c66e35075a3cb9ebc2f941e3a477c988900a7fe3269"},
+]
+
+[package.dependencies]
+django = ">=2.0"
+
+[[package]]
 name = "django-modeltranslation"
 version = "0.20.2"
 description = "Translates Django models using a registration approach."
@@ -3060,4 +3075,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "68a8d273a999c481404b40861d4f42c2d5705feb33c4783a485fd5da6672fd3e"
+content-hash = "a76621cf0ed8a1a4398adc472a28b50e9254bd17f78cc81e08eb214b974a2c21"

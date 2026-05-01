@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-27 09:37+0300\n"
-"PO-Revision-Date: 2026-04-20 09:30+0300\n"
+"POT-Creation-Date: 2026-05-01 21:33+0300\n"
+"PO-Revision-Date: 2026-05-01 23:30+0300\n"
 "Last-Translator: Dzmitry <email@address>\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Language: sr_Cyrl\n"
@@ -22,20 +22,15 @@ msgid "Создание запроса обратной связи"
 msgstr "Креирање захтева за повратне информације"
 
 #: backend/api/contacts/views.py:13
-#, fuzzy
-#| msgid ""
-#| "Принимает данные формы и сохраняет их. Поле `contact_preference` — "
-#| "техническое антиспам-поле (honeypot). Фронтенд должен передавать его "
-#| "пустым. Если поле заполнено, запрос считается спамом и игнорируется."
 msgid ""
 "Принимает данные формы и сохраняет их. Поле `contact_preference` — "
 "техническое антиспам-поле (honeypot). Поле `contact_preference` фронтендерам "
 "надо спрятать, чтобы пользователь его не видел. Если поле заполнено, запрос "
 "считается спамом и игнорируется."
 msgstr ""
-"Прихвата податке из форме и чува их. Поље `contact_preference` је техничко "
-"анти-спам поље (honeypot). Фронтенд треба да га пошаље празно. Ако је поље "
-"попуњено, захтев се сматра спамом и игнорише се."
+"Прихвата податке форме и чува их. Поље `contact_preference` је техничко анти-"
+"спам поље (хонеипот). Фронтенд треба да сакрије ово поље тако да корисник не "
+"може да га види. Ако је поље попуњено, захтев се сматра спамом и игнорише се."
 
 #: backend/api/contacts/views.py:40
 msgid "Получено"
@@ -45,21 +40,22 @@ msgstr "Примљено"
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 msgstr ""
-"Погрешна адреса е-поште или лозинка. Проверите податке и покушајте поново."
+"Погрешна адреса е-поште или лозинка. Молимо проверите податке и покушајте "
+"поново."
 
-#: backend/backend/settings.py:202
+#: backend/backend/settings.py:217
 msgid "Russian"
 msgstr "Руски"
 
-#: backend/backend/settings.py:203
+#: backend/backend/settings.py:218
 msgid "English"
 msgstr "Енглески"
 
-#: backend/backend/settings.py:204
+#: backend/backend/settings.py:219
 msgid "Serbian (Latin)"
 msgstr "Српски (латиница)"
 
-#: backend/backend/settings.py:205
+#: backend/backend/settings.py:220
 msgid "Serbian (Cyrillic)"
 msgstr "Српски (ћирилица)"
 
@@ -95,6 +91,18 @@ msgstr "Захтев за повратне информације"
 msgid "Запросы обратной связи"
 msgstr "Захтеви за повратне информације"
 
+#: backend/core/base_admin.py
+msgid "Да"
+msgstr "Да"
+
+#: backend/core/base_admin.py
+msgid "Нет"
+msgstr "Не"
+
+#: backend/core/base_admin.py
+msgid "Изображение не загружено"
+msgstr "Слика није отпремљена"
+
 #: backend/core/validators.py:112
 msgid "HTML tags are not allowed."
 msgstr "HTML ознаке нису дозвољене."
@@ -111,398 +119,488 @@ msgstr "Величина датотеке %(size).1f MB премашује ли�
 #: backend/core/validators.py:186
 #, python-format
 msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
-msgstr "Тип датотеке \"%(mime)s\" није дозвољен. Прихваћени: %(allowed)s."
+msgstr ""
+"Тип датотеке \"%(mime)s\" није дозвољен. Прихваћени типови: %(allowed)s."
 
-#: backend/projects/admin.py:128 backend/projects/form_admin.py:14
-#: backend/projects/form_admin.py:25 backend/projects/models.py:129
-#: backend/projects/models.py:198
+#: backend/projects/admin.py:93 backend/projects/models.py:130
+#: backend/projects/models.py:199
 msgid "Тип проекта"
 msgstr "Тип пројекта"
 
-#: backend/projects/admin.py:138
+#: backend/projects/admin.py:105
 msgid "Просмотр на сайте"
-msgstr ""
+msgstr "Приказ на сајту"
 
-#: backend/projects/admin.py:140
+#: backend/projects/admin.py:109
 msgid "Ссылка"
-msgstr ""
+msgstr "Линк"
+
+#: backend/projects/admin.py
+msgid "Основная информация"
+msgstr "Основне информације"
+
+#: backend/projects/admin.py backend/projects/models.py:215
+#: backend/projects/models.py:251
+msgid "Проект"
+msgstr "Пројекат"
+
+#: backend/projects/admin.py backend/projects/forms.py
+msgid "Вариант разметки"
+msgstr "Варијанта изгледа"
+
+#: backend/projects/admin.py backend/projects/models.py:259
+#: backend/projects/models.py:362
+msgid "Порядок"
+msgstr "Редослед"
+
+#: backend/projects/admin.py backend/projects/forms.py
+msgid "Изображение"
+msgstr "Слика"
+
+#: backend/projects/admin.py
+msgid "Левое изображение"
+msgstr "Лева слика"
+
+#: backend/projects/admin.py
+msgid "Мета-теги"
+msgstr "Мета ознаке"
+
+#: backend/projects/admin.py
+msgid "SEO заголовок"
+msgstr "SEO наслов"
+
+#: backend/projects/admin.py backend/site_config/admin.py
+#: backend/site_config/models.py:43
+msgid "SEO описание"
+msgstr "SEO опис"
+
+#: backend/projects/admin.py
+msgid "Ключевые слова"
+msgstr "Кључне речи"
+
+#: backend/projects/admin.py backend/projects/models.py:155
+#: backend/projects/models.py:204
+msgid "Теги"
+msgstr "Ознаке"
+
+#: backend/projects/admin.py
+msgid "Опубликовано"
+msgstr "Објављено"
+
+#: backend/projects/admin.py
+msgid "Список тезисов (JSON)"
+msgstr "Листа теза (JSON)"
+
+#: backend/projects/admin.py backend/projects/forms.py
+msgid "Будет применён ко всем импортируемым блокам"
+msgstr "Биће примењено на све увезене блокове"
+
+#: backend/projects/admin.py
+msgid "Вариант разметки будет применён ко всем импортируемым блокам"
+msgstr "Варијанта изгледа ће бити примењена на све увезене блокове"
+
+#: backend/projects/admin.py
+msgid "Изображение будет применено ко всем импортируемым блокам"
+msgstr "Слика ће бити примењена на све увезене блокове"
 
 #: backend/projects/apps.py:11
 msgid "Урбанистические проекты"
 msgstr "Урбанистички пројекти"
 
-#: backend/projects/form_admin.py:15 backend/projects/form_admin.py:26
-msgid " будет применен ко всем импортируемым проектам"
-msgstr ""
-
-#: backend/projects/form_admin.py:36 backend/projects/form_admin.py:54
-#, fuzzy
-#| msgid "Контентный блок"
+#: backend/projects/forms.py
 msgid "Проект в блоке"
-msgstr "Садржајни блок"
+msgstr "Пројекат у блоку"
 
-#: backend/projects/form_admin.py:37 backend/projects/form_admin.py:43
-#: backend/projects/form_admin.py:55 backend/projects/form_admin.py:61
-msgid " будет применен ко всем импортируемым блокам"
-msgstr ""
+#: backend/projects/forms.py
+msgid "В системе может существовать только один экземпляр настроек сайта."
+msgstr "Само једна инстанца подешавања сајта може постојати у систему."
 
-#: backend/projects/form_admin.py:42 backend/projects/form_admin.py:60
-#, fuzzy
-#| msgid "Вариант"
-msgid "Вариант разметки"
-msgstr "Варијанта"
-
-#: backend/projects/models.py:117 backend/projects/models.py:141
+#: backend/projects/models.py:118 backend/projects/models.py:142
 msgid "Идентификатор"
 msgstr "Идентификатор"
 
-#: backend/projects/models.py:120
+#: backend/projects/models.py:121
 msgid "Уникальный идентификатор типа проекта для API и фильтров."
 msgstr "Јединствени идентификатор типа пројекта за АПИ и филтере."
 
-#: backend/projects/models.py:123 backend/projects/models.py:147
-#: backend/projects/models.py:171 backend/site_config/models.py:8
+#: backend/projects/models.py:124 backend/projects/models.py:148
+#: backend/projects/models.py:172 backend/site_config/models.py:8
 msgid "Название"
 msgstr "Назив"
 
-#: backend/projects/models.py:125
+#: backend/projects/models.py:126
 msgid "Отображаемое название типа проекта."
-msgstr "Приказано име типа пројекта."
+msgstr "Приказани назив типа пројекта."
 
-#: backend/projects/models.py:130
+#: backend/projects/models.py:131
 msgid "Типы проектов"
 msgstr "Типови пројеката"
 
-#: backend/projects/models.py:144
+#: backend/projects/models.py:145
 msgid "Уникальный идентификатор тега для API и фильтров."
 msgstr "Јединствени идентификатор ознаке за АПИ и филтере."
 
-#: backend/projects/models.py:149
+#: backend/projects/models.py:150
 msgid "Отображаемое название тега."
-msgstr "Приказано име ознаке."
+msgstr "Приказани назив ознаке."
 
-#: backend/projects/models.py:153
+#: backend/projects/models.py:154
 msgid "Тег"
 msgstr "Ознака"
 
-#: backend/projects/models.py:154 backend/projects/models.py:203
-msgid "Теги"
-msgstr "Ознаке"
-
-#: backend/projects/models.py:165
+#: backend/projects/models.py:166
 msgid "Slug"
-msgstr "Slug"
+msgstr "Слуг"
 
-#: backend/projects/models.py:168
+#: backend/projects/models.py:169
 msgid "Уникальный идентификатор проекта для URL."
-msgstr "Јединствени идентификатор пројекта за URL."
+msgstr "Јединствени идентификатор пројекта за УРЛ."
 
-#: backend/projects/models.py:174
+#: backend/projects/models.py:175
 msgid "Название проекта для списка и детальной страницы."
 msgstr "Назив пројекта за листу и детаљну страницу."
 
-#: backend/projects/models.py:179
+#: backend/projects/models.py:180
 msgid "Краткое описание"
 msgstr "Кратак опис"
 
-#: backend/projects/models.py:181
+#: backend/projects/models.py:182
 msgid "Описание проекта для карточек и верхнего блока детальной страницы."
 msgstr "Опис пројекта за картице и горњи блок детаљне странице."
 
-#: backend/projects/models.py:184
+#: backend/projects/models.py:185
 msgid "Год"
 msgstr "Година"
 
-#: backend/projects/models.py:186
+#: backend/projects/models.py:187
 msgid "Год реализации или публикации проекта."
 msgstr "Година реализације или објављивања пројекта."
 
-#: backend/projects/models.py:189
+#: backend/projects/models.py:190
 msgid "Обложка"
 msgstr "Насловна слика"
 
-#: backend/projects/models.py:192
+#: backend/projects/models.py:193
 msgid "URL главного изображения проекта."
-msgstr "URL главне слике пројекта."
+msgstr "УРЛ главне слике пројекта."
 
-#: backend/projects/models.py:207
+#: backend/projects/models.py:208
 msgid "Опубликован"
 msgstr "Објављено"
 
-#: backend/projects/models.py:210
+#: backend/projects/models.py:211
 msgid "Неопубликованные проекты не попадают в публичный API."
 msgstr "Необјављени пројекти се не појављују у јавном АПИ-ју."
 
-#: backend/projects/models.py:214 backend/projects/models.py:248
-msgid "Проект"
-msgstr "Пројекат"
-
-#: backend/projects/models.py:215
+#: backend/projects/models.py:216
 msgid "Проекты"
 msgstr "Пројекти"
 
-#: backend/projects/models.py:240
+#: backend/projects/models.py:243
 msgid "Изображение и список"
 msgstr "Слика и листа"
 
-#: backend/projects/models.py:241
+#: backend/projects/models.py:244
 msgid "Два изображения"
 msgstr "Две слике"
 
-#: backend/projects/models.py:242
+#: backend/projects/models.py:245
 msgid "Изображение и кнопки"
 msgstr "Слика и дугмад"
 
-#: backend/projects/models.py:251
+#: backend/projects/models.py:254
 msgid "Вариант"
 msgstr "Варијанта"
 
-#: backend/projects/models.py:253
+#: backend/projects/models.py:256
 msgid "Вариант разметки, который использует фронтенд."
 msgstr "Варијанта изгледа коју користи фронтенд."
 
-#: backend/projects/models.py:256 backend/projects/models.py:355
-msgid "Порядок"
-msgstr "Редослед"
-
-#: backend/projects/models.py:259
+#: backend/projects/models.py:262
 msgid ""
 "Порядок блока внутри проекта. Используется для сортировки и генерации index."
 msgstr ""
 "Редослед блока унутар пројекта. Користи се за сортирање и генерисање индекса."
 
-#: backend/projects/models.py:262
+#: backend/projects/models.py:265
 msgid "Заголовок"
 msgstr "Наслов"
 
-#: backend/projects/models.py:264
+#: backend/projects/models.py:267
 msgid "Заголовок секции проекта."
 msgstr "Наслов секције пројекта."
 
-#: backend/projects/models.py:267
+#: backend/projects/models.py:270
 msgid "Основное изображение"
 msgstr "Главна слика"
 
-#: backend/projects/models.py:270
+#: backend/projects/models.py:274
 msgid "Основное изображение блока."
 msgstr "Главна слика блока."
 
-#: backend/projects/models.py:273
+#: backend/projects/models.py:277
 msgid "Дополнительное изображение"
 msgstr "Додатна слика"
 
-#: backend/projects/models.py:277
+#: backend/projects/models.py:281
 msgid "Второе изображение для варианта с двумя картинками."
 msgstr "Друга слика за варијанту са две слике."
 
-#: backend/projects/models.py:280
+#: backend/projects/models.py:284
 msgid "Список тезисов"
 msgstr "Листа теза"
 
-#: backend/projects/models.py:283
-msgid "Список строк для варианта с изображением и списком."
-msgstr "Листа редова за варијанту са сликом и листом."
+#: backend/projects/models.py:289
+#, python-format
+msgid ""
+"Слева вводите тезисы, а справа отображается технический JSON-код для "
+"системы. Его можно не трогать."
+msgstr ""
+"Са леве стране уносите тезе, а са десне стране се приказује технички JSON "
+"код за систем. Можете га оставити нетакнутим."
 
-#: backend/projects/models.py:286
+#: backend/projects/models.py:293
 msgid "Текст"
 msgstr "Текст"
 
-#: backend/projects/models.py:288
+#: backend/projects/models.py:295
 msgid "Основной HTML-текст блока."
 msgstr "Главни HTML текст блока."
 
-#: backend/projects/models.py:291
+#: backend/projects/models.py:298
 msgid "Акцентный текст"
 msgstr "Акцентовани текст"
 
-#: backend/projects/models.py:293
+#: backend/projects/models.py:300
 msgid "Дополнительный акцентный HTML-текст блока."
 msgstr "Додатни акцентовани HTML текст блока."
 
-#: backend/projects/models.py:297
+#: backend/projects/models.py:304
 msgid "Контентный блок проекта"
 msgstr "Садржајни блок пројекта"
 
-#: backend/projects/models.py:298
+#: backend/projects/models.py:305
 msgid "Контентные блоки проектов"
 msgstr "Садржајни блокови пројеката"
 
-#: backend/projects/models.py:315
+#: backend/projects/models.py:322
 msgid "Для варианта 1 требуется хотя бы один элемент списка."
 msgstr "За варијанту 1 је потребна бар једна ставка листе."
 
-#: backend/projects/models.py:317
+#: backend/projects/models.py:324
 msgid "Список тезисов допустим только для варианта 1."
 msgstr "Листа теза је дозвољена само за варијанту 1."
 
-#: backend/projects/models.py:319
+#: backend/projects/models.py:326
 msgid "Для варианта 2 требуется второе изображение."
 msgstr "За варијанту 2 је потребна друга слика."
 
-#: backend/projects/models.py:321
+#: backend/projects/models.py:328
 msgid "Второе изображение допустимо только для варианта 2."
 msgstr "Друга слика је дозвољена само за варијанту 2."
 
-#: backend/projects/models.py:345
+#: backend/projects/models.py:352
 msgid "Скачать файл"
 msgstr "Преузми датотеку"
 
-#: backend/projects/models.py:346
+#: backend/projects/models.py:353
 msgid "Перейти по ссылке"
 msgstr "Иди на линк"
 
-#: backend/projects/models.py:352
+#: backend/projects/models.py:359
 msgid "Контентный блок"
 msgstr "Садржајни блок"
 
-#: backend/projects/models.py:358
+#: backend/projects/models.py:365
 msgid "Порядок кнопки внутри блока."
 msgstr "Редослед дугмета унутар блока."
 
-#: backend/projects/models.py:361
+#: backend/projects/models.py:368
 msgid "Подпись"
-msgstr "Потпис"
+msgstr "Натпис"
 
-#: backend/projects/models.py:363
+#: backend/projects/models.py:370
 msgid "Текст кнопки для фронтенда."
 msgstr "Текст дугмета за фронтенд."
 
-#: backend/projects/models.py:366
+#: backend/projects/models.py:373
 msgid "Тип"
 msgstr "Тип"
 
-#: backend/projects/models.py:369
+#: backend/projects/models.py:376
 msgid "Тип действия кнопки."
 msgstr "Тип акције дугмета."
 
-#: backend/projects/models.py:372 backend/site_config/models.py:29
+#: backend/projects/models.py:379 backend/site_config/models.py:29
 msgid "URL"
-msgstr "URL"
+msgstr "УРЛ"
 
-#: backend/projects/models.py:374
+#: backend/projects/models.py:381
 msgid "Ссылка для скачивания или перехода."
 msgstr "Линк за преузимање или прелазак."
 
-#: backend/projects/models.py:378
+#: backend/projects/models.py:385
 msgid "Кнопка контентного блока"
 msgstr "Дугме садржајног блока"
 
-#: backend/projects/models.py:379
+#: backend/projects/models.py:386
 msgid "Кнопки контентных блоков"
 msgstr "Дугмад садржајних блокова"
 
-#: backend/projects/resources_admin.py:19
-#, fuzzy
-#| msgid "Дополнительное изображение"
+#: backend/projects/resources_admin.py:21
 msgid "slug: Это поле обязательно для заполнения"
-msgstr "Додатна слика"
+msgstr "slug: Ово поље је обавезно"
+
+#: backend/projects/resources_admin.py
+msgid "Импорт контентных блоков"
+msgstr "Увоз садржајних блокова"
+
+#: backend/projects/resources_admin.py
+msgid "Подтверждение импорта"
+msgstr "Потврда увоза"
 
 #: backend/projects/validators.py:16
 msgid "Поле string_list должно быть списком строк."
-msgstr "Поље string_list мора бити листа ниски."
+msgstr "Поље \"Листа теза\" мора бити листа стрингова."
 
 #: backend/projects/validators.py:19
 #, python-format
 msgid "Допускается не более %(max_items)s элементов списка."
-msgstr "Дозвољено је највише %(max_items)s ставки у листи."
+msgstr "Дозвољено је највише %(max_items)s ставки."
 
 #: backend/projects/validators.py:24
 msgid "Каждый элемент списка должен быть строкой."
-msgstr "Свака ставка у листи мора бити ниска."
+msgstr "Свака ставка листе мора бити текст."
 
 #: backend/projects/validators.py:27
 #, python-format
 msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
-msgstr "Дужина сваке ставке листе не сме прелазити %(max_length)s карактера."
+msgstr "Дужина сваке ставке не сме прелазити %(max_length)s карактера."
+
+#: backend/projects/validators.py:36
+#, python-format
+msgid "Элемент списка не может быть пустым (индекс %(index)s)"
+msgstr "Ставка листе не може бити празна (индекс %(index)s)"
+
+#: backend/projects/validators.py:43
+#, python-format
+msgid ""
+"Элемент списка слишком длинный (индекс %(index)s): максимум %(max_length)s "
+"символов"
+msgstr ""
+"Ставка листе је предугачка (индекс %(index)s): максимум %(max_length)s "
+"карактера"
+
+#: backend/projects/validators.py:50
+#, python-format
+msgid "HTML-теги запрещены в элементе списка (индекс %(index)s): %(tags)s"
+msgstr "HTML ознаке нису дозвољене у ставци листе (индекс %(index)s): %(tags)s"
+
+#: backend/site_config/admin.py backend/site_config/models.py:41
+msgid "Название сайта"
+msgstr "Назив сајта"
+
+#: backend/site_config/admin.py backend/site_config/models.py:48
+msgid "Копирайт"
+msgstr "Ауторско право"
+
+#: backend/site_config/admin.py
+msgid "Переводы (Русский)"
+msgstr "Преводи (Руски)"
+
+#: backend/site_config/admin.py
+msgid "Переводы (English)"
+msgstr "Преводи (Енглески)"
+
+#: backend/site_config/admin.py
+msgid "Prevodi (Srpski - Latinica)"
+msgstr "Преводи (Српски - латиница)"
+
+#: backend/site_config/admin.py
+msgid "Преводи (Српски - Ћирилица)"
+msgstr "Преводи (Српски - ћирилица)"
+
+#: backend/site_config/admin.py backend/site_config/models.py:33
+msgid "Социальные сети"
+msgstr "Друштвене мреже"
+
+#: backend/site_config/admin.py backend/site_config/models.py:12
+#: backend/site_config/models.py:49
+msgid "Языки"
+msgstr "Језици"
+
+#: backend/site_config/admin.py
+msgid "Скрывает кнопку добавления, если SiteConfig уже существует."
+msgstr "Сакрива дугме за додавање ако SiteConfig већ постоји."
+
+#: backend/site_config/admin.py
+msgid "Редиректит на редактирование при попытке создания дубликата."
+msgstr "Преусмерава на уређивање при покушају креирања дупликата."
 
 #: backend/site_config/models.py:7
-#, fuzzy
-#| msgid "Год"
 msgid "Код"
-msgstr "Година"
+msgstr "Шифра"
 
 #: backend/site_config/models.py:11
 msgid "Язык"
-msgstr ""
-
-#: backend/site_config/models.py:12 backend/site_config/models.py:46
-msgid "Языки"
-msgstr ""
+msgstr "Језик"
 
 #: backend/site_config/models.py:21
 msgid "Telegram"
-msgstr ""
+msgstr "Телеграм"
 
 #: backend/site_config/models.py:22
 msgid "Instagram"
-msgstr ""
+msgstr "Инстаграм"
 
 #: backend/site_config/models.py:23
 msgid "Facebook"
-msgstr ""
+msgstr "Фејсбук"
 
 #: backend/site_config/models.py:24
 msgid "LinkedIn"
-msgstr ""
+msgstr "Линкедин"
 
 #: backend/site_config/models.py:27
-#, fuzzy
-#| msgid "Тип проекта"
 msgid "Тип соцсети"
-msgstr "Тип пројекта"
+msgstr "Тип друштвене мреже"
 
 #: backend/site_config/models.py:32
 msgid "Социальная сеть"
-msgstr ""
-
-#: backend/site_config/models.py:33
-msgid "Социальные сети"
-msgstr ""
-
-#: backend/site_config/models.py:41
-#, fuzzy
-#| msgid "Название"
-msgid "Название сайта"
-msgstr "Назив"
+msgstr "Друштвена мрежа"
 
 #: backend/site_config/models.py:41
 msgid "Максимум 100 символов"
-msgstr ""
+msgstr "Максимум 100 карактера"
 
-#: backend/site_config/models.py:43
-#, fuzzy
-#| msgid "Краткое описание"
-msgid "SEO описание"
-msgstr "Кратак опис"
-
-#: backend/site_config/models.py:43
+#: backend/site_config/models.py:43 backend/site_config/models.py:46
 msgid "Максимум 250 символов"
-msgstr ""
+msgstr "Максимум 250 карактера"
 
-#: backend/site_config/models.py:45
-msgid "Копирайт"
-msgstr ""
-
-#: backend/site_config/models.py:45
-msgid "Максимум 150 символов"
-msgstr ""
+#: backend/site_config/models.py:46
+msgid "Политика конфиденциальности"
+msgstr "Политика приватности"
 
 #: backend/site_config/models.py:48
+msgid "Максимум 150 символов"
+msgstr "Максимум 150 карактера"
+
+#: backend/site_config/models.py:51
 msgid "Соцсети"
-msgstr ""
+msgstr "Друштвене мреже"
 
-#: backend/site_config/models.py:52
+#: backend/site_config/models.py:55
 msgid "Может существовать только один объект настроек сайта"
-msgstr ""
+msgstr "Само један објекат подешавања сајта може постојати"
 
-#: backend/site_config/models.py:59 backend/site_config/models.py:60
+#: backend/site_config/models.py:62 backend/site_config/models.py:63
 msgid "Настройки сайта"
-msgstr ""
+msgstr "Подешавања сајта"
 
-#: backend/users/admin.py:70
+#: backend/users/admin.py:69
 msgid "Полное имя"
-msgstr ""
+msgstr "Пуно име"
 
 #: backend/users/apps.py:10
 msgid "Управление пользователями"
@@ -583,3 +681,6 @@ msgstr "Прикажи у блоку тима на сајту"
 #: backend/users/models.py:141
 msgid "Пользователи"
 msgstr "Корисници"
+
+#~ msgid "Фото"
+#~ msgstr "Фотографија"

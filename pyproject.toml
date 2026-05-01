@@ -48,6 +48,7 @@ django-import-export = "^4.4.0"
 deep-translator = "^1.11.4"
 google-trans-new = "^1.1.9"
 django-tinymce = "^5.0.0"
+django-jsonform = "^2.23.2"
 
 [tool.poetry.group.dev.dependencies]
 # Code quality and formatting

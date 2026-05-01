@@ -1,7 +1,9 @@
+"""Классы ресурсов для импорта csv."""
+
 from django.utils.translation import gettext_lazy as _
 from import_export import resources
 
-from .models import Project, ProjectContentBlock, ProjectType, Tag
+from .models import ProjectType, Tag
 
 
 class BaseResource(resources.ModelResource):
@@ -34,55 +36,3 @@ class ProjectTypeResource(TagResource):
 
     class Meta(TagResource.Meta):
         model = ProjectType
-
-
-class ProjectResource(BaseResource):
-    """Ресурс для импорта/экстпорта проектов."""
-
-    class Meta(BaseResource.Meta):
-        model = Project
-        import_id_fields = ['slug']
-        fields = [
-            'slug',
-            'title_ru',
-            'title_en',
-            'title_sr_latn',
-            'description_ru',
-            'description_en',
-            'description_sr_latn',
-            'year',
-        ]
-
-    def after_init_instance(self, instance, new, row, **kwargs):
-        if 'project_type' in kwargs:
-            instance.project_type = kwargs['project_type']
-
-
-class ProjectContentBlockResource(resources.ModelResource):
-    """Ресурс для импорта/экспорта контентного блока проектов."""
-
-    class Meta:
-        model = ProjectContentBlock
-        import_id_fields = ['title_en']
-        fields = [
-            'order',
-            'title_ru',
-            'title_en',
-            'title_sr_latn',
-            'string_list_ru',
-            'string_list_en',
-            'string_list_sr_latn',
-            'text_ru',
-            'text_en',
-            'text_sr_latn',
-            'accented_text_ru',
-            'accented_text_en',
-            'accented_text_sr_latn',
-        ]
-
-    def after_init_instance(self, instance, new, row, **kwargs):
-        if 'project' in kwargs:
-            instance.project = kwargs['project']
-        if 'variant' in kwargs:
-            instance.variant = kwargs['variant']
-        return instance

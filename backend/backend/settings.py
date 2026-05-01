@@ -93,14 +93,15 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'drf_spectacular',
+    'import_export',
+    'tinymce',
+    'django_jsonform',
     # local
     'projects',
     'users',
     'api',
     'site_config',
     'contacts',
-    'import_export',
-    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -122,14 +123,28 @@ ROOT_URLCONF = 'backend.urls'
 # Cache — Redis
 CACHE_LOCATION = config('CACHE_LOCATION', default='')
 
-if 'redis' in CACHE_LOCATION:
+if APP_ENV == 'production':
+    # В продакшене только Redis. Если CACHE_LOCATION пуст — будет ошибка, и это ХОРОШО.
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': CACHE_LOCATION,
+            'LOCATION': config('CACHE_LOCATION'),
             'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
         }
     }
+elif 'test' in sys.argv:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+
 
 TEMPLATES = [
     {
@@ -225,6 +240,10 @@ TIME_ZONE = 'Europe/Moscow'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
 
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',

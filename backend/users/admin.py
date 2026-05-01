@@ -1,19 +1,19 @@
+"""Регистрация модели User в админ-панели."""
+
 import os
 import shutil
 
-from django.conf import settings
+from core.base_admin import BaseAdmin
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from modeltranslation.admin import TranslationAdmin
 
 from .models import User
 
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin, TranslationAdmin):
+class UserAdmin(BaseUserAdmin, BaseAdmin):
     """Административный интерфейс для модели User, с поддержкой перевода."""
 
     date_hierarchy = 'date_joined'
@@ -29,7 +29,7 @@ class UserAdmin(BaseUserAdmin, TranslationAdmin):
         'is_active',
         'is_staff',
         'is_public',
-        'image_thumbnail',
+        'avatar_thumbnail',
     ]
 
     fieldsets = (
@@ -68,13 +68,8 @@ class UserAdmin(BaseUserAdmin, TranslationAdmin):
 
     get_full_name.short_description = _('Полное имя')
 
-    def image_thumbnail(self, obj):
+    def avatar_thumbnail(self, obj):
         """Метод для отображения миниатюры изображения в списке."""
-        if obj.photo:
-            photo_url = f'{settings.MEDIA_URL}{obj.photo}'
-            return format_html(
-                '<img src="{}" width="40" height="40" style="object-fit: cover; border-radius: 4px;" />', photo_url
-            )
-        return '-empty-'
+        return self.get_image_thumbnail(obj, 'photo')
 
-    image_thumbnail.short_description = User._meta.get_field('photo').verbose_name
+    avatar_thumbnail.short_description = User._meta.get_field('photo').verbose_name
