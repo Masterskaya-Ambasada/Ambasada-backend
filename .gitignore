@@ -67,6 +67,7 @@ coverage/
 *.pyd
 *.sqlite3
 *.db
+*.mo
 
 # IDE configuration
 .idea/
@@ -127,4 +128,5 @@ htmlcov/
 .copilot
 .dotnet
 .gitconfig
+.python_history
 .bash_history
