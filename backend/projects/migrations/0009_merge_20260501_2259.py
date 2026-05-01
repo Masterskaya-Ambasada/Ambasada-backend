@@ -5,8 +5,8 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("projects", "0008_alter_projectcontentblock_image_and_more"),
-        ("projects", "0008_projectgalleryimage"),
+        ('projects', '0008_alter_projectcontentblock_image_and_more'),
+        ('projects', '0008_projectgalleryimage'),
     ]
 
     operations = []

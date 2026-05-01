@@ -125,7 +125,6 @@ ROOT_URLCONF = 'backend.urls'
 CACHE_LOCATION = config('CACHE_LOCATION', default='')
 
 if APP_ENV == 'production':
-
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
