@@ -1,14 +1,12 @@
 """APIView для получения данных страницы 'О нас'."""
 
+from about.models import AboutPage, GalleryImage, Value
 from django.utils.translation import gettext_lazy as _
-
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import serializers
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from about.models import AboutPage, GalleryImage, Value
 
 from .serializers import AboutPageSerializer
 
