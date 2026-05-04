@@ -1,7 +1,6 @@
 import pytest
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
-from django.core.cache import cache
 from projects.models import (
     Project,
     ProjectBlockButton,
