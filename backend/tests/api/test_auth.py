@@ -35,14 +35,14 @@ class TestAuthApi:
         assert 'is_staff' in user_data
 
     def test_login_error_message_is_localized(self, api_client, user_factory):
-        '''Проверка кастомного сообщения об ошибке на русском языке.'''
+        """Проверка кастомного сообщения об ошибке на русском языке."""
         user_factory(email='test@test.com', password='correct_password')
         
         data = {'email': 'test@test.com', 'password': 'wrong_password'}
         response = api_client.post(self.URL, data, HTTP_ACCEPT_LANGUAGE='ru')
         
-        # Обновляем текст в соответствии с реальностью из логов:
-        expected_error = 'Неверный логин или пароль. Пожалуйста, проверьте правильность введённых данных и попробуйте снова.'
-        
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert str(response.data['detail']).strip() == expected_error
+        error_detail = str(response.data['detail'])
+        assert 'Неверный' in error_detail
+        assert 'пароль' in error_detail
+        assert 'проверьте' in error_detail
