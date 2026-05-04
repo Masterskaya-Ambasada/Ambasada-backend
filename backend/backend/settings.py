@@ -368,3 +368,34 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 400,
+    'width': '100%',
+    'menubar': True,
+    'plugins': [
+        'link',
+        'lists',
+        'textcolor',
+        'colorpicker',
+        'paste',
+    ],
+    'toolbar': (
+        'undo redo | '
+        'formatselect | '
+        'bold italic underline | '
+        'forecolor backcolor | '
+        'alignleft aligncenter alignright alignjustify | '
+        'bullist numlist | '
+        'link | '
+        'removeformat'
+    ),
+    'fontsize_formats': '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
+    'textcolor_map': [],
+    'textcolor_rows': 6,
+    'link_default_target': '_blank',
+    'invalid_elements': 'img',
+    'cleanup': True,
+    'valid_elements': '*[*]',
+    'paste_data_images': False,
+}

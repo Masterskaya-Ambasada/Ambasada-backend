@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
@@ -86,21 +87,7 @@ class ContactPageContentAdminForm(forms.ModelForm):
             label='Текстовый блок для пожертвований',
             widget=TinyMCE(
                 attrs={'cols': 100, 'rows': 12},
-                mce_attrs={
-                    'height': 250,
-                    'menubar': False,
-                    'branding': False,
-                    'statusbar': False,
-                    'plugins': 'link',
-                    'toolbar': ('undo redo | bold italic underline | ' 'link unlink | removeformat'),
-                    'forced_root_block': 'p',
-                    'valid_elements': 'p,br,strong/b,em/i,u,a[href|target|rel|title]',
-                    'invalid_elements': 'script,iframe,object,embed,form,input,button,style',
-                    'default_link_target': '_blank',
-                    'link_default_target': '_blank',
-                    'allow_unsafe_link_target': False,
-                    'paste_as_text': True,
-                },
+                mce_attrs=settings.TINYMCE_DEFAULT_CONFIG,
             ),
         )
 
