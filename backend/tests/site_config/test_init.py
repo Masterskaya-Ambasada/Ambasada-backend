@@ -65,9 +65,7 @@ class InitViewTests(APITestCase):
     def test_only_one_site_config_allowed(self):
         """Проверка валидации на создание единственного экземпляра настроек."""
         SiteConfig.objects.create(site_name='First')
-
-        # Ожидаем IntegrityError, так как self.pk = 1 принудительно 
-        # вызывает дублирование первичного ключа в БД
+        
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 SiteConfig.objects.create(site_name='Second')
