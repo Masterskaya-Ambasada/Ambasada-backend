@@ -10,6 +10,7 @@ from drf_spectacular.views import (
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from api.about.views import AboutAPIView
+from api.auth.views import AmbasadaTokenObtainPairView
 from api.contacts.views import ContactCreateView
 from api.projects.views import (
     ProjectDetailView,
@@ -17,8 +18,9 @@ from api.projects.views import (
     ProjectTagListView,
     ProjectTypeListView,
 )
+from api.schemas.auth_schemas import TOKEN_REFRESH_SCHEMA
 from api.site_config.views import InitView
-from api.users.views import AmbasadaTokenObtainPairView, TeamListView
+from api.users.views import TeamListView
 
 app_name = 'api'
 
@@ -49,7 +51,7 @@ doc_urlpatterns = [
 # Эндпоинты авторизации
 auth_urlpatterns = [
     path('login/', AmbasadaTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/refresh/', TOKEN_REFRESH_SCHEMA(TokenRefreshView).as_view(), name='token_refresh'),
 ]
 
 # Эндпоинты пользователей и команды
