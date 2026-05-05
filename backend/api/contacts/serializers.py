@@ -1,4 +1,4 @@
-from contacts.models import ContactRequest
+from contacts.models import ContactPageContent, ContactRequest, ContactSocialLink
 from rest_framework import serializers
 
 
@@ -10,3 +10,23 @@ class ContactRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactRequest
         fields = ['name', 'email', 'message', 'reason', 'contact_preference']
+
+    def create(self, validated_data):
+        validated_data.pop('contact_preference', None)
+        return super().create(validated_data)
+
+
+class ContactSocialLinkSerializer(serializers.ModelSerializer):
+    """Сериалайзер для для ссылок на соцсети и мессенджеры."""
+
+    class Meta:
+        model = ContactSocialLink
+        fields = ('social_type', 'url', 'order')
+
+
+class ContactPageContentSerializer(serializers.ModelSerializer):
+    """Сериалайзер для редактируемой ссылки на пожертвования."""
+
+    class Meta:
+        model = ContactPageContent
+        fields = ('donation_text',)
