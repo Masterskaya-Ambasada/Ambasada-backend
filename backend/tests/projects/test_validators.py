@@ -12,14 +12,14 @@ def test_validate_string_list_accepts_valid_list():
 def test_validate_string_list_raises_error_when_value_is_not_list():
     with pytest.raises(ValidationError) as exc_info:
         validate_string_list('not-a-list')
-    assert 'списком строк' in str(exc_info.value).lower()
+    assert 'должно содержать список строк' in str(exc_info.value).lower()
 
 
 def test_validate_string_list_raises_error_when_list_has_too_many_items():
     value = ['item'] * (STRING_LIST_MAX_ITEMS + 1)
     with pytest.raises(ValidationError) as exc_info:
         validate_string_list(value)
-    assert 'не более 20' in str(exc_info.value).lower()
+    assert 'максимальное количество элементов списка: 20' in str(exc_info.value).lower()
 
 
 def test_validate_string_list_raises_error_when_item_is_not_string():

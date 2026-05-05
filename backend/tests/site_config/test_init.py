@@ -1,9 +1,11 @@
 from django.core.cache import cache
-from django.core.exceptions import ValidationError
+
 from django.urls import reverse
 from rest_framework.test import APITestCase
+from django.db import IntegrityError, transaction
 
-from site_config.models import Language, SiteConfig, Social
+from site_config.models import SiteConfig
+
 
 
 class InitViewTests(APITestCase):
@@ -64,5 +66,8 @@ class InitViewTests(APITestCase):
         """Проверка валидации на создание единственного экземпляра настроек."""
         SiteConfig.objects.create(site_name='First')
 
-        with self.assertRaises(ValidationError):
-            SiteConfig.objects.create(site_name='Second')
+        # Ожидаем IntegrityError, так как self.pk = 1 принудительно 
+        # вызывает дублирование первичного ключа в БД
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                SiteConfig.objects.create(site_name='Second')
