@@ -93,6 +93,9 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'drf_spectacular',
+    'import_export',
+    'tinymce',
+    'django_jsonform',
     # local
     'projects',
     'users',
@@ -238,6 +241,10 @@ TIME_ZONE = 'Europe/Moscow'
 
 STATIC_URL = 'static/'
 
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
+
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
     cast=bool,
@@ -357,4 +364,16 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API documentation',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+}
+
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 200,
+    'menubar': False,
+    'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
+    'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
+    'code,help,wordcount',
+    'toolbar': 'undo redo | formatselect | bold italic backcolor | '
+    'alignleft aligncenter alignright alignjustify | '
+    'bullist numlist outdent indent | removeformat | help',
 }

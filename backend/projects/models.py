@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Max
 from django.utils.translation import gettext_lazy as _
+from django_jsonform.models.fields import JSONField
 
 from projects.constants import (
     BLOCK_VARIANT_IMAGE_WITH_BUTTONS,
@@ -284,6 +285,8 @@ class ProjectContentBlock(models.Model):
 
     objects = ProjectContentBlockQuerySet.as_manager()
 
+    LIST_SCHEMA = {'type': 'array', 'items': {'type': 'string', 'rows': 5, 'widget': 'textarea'}}
+
     class Variant(models.IntegerChoices):
         """Поддерживаемые варианты разметки контентного блока."""
 
@@ -317,6 +320,7 @@ class ProjectContentBlock(models.Model):
         _('Основное изображение'),
         upload_to=project_block_image_path,
         max_length=URL_MAX_LENGTH,
+        blank=True,  # добавил из-за проблем с импортом
         help_text=_('Основное изображение блока.'),
     )
     left_image = models.ImageField(
@@ -326,11 +330,14 @@ class ProjectContentBlock(models.Model):
         blank=True,
         help_text=_('Второе изображение для варианта с двумя картинками.'),
     )
-    string_list = models.JSONField(
+    string_list = JSONField(
         _('Список тезисов'),
+        schema=LIST_SCHEMA,
         default=list,
         blank=True,
-        help_text=_('Список строк для варианта с изображением и списком.'),
+        help_text=_(
+            'Слева вводите тезисы, а справа отображается технический JSON-код для системы. Его можно не трогать.'
+        ),
     )
     text = models.TextField(
         _('Текст'),

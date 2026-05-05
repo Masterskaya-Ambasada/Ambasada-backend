@@ -43,6 +43,9 @@ class SiteConfig(models.Model):
     seo_description = models.CharField(
         max_length=250, verbose_name=_('SEO описание'), help_text=_('Максимум 250 символов')
     )
+    privacy_policy = models.TextField(
+        max_length=250, verbose_name=_('Политика конфиденциальности'), help_text=_('Максимум 250 символов'), default=''
+    )
     copyright = models.CharField(max_length=150, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов'))
     languages = models.ManyToManyField('Language', blank=True, related_name='site_configs', verbose_name=_('Языки'))
 
