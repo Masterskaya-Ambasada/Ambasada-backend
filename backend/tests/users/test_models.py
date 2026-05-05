@@ -99,7 +99,7 @@ class TestUserManager:
 
     def test_create_user_no_email_raises_error(self):
         """Проверка валидации обязательного email в менеджере."""
-        with pytest.raises(ValueError, match='почта'):
+        with pytest.raises(ValueError, match='(Электронная почта|Адрес электронной почты)'):
             User.objects.create_user(email=None)
 
 
