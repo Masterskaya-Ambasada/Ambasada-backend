@@ -93,7 +93,9 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'drf_spectacular',
+    'import_export',
     'tinymce',
+    'django_jsonform',
     # local
     'projects',
     'users',
@@ -123,6 +125,7 @@ ROOT_URLCONF = 'backend.urls'
 CACHE_LOCATION = config('CACHE_LOCATION', default='')
 
 if APP_ENV == 'production':
+    # В продакшене только Redis. Если CACHE_LOCATION пуст — будет ошибка, и это ХОРОШО.
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
@@ -142,16 +145,6 @@ else:
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         }
     }
-
-# if 'redis' in CACHE_LOCATION:
-
-#     CACHES = {
-#         'default': {
-#             'BACKEND': 'django_redis.cache.RedisCache',
-#             'LOCATION': CACHE_LOCATION,
-#             'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
-#         }
-#     }
 
 TEMPLATES = [
     {
@@ -247,6 +240,10 @@ TIME_ZONE = 'Europe/Moscow'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
 
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
@@ -369,33 +366,14 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
+
 TINYMCE_DEFAULT_CONFIG = {
-    'height': 400,
-    'width': '100%',
-    'menubar': True,
-    'plugins': [
-        'link',
-        'lists',
-        'textcolor',
-        'colorpicker',
-        'paste',
-    ],
-    'toolbar': (
-        'undo redo | '
-        'formatselect | '
-        'bold italic underline | '
-        'forecolor backcolor | '
-        'alignleft aligncenter alignright alignjustify | '
-        'bullist numlist | '
-        'link | '
-        'removeformat'
-    ),
-    'fontsize_formats': '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
-    'textcolor_map': [],
-    'textcolor_rows': 6,
-    'link_default_target': '_blank',
-    'invalid_elements': 'img',
-    'cleanup': True,
-    'valid_elements': '*[*]',
-    'paste_data_images': False,
+    'height': 200,
+    'menubar': False,
+    'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
+    'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
+    'code,help,wordcount',
+    'toolbar': 'undo redo | formatselect | bold italic backcolor | '
+    'alignleft aligncenter alignright alignjustify | '
+    'bullist numlist outdent indent | removeformat | help',
 }
