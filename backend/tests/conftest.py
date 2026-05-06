@@ -4,7 +4,7 @@ import pytest
 from django.core.cache import cache
 from django.test import override_settings
 from rest_framework.test import APIClient
-
+from django.contrib.auth import get_user_model
 from projects.models import (
     Project,
     ProjectBlockButton,
@@ -13,6 +13,47 @@ from projects.models import (
     Tag,
 )
 
+User = get_user_model()
+
+
+# =========================================================
+# USERS
+# =========================================================
+
+@pytest.fixture
+def user_factory(db):
+    """Фабрика для создания пользователей с произвольными параметрами."""
+    def create_user(email='test@example.com', password='password', **kwargs):
+        return User.objects.create_user(email=email, password=password, **kwargs)
+    return create_user
+
+
+@pytest.fixture
+def regular_user(user_factory):
+    """Обычный пользователь (роль USER, без прав staff)."""
+    return user_factory(
+        email='user@test.com',
+        first_name='Ivan',
+        last_name='Ivanov',
+        role=User.Role.USER
+    )
+
+
+@pytest.fixture
+def editor_user(user_factory):
+    """Пользователь-редактор контента."""
+    return user_factory(email='editor@test.com', role=User.Role.EDITOR)
+
+
+@pytest.fixture
+def admin_user(db):
+    """Суперпользователь."""
+    return User.objects.create_superuser(
+        email='admin@test.com',
+        password='adminpassword',
+        first_name='Admin',
+        last_name='Adminov'
+    )
 
 # Test settings with local memory cache instead of Redis
 TEST_CACHE_SETTINGS = {
@@ -34,14 +75,23 @@ def configure_cache(settings):
         yield
         cache.clear()
 
+# =========================================================
+# API
+# =========================================================
 
 @pytest.fixture
 def api_client():
+    """DRF тестовый клиент."""
     return APIClient()
 
 
+# =========================================================
+# ROJECT TYPES
+# =========================================================
+
 @pytest.fixture
 def project_type_architecture():
+    """Тип проекта: архитектура."""
     return ProjectType.objects.create(
         slug='architecture',
         label='Architecture',
@@ -50,14 +100,20 @@ def project_type_architecture():
 
 @pytest.fixture
 def project_type_research():
+    """Тип проекта: исследование."""
     return ProjectType.objects.create(
         slug='research',
         label='Research',
     )
 
 
+# =========================================================
+# TAGS
+# =========================================================
+
 @pytest.fixture
 def tag_urban():
+    """Тег: urban."""
     return Tag.objects.create(
         slug='urban',
         label='Urban',
@@ -66,6 +122,7 @@ def tag_urban():
 
 @pytest.fixture
 def tag_social():
+    """Тег: social."""
     return Tag.objects.create(
         slug='social',
         label='Social',
@@ -74,14 +131,20 @@ def tag_social():
 
 @pytest.fixture
 def tag_hidden():
+    """Тег: скрытый (для непубличных проектов)."""
     return Tag.objects.create(
         slug='hidden',
         label='Hidden',
     )
 
 
+# =========================================================
+# PROJECTS
+# =========================================================
+
 @pytest.fixture
 def published_project(project_type_architecture, tag_urban, tag_social):
+    """Опубликованный проект с тегами urban и social."""
     project = Project.objects.create(
         slug='central-park',
         title='Central Park',
@@ -97,6 +160,7 @@ def published_project(project_type_architecture, tag_urban, tag_social):
 
 @pytest.fixture
 def second_published_project(project_type_research, tag_social):
+    """Второй опубликованный проект."""
     project = Project.objects.create(
         slug='city-research',
         title='City Research',
@@ -112,6 +176,7 @@ def second_published_project(project_type_research, tag_social):
 
 @pytest.fixture
 def unpublished_project(project_type_architecture, tag_hidden):
+    """Неопубликованный проект (используется для проверки доступа)."""
     project = Project.objects.create(
         slug='secret-project',
         title='Secret Project',
@@ -125,8 +190,13 @@ def unpublished_project(project_type_architecture, tag_hidden):
     return project
 
 
+# =========================================================
+# CONTENT BLOCKS
+# =========================================================
+
 @pytest.fixture
 def list_block(published_project):
+    """Контент-блок с изображением и списком."""
     return ProjectContentBlock.objects.create(
         project=published_project,
         variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
@@ -141,6 +211,7 @@ def list_block(published_project):
 
 @pytest.fixture
 def two_images_block(published_project):
+    """Контент-блок с двумя изображениями."""
     return ProjectContentBlock.objects.create(
         project=published_project,
         variant=ProjectContentBlock.Variant.TWO_IMAGES,
@@ -153,8 +224,13 @@ def two_images_block(published_project):
     )
 
 
+# =========================================================
+# BUTTONS BLOCK
+# =========================================================
+
 @pytest.fixture
 def buttons_block(published_project):
+    """Контент-блок с кнопками действий."""
     block = ProjectContentBlock.objects.create(
         project=published_project,
         variant=ProjectContentBlock.Variant.IMAGE_WITH_BUTTONS,
@@ -164,6 +240,7 @@ def buttons_block(published_project):
         text='<p>Buttons text</p>',
         accented_text='<p>Buttons accent</p>',
     )
+
     ProjectBlockButton.objects.create(
         block=block,
         order=1,
@@ -171,6 +248,7 @@ def buttons_block(published_project):
         type=ProjectBlockButton.ButtonType.DOWNLOAD,
         url='https://example.com/file.pdf',
     )
+
     ProjectBlockButton.objects.create(
         block=block,
         order=2,
@@ -178,4 +256,5 @@ def buttons_block(published_project):
         type=ProjectBlockButton.ButtonType.REDIRECT,
         url='https://example.com/page',
     )
+
     return block

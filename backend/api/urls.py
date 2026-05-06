@@ -10,15 +10,17 @@ from drf_spectacular.views import (
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from api.about.views import AboutAPIView
-from api.contacts.views import ContactCreateView
+from api.auth.views import AmbasadaTokenObtainPairView
+from api.contacts.views import ContactView
 from api.projects.views import (
     ProjectDetailView,
     ProjectListView,
     ProjectTagListView,
     ProjectTypeListView,
 )
+from api.schemas.auth_schemas import TOKEN_REFRESH_SCHEMA
 from api.site_config.views import InitView
-from api.users.views import AmbasadaTokenObtainPairView, TeamListView
+from api.users.views import TeamListView
 
 app_name = 'api'
 
@@ -49,7 +51,7 @@ doc_urlpatterns = [
 # Эндпоинты авторизации
 auth_urlpatterns = [
     path('login/', AmbasadaTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/refresh/', TOKEN_REFRESH_SCHEMA(TokenRefreshView).as_view(), name='token_refresh'),
 ]
 
 # Эндпоинты пользователей и команды
@@ -72,7 +74,7 @@ about_urlpatterns = [
 
 # Эндпоинты контактов
 contact_urlpatterns = [
-    path('', ContactCreateView.as_view(), name='contact-create'),
+    path('', ContactView.as_view(), name='contact-create'),
 ]
 
 # Объединение всех эндпоинтов версии v1
@@ -87,4 +89,4 @@ v1_urlpatterns = [
 ]
 
 # Главный список путей
-urlpatterns = v1_urlpatterns
+urlpatterns = [path('v1/', include(v1_urlpatterns))]

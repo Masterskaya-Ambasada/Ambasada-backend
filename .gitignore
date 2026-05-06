@@ -128,3 +128,5 @@ htmlcov/
 .copilot
 .dotnet
 .gitconfig
+.python_history
+.bash_history
