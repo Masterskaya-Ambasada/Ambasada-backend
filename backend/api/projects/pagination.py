@@ -27,3 +27,23 @@ class ProjectLimitOffsetPagination(LimitOffsetPagination):
                 },
             }
         )
+
+    def get_paginated_response_schema(self, schema):
+        """Возвращает OpenAPI-схему в фактическом формате API."""
+        return {
+            'type': 'object',
+            'properties': {
+                'items': schema,
+                'pagination': {
+                    'type': 'object',
+                    'properties': {
+                        'totalItems': {'type': 'integer', 'example': 80},
+                        'offset': {'type': 'integer', 'example': 20},
+                        'limit': {'type': 'integer', 'example': 20},
+                        'isNext': {'type': 'boolean', 'example': True},
+                    },
+                    'required': ['totalItems', 'offset', 'limit', 'isNext'],
+                },
+            },
+            'required': ['items', 'pagination'],
+        }

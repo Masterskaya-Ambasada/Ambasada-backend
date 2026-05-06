@@ -22,8 +22,15 @@ from api.projects.serializers import (
     ProjectDetailSerializer,
     ProjectTypeSerializer,
 )
+from api.schemas.projects_schemas import (
+    PROJECT_DETAIL_SCHEMA,
+    PROJECT_LIST_SCHEMA,
+    PROJECT_TAGS_SCHEMA,
+    PROJECT_TYPES_SCHEMA,
+)
 
 
+@PROJECT_LIST_SCHEMA
 class ProjectListView(ListAPIView):
     """Возвращает список опубликованных проектов с фильтрацией и пагинацией."""
 
@@ -71,6 +78,7 @@ class ProjectListView(ListAPIView):
         return queryset.distinct()
 
 
+@PROJECT_DETAIL_SCHEMA
 class ProjectDetailView(RetrieveAPIView):
     """Возвращает детальную страницу опубликованного проекта по slug."""
 
@@ -97,6 +105,7 @@ class ProjectDetailView(RetrieveAPIView):
         )
 
 
+@PROJECT_TAGS_SCHEMA
 class ProjectTagListView(APIView):
     """Возвращает список тегов опубликованных проектов."""
 
@@ -108,6 +117,7 @@ class ProjectTagListView(APIView):
         return Response(tags)
 
 
+@PROJECT_TYPES_SCHEMA
 class ProjectTypeListView(APIView):
     """Возвращает список типов проектов для фильтров фронтенда."""
 
