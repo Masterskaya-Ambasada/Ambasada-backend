@@ -1,4 +1,8 @@
+"""Pytest configuration for test environment."""
+
 import pytest
+from django.core.cache import cache
+from django.test import override_settings
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
 from projects.models import (
@@ -51,6 +55,25 @@ def admin_user(db):
         last_name='Adminov'
     )
 
+# Test settings with local memory cache instead of Redis
+TEST_CACHE_SETTINGS = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+
+@pytest.fixture(autouse=True)
+def configure_cache(settings):
+    """Configure local memory cache for tests instead of Redis."""
+    with override_settings(CACHES=TEST_CACHE_SETTINGS):
+        # Reconfigure cache with new settings
+        from django.core.cache import caches
+        cache.close()
+        caches['default'].close()
+        yield
+        cache.clear()
 
 # =========================================================
 # API
