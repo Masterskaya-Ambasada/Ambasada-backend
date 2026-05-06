@@ -93,6 +93,9 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'drf_spectacular',
+    'import_export',
+    'tinymce',
+    'django_jsonform',
     # local
     'projects',
     'users',
@@ -122,6 +125,7 @@ ROOT_URLCONF = 'backend.urls'
 CACHE_LOCATION = config('CACHE_LOCATION', default='')
 
 if APP_ENV == 'production':
+    # В продакшене только Redis. Если CACHE_LOCATION пуст — будет ошибка, и это ХОРОШО.
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
@@ -141,16 +145,6 @@ else:
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         }
     }
-
-# if 'redis' in CACHE_LOCATION:
-
-#     CACHES = {
-#         'default': {
-#             'BACKEND': 'django_redis.cache.RedisCache',
-#             'LOCATION': CACHE_LOCATION,
-#             'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
-#         }
-#     }
 
 TEMPLATES = [
     {
@@ -246,6 +240,10 @@ TIME_ZONE = 'Europe/Moscow'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
 
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
@@ -366,4 +364,16 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API documentation',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+}
+
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 200,
+    'menubar': False,
+    'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
+    'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
+    'code,help,wordcount',
+    'toolbar': 'undo redo | formatselect | bold italic backcolor | '
+    'alignleft aligncenter alignright alignjustify | '
+    'bullist numlist outdent indent | removeformat | help',
 }

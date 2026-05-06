@@ -6,13 +6,14 @@ from rest_framework import status
 
 
 @pytest.mark.django_db
-def test_about_page_success(api_client, about_page, values, gallery_images):
+def test_about_page_success(api_client, about_full_setup):
     """
     Проверяет успешное получение страницы 'О нас'.
 
     Ожидается:
     - статус 200
-    - наличие всех основных секций
+    - наличие всех секций
+    - корректные данные из БД
     """
     url = reverse('api:about')
     response = api_client.get(url)
@@ -41,18 +42,18 @@ def test_about_page_not_found(api_client):
     response = api_client.get(url)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()['detail'] is not None
+    assert 'detail' in response.json()
 
 
 @pytest.mark.django_db
-def test_about_team_structure(api_client, about_page, team_members):
+def test_about_team_structure(api_client, about_full_setup):
     """
-    Проверяет корректность структуры блока команды.
+    Проверяет структуру и данные блока команды.
 
     Ожидается:
-    - наличие title
-    - список участников
-    - наличие action_button
+    - title присутствует
+    - members не пустой
+    - данные совпадают с БД
     """
     url = reverse('api:about')
     response = api_client.get(url)
@@ -62,17 +63,23 @@ def test_about_team_structure(api_client, about_page, team_members):
     assert 'title' in data
     assert 'members' in data
     assert isinstance(data['members'], list)
+    assert len(data['members']) == 2
+
+    emails = [m['email'] for m in data['members']]
+    assert 'user1@test.com' in emails
+    assert 'user2@test.com' in emails
+
     assert 'action_button' in data
 
 
 @pytest.mark.django_db
-def test_about_values_structure(api_client, about_page, values):
+def test_about_values_structure(api_client, about_full_setup):
     """
-    Проверяет корректность структуры блока ценностей.
+    Проверяет структуру и данные блока ценностей.
 
     Ожидается:
-    - наличие title
-    - список items
+    - title присутствует
+    - items содержит реальные данные
     """
     url = reverse('api:about')
     response = api_client.get(url)
@@ -82,16 +89,21 @@ def test_about_values_structure(api_client, about_page, values):
     assert 'title' in data
     assert 'items' in data
     assert isinstance(data['items'], list)
+    assert len(data['items']) == 2
+
+    titles = [v['title'] for v in data['items']]
+    assert 'Value 1' in titles
+    assert 'Value 2' in titles
 
 
 @pytest.mark.django_db
-def test_about_gallery_structure(api_client, about_page, gallery_images):
+def test_about_gallery_structure(api_client, about_full_setup):
     """
-    Проверяет корректность структуры галереи.
+    Проверяет структуру и данные галереи.
 
     Ожидается:
-    - наличие title
-    - список изображений
+    - title присутствует
+    - изображения реально возвращаются из БД
     """
     url = reverse('api:about')
     response = api_client.get(url)
@@ -101,3 +113,8 @@ def test_about_gallery_structure(api_client, about_page, gallery_images):
     assert 'title' in data
     assert 'images' in data
     assert isinstance(data['images'], list)
+    assert len(data['images']) == 2
+
+    alts = [img['alt'] for img in data['images']]
+    assert 'Image 1' in alts
+    assert 'Image 2' in alts
