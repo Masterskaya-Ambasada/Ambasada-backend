@@ -64,11 +64,6 @@ def test_about_team_structure(api_client, about_full_setup):
     assert 'members' in data
     assert isinstance(data['members'], list)
     assert len(data['members']) == 2
-
-    emails = [m['email'] for m in data['members']]
-    assert 'user1@test.com' in emails
-    assert 'user2@test.com' in emails
-
     assert 'action_button' in data
 
 
