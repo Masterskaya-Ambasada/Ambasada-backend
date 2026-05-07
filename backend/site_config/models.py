@@ -4,12 +4,18 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .constants import CACHE_KEY_INIT, DEFAULT_COOKIE_MESSAGE, COOKIE_BUTTON_TEXT_MAX_LENGTH, DEFAULT_COOKIE_BUTTON_TEXT
+from .constants import (
+    COOKIE_BUTTON_TEXT_MAX_LENGTH,
+    DEFAULT_COOKIE_BUTTON_TEXT,
+    DEFAULT_COOKIE_MESSAGE,
+    get_config_cache_key,
+)
 
 
 def clear_config_cache():
     """Единая функция очистки кэша конфигурации."""
-    cache.delete(CACHE_KEY_INIT)
+    keys = [get_config_cache_key(language_code) for language_code, _ in settings.LANGUAGES]
+    cache.delete_many(keys)
 
 
 class Language(models.Model):
@@ -88,7 +94,7 @@ class SiteConfig(models.Model):
     cookie_button_text = models.CharField(
         max_length=COOKIE_BUTTON_TEXT_MAX_LENGTH,
         verbose_name=_('Текст кнопки cookie'),
-        default=DEFAULT_COOKIE_BUTTON_TEXT
+        default=DEFAULT_COOKIE_BUTTON_TEXT,
     )
 
     copyright = models.CharField(max_length=150, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов'))

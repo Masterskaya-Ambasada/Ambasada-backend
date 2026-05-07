@@ -5,15 +5,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("site_config", "0005_siteconfig_cookie_button_text_and_more"),
+        ('site_config', '0005_siteconfig_cookie_button_text_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="siteconfig",
-            name="cookie_button_text",
-            field=models.CharField(
-                default="OK", max_length=20, verbose_name="Текст кнопки cookie"
-            ),
+            model_name='siteconfig',
+            name='cookie_button_text',
+            field=models.CharField(default='OK', max_length=20, verbose_name='Текст кнопки cookie'),
         ),
     ]

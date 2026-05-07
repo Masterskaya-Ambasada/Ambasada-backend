@@ -3,13 +3,13 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from site_config.constants import get_config_cache_key
 from site_config.models import SiteConfig
 
 from api.schemas.init_schemas import INIT_VIEW_SCHEMA
 from api.site_config.serializers import ErrorSerializer, SiteConfigSerializer
 
 from .constants import (
-    CACHE_KEY_INIT,
     CACHE_TIMEOUT_NOT_FOUND,
     CACHE_TIMEOUT_SUCCESS,
     CACHE_VALUE_NOT_FOUND,
@@ -25,7 +25,9 @@ class InitView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
-        cached = cache.get(CACHE_KEY_INIT)
+        cache_key = get_config_cache_key()
+
+        cached = cache.get(cache_key)
 
         if cached == CACHE_VALUE_NOT_FOUND:
             return self._not_found_response()
@@ -36,13 +38,13 @@ class InitView(APIView):
         config = SiteConfig.objects.prefetch_related('languages', 'socials').first()
 
         if not config:
-            cache.set(CACHE_KEY_INIT, CACHE_VALUE_NOT_FOUND, timeout=CACHE_TIMEOUT_NOT_FOUND)
+            cache.set(cache_key, CACHE_VALUE_NOT_FOUND, timeout=CACHE_TIMEOUT_NOT_FOUND)
             return self._not_found_response()
 
         serializer = SiteConfigSerializer(config)
         data = serializer.data
 
-        cache.set(CACHE_KEY_INIT, data, timeout=CACHE_TIMEOUT_SUCCESS)
+        cache.set(cache_key, data, timeout=CACHE_TIMEOUT_SUCCESS)
         return Response(data, status=status.HTTP_200_OK)
 
     def _not_found_response(self):
