@@ -79,6 +79,14 @@ class SiteConfig(models.Model):
         max_length=250, verbose_name=_('SEO описание'), help_text=_('Максимум 250 символов')
     )
     privacy_policy = models.TextField(verbose_name=_('Политика конфиденциальности'), default='')
+
+    cookie_message = models.TextField(
+        verbose_name=_('Текст cookie-сообщения'),
+        default='Мы используем технические cookie для корректной работы сайта.',
+    )
+
+    cookie_button_text = models.CharField(max_length=50, verbose_name=_('Текст кнопки cookie'), default='OK')
+
     copyright = models.CharField(max_length=150, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов'))
     languages = models.ManyToManyField('Language', blank=True, related_name='site_configs', verbose_name=_('Языки'))
     socials = models.ManyToManyField('Social', blank=True, related_name='site_configs', verbose_name=_('Соцсети'))
