@@ -16,6 +16,9 @@ INIT_VIEW_SCHEMA = extend_schema(
                     value={
                         'site_name': 'My Site',
                         'seo_description': 'Best site',
+                        'privacy_policy': 'Политика конфиденциальности',
+                        'cookie_message': 'We use cookies',
+                        'cookie_button_text': 'OK',
                         'languages': [
                             {'code': 'ru', 'label': 'Russian'},
                             {'code': 'sr-latn', 'label': 'Serbian (Latin)'},
