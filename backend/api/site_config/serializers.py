@@ -33,6 +33,9 @@ class SiteConfigSerializer(serializers.ModelSerializer):
         fields = [
             'site_name',
             'seo_description',
+            'privacy_policy',
+            'cookie_message',
+            'cookie_button_text',
             'languages',
             'socials',
             'copyright',
