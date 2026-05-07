@@ -11,4 +11,5 @@ class SiteConfigTranslationOptions(TranslationOptions):
         'copyright',
         'privacy_policy',
         'cookie_message',
+        'cookie_button_text',
     )
