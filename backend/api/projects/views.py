@@ -16,13 +16,21 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from api.projects.constants import (
+    PATH_PARAM_PROJECT_ID,
+    PROJECT_TYPES_RESPONSE_KEY,
+    QUERY_PARAM_PROJECT_TYPE,
+    QUERY_PARAM_SEARCH,
+    QUERY_PARAM_TAG,
+    TAG_QUERY_VALUE_SEPARATOR,
+)
 from api.projects.pagination import ProjectLimitOffsetPagination
 from api.projects.serializers import (
     ProjectCardSerializer,
     ProjectDetailSerializer,
     ProjectTypeSerializer,
 )
-from api.schemas.projects_schemas import (
+from api.schemas.project_schemas import (
     PROJECT_DETAIL_SCHEMA,
     PROJECT_LIST_SCHEMA,
     PROJECT_TAGS_SCHEMA,
@@ -47,32 +55,31 @@ class ProjectListView(ListAPIView):
         - CSV в одном параметре: ?tag=urban,belgrade
         """
         tags: list[str] = []
-        for raw_tag in self.request.query_params.getlist('tag'):
-            for tag in raw_tag.split(','):
+        for raw_tag in self.request.query_params.getlist(QUERY_PARAM_TAG):
+            for tag in raw_tag.split(TAG_QUERY_VALUE_SEPARATOR):
                 normalized_tag = tag.strip()
                 if normalized_tag:
                     tags.append(normalized_tag)
         return tags
 
     def get_queryset(self):
+        """Собирает queryset опубликованных проектов с применением фильтров списка."""
         tag_queryset = Tag.objects.order_by('label', 'pk')
         queryset = (
             Project.objects.filter(is_published=True)
             .select_related('project_type')
             .prefetch_related(Prefetch('tags', queryset=tag_queryset))
         )
-        project_type = (self.request.query_params.get('project_type') or '').strip()
+        project_type = (self.request.query_params.get(QUERY_PARAM_PROJECT_TYPE) or '').strip()
         if project_type:
             queryset = queryset.filter(Q(project_type__slug=project_type) | Q(project_type__label__iexact=project_type))
-
         tags = self._normalize_tag_filters()
         if tags:
             tag_filter = Q()
             for tag in tags:
                 tag_filter |= Q(tags__slug=tag) | Q(tags__label__iexact=tag)
             queryset = queryset.filter(tag_filter)
-
-        search = (self.request.query_params.get('search') or '').strip()
+        search = (self.request.query_params.get(QUERY_PARAM_SEARCH) or '').strip()
         if search:
             queryset = queryset.filter(title__icontains=search)
         return queryset.distinct()
@@ -85,9 +92,10 @@ class ProjectDetailView(RetrieveAPIView):
     permission_classes = (AllowAny,)
     serializer_class = ProjectDetailSerializer
     lookup_field = 'slug'
-    lookup_url_kwarg = 'project_id'
+    lookup_url_kwarg = PATH_PARAM_PROJECT_ID
 
     def get_queryset(self):
+        """Собирает queryset опубликованных проектов для детального просмотра."""
         tag_queryset = Tag.objects.order_by('label', 'pk')
         button_queryset = ProjectBlockButton.objects.order_by('order', 'pk')
         gallery_queryset = ProjectGalleryImage.objects.order_by('order', 'pk')
@@ -112,6 +120,7 @@ class ProjectTagListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
+        """Возвращает локализованный список тегов опубликованных проектов."""
         queryset = Tag.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
         tags = [tag.label for tag in queryset]
         return Response(tags)
@@ -124,6 +133,7 @@ class ProjectTypeListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
+        """Возвращает локализованный список типов опубликованных проектов."""
         queryset = ProjectType.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
         serializer = ProjectTypeSerializer(queryset, many=True)
-        return Response({'types': serializer.data})
+        return Response({PROJECT_TYPES_RESPONSE_KEY: serializer.data})
