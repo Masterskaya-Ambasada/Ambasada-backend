@@ -14,12 +14,20 @@ from projects.constants import (
     BLOCK_VARIANT_IMAGE_WITH_BUTTONS,
     BLOCK_VARIANT_IMAGE_WITH_LIST,
     BLOCK_VARIANT_TWO_IMAGES,
+    BUTTON_TYPE_DOWNLOAD,
     BUTTON_TYPE_MAX_LENGTH,
+    BUTTON_TYPE_REDIRECT,
     CONTENT_BLOCK_TITLE_MAX_LENGTH,
     DEFAULT_ORDER,
     DESCRIPTION_MAX_LENGTH,
+    JSONFORM_TEXTAREA_ROWS,
     LABEL_MAX_LENGTH,
     ORDER_STEP,
+    PROJECT_BLOCK_FALLBACK_SLUG,
+    PROJECT_BLOCKS_DIRECTORY,
+    PROJECT_COVER_DIRECTORY,
+    PROJECT_GALLERY_DIRECTORY,
+    PROJECT_MEDIA_DIRECTORY,
     PROJECT_SLUG_MAX_LENGTH,
     REFERENCE_SLUG_MAX_LENGTH,
     TITLE_MAX_LENGTH,
@@ -31,18 +39,18 @@ from .validators import validate_string_list
 
 def project_cover_image_path(instance: 'Project', filename: str) -> str:
     """Путь загрузки обложки проекта."""
-    return f'projects/{instance.slug}/cover/{filename}'
+    return f'{PROJECT_MEDIA_DIRECTORY}/{instance.slug}/{PROJECT_COVER_DIRECTORY}/{filename}'
 
 
 def project_gallery_image_path(instance: 'ProjectGalleryImage', filename: str) -> str:
     """Путь загрузки изображений галереи проекта."""
-    return f'projects/{instance.project.slug}/gallery/{filename}'
+    return f'{PROJECT_MEDIA_DIRECTORY}/{instance.project.slug}/{PROJECT_GALLERY_DIRECTORY}/{filename}'
 
 
 def project_block_image_path(instance: 'ProjectContentBlock', filename: str) -> str:
     """Путь загрузки изображений контентных блоков проекта."""
-    project_slug = instance.project.slug if instance.project_id else 'project'
-    return f'projects/{project_slug}/blocks/{filename}'
+    project_slug = instance.project.slug if instance.project_id else PROJECT_BLOCK_FALLBACK_SLUG
+    return f'{PROJECT_MEDIA_DIRECTORY}/{project_slug}/{PROJECT_BLOCKS_DIRECTORY}/{filename}'
 
 
 class OrderedValidationQuerySet(models.QuerySet):
@@ -54,19 +62,15 @@ class OrderedValidationQuerySet(models.QuerySet):
         """Заполняет пропущенные порядковые номера в пределах связанного объекта."""
         if not self.related_field_name:
             return
-
         pending_orders: defaultdict[int, int] = defaultdict(int)
         max_orders: dict[int, int] = {}
         related_field_name = self.related_field_name
-
         for obj in objs:
             if obj.order:
                 continue
-
             related_id = getattr(obj, f'{related_field_name}_id')
             if related_id is None:
                 continue
-
             if related_id not in max_orders:
                 max_orders[related_id] = (
                     self.filter(**{f'{related_field_name}_id': related_id})
@@ -74,7 +78,6 @@ class OrderedValidationQuerySet(models.QuerySet):
                     .get('max_order')
                     or DEFAULT_ORDER
                 )
-
             pending_orders[related_id] += ORDER_STEP
             obj.order = max_orders[related_id] + pending_orders[related_id]
 
@@ -90,10 +93,8 @@ class OrderedValidationQuerySet(models.QuerySet):
         """Проверяет и подготавливает объекты перед массовым созданием."""
         objs = list(objs)
         self._set_missing_orders(objs)
-
         for obj in objs:
             obj.full_clean()
-
         return super().bulk_create(
             objs,
             batch_size=batch_size,
@@ -285,7 +286,14 @@ class ProjectContentBlock(models.Model):
 
     objects = ProjectContentBlockQuerySet.as_manager()
 
-    LIST_SCHEMA = {'type': 'array', 'items': {'type': 'string', 'rows': 5, 'widget': 'textarea'}}
+    LIST_SCHEMA = {
+        'type': 'array',
+        'items': {
+            'type': 'string',
+            'rows': JSONFORM_TEXTAREA_ROWS,
+            'widget': 'textarea',
+        },
+    }
 
     class Variant(models.IntegerChoices):
         """Поддерживаемые варианты разметки контентного блока."""
@@ -399,8 +407,8 @@ class ProjectBlockButton(models.Model):
     class ButtonType(models.TextChoices):
         """Поддерживаемые типы кнопок блока."""
 
-        DOWNLOAD = 'download', _('Скачать файл')
-        REDIRECT = 'redirect', _('Перейти по ссылке')
+        DOWNLOAD = BUTTON_TYPE_DOWNLOAD, _('Скачать файл')
+        REDIRECT = BUTTON_TYPE_REDIRECT, _('Перейти по ссылке')
 
     block = models.ForeignKey(
         ProjectContentBlock,
