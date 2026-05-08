@@ -6,8 +6,14 @@ from django.utils.translation import gettext_lazy as _
 
 from .constants import (
     COOKIE_BUTTON_TEXT_MAX_LENGTH,
+    COPYRIGHT_MAX_LENGTH,
     DEFAULT_COOKIE_BUTTON_TEXT,
     DEFAULT_COOKIE_MESSAGE,
+    LANGUAGE_CODE_MAX_LENGTH,
+    SEO_DESCRIPTION_MAX_LENGTH,
+    SITE_CONFIG_SINGLETON_PK,
+    SITE_NAME_MAX_LENGTH,
+    SOCIAL_TYPE_MAX_LENGTH,
     get_config_cache_key,
 )
 
@@ -21,7 +27,9 @@ def clear_config_cache():
 class Language(models.Model):
     """Модель доступных языков на основе настроек проекта."""
 
-    code = models.CharField(max_length=10, unique=True, choices=settings.LANGUAGES, verbose_name=_('Код'))
+    code = models.CharField(
+        max_length=LANGUAGE_CODE_MAX_LENGTH, unique=True, choices=settings.LANGUAGES, verbose_name=_('Код')
+    )
 
     class Meta:
         verbose_name = _('Язык')
@@ -56,7 +64,7 @@ class Social(models.Model):
         LINKEDIN = 'linkedin', _('LinkedIn')
 
     social_type = models.CharField(
-        max_length=20, choices=SocialType.choices, verbose_name=_('Тип соцсети'), db_index=True
+        max_length=SOCIAL_TYPE_MAX_LENGTH, choices=SocialType.choices, verbose_name=_('Тип соцсети'), db_index=True
     )
     url = models.URLField(verbose_name=_('URL'))
 
@@ -80,9 +88,11 @@ class Social(models.Model):
 class SiteConfig(models.Model):
     """Глобальные настройки сайта (True Singleton для продакшена)."""
 
-    site_name = models.CharField(max_length=100, verbose_name=_('Название сайта'), help_text=_('Максимум 100 символов'))
+    site_name = models.CharField(
+        max_length=SITE_NAME_MAX_LENGTH, verbose_name=_('Название сайта'), help_text=_('Максимум 100 символов')
+    )
     seo_description = models.CharField(
-        max_length=250, verbose_name=_('SEO описание'), help_text=_('Максимум 250 символов')
+        max_length=SEO_DESCRIPTION_MAX_LENGTH, verbose_name=_('SEO описание'), help_text=_('Максимум 250 символов')
     )
     privacy_policy = models.TextField(verbose_name=_('Политика конфиденциальности'), default='')
 
@@ -97,7 +107,9 @@ class SiteConfig(models.Model):
         default=DEFAULT_COOKIE_BUTTON_TEXT,
     )
 
-    copyright = models.CharField(max_length=150, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов'))
+    copyright = models.CharField(
+        max_length=COPYRIGHT_MAX_LENGTH, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов')
+    )
     languages = models.ManyToManyField('Language', blank=True, related_name='site_configs', verbose_name=_('Языки'))
     socials = models.ManyToManyField('Social', blank=True, related_name='site_configs', verbose_name=_('Соцсети'))
 
@@ -107,7 +119,7 @@ class SiteConfig(models.Model):
 
     def save(self, *args, **kwargs):
         """Гарантирует уникальность записи на уровне PK и сбрасывает кэш."""
-        self.pk = 1
+        self.pk = SITE_CONFIG_SINGLETON_PK
         super().save(*args, **kwargs)
         clear_config_cache()
 
