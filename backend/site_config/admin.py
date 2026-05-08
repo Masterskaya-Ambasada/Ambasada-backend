@@ -4,6 +4,7 @@ from core.base_admin import BaseAdmin
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from .models import Language, SiteConfig, Social
 
@@ -33,32 +34,32 @@ class ConfigAdmin(BaseAdmin):
     ]
 
     fieldsets = (
-        ('Название сайта', {'fields': ('site_name_sr_latn', 'site_name_sr_cyrl')}),
-        ('Социальные сети', {'fields': ('socials',), 'classes': ('wide',)}),
-        ('Языки', {'fields': ('languages',), 'classes': ('wide',)}),
+        (_('Название сайта'), {'fields': ('site_name_sr_latn', 'site_name_sr_cyrl')}),
+        (_('Социальные сети'), {'fields': ('socials',), 'classes': ('wide',)}),
+        (_('Языки'), {'fields': ('languages',), 'classes': ('wide',)}),
         (
-            'Переводы (Русский)',
+            _('Переводы (Русский)'),
             {
                 'fields': ('seo_description_ru', 'copyright_ru', 'privacy_policy_ru'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Переводы (English)',
+            _('Переводы (Английский)'),
             {
                 'fields': ('seo_description_en', 'copyright_en', 'privacy_policy_en'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Prevodi (Srpski - Latinica)',
+            _('Переводы (Сербский - Латиница)'),
             {
                 'fields': ('seo_description_sr_latn', 'copyright_sr_latn', 'privacy_policy_sr_latn'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Преводи (Српски - Ћирилица)',
+            _('Переводы (Сербский - Кирилица)'),
             {
                 'fields': ('seo_description_sr_cyrl', 'copyright_sr_cyrl', 'privacy_policy_sr_cyrl'),
                 'classes': ('collapse',),

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-05 22:46+0300\n"
-"PO-Revision-Date: 2026-05-05 15:48+0300\n"
+"POT-Creation-Date: 2026-05-07 19:15+0300\n"
+"PO-Revision-Date: 2026-05-07 20:30+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Language: sr_Cyrl\n"
@@ -118,7 +118,7 @@ msgstr "Дугме тима (линк)"
 msgid "Участники команды"
 msgstr "Чланови тима"
 
-#: backend/about/models.py:131 backend/contacts/models.py:16
+#: backend/about/models.py:131 backend/contacts/models.py:17
 msgid "Email"
 msgstr "Е-пошта"
 
@@ -163,7 +163,15 @@ msgstr "Параграф"
 msgid "Параграфы"
 msgstr "Параграфи"
 
-#: backend/api/about/views.py:23
+#: backend/api/about/views.py:21
+msgid "Получение страницы \"О сообществе\""
+msgstr "Преузимање странице \"О заједници\""
+
+#: backend/api/about/views.py:22
+msgid "Возвращает данные страницы \"О нас\" со всеми секциями"
+msgstr "Враћа податке странице \"О нама\" са свим секцијама"
+
+#: backend/api/about/views.py:39
 msgid "Страница \"О нас\" не найдена."
 msgstr "Страница \"О нама\" није пронађена."
 
@@ -178,24 +186,35 @@ msgstr ""
 "Погрешна адреса е-поште или лозинка. Молимо проверите податке и покушајте "
 "поново."
 
-#: backend/api/contacts/views.py:11
+#: backend/api/contacts/views.py:30
 msgid "Создание запроса обратной связи"
 msgstr "Креирање захтева за контакт"
 
-#: backend/api/contacts/views.py:13
+#: backend/api/contacts/views.py:32
 msgid ""
 "Принимает данные формы и сохраняет их. Поле `contact_preference` — "
-"техническое антиспам-поле (honeypot). Поле `contact_preference` фронтендерам "
-"надо спрятать, чтобы пользователь его не видел. Если поле заполнено, запрос "
-"считается спамом и игнорируется."
+"техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается "
+"спамом и игнорируется."
 msgstr ""
-"Прихвата податке форме и чува их. Поље `contact_preference` је техничко анти-"
-"спам поље (хонеипот). Фронтенд треба да сакрије ово поље тако да корисник не "
-"може да га види. Ако је поље попуњено, захтев се сматра спамом и игнорише се."
+"Прихвата податке из форме и чува их. Поље `contact_preference` је техничко "
+"анти-спам поље (хонеипот). Ако је поље попуњено, захтев се сматра спамом и "
+"игнорише се."
 
-#: backend/api/contacts/views.py:40
+#: backend/api/contacts/views.py:50
 msgid "Получено"
 msgstr "Примљено"
+
+#: backend/api/contacts/views.py:53
+msgid "Получение контента блока контактов"
+msgstr "Преузимање садржаја блока контаката"
+
+#: backend/api/contacts/views.py:54
+msgid ""
+"Возвращает текстовый блок для пожертвований и список активных ссылок на "
+"соцсети и мессенджеры."
+msgstr ""
+"Враћа текст блок за донације и листу активних линкова ка друштвеним мрежама "
+"и месинџерима."
 
 #: backend/api/projects/serializers.py:56
 msgid "Перейти к проекту"
@@ -213,7 +232,8 @@ msgstr "Враћа глобална подешавања: назив, SEO, је�
 msgid "Успешный ответ"
 msgstr "Успешан одговор"
 
-#: backend/api/schemas/init_schemas.py:34 backend/api/site_config/views.py:50
+#: backend/api/schemas/init_schemas.py:34
+#: backend/api/site_config/constants.py:8
 msgid "Конфигурация сайта не найдена"
 msgstr "Конфигурација сајта није пронађена"
 
@@ -233,33 +253,121 @@ msgstr "Српски (латиница)"
 msgid "Serbian (Cyrillic)"
 msgstr "Српски (ћирилица)"
 
-#: backend/contacts/models.py:13 backend/users/models.py:97
+#: backend/contacts/admin.py:12
+msgid "Отображение на сайте"
+msgstr "Приказивање на сајту"
+
+#: backend/contacts/admin.py:17
+msgid "Показываются на сайте"
+msgstr "Приказују се на сајту"
+
+#: backend/contacts/admin.py:18
+msgid "Скрыты с сайта"
+msgstr "Скривени са сајта"
+
+#: backend/contacts/admin.py:79
+msgid ""
+"Доступной может быть только одна ссылка! Оставьте галочку только на одной из "
+"них"
+msgstr ""
+"Само један линк може бити активан! Оставите квачицу само на једном од њих"
+
+#: backend/contacts/models.py:14 backend/users/models.py:97
 msgid "Имя"
 msgstr "Име"
 
-#: backend/contacts/models.py:20
+#: backend/contacts/models.py:21
 msgid "Сообщение"
 msgstr "Порука"
 
-#: backend/contacts/models.py:22
+#: backend/contacts/models.py:23
 msgid "Введите сообщение"
 msgstr "Унесите поруку"
 
-#: backend/contacts/models.py:26
+#: backend/contacts/models.py:27
 msgid "Причина обращения"
 msgstr "Разлог обраћања"
 
-#: backend/contacts/models.py:29
+#: backend/contacts/models.py:30 backend/contacts/models.py:55
+#: backend/contacts/models.py:111
 msgid "Дата создания"
 msgstr "Датум креирања"
 
-#: backend/contacts/models.py:32
+#: backend/contacts/models.py:33
 msgid "Запрос обратной связи"
 msgstr "Захтев за контакт"
 
-#: backend/contacts/models.py:33
+#: backend/contacts/models.py:34
 msgid "Запросы обратной связи"
 msgstr "Захтеви за контакт"
+
+#: backend/contacts/models.py:46
+msgid "Текстовый блок для пожертвований"
+msgstr "Текст блок за донације"
+
+#: backend/contacts/models.py:47
+msgid ""
+"Редактируемый текст с возможностью добавить внешнюю ссылку. В админке "
+"используется TinyMCE."
+msgstr ""
+"Текст који се може уређивати са могућношћу додавања спољног линка. У админ "
+"панелу се користи TinyMCE."
+
+#: backend/contacts/models.py:51
+msgid "Активно"
+msgstr "Активно"
+
+#: backend/contacts/models.py:59
+msgid "Дата обновления"
+msgstr "Датум ажурирања"
+
+#: backend/contacts/models.py:63
+msgid "Редактируемая ссылка на пожертвования"
+msgstr "Линк за донације који се може уређивати"
+
+#: backend/contacts/models.py:64
+msgid "Редактируемые ссылки на пожертвования"
+msgstr "Линкови за донације који се могу уређивати"
+
+#: backend/contacts/models.py:90
+msgid "Тип соцсети / мессенджера"
+msgstr "Тип друштвене мреже / месинџера"
+
+#: backend/contacts/models.py:91
+msgid "Выбор соцсети."
+msgstr "Избор друштвене мреже."
+
+#: backend/contacts/models.py:94 backend/projects/admin.py:109
+msgid "Ссылка"
+msgstr "Линк"
+
+#: backend/contacts/models.py:95
+msgid "Например: https://t.me/tme"
+msgstr "На пример: https://t.me/tme"
+
+#: backend/contacts/models.py:99
+msgid "Порядок отображения"
+msgstr "Редослед приказивања"
+
+#: backend/contacts/models.py:103
+msgid "Показывать на сайте"
+msgstr "Приказивати на сајту"
+
+#: backend/contacts/models.py:105
+msgid ""
+"Если галочка включена — ссылка отображается на странице контактов. Если "
+"выключена — ссылка скрыта, но не удаляется."
+msgstr ""
+"Ако је квачица укључена — линк се приказује на страници контаката. Ако је "
+"искључена — линк је скривен, али није обрисан."
+
+#: backend/contacts/models.py:115
+msgid "Ссылка на соцсеть / мессенджер"
+msgstr "Линк ка друштвеној мрежи / месинџеру"
+
+#: backend/contacts/models.py:116
+msgid "Ссылки на соцсети / мессенджеры"
+msgstr "Линкови ка друштвеним мрежама / месинџерима"
 
 #: backend/core/validators.py:112
 msgid "HTML tags are not allowed."
@@ -280,6 +388,30 @@ msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
 msgstr ""
 "Тип датотеке \"%(mime)s\" није дозвољен. Прихваћени типови: %(allowed)s."
 
+#: backend/projects/admin.py:58 backend/projects/admin.py:156
+msgid "Основная информация"
+msgstr "Основне информације"
+
+#: backend/projects/admin.py:60 backend/projects/admin.py:158
+#: backend/site_config/admin.py:41
+msgid "Переводы (Русский)"
+msgstr "Преводи (Руски)"
+
+#: backend/projects/admin.py:67 backend/projects/admin.py:165
+#: backend/site_config/admin.py:48
+msgid "Переводы (Английский)"
+msgstr "Преводи (Енглески)"
+
+#: backend/projects/admin.py:74 backend/projects/admin.py:172
+#: backend/site_config/admin.py:55
+msgid "Переводы (Сербский - Латиница)"
+msgstr "Преводи (Српски - Латиница)"
+
+#: backend/projects/admin.py:81 backend/projects/admin.py:179
+#: backend/site_config/admin.py:62
+msgid "Переводы (Сербский - Кирилица)"
+msgstr "Преводи (Српски - Ћирилица)"
+
 #: backend/projects/admin.py:93 backend/projects/models.py:135
 #: backend/projects/models.py:204
 msgid "Тип проекта"
@@ -288,10 +420,6 @@ msgstr "Тип пројекта"
 #: backend/projects/admin.py:105
 msgid "Просмотр на сайте"
 msgstr "Приказ на сајту"
-
-#: backend/projects/admin.py:109
-msgid "Ссылка"
-msgstr "Линк"
 
 #: backend/projects/apps.py:11
 msgid "Урбанистические проекты"
@@ -331,7 +459,7 @@ msgstr "Ознаке"
 
 #: backend/projects/models.py:171
 msgid "Slug"
-msgstr "Slug"
+msgstr "Слуг"
 
 #: backend/projects/models.py:174
 msgid "Уникальный идентификатор проекта для URL."
@@ -384,7 +512,7 @@ msgstr "Пројекти"
 
 #: backend/projects/models.py:251
 msgid "Изображение для карусели проекта."
-msgstr "Слика за вртешку (carousel) пројекта."
+msgstr "Слика за вртешку пројекта."
 
 #: backend/projects/models.py:257
 msgid "Порядок изображения в карусели проекта."
@@ -445,7 +573,7 @@ msgid "Дополнительное изображение"
 msgstr "Додатна слика"
 
 #: backend/projects/models.py:331
-msgid "Второе изображение для возраста с двумя картинками."
+msgid "Второе изображение для варианта с двумя картинками."
 msgstr "Друга слика за варијанту са две слике."
 
 #: backend/projects/models.py:334
@@ -457,8 +585,8 @@ msgid ""
 "Слева вводите тезисы, а справа отображается технический JSON-код для "
 "системы. Его можно не трогать."
 msgstr ""
-"Са леве стране уносите тезе, а са десне стране се приказује технички JSON "
-"код за систем. Можете га оставити нетакнутим."
+"Са леве стране уносите тезе, а са десне стране се приказује технички JSON код "
+"за систем. Можете га оставити нетакнутим."
 
 #: backend/projects/models.py:345
 msgid "Основной HTML-текст блока."
@@ -528,7 +656,7 @@ msgstr "Тип"
 msgid "Тип действия кнопки."
 msgstr "Тип акције дугмета."
 
-#: backend/projects/models.py:429 backend/site_config/models.py:54
+#: backend/projects/models.py:429 backend/site_config/models.py:55
 msgid "URL"
 msgstr "УРЛ"
 
@@ -550,7 +678,7 @@ msgstr "slug: Ово поље је обавезно"
 
 #: backend/projects/validators.py:16
 msgid "Поле string_list должно быть списком строк."
-msgstr "Поље \"Листа теза\" мора бити листа стрингова."
+msgstr "Поље \"Листа теза\" мора бити листа текста."
 
 #: backend/projects/validators.py:19
 #, python-format
@@ -567,87 +695,89 @@ msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
 msgstr "Дужина сваке ставке не сме прелазити %(max_length)s карактера."
 
-#: backend/site_config/models.py:17
-msgid "Код"
-msgstr "Код"
-
-#: backend/site_config/models.py:20
-msgid "Язык"
-msgstr "Језик"
-
-#: backend/site_config/models.py:21 backend/site_config/models.py:82
-msgid "Языки"
-msgstr "Језици"
-
-#: backend/site_config/models.py:28
-msgid "Название языка"
-msgstr "Назив језика"
-
-#: backend/site_config/models.py:46
-msgid "Telegram"
-msgstr "Телеграм"
-
-#: backend/site_config/models.py:47
-msgid "Instagram"
-msgstr "Инстаграм"
-
-#: backend/site_config/models.py:48
-msgid "Facebook"
-msgstr "Фејсбук"
-
-#: backend/site_config/models.py:49
-msgid "LinkedIn"
-msgstr "Линкедин"
-
-#: backend/site_config/models.py:52
-msgid "Тип соцсети"
-msgstr "Тип друштвене мреже"
-
-#: backend/site_config/models.py:57
-msgid "Социальная сеть"
-msgstr "Друштвена мрежа"
-
-#: backend/site_config/models.py:58
-msgid "Социальные сети"
-msgstr "Друштвене мреже"
-
-#: backend/site_config/models.py:76
+#: backend/site_config/admin.py:37 backend/site_config/models.py:77
 msgid "Название сайта"
 msgstr "Назив сајта"
 
-#: backend/site_config/models.py:76
-msgid "Максимум 100 символов"
-msgstr "Максимум 100 карактера"
-
-#: backend/site_config/models.py:78
-msgid "SEO описание"
-msgstr "SEO опис"
-
-#: backend/site_config/models.py:78
-msgid "Максимум 250 символов"
-msgstr "Максимум 250 карактера"
-
-#: backend/site_config/models.py:80
-msgid "Политика конфиденциальности"
-msgstr "Политика приватности"
-
-#: backend/site_config/models.py:81
-msgid "Копирайт"
-msgstr "Ауторско право"
-
-#: backend/site_config/models.py:81
-msgid "Максимум 150 символов"
-msgstr "Максимум 150 карактера"
-
-#: backend/site_config/models.py:83
-msgid "Соцсети"
+#: backend/site_config/admin.py:38 backend/site_config/models.py:59
+msgid "Социальные сети"
 msgstr "Друштвене мреже"
 
-#: backend/site_config/models.py:86 backend/site_config/models.py:87
+#: backend/site_config/admin.py:39 backend/site_config/models.py:22
+#: backend/site_config/models.py:83
+msgid "Языки"
+msgstr "Језици"
+
+#: backend/site_config/apps.py:6 backend/site_config/models.py:87
+#: backend/site_config/models.py:88
 msgid "Настройки сайта"
 msgstr "Подешавања сајта"
 
-#: backend/site_config/models.py:97
+#: backend/site_config/models.py:18
+msgid "Код"
+msgstr "Код"
+
+#: backend/site_config/models.py:21
+msgid "Язык"
+msgstr "Језик"
+
+#: backend/site_config/models.py:29
+msgid "Название языка"
+msgstr "Назив језика"
+
+#: backend/site_config/models.py:47
+msgid "Telegram"
+msgstr "Телеграм"
+
+#: backend/site_config/models.py:48
+msgid "Instagram"
+msgstr "Инстаграм"
+
+#: backend/site_config/models.py:49
+msgid "Facebook"
+msgstr "Фејсбук"
+
+#: backend/site_config/models.py:50
+msgid "LinkedIn"
+msgstr "Линкедин"
+
+#: backend/site_config/models.py:53
+msgid "Тип соцсети"
+msgstr "Тип друштвене мреже"
+
+#: backend/site_config/models.py:58
+msgid "Социальная сеть"
+msgstr "Друштвена мрежа"
+
+#: backend/site_config/models.py:77
+msgid "Максимум 100 символов"
+msgstr "Максимум 100 карактера"
+
+#: backend/site_config/models.py:79
+msgid "SEO описание"
+msgstr "SEO опис"
+
+#: backend/site_config/models.py:79
+msgid "Максимум 250 символов"
+msgstr "Максимум 250 карактера"
+
+#: backend/site_config/models.py:81
+msgid "Политика конфиденциальности"
+msgstr "Политика приватности"
+
+#: backend/site_config/models.py:82
+msgid "Копирайт"
+msgstr "Ауторско право"
+
+#: backend/site_config/models.py:82
+msgid "Максимум 150 символов"
+msgstr "Максимум 150 карактера"
+
+#: backend/site_config/models.py:84
+msgid "Соцсети"
+msgstr "Друштвене мреже"
+
+#: backend/site_config/models.py:98
 msgid "Удаление системных настроек сайта запрещено."
 msgstr "Брисање системских подешавања сајта је забрањено."
 
@@ -701,7 +831,7 @@ msgstr "Системски број. Генерише се аутоматски 
 
 #: backend/users/models.py:99
 msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
-msgstr "Наведите име учесника. Оно ће бити приказано на сајту у блоку тима."
+msgstr "Наведите име учесника. Приказиваће се на сајту у блоку тима."
 
 #: backend/users/models.py:102
 msgid "Фамилия"
@@ -711,7 +841,7 @@ msgstr "Презиме"
 msgid ""
 "Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
 msgstr ""
-"Наведите презиме. Заједно са именом оно чини пуно име учесника на сајту."
+"Наведите презиме. Заједно са именом чини пуно име учесника на сајту."
 
 #: backend/users/models.py:108
 msgid "Роль"

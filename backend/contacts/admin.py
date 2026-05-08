@@ -1,5 +1,5 @@
+from core.base_admin import BaseAdmin
 from django import forms
-from django.conf import settings
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
@@ -27,7 +27,7 @@ class IsActiveOnSiteFilter(admin.SimpleListFilter):
 
 
 @admin.register(ContactRequest)
-class ContactRequestAdmin(admin.ModelAdmin):
+class ContactRequestAdmin(BaseAdmin):
     list_display = (
         'id',
         'name',
@@ -47,15 +47,6 @@ class ContactRequestAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('created_at',)
     ordering = ('-created_at',)
-
-
-try:
-    from tinymce.widgets import TinyMCE
-
-    TINYMCE_AVAILABLE = True
-except ImportError:
-    TinyMCE = None
-    TINYMCE_AVAILABLE = False
 
 
 class ContactPageContentAdminForm(forms.ModelForm):
@@ -81,32 +72,25 @@ class ContactPageContentAdminForm(forms.ModelForm):
 
         return cleaned_data
 
-    if TINYMCE_AVAILABLE:
-        donation_text = forms.CharField(
-            required=False,
-            label='Текстовый блок для пожертвований',
-            widget=TinyMCE(
-                attrs={'cols': 100, 'rows': 12},
-                mce_attrs=settings.TINYMCE_DEFAULT_CONFIG,
-            ),
-        )
-
 
 @admin.register(ContactPageContent)
-class ContactPageContentAdmin(admin.ModelAdmin):
+class ContactPageContentAdmin(BaseAdmin):
     """Админка для управления текстовым блоком пожертвований."""
 
     form = ContactPageContentAdminForm
     list_display = ('id', 'is_active', 'updated_at')
     list_editable = ('is_active',)
     search_fields = ('donation_text',)
+    ordering = ['created_at']
+    tinymce_fields = ['donation_text']
 
 
 @admin.register(ContactSocialLink)
-class ContactSocialLinkAdmin(admin.ModelAdmin):
+class ContactSocialLinkAdmin(BaseAdmin):
     """Админка для управления ссылками на соцсети и мессенджеры."""
 
     list_display = ('id', 'social_type', 'url', 'order', 'is_active')
     list_editable = ('order', 'is_active')
     list_filter = ('social_type', IsActiveOnSiteFilter)
     search_fields = ('url',)
+    ordering = ('order',)

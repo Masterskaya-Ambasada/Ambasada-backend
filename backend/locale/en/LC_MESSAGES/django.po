@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-05 22:37+0300\n"
-"PO-Revision-Date: 2026-05-05 15:40+0300\n"
+"POT-Creation-Date: 2026-05-07 19:15+0300\n"
+"PO-Revision-Date: 2026-05-07 20:00+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -117,7 +117,7 @@ msgstr "Team button (link)"
 msgid "Участники команды"
 msgstr "Team members"
 
-#: backend/about/models.py:131 backend/contacts/models.py:16
+#: backend/about/models.py:131 backend/contacts/models.py:17
 msgid "Email"
 msgstr "Email"
 
@@ -162,9 +162,17 @@ msgstr "Paragraph"
 msgid "Параграфы"
 msgstr "Paragraphs"
 
-#: backend/api/about/views.py:23
+#: backend/api/about/views.py:21
+msgid "Получение страницы \"О сообществе\""
+msgstr "Retrieve \"About Community\" page"
+
+#: backend/api/about/views.py:22
+msgid "Возвращает данные страницы \"О нас\" со всеми секциями"
+msgstr "Returns the \"About Us\" page data with all sections"
+
+#: backend/api/about/views.py:39
 msgid "Страница \"О нас\" не найдена."
-msgstr "About Us page not found."
+msgstr "\"About Us\" page not found."
 
 #: backend/api/apps.py:7
 msgid "Интерфейс API"
@@ -176,25 +184,35 @@ msgid ""
 msgstr ""
 "Incorrect email or password. Please check your credentials and try again."
 
-#: backend/api/contacts/views.py:11
+#: backend/api/contacts/views.py:30
 msgid "Создание запроса обратной связи"
 msgstr "Submit a Contact Request"
 
-#: backend/api/contacts/views.py:13
+#: backend/api/contacts/views.py:32
 msgid ""
 "Принимает данные формы и сохраняет их. Поле `contact_preference` — "
-"техническое антиспам-поле (honeypot). Поле `contact_preference` фронтендерам "
-"надо спрятать, чтобы пользователь его не видел. Если поле заполнено, запрос "
-"считается спамом и игнорируется."
+"техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается "
+"спамом и игнорируется."
 msgstr ""
 "Accepts and saves form data. The `contact_preference` field is a technical "
-"anti-spam honeypot field. Frontend developers must hide this field so users "
-"cannot see it. If the field is filled out, the request is considered spam "
-"and is ignored."
+"anti-spam honeypot field. If the field is filled out, the request is "
+"considered spam and is ignored."
 
-#: backend/api/contacts/views.py:40
+#: backend/api/contacts/views.py:50
 msgid "Получено"
 msgstr "Received"
+
+#: backend/api/contacts/views.py:53
+msgid "Получение контента блока контактов"
+msgstr "Retrieve contacts block content"
+
+#: backend/api/contacts/views.py:54
+msgid ""
+"Возвращает текстовый блок для пожертвований и список активных ссылок на "
+"соцсети и мессенджеры."
+msgstr ""
+"Returns the donation text block and a list of active social media and "
+"messenger links."
 
 #: backend/api/projects/serializers.py:56
 msgid "Перейти к проекту"
@@ -212,7 +230,8 @@ msgstr "Returns global settings: title, SEO, languages, and social networks."
 msgid "Успешный ответ"
 msgstr "Successful response"
 
-#: backend/api/schemas/init_schemas.py:34 backend/api/site_config/views.py:50
+#: backend/api/schemas/init_schemas.py:34
+#: backend/api/site_config/constants.py:8
 msgid "Конфигурация сайта не найдена"
 msgstr "Site configuration not found"
 
@@ -232,33 +251,121 @@ msgstr "Serbian (Latin)"
 msgid "Serbian (Cyrillic)"
 msgstr "Serbian (Cyrillic)"
 
-#: backend/contacts/models.py:13 backend/users/models.py:97
+#: backend/contacts/admin.py:12
+msgid "Отображение на сайте"
+msgstr "Display on website"
+
+#: backend/contacts/admin.py:17
+msgid "Показываются на сайте"
+msgstr "Displayed on website"
+
+#: backend/contacts/admin.py:18
+msgid "Скрыты с сайта"
+msgstr "Hidden from website"
+
+#: backend/contacts/admin.py:79
+msgid ""
+"Доступной может быть только одна ссылка! Оставьте галочку только на одной из "
+"них"
+msgstr ""
+"Only one link can be active! Leave the checkbox on only one of them."
+
+#: backend/contacts/models.py:14 backend/users/models.py:97
 msgid "Имя"
 msgstr "Name"
 
-#: backend/contacts/models.py:20
+#: backend/contacts/models.py:21
 msgid "Сообщение"
 msgstr "Message"
 
-#: backend/contacts/models.py:22
+#: backend/contacts/models.py:23
 msgid "Введите сообщение"
 msgstr "Enter your message"
 
-#: backend/contacts/models.py:26
+#: backend/contacts/models.py:27
 msgid "Причина обращения"
 msgstr "Reason for Contact"
 
-#: backend/contacts/models.py:29
+#: backend/contacts/models.py:30 backend/contacts/models.py:55
+#: backend/contacts/models.py:111
 msgid "Дата создания"
 msgstr "Creation Date"
 
-#: backend/contacts/models.py:32
+#: backend/contacts/models.py:33
 msgid "Запрос обратной связи"
 msgstr "Feedback Request"
 
-#: backend/contacts/models.py:33
+#: backend/contacts/models.py:34
 msgid "Запросы обратной связи"
 msgstr "Feedback Requests"
+
+#: backend/contacts/models.py:46
+msgid "Текстовый блок для пожертвований"
+msgstr "Donations text block"
+
+#: backend/contacts/models.py:47
+msgid ""
+"Редактируемый текст с возможностью добавить внешнюю ссылку. В админке "
+"используется TinyMCE."
+msgstr ""
+"Editable text with the ability to add an external link. Uses TinyMCE in the "
+"admin panel."
+
+#: backend/contacts/models.py:51
+msgid "Активно"
+msgstr "Active"
+
+#: backend/contacts/models.py:59
+msgid "Дата обновления"
+msgstr "Update Date"
+
+#: backend/contacts/models.py:63
+msgid "Редактируемая ссылка на пожертвования"
+msgstr "Editable donation link"
+
+#: backend/contacts/models.py:64
+msgid "Редактируемые ссылки на пожертвования"
+msgstr "Editable donation links"
+
+#: backend/contacts/models.py:90
+msgid "Тип соцсети / мессенджера"
+msgstr "Social network / messenger type"
+
+#: backend/contacts/models.py:91
+msgid "Выбор соцсети."
+msgstr "Social network selection."
+
+#: backend/contacts/models.py:94 backend/projects/admin.py:109
+msgid "Ссылка"
+msgstr "Link"
+
+#: backend/contacts/models.py:95
+msgid "Например: https://t.me/tme"
+msgstr "For example: https://t.me/tme"
+
+#: backend/contacts/models.py:99
+msgid "Порядок отображения"
+msgstr "Display order"
+
+#: backend/contacts/models.py:103
+msgid "Показывать на сайте"
+msgstr "Show on website"
+
+#: backend/contacts/models.py:105
+msgid ""
+"Если галочка включена — ссылка отображается на странице контактов. Если "
+"выключена — ссылка скрыта, но не удаляется."
+msgstr ""
+"If checked, the link is displayed on the contacts page. If unchecked, the "
+"link is hidden but not deleted."
+
+#: backend/contacts/models.py:115
+msgid "Ссылка на соцсеть / мессенджер"
+msgstr "Social network / messenger link"
+
+#: backend/contacts/models.py:116
+msgid "Ссылки на соцсети / мессенджеры"
+msgstr "Social network / messenger links"
 
 #: backend/core/validators.py:112
 msgid "HTML tags are not allowed."
@@ -278,6 +385,30 @@ msgstr "File size %(size).1f MB exceeds the limit of %(max)d MB."
 msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
 msgstr "File type \"%(mime)s\" is not allowed. Accepted types: %(allowed)s."
 
+#: backend/projects/admin.py:58 backend/projects/admin.py:156
+msgid "Основная информация"
+msgstr "Basic Information"
+
+#: backend/projects/admin.py:60 backend/projects/admin.py:158
+#: backend/site_config/admin.py:41
+msgid "Переводы (Русский)"
+msgstr "Translations (Russian)"
+
+#: backend/projects/admin.py:67 backend/projects/admin.py:165
+#: backend/site_config/admin.py:48
+msgid "Переводы (Английский)"
+msgstr "Translations (English)"
+
+#: backend/projects/admin.py:74 backend/projects/admin.py:172
+#: backend/site_config/admin.py:55
+msgid "Переводы (Сербский - Латиница)"
+msgstr "Translations (Serbian - Latin)"
+
+#: backend/projects/admin.py:81 backend/projects/admin.py:179
+#: backend/site_config/admin.py:62
+msgid "Переводы (Сербский - Кирилица)"
+msgstr "Translations (Serbian - Cyrillic)"
+
 #: backend/projects/admin.py:93 backend/projects/models.py:135
 #: backend/projects/models.py:204
 msgid "Тип проекта"
@@ -286,10 +417,6 @@ msgstr "Project Type"
 #: backend/projects/admin.py:105
 msgid "Просмотр на сайте"
 msgstr "View on site"
-
-#: backend/projects/admin.py:109
-msgid "Ссылка"
-msgstr "Link"
 
 #: backend/projects/apps.py:11
 msgid "Урбанистические проекты"
@@ -382,7 +509,7 @@ msgstr "Projects"
 
 #: backend/projects/models.py:251
 msgid "Изображение для карусели проекта."
-msgstr "Project carousel image."
+msgstr "Image for the project carousel."
 
 #: backend/projects/models.py:257
 msgid "Порядок изображения в карусели проекта."
@@ -525,7 +652,7 @@ msgstr "Type"
 msgid "Тип действия кнопки."
 msgstr "Button action type."
 
-#: backend/projects/models.py:429 backend/site_config/models.py:54
+#: backend/projects/models.py:429 backend/site_config/models.py:55
 msgid "URL"
 msgstr "URL"
 
@@ -564,87 +691,89 @@ msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
 msgstr "Each list item must not exceed %(max_length)s characters."
 
-#: backend/site_config/models.py:17
-msgid "Код"
-msgstr "Code"
-
-#: backend/site_config/models.py:20
-msgid "Язык"
-msgstr "Language"
-
-#: backend/site_config/models.py:21 backend/site_config/models.py:82
-msgid "Языки"
-msgstr "Languages"
-
-#: backend/site_config/models.py:28
-msgid "Название языка"
-msgstr "Language Name"
-
-#: backend/site_config/models.py:46
-msgid "Telegram"
-msgstr "Telegram"
-
-#: backend/site_config/models.py:47
-msgid "Instagram"
-msgstr "Instagram"
-
-#: backend/site_config/models.py:48
-msgid "Facebook"
-msgstr "Facebook"
-
-#: backend/site_config/models.py:49
-msgid "LinkedIn"
-msgstr "LinkedIn"
-
-#: backend/site_config/models.py:52
-msgid "Тип соцсети"
-msgstr "Social Network Type"
-
-#: backend/site_config/models.py:57
-msgid "Социальная сеть"
-msgstr "Social Network"
-
-#: backend/site_config/models.py:58
-msgid "Социальные сети"
-msgstr "Social Networks"
-
-#: backend/site_config/models.py:76
+#: backend/site_config/admin.py:37 backend/site_config/models.py:77
 msgid "Название сайта"
 msgstr "Site Title"
 
-#: backend/site_config/models.py:76
-msgid "Максимум 100 символов"
-msgstr "Maximum 100 characters"
+#: backend/site_config/admin.py:38 backend/site_config/models.py:59
+msgid "Социальные сети"
+msgstr "Social Networks"
 
-#: backend/site_config/models.py:78
-msgid "SEO описание"
-msgstr "SEO Description"
-
-#: backend/site_config/models.py:78
-msgid "Максимум 250 символов"
-msgstr "Maximum 250 characters"
-
-#: backend/site_config/models.py:80
-msgid "Политика конфиденциальности"
-msgstr "Privacy Policy"
-
-#: backend/site_config/models.py:81
-msgid "Копирайт"
-msgstr "Copyright"
-
-#: backend/site_config/models.py:81
-msgid "Максимум 150 символов"
-msgstr "Maximum 150 characters"
-
+#: backend/site_config/admin.py:39 backend/site_config/models.py:22
 #: backend/site_config/models.py:83
-msgid "Соцсети"
-msgstr "Social Media"
+msgid "Языки"
+msgstr "Languages"
 
-#: backend/site_config/models.py:86 backend/site_config/models.py:87
+#: backend/site_config/apps.py:6 backend/site_config/models.py:87
+#: backend/site_config/models.py:88
 msgid "Настройки сайта"
 msgstr "Site Settings"
 
-#: backend/site_config/models.py:97
+#: backend/site_config/models.py:18
+msgid "Код"
+msgstr "Code"
+
+#: backend/site_config/models.py:21
+msgid "Язык"
+msgstr "Language"
+
+#: backend/site_config/models.py:29
+msgid "Название языка"
+msgstr "Language Name"
+
+#: backend/site_config/models.py:47
+msgid "Telegram"
+msgstr "Telegram"
+
+#: backend/site_config/models.py:48
+msgid "Instagram"
+msgstr "Instagram"
+
+#: backend/site_config/models.py:49
+msgid "Facebook"
+msgstr "Facebook"
+
+#: backend/site_config/models.py:50
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#: backend/site_config/models.py:53
+msgid "Тип соцсети"
+msgstr "Social Network Type"
+
+#: backend/site_config/models.py:58
+msgid "Социальная сеть"
+msgstr "Social Network"
+
+#: backend/site_config/models.py:77
+msgid "Максимум 100 символов"
+msgstr "Maximum 100 characters"
+
+#: backend/site_config/models.py:79
+msgid "SEO описание"
+msgstr "SEO Description"
+
+#: backend/site_config/models.py:79
+msgid "Максимум 250 символов"
+msgstr "Maximum 250 characters"
+
+#: backend/site_config/models.py:81
+msgid "Политика конфиденциальности"
+msgstr "Privacy Policy"
+
+#: backend/site_config/models.py:82
+msgid "Копирайт"
+msgstr "Copyright"
+
+#: backend/site_config/models.py:82
+msgid "Максимум 150 символов"
+msgstr "Maximum 150 characters"
+
+#: backend/site_config/models.py:84
+msgid "Соцсети"
+msgstr "Social Media"
+
+#: backend/site_config/models.py:98
 msgid "Удаление системных настроек сайта запрещено."
 msgstr "Deletion of system site settings is prohibited."
 
@@ -698,7 +827,9 @@ msgstr "System number. Automatically generated and cannot be changed."
 
 #: backend/users/models.py:99
 msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
-msgstr "Enter the member's first name. It will be displayed in the team block on the website."
+msgstr ""
+"Enter the member's first name. It will be displayed in the team block on the "
+"website."
 
 #: backend/users/models.py:102
 msgid "Фамилия"
@@ -707,7 +838,9 @@ msgstr "Last Name"
 #: backend/users/models.py:104
 msgid ""
 "Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
-msgstr "Enter the last name. Together with the first name, it forms the full name of the member on the website."
+msgstr ""
+"Enter the last name. Together with the first name, it forms the full name of "
+"the member on the website."
 
 #: backend/users/models.py:108
 msgid "Роль"
@@ -717,7 +850,9 @@ msgstr "Role"
 msgid ""
 "Определяет уровень доступа к панели управления: Пользователь — нет доступа, "
 "Редактор — управление контентом, Администратор — полный доступ."
-msgstr "Defines the control panel access level: User — no access, Editor — content management, Administrator — full access."
+msgstr ""
+"Defines the control panel access level: User — no access, Editor — content "
+"management, Administrator — full access."
 
 #: backend/users/models.py:121
 msgid "Должность"
@@ -727,7 +862,9 @@ msgstr "Position"
 msgid ""
 "Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
 "в карточке сотрудника на сайте."
-msgstr "Enter the professional role (e.g., 'Lead Architect'). It will be displayed on the team member's card on the website."
+msgstr ""
+"Enter the professional role (e.g., 'Lead Architect'). It will be displayed "
+"on the team member's card on the website."
 
 #: backend/users/models.py:131
 msgid "Фотография"

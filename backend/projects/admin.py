@@ -3,7 +3,7 @@
 import os
 import shutil
 
-from core.base_admin import BaseAdmin, ImportExportMixin
+from core.base_admin import BaseTranslatedAdmin, ImportExportMixin
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
@@ -17,7 +17,7 @@ from .resources_admin import (
 
 
 @admin.register(Tag)
-class TagAdmin(BaseAdmin, ImportExportMixin):
+class TagAdmin(BaseTranslatedAdmin, ImportExportMixin):
     """Класс администрирования Тегов."""
 
     resource_classes = [TagResource]
@@ -40,7 +40,7 @@ class ProjectTypeAdmin(TagAdmin):
 
 
 @admin.register(Project)
-class ProjectAdmin(BaseAdmin):
+class ProjectAdmin(BaseTranslatedAdmin):
     """Класс администрирования проектов."""
 
     list_display = [
@@ -52,33 +52,37 @@ class ProjectAdmin(BaseAdmin):
         'cover_image_thumbnail',
         'get_view_on_site',
     ]
+    list_editable = (
+        'year',
+        'is_published',
+    )
     list_filter = ['project_type', 'year', 'is_published']
     ordering = ('-is_published', '-year')
     fieldsets = (
-        ('Основная информация', {'fields': ('slug', 'year', 'project_type', 'tags', 'cover_image', 'is_published')}),
+        (_('Основная информация'), {'fields': ('slug', 'year', 'project_type', 'tags', 'cover_image', 'is_published')}),
         (
-            'Переводы (Русский)',
+            _('Переводы (Русский)'),
             {
                 'fields': ('title_ru', 'description_ru'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Переводы (English)',
+            _('Переводы (Английский)'),
             {
                 'fields': ('title_en', 'description_en'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Prevodi (Srpski - Latinica)',
+            _('Переводы (Сербский - Латиница)'),
             {
                 'fields': ('title_sr_latn', 'description_sr_latn'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Преводи (Српски - Ћирилица)',
+            _('Переводы (Сербский - Кирилица)'),
             {
                 'fields': ('title_sr_cyrl', 'description_sr_cyrl'),
                 'classes': ('collapse',),
@@ -127,7 +131,7 @@ class ProjectAdmin(BaseAdmin):
 
 
 @admin.register(ProjectContentBlock)
-class ProjectContentBlockAdmin(BaseAdmin):
+class ProjectContentBlockAdmin(BaseTranslatedAdmin):
     """Класс администрирования детальной страницы проектов."""
 
     ordering = (
@@ -135,12 +139,13 @@ class ProjectContentBlockAdmin(BaseAdmin):
         'order',
     )
     list_display = [
-        'order',
         'project__title',
+        'order',
         'title',
         'main_image_thumbnail',
         'left_image_thumbnail',
     ]
+    list_editable = ('order',)
     tinymce_fields = [
         'text_ru',
         'text_en',
@@ -153,30 +158,30 @@ class ProjectContentBlockAdmin(BaseAdmin):
     ]
 
     fieldsets = (
-        ('Основная информация', {'fields': ('project', 'variant', 'order', 'image', 'left_image')}),
+        (_('Основная информация'), {'fields': ('project', 'variant', 'order', 'image', 'left_image')}),
         (
-            'Переводы (Русский)',
+            _('Переводы (Русский)'),
             {
                 'fields': ('title_ru', 'text_ru', 'accented_text_ru', 'string_list_ru'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Переводы (English)',
+            _('Переводы (Английский)'),
             {
                 'fields': ('title_en', 'text_en', 'accented_text_en', 'string_list_en'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Prevodi (Srpski - Latinica)',
+            _('Переводы (Сербский - Латиница)'),
             {
                 'fields': ('title_sr_latn', 'text_sr_latn', 'accented_text_sr_latn', 'string_list_sr_latn'),
                 'classes': ('collapse',),
             },
         ),
         (
-            'Преводи (Српски - Ћирилица)',
+            _('Переводы (Сербский - Кирилица)'),
             {
                 'fields': ('title_sr_cyrl', 'text_sr_cyrl', 'accented_text_sr_cyrl', 'string_list_sr_cyrl'),
                 'classes': ('collapse',),
