@@ -1,11 +1,11 @@
-"""Регистрация моделей SiteConfig, Social, Language в админ-панели."""
+"""Регистрация моделей SiteConfig, ContactSocialLink, Language в админ-панели."""
 
 from core.base_admin import BaseAdmin
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from .models import Language, SiteConfig, Social
+from .models import Language, SiteConfig
 
 
 @admin.register(SiteConfig)
@@ -102,11 +102,6 @@ class ConfigAdmin(BaseAdmin):
             existing_config = SiteConfig.objects.first()
             return redirect(reverse('admin:site_config_siteconfig_change', args=[existing_config.pk]))
         return super().add_view(request, form_url, extra_context)
-
-
-@admin.register(Social)
-class SocialAdmin(admin.ModelAdmin):
-    list_display = ['social_type', 'url']
 
 
 @admin.register(Language)

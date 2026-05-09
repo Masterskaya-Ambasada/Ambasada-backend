@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -14,14 +13,8 @@ from .constants import (
     SITE_CONFIG_SINGLETON_PK,
     SITE_NAME_MAX_LENGTH,
     SOCIAL_TYPE_MAX_LENGTH,
-    get_config_cache_key,
+    clear_config_cache,
 )
-
-
-def clear_config_cache():
-    """Единая функция очистки кэша конфигурации."""
-    keys = [get_config_cache_key(language_code) for language_code, _ in settings.LANGUAGES]
-    cache.delete_many(keys)
 
 
 class Language(models.Model):
@@ -111,7 +104,9 @@ class SiteConfig(models.Model):
         max_length=COPYRIGHT_MAX_LENGTH, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов')
     )
     languages = models.ManyToManyField('Language', blank=True, related_name='site_configs', verbose_name=_('Языки'))
-    socials = models.ManyToManyField('Social', blank=True, related_name='site_configs', verbose_name=_('Соцсети'))
+    socials = models.ManyToManyField(
+        'contacts.ContactSocialLink', blank=True, related_name='site_configs', verbose_name=_('Соцсети')
+    )
 
     class Meta:
         verbose_name = _('Настройки сайта')

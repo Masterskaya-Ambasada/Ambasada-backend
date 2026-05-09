@@ -1,5 +1,6 @@
+from contacts.models import ContactSocialLink
 from rest_framework import serializers
-from site_config.models import Language, SiteConfig, Social
+from site_config.models import Language, SiteConfig
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -12,13 +13,13 @@ class LanguageSerializer(serializers.ModelSerializer):
         fields = ['code', 'label']
 
 
-class SocialSerializer(serializers.ModelSerializer):
+class SiteConfigSocialSerializer(serializers.ModelSerializer):
     """Сериализатор для модели социальных сетей."""
 
     social_type = serializers.CharField(source='get_social_type_display', read_only=True)
 
     class Meta:
-        model = Social
+        model = ContactSocialLink
         fields = ['social_type', 'url']
 
 
@@ -26,7 +27,7 @@ class SiteConfigSerializer(serializers.ModelSerializer):
     """Сериализатор для конфигурации сайта."""
 
     languages = LanguageSerializer(many=True, read_only=True)
-    socials = SocialSerializer(many=True, read_only=True)
+    socials = SiteConfigSocialSerializer(many=True, read_only=True)
 
     class Meta:
         model = SiteConfig

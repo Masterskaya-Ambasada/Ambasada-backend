@@ -2,8 +2,9 @@ from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
+from site_config.constants import clear_config_cache
 
-from contacts.constants import MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH, MAX_REASON_LENGTH
+from contacts.constants import MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH, MAX_REASON_LENGTH, SOCIAL_TYPE_MAX_LENGTH
 
 
 class ContactRequest(models.Model):
@@ -26,7 +27,11 @@ class ContactRequest(models.Model):
         max_length=MAX_REASON_LENGTH,
         verbose_name=_('Причина обращения'),
     )
-
+    is_processed = models.BooleanField(
+        default=False,
+        verbose_name=_('Обработано'),
+        help_text=_('Показывает, обработано ли обращение.'),
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Дата создания'))
 
     class Meta:
@@ -79,13 +84,13 @@ class ContactSocialLink(models.Model):
     """Ссылки на соцсети и мессенджеры проекта."""
 
     class SocialType(models.TextChoices):
-        TELEGRAM = 'telegram', 'Telegram'
-        INSTAGRAM = 'instagram', 'Instagram'
-        FACEBOOK = 'facebook', 'Facebook'
-        LINKEDIN = 'linkedin', 'Linkedin'
+        TELEGRAM = 'telegram', _('Telegram')
+        INSTAGRAM = 'instagram', _('Instagram')
+        FACEBOOK = 'facebook', _('Facebook')
+        LINKEDIN = 'linkedin', _('LinkedIn')
 
     social_type = models.CharField(
-        max_length=32,
+        max_length=SOCIAL_TYPE_MAX_LENGTH,
         choices=SocialType.choices,
         verbose_name=_('Тип соцсети / мессенджера'),
         help_text=_('Выбор соцсети.'),
@@ -115,6 +120,14 @@ class ContactSocialLink(models.Model):
         verbose_name = _('Ссылка на соцсеть / мессенджер')
         verbose_name_plural = _('Ссылки на соцсети / мессенджеры')
         ordering = ('order', 'id')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        clear_config_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        clear_config_cache()
 
     def __str__(self):
         return f'{self.get_social_type_display()} - {self.url}'
