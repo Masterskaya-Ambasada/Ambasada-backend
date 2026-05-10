@@ -5,15 +5,15 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("about", "0003_aboutpage_contact_link_aboutpage_email_and_more"),
+        ('about', '0003_aboutpage_contact_link_aboutpage_email_and_more'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="aboutpage",
+            name='aboutpage',
             options={
-                "verbose_name": 'Страница "О нас"',
-                "verbose_name_plural": 'Страница "О нас"',
+                'verbose_name': 'Страница "О нас"',
+                'verbose_name_plural': 'Страница "О нас"',
             },
         ),
     ]
