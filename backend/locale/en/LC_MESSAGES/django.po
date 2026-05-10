@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 21:46+0300\n"
+"POT-Creation-Date: 2026-05-10 23:03+0300\n"
 "PO-Revision-Date: 2026-05-05 15:40+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: English\n"
@@ -35,6 +35,11 @@ msgstr "Gallery"
 #: backend/about/admin.py:53
 msgid "Contacts"
 msgstr "Contacts"
+
+#: backend/about/apps.py:7 backend/about/models.py:150
+#: backend/about/models.py:151 backend/about/models.py:168
+msgid "Страница \"О нас\""
+msgstr "About Us page"
 
 #: backend/about/models.py:16 backend/projects/models.py:129
 #: backend/projects/models.py:153 backend/projects/models.py:177
@@ -117,7 +122,7 @@ msgstr "Team button (link)"
 msgid "Участники команды"
 msgstr "Team members"
 
-#: backend/about/models.py:131 backend/contacts/models.py:18
+#: backend/about/models.py:131 backend/contacts/models.py:17
 msgid "Email"
 msgstr "Email"
 
@@ -128,14 +133,6 @@ msgstr "Contact link"
 #: backend/about/models.py:145
 msgid "Заголовок галереи"
 msgstr "Gallery heading"
-
-#: backend/about/models.py:150 backend/about/models.py:168
-msgid "Страница \"О нас\""
-msgstr "About Us page"
-
-#: backend/about/models.py:151
-msgid "Страницы \"О нас\""
-msgstr "About Us pages"
 
 #: backend/about/models.py:155
 msgid "Может существовать только одна страница \"О нас\"."
@@ -218,19 +215,19 @@ msgstr "Site initialization"
 msgid "Возвращает глобальные настройки: название, SEO, языки и соцсети."
 msgstr "Returns global settings: title, SEO, languages, and social networks."
 
-#: backend/api/schemas/init_schemas.py:22
+#: backend/api/schemas/init_schemas.py:21
 msgid "Список доступных языков"
 msgstr "List of available languages"
 
-#: backend/api/schemas/init_schemas.py:32
+#: backend/api/schemas/init_schemas.py:31
 msgid "Ссылки на социальные сети"
 msgstr "Links to social networks"
 
-#: backend/api/schemas/init_schemas.py:36
+#: backend/api/schemas/init_schemas.py:35
 msgid "Успешный ответ"
 msgstr "Successful response"
 
-#: backend/api/schemas/init_schemas.py:69
+#: backend/api/schemas/init_schemas.py:68
 msgid "Конфигурация сайта не найдена"
 msgstr "Site configuration not found"
 
@@ -269,112 +266,112 @@ msgid ""
 msgstr ""
 "Only one link can be available! Keep the checkmark on only one of them."
 
-#: backend/contacts/apps.py:6
+#: backend/contacts/apps.py:7
 msgid "Обратная связь и соцсети"
 msgstr "Feedback and Social Networks"
 
-#: backend/contacts/models.py:15 backend/users/models.py:97
+#: backend/contacts/models.py:14 backend/users/models.py:97
 msgid "Имя"
 msgstr "Name"
 
-#: backend/contacts/models.py:22
+#: backend/contacts/models.py:21
 msgid "Сообщение"
 msgstr "Message"
 
-#: backend/contacts/models.py:24
+#: backend/contacts/models.py:23
 msgid "Введите сообщение"
 msgstr "Enter your message"
 
-#: backend/contacts/models.py:28
+#: backend/contacts/models.py:27
 msgid "Причина обращения"
 msgstr "Reason for Contact"
 
-#: backend/contacts/models.py:32
+#: backend/contacts/models.py:31
 msgid "Обработано"
 msgstr "Processed"
 
-#: backend/contacts/models.py:33
+#: backend/contacts/models.py:32
 msgid "Показывает, обработано ли обращение."
 msgstr "Shows whether the request has been processed."
 
-#: backend/contacts/models.py:35 backend/contacts/models.py:60
-#: backend/contacts/models.py:122
+#: backend/contacts/models.py:34 backend/contacts/models.py:59
+#: backend/contacts/models.py:121
 msgid "Дата создания"
 msgstr "Creation Date"
 
-#: backend/contacts/models.py:38
+#: backend/contacts/models.py:37
 msgid "Запрос обратной связи"
 msgstr "Feedback Request"
 
-#: backend/contacts/models.py:39
+#: backend/contacts/models.py:38
 msgid "Запросы обратной связи"
 msgstr "Feedback Requests"
 
-#: backend/contacts/models.py:51
+#: backend/contacts/models.py:50
 msgid "Текстовый блок для пожертвований"
 msgstr "Donation text block"
 
-#: backend/contacts/models.py:52
+#: backend/contacts/models.py:51
 msgid "Редактируемый текст с возможностью добавить внешнюю ссылку."
 msgstr "Editable text with the ability to add an external link."
 
-#: backend/contacts/models.py:56
+#: backend/contacts/models.py:55
 msgid "Активно"
 msgstr "Active"
 
-#: backend/contacts/models.py:64
+#: backend/contacts/models.py:63
 msgid "Дата обновления"
 msgstr "Update Date"
 
-#: backend/contacts/models.py:68
+#: backend/contacts/models.py:67
 msgid "Редактируемая ссылка на пожертвования"
 msgstr "Editable donation link"
 
-#: backend/contacts/models.py:69
+#: backend/contacts/models.py:68
 msgid "Редактируемые ссылки на пожертвования"
 msgstr "Editable donation links"
 
-#: backend/contacts/models.py:87
+#: backend/contacts/models.py:86
 msgid "Telegram"
 msgstr "Telegram"
 
-#: backend/contacts/models.py:88
+#: backend/contacts/models.py:87
 msgid "Instagram"
 msgstr "Instagram"
 
-#: backend/contacts/models.py:89
+#: backend/contacts/models.py:88
 msgid "Facebook"
 msgstr "Facebook"
 
-#: backend/contacts/models.py:90
+#: backend/contacts/models.py:89
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: backend/contacts/models.py:101
+#: backend/contacts/models.py:100
 msgid "Тип соцсети / мессенджера"
 msgstr "Social network / messenger type"
 
-#: backend/contacts/models.py:102
+#: backend/contacts/models.py:101
 msgid "Выбор соцсети."
 msgstr "Selection of social network."
 
-#: backend/contacts/models.py:105 backend/projects/admin.py:109
+#: backend/contacts/models.py:104 backend/projects/admin.py:109
 msgid "Ссылка"
 msgstr "Link"
 
-#: backend/contacts/models.py:106
+#: backend/contacts/models.py:105
 msgid "Например: https://t.me/tme"
 msgstr "For example: https://t.me/tme"
 
-#: backend/contacts/models.py:110
+#: backend/contacts/models.py:109
 msgid "Порядок отображения"
 msgstr "Display order"
 
-#: backend/contacts/models.py:114
+#: backend/contacts/models.py:113
 msgid "Показывать на сайте"
 msgstr "Show on site"
 
-#: backend/contacts/models.py:116
+#: backend/contacts/models.py:115
 msgid ""
 "Если галочка включена — ссылка отображается на странице контактов. Если "
 "выключена — ссылка скрыта, но не удаляется."
@@ -382,11 +379,11 @@ msgstr ""
 "If checked, the link is displayed on the contact page. If unchecked, the "
 "link is hidden but not deleted."
 
-#: backend/contacts/models.py:126
+#: backend/contacts/models.py:125
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr "Social network / messenger link"
 
-#: backend/contacts/models.py:127
+#: backend/contacts/models.py:126
 msgid "Ссылки на соцсети / мессенджеры"
 msgstr "Social network / messenger links"
 
@@ -690,7 +687,7 @@ msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
 msgstr "Each list item must not exceed %(max_length)s characters."
 
-#: backend/site_config/apps.py:8
+#: backend/site_config/apps.py:10
 msgid "Конфигурация настроек сайта"
 msgstr "Site settings configuration"
 
@@ -698,47 +695,47 @@ msgstr "Site settings configuration"
 msgid "Мы используем технические cookie для корректной работы сайта."
 msgstr "We use technical cookies for the correct operation of the site."
 
-#: backend/site_config/models.py:22
+#: backend/site_config/models.py:20
 msgid "Название сайта"
 msgstr "Site Title"
 
-#: backend/site_config/models.py:22
+#: backend/site_config/models.py:20
 msgid "Максимум 100 символов"
 msgstr "Maximum 100 characters"
 
-#: backend/site_config/models.py:25
+#: backend/site_config/models.py:23
 msgid "SEO описание"
 msgstr "SEO Description"
 
-#: backend/site_config/models.py:25
+#: backend/site_config/models.py:23
 msgid "Максимум 250 символов"
 msgstr "Maximum 250 characters"
 
-#: backend/site_config/models.py:27
+#: backend/site_config/models.py:25
 msgid "Политика конфиденциальности"
 msgstr "Privacy Policy"
 
-#: backend/site_config/models.py:30
+#: backend/site_config/models.py:28
 msgid "Текст cookie-сообщения"
 msgstr "Cookie message text"
 
-#: backend/site_config/models.py:36
+#: backend/site_config/models.py:34
 msgid "Текст кнопки cookie"
 msgstr "Cookie button text"
 
-#: backend/site_config/models.py:41
+#: backend/site_config/models.py:39
 msgid "Копирайт"
 msgstr "Copyright"
 
-#: backend/site_config/models.py:41
+#: backend/site_config/models.py:39
 msgid "Максимум 150 символов"
 msgstr "Maximum 150 characters"
 
-#: backend/site_config/models.py:46 backend/site_config/models.py:47
+#: backend/site_config/models.py:43 backend/site_config/models.py:44
 msgid "Настройки сайта"
 msgstr "Site Settings"
 
-#: backend/site_config/models.py:56
+#: backend/site_config/models.py:53
 msgid "Удаление системных настроек сайта запрещено."
 msgstr "Deletion of system site settings is prohibited."
 
@@ -840,8 +837,8 @@ msgid ""
 "Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, "
 "размер до 2 МБ."
 msgstr ""
-"Upload a portrait photo of the member. Recommended format: JPG or PNG, "
-"size up to 2 MB."
+"Upload a portrait photo of the member. Recommended format: JPG or PNG, size "
+"up to 2 MB."
 
 #: backend/users/models.py:139
 msgid "Биография"
@@ -862,3 +859,5 @@ msgstr "If checked, the user will be visible in the team list on the website."
 #: backend/users/models.py:160
 msgid "Пользователи и команда"
 msgstr "Users and Team"
+
+

@@ -10,4 +10,4 @@ class SiteConfigConfig(AppConfig):
     verbose_name = _('Конфигурация настроек сайта')
 
     def ready(self):
-        pass
+        import site_config.signals  # noqa

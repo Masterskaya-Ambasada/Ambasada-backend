@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 21:46+0300\n"
+"POT-Creation-Date: 2026-05-10 23:03+0300\n"
 "PO-Revision-Date: 2026-05-10 21:55+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: Serbian (Latin)\n"
@@ -36,6 +36,11 @@ msgstr "Galerija"
 #: backend/about/admin.py:53
 msgid "Contacts"
 msgstr "Kontakti"
+
+#: backend/about/apps.py:7 backend/about/models.py:150
+#: backend/about/models.py:151 backend/about/models.py:168
+msgid "Страница \"О нас\""
+msgstr "Stranica \"O nama\""
 
 #: backend/about/models.py:16 backend/projects/models.py:129
 #: backend/projects/models.py:153 backend/projects/models.py:177
@@ -118,7 +123,7 @@ msgstr "Dugme tima (link)"
 msgid "Участники команды"
 msgstr "Članovi tima"
 
-#: backend/about/models.py:131 backend/contacts/models.py:18
+#: backend/about/models.py:131 backend/contacts/models.py:17
 msgid "Email"
 msgstr "E-pošta"
 
@@ -129,14 +134,6 @@ msgstr "Link za kontakt"
 #: backend/about/models.py:145
 msgid "Заголовок галереи"
 msgstr "Naslov galerije"
-
-#: backend/about/models.py:150 backend/about/models.py:168
-msgid "Страница \"О нас\""
-msgstr "Stranica \"O nama\""
-
-#: backend/about/models.py:151
-msgid "Страницы \"О нас\""
-msgstr "Stranice \"O nama\""
 
 #: backend/about/models.py:155
 msgid "Может существовать только одна страница \"О нас\"."
@@ -220,19 +217,19 @@ msgstr "Inicijalizacija sajta"
 msgid "Возвращает глобальные настройки: название, SEO, языки и соцсети."
 msgstr "Vraća globalna podešavanja: naziv, SEO, jezike i društvene mreže."
 
-#: backend/api/schemas/init_schemas.py:22
+#: backend/api/schemas/init_schemas.py:21
 msgid "Список доступных языков"
 msgstr "Lista dostupnih jezika"
 
-#: backend/api/schemas/init_schemas.py:32
+#: backend/api/schemas/init_schemas.py:31
 msgid "Ссылки на социальные сети"
 msgstr "Linkovi ka društvenim mrežama"
 
-#: backend/api/schemas/init_schemas.py:36
+#: backend/api/schemas/init_schemas.py:35
 msgid "Успешный ответ"
 msgstr "Uspešan odgovor"
 
-#: backend/api/schemas/init_schemas.py:69
+#: backend/api/schemas/init_schemas.py:68
 msgid "Конфигурация сайта не найдена"
 msgstr "Konfiguracija sajta nije pronađena"
 
@@ -271,112 +268,112 @@ msgid ""
 msgstr ""
 "Dostupna može biti samo jedna veza! Ostavite kvačicu samo na jednoj od njih."
 
-#: backend/contacts/apps.py:6
+#: backend/contacts/apps.py:7
 msgid "Обратная связь и соцсети"
 msgstr "Povratne informacije i društvene mreže"
 
-#: backend/contacts/models.py:15 backend/users/models.py:97
+#: backend/contacts/models.py:14 backend/users/models.py:97
 msgid "Имя"
 msgstr "Ime"
 
-#: backend/contacts/models.py:22
+#: backend/contacts/models.py:21
 msgid "Сообщение"
 msgstr "Poruka"
 
-#: backend/contacts/models.py:24
+#: backend/contacts/models.py:23
 msgid "Введите сообщение"
 msgstr "Unesite poruku"
 
-#: backend/contacts/models.py:28
+#: backend/contacts/models.py:27
 msgid "Причина обращения"
 msgstr "Razlog obraćanja"
 
-#: backend/contacts/models.py:32
+#: backend/contacts/models.py:31
 msgid "Обработано"
 msgstr "Obrađeno"
 
-#: backend/contacts/models.py:33
+#: backend/contacts/models.py:32
 msgid "Показывает, обработано ли обращение."
 msgstr "Pokazuje da li je zahtev obrađen."
 
-#: backend/contacts/models.py:35 backend/contacts/models.py:60
-#: backend/contacts/models.py:122
+#: backend/contacts/models.py:34 backend/contacts/models.py:59
+#: backend/contacts/models.py:121
 msgid "Дата создания"
 msgstr "Datum kreiranja"
 
-#: backend/contacts/models.py:38
+#: backend/contacts/models.py:37
 msgid "Запрос обратной связи"
 msgstr "Zahtev za kontakt"
 
-#: backend/contacts/models.py:39
+#: backend/contacts/models.py:38
 msgid "Запросы обратной связи"
 msgstr "Zahtevi za kontakt"
 
-#: backend/contacts/models.py:51
+#: backend/contacts/models.py:50
 msgid "Текстовый блок для пожертвований"
 msgstr "Tekstualni blok za donacije"
 
-#: backend/contacts/models.py:52
+#: backend/contacts/models.py:51
 msgid "Редактируемый текст с возможностью добавить внешнюю ссылку."
 msgstr "Tekst koji se može uređivati sa mogućnošću dodavanja spoljnog linka."
 
-#: backend/contacts/models.py:56
+#: backend/contacts/models.py:55
 msgid "Активно"
 msgstr "Aktivno"
 
-#: backend/contacts/models.py:64
+#: backend/contacts/models.py:63
 msgid "Дата обновления"
 msgstr "Datum ažuriranja"
 
-#: backend/contacts/models.py:68
+#: backend/contacts/models.py:67
 msgid "Редактируемая ссылка на пожертвования"
 msgstr "Link za donacije koji se može uređivati"
 
-#: backend/contacts/models.py:69
+#: backend/contacts/models.py:68
 msgid "Редактируемые ссылки на пожертвования"
 msgstr "Linkovi za donacije koji se mogu uređivati"
 
-#: backend/contacts/models.py:87
+#: backend/contacts/models.py:86
 msgid "Telegram"
 msgstr "Telegram"
 
-#: backend/contacts/models.py:88
+#: backend/contacts/models.py:87
 msgid "Instagram"
 msgstr "Instagram"
 
-#: backend/contacts/models.py:89
+#: backend/contacts/models.py:88
 msgid "Facebook"
 msgstr "Facebook"
 
-#: backend/contacts/models.py:90
+#: backend/contacts/models.py:89
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: backend/contacts/models.py:101
+#: backend/contacts/models.py:100
 msgid "Тип соцсети / мессенджера"
 msgstr "Tip društvene mreže / mesindžera"
 
-#: backend/contacts/models.py:102
+#: backend/contacts/models.py:101
 msgid "Выбор соцсети."
 msgstr "Izbor društvene mreže."
 
-#: backend/contacts/models.py:105 backend/projects/admin.py:109
+#: backend/contacts/models.py:104 backend/projects/admin.py:109
 msgid "Ссылка"
 msgstr "Link"
 
-#: backend/contacts/models.py:106
+#: backend/contacts/models.py:105
 msgid "Например: https://t.me/tme"
 msgstr "Na primer: https://t.me/tme"
 
-#: backend/contacts/models.py:110
+#: backend/contacts/models.py:109
 msgid "Порядок отображения"
 msgstr "Redosled prikaza"
 
-#: backend/contacts/models.py:114
+#: backend/contacts/models.py:113
 msgid "Показывать на сайте"
 msgstr "Prikaži na sajtu"
 
-#: backend/contacts/models.py:116
+#: backend/contacts/models.py:115
 msgid ""
 "Если галочка включена — ссылка отображается на странице контактов. Если "
 "выключена — ссылка скрыта, но не удаляется."
@@ -384,11 +381,11 @@ msgstr ""
 "Ako je označeno — link se prikazuje na stranici kontakata. Ako nije označeno "
 "— link je skriven, ali se ne briše."
 
-#: backend/contacts/models.py:126
+#: backend/contacts/models.py:125
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr "Link ka društvenoj mreži / mesindžeru"
 
-#: backend/contacts/models.py:127
+#: backend/contacts/models.py:126
 msgid "Ссылки на соцсети / мессенджеры"
 msgstr "Linkovi ka društvenim mrežama / mesindžerima"
 
@@ -694,7 +691,7 @@ msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
 msgstr "Dužina svake stavke ne sme prelaziti %(max_length)s karaktera."
 
-#: backend/site_config/apps.py:8
+#: backend/site_config/apps.py:10
 msgid "Конфигурация настроек сайта"
 msgstr "Konfiguracija podešavanja sajta"
 
@@ -702,47 +699,47 @@ msgstr "Konfiguracija podešavanja sajta"
 msgid "Мы используем технические cookie для корректной работы сайта."
 msgstr "Koristimo tehničke kolačiće (cookies) za ispravan rad sajta."
 
-#: backend/site_config/models.py:22
+#: backend/site_config/models.py:20
 msgid "Название сайта"
 msgstr "Naziv sajta"
 
-#: backend/site_config/models.py:22
+#: backend/site_config/models.py:20
 msgid "Максимум 100 символов"
 msgstr "Najviše 100 karaktera"
 
-#: backend/site_config/models.py:25
+#: backend/site_config/models.py:23
 msgid "SEO описание"
 msgstr "SEO opis"
 
-#: backend/site_config/models.py:25
+#: backend/site_config/models.py:23
 msgid "Максимум 250 символов"
 msgstr "Najviše 250 karaktera"
 
-#: backend/site_config/models.py:27
+#: backend/site_config/models.py:25
 msgid "Политика конфиденциальности"
 msgstr "Politika privatnosti"
 
-#: backend/site_config/models.py:30
+#: backend/site_config/models.py:28
 msgid "Текст cookie-сообщения"
 msgstr "Tekst poruke o kolačićima"
 
-#: backend/site_config/models.py:36
+#: backend/site_config/models.py:34
 msgid "Текст кнопки cookie"
 msgstr "Tekst dugmeta za kolačiće"
 
-#: backend/site_config/models.py:41
+#: backend/site_config/models.py:39
 msgid "Копирайт"
 msgstr "Autorsko pravo"
 
-#: backend/site_config/models.py:41
+#: backend/site_config/models.py:39
 msgid "Максимум 150 символов"
 msgstr "Najviše 150 karaktera"
 
-#: backend/site_config/models.py:46 backend/site_config/models.py:47
+#: backend/site_config/models.py:43 backend/site_config/models.py:44
 msgid "Настройки сайта"
 msgstr "Podešavanja sajta"
 
-#: backend/site_config/models.py:56
+#: backend/site_config/models.py:53
 msgid "Удаление системных настроек сайта запрещено."
 msgstr "Brisanje sistemskih podešavanja sajta je zabranjeno."
 
