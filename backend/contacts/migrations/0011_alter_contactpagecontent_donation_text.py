@@ -5,17 +5,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("contacts", "0010_contactsociallink_site_config"),
+        ('contacts', '0010_contactsociallink_site_config'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="contactpagecontent",
-            name="donation_text",
+            model_name='contactpagecontent',
+            name='donation_text',
             field=models.TextField(
                 blank=True,
-                help_text="Редактируемый текст с возможностью добавить внешнюю ссылку.",
-                verbose_name="Текстовый блок для пожертвований",
+                help_text='Редактируемый текст с возможностью добавить внешнюю ссылку.',
+                verbose_name='Текстовый блок для пожертвований',
             ),
         ),
     ]
