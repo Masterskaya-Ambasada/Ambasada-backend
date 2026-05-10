@@ -1,17 +1,13 @@
-from django.db.models.signals import post_delete, post_save
+from contacts.models import ContactSocialLink  # Твоя модель соцсетей
+from django.db.models.signals import post_delete, post_save  # Добавили удаление
 from django.dispatch import receiver
 
-from .constants import clear_config_cache
-from .models import Language
+from site_config.cache import clear_config_cache
+from site_config.models import SiteConfig
 
 
-@receiver(post_save, sender=Language)
-def language_saved(sender, instance, **kwargs):
-    """Очищает кэш конфигурации при изменении языка."""
-    clear_config_cache()
-
-
-@receiver(post_delete, sender=Language)
-def language_deleted(sender, instance, **kwargs):
-    """Очищает кэш конфигурации при удалении языка."""
+@receiver([post_save, post_delete], sender=SiteConfig)
+@receiver([post_save, post_delete], sender=ContactSocialLink)
+def invalidate_site_config_cache(sender, instance, **kwargs):
+    """Сбрасывает кеш при изменении настроек или социальных ссылок."""
     clear_config_cache()

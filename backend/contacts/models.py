@@ -2,7 +2,6 @@ from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
-from site_config.constants import clear_config_cache
 
 from contacts.constants import MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH, MAX_REASON_LENGTH, SOCIAL_TYPE_MAX_LENGTH
 
@@ -49,7 +48,7 @@ class ContactPageContent(models.Model):
     donation_text = models.TextField(
         blank=True,
         verbose_name=_('Текстовый блок для пожертвований'),
-        help_text=_('Редактируемый текст с возможностью добавить внешнюю ссылку. ' 'В админке используется TinyMCE.'),
+        help_text=_('Редактируемый текст с возможностью добавить внешнюю ссылку.'),
     )
     is_active = models.BooleanField(
         default=True,
@@ -89,6 +88,12 @@ class ContactSocialLink(models.Model):
         FACEBOOK = 'facebook', _('Facebook')
         LINKEDIN = 'linkedin', _('LinkedIn')
 
+    site_config = models.ForeignKey(
+        'site_config.SiteConfig',
+        on_delete=models.CASCADE,
+        related_name='socials',
+        verbose_name='Настройки сайта',
+    )
     social_type = models.CharField(
         max_length=SOCIAL_TYPE_MAX_LENGTH,
         choices=SocialType.choices,
@@ -120,14 +125,6 @@ class ContactSocialLink(models.Model):
         verbose_name = _('Ссылка на соцсеть / мессенджер')
         verbose_name_plural = _('Ссылки на соцсети / мессенджеры')
         ordering = ('order', 'id')
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        clear_config_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        clear_config_cache()
 
     def __str__(self):
         return f'{self.get_social_type_display()} - {self.url}'

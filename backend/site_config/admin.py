@@ -1,22 +1,35 @@
-"""Регистрация моделей SiteConfig, ContactSocialLink, Language в админ-панели."""
-
+from contacts.models import ContactSocialLink
 from core.base_admin import BaseAdmin
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from .models import Language, SiteConfig
+from .models import SiteConfig
+
+
+class ContactSocialLinkInline(admin.TabularInline):
+    """Настройка отображения ссылок на соцсети внутри конфигурации сайта."""
+
+    model = ContactSocialLink
+    extra = 1
+    fields = ('social_type', 'url', 'order', 'is_active')
 
 
 @admin.register(SiteConfig)
 class ConfigAdmin(BaseAdmin):
+    """Администрирование глобальных настроек сайта (Singleton)."""
+
     ordering = ('id',)
+
+    inlines = [ContactSocialLinkInline]
+
     list_display = [
         'site_name_sr_latn',
         'site_name_sr_cyrl',
         'seo_description',
         'copyright',
     ]
+
     tinymce_fields = [
         'seo_description_ru',
         'seo_description_en',
@@ -40,7 +53,6 @@ class ConfigAdmin(BaseAdmin):
                 'fields': ('cookie_button_text',),
             },
         ),
-        ('Социальные сети', {'fields': ('socials',), 'classes': ('wide',)}),
         (
             'Переводы (Русский)',
             {
@@ -90,23 +102,12 @@ class ConfigAdmin(BaseAdmin):
         return form
 
     def has_add_permission(self, request):
-        """Скрывает кнопку add на странице списка если объект SiteConfig же существует."""
         if SiteConfig.objects.exists():
             return False
         return super().has_add_permission(request)
 
     def add_view(self, request, form_url='', extra_context=None):
-        """Редирект на страницу update."""
         if SiteConfig.objects.exists():
             existing_config = SiteConfig.objects.first()
             return redirect(reverse('admin:site_config_siteconfig_change', args=[existing_config.pk]))
         return super().add_view(request, form_url, extra_context)
-
-
-@admin.register(Language)
-class LanguageAdmin(admin.ModelAdmin):
-    list_display = ['code', 'label', 'is_active']
-    list_editable = ['is_active']
-
-    def has_add_permission(self, request):
-        return False
