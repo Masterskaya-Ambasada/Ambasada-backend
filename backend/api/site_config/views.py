@@ -35,7 +35,7 @@ class InitView(APIView):
         if cached is not None:
             return Response(cached, status=status.HTTP_200_OK)
 
-        config = SiteConfig.objects.prefetch_related('languages', 'socials').first()
+        config = SiteConfig.objects.prefetch_related('socials').first()
 
         if not config:
             cache.set(cache_key, CACHE_VALUE_NOT_FOUND, timeout=CACHE_TIMEOUT_NOT_FOUND)

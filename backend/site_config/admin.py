@@ -41,7 +41,6 @@ class ConfigAdmin(BaseAdmin):
             },
         ),
         ('Социальные сети', {'fields': ('socials',), 'classes': ('wide',)}),
-        ('Языки', {'fields': ('languages',), 'classes': ('wide',)}),
         (
             'Переводы (Русский)',
             {
@@ -106,4 +105,8 @@ class ConfigAdmin(BaseAdmin):
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
-    list_display = ['code', 'label']
+    list_display = ['code', 'label', 'is_active']
+    list_editable = ['is_active']
+
+    def has_add_permission(self, request):
+        return False

@@ -26,7 +26,8 @@ class SiteConfigSocialSerializer(serializers.ModelSerializer):
 class SiteConfigSerializer(serializers.ModelSerializer):
     """Сериализатор для конфигурации сайта."""
 
-    languages = LanguageSerializer(many=True, read_only=True)
+    # languages = LanguageSerializer(many=True, read_only=True)
+    languages = serializers.SerializerMethodField()
     socials = SiteConfigSocialSerializer(many=True, read_only=True)
 
     class Meta:
@@ -41,6 +42,10 @@ class SiteConfigSerializer(serializers.ModelSerializer):
             'socials',
             'copyright',
         ]
+
+    def get_languages(self, obj):
+        languages = Language.objects.filter(is_active=True)
+        return LanguageSerializer(languages, many=True).data
 
 
 class ErrorSerializer(serializers.Serializer):

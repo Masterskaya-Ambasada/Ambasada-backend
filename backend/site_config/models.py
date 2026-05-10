@@ -12,7 +12,6 @@ from .constants import (
     SEO_DESCRIPTION_MAX_LENGTH,
     SITE_CONFIG_SINGLETON_PK,
     SITE_NAME_MAX_LENGTH,
-    SOCIAL_TYPE_MAX_LENGTH,
     clear_config_cache,
 )
 
@@ -20,9 +19,8 @@ from .constants import (
 class Language(models.Model):
     """Модель доступных языков на основе настроек проекта."""
 
-    code = models.CharField(
-        max_length=LANGUAGE_CODE_MAX_LENGTH, unique=True, choices=settings.LANGUAGES, verbose_name=_('Код')
-    )
+    code = models.CharField(max_length=LANGUAGE_CODE_MAX_LENGTH, unique=True, verbose_name=_('Код'))
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = _('Язык')
@@ -31,51 +29,13 @@ class Language(models.Model):
 
     def label(self):
         """Возвращает название языка из настроек проекта."""
-        return self.get_code_display()
+        # return self.get_code_display()
+        return dict(settings.LANGUAGES).get(self.code, self.code)
 
     label.short_description = _('Название языка')
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        clear_config_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        clear_config_cache()
-
     def __str__(self):
-        return f'{self.get_code_display()} ({self.code})'
-
-
-class Social(models.Model):
-    """Модель ссылок на социальные сети."""
-
-    class SocialType(models.TextChoices):
-        TELEGRAM = 'telegram', _('Telegram')
-        INSTAGRAM = 'instagram', _('Instagram')
-        FACEBOOK = 'facebook', _('Facebook')
-        LINKEDIN = 'linkedin', _('LinkedIn')
-
-    social_type = models.CharField(
-        max_length=SOCIAL_TYPE_MAX_LENGTH, choices=SocialType.choices, verbose_name=_('Тип соцсети'), db_index=True
-    )
-    url = models.URLField(verbose_name=_('URL'))
-
-    class Meta:
-        verbose_name = _('Социальная сеть')
-        verbose_name_plural = _('Социальные сети')
-        constraints = [models.UniqueConstraint(fields=['social_type', 'url'], name='unique_social_type_url')]
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        clear_config_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        clear_config_cache()
-
-    def __str__(self):
-        return f'{self.get_social_type_display()}: {self.url}'
+        return f'{self.label()} ({self.code})'
 
 
 class SiteConfig(models.Model):
@@ -103,7 +63,6 @@ class SiteConfig(models.Model):
     copyright = models.CharField(
         max_length=COPYRIGHT_MAX_LENGTH, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов')
     )
-    languages = models.ManyToManyField('Language', blank=True, related_name='site_configs', verbose_name=_('Языки'))
     socials = models.ManyToManyField(
         'contacts.ContactSocialLink', blank=True, related_name='site_configs', verbose_name=_('Соцсети')
     )
