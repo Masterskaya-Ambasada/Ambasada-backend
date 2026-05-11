@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 23:03+0300\n"
+"POT-Creation-Date: 2026-05-11 16:42+0300\n"
 "PO-Revision-Date: 2026-05-05 15:40+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: English\n"
@@ -379,11 +379,19 @@ msgstr ""
 "If checked, the link is displayed on the contact page. If unchecked, the "
 "link is hidden but not deleted."
 
-#: backend/contacts/models.py:125
+#: backend/contacts/models.py:142
+msgid ""
+"Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать "
+"существующую запись"
+msgstr ""
+"A link for this social media type has already been added. You can edit the "
+"existing entry."
+
+#: backend/contacts/models.py:147
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr "Social network / messenger link"
 
-#: backend/contacts/models.py:126
+#: backend/contacts/models.py:148
 msgid "Ссылки на соцсети / мессенджеры"
 msgstr "Social network / messenger links"
 
@@ -735,7 +743,7 @@ msgstr "Maximum 150 characters"
 msgid "Настройки сайта"
 msgstr "Site Settings"
 
-#: backend/site_config/models.py:53
+#: backend/site_config/models.py:54
 msgid "Удаление системных настроек сайта запрещено."
 msgstr "Deletion of system site settings is prohibited."
 
@@ -859,5 +867,3 @@ msgstr "If checked, the user will be visible in the team list on the website."
 #: backend/users/models.py:160
 msgid "Пользователи и команда"
 msgstr "Users and Team"
-
-

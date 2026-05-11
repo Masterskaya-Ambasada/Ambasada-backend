@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 23:03+0300\n"
+"POT-Creation-Date: 2026-05-11 16:42+0300\n"
 "PO-Revision-Date: 2026-05-10 21:50+0300\n"
 "Last-Translator: Gemini\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -381,11 +381,19 @@ msgstr ""
 "Ако је означено — линк се приказује на страници контаката. Ако није означено "
 "— линк је скривен, али се не брише."
 
-#: backend/contacts/models.py:125
+#: backend/contacts/models.py:142
+msgid ""
+"Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать "
+"существующую запись"
+msgstr ""
+"Линк за овај тип друштвене мреже је већ додат. Можете изменити постојећи "
+"запис."
+
+#: backend/contacts/models.py:147
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr "Линк ка друштвеној мрежи / месинџеру"
 
-#: backend/contacts/models.py:126
+#: backend/contacts/models.py:148
 msgid "Ссылки на соцсети / мессенджеры"
 msgstr "Линкови ка друштвеним мрежама / месинџерима"
 
@@ -739,7 +747,7 @@ msgstr "Максимум 150 карактера"
 msgid "Настройки сайта"
 msgstr "Подешавања сајта"
 
-#: backend/site_config/models.py:53
+#: backend/site_config/models.py:54
 msgid "Удаление системных настроек сайта запрещено."
 msgstr "Брисање системских подешавања сајта је забрањено."
 

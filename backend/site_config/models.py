@@ -49,8 +49,10 @@ class SiteConfig(models.Model):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        """Запрещает удаление системных настроек."""
-        raise ValidationError(_('Удаление системных настроек сайта запрещено.'))
+        """Запрещает удаление только основной системной записи."""
+        if self.pk == SITE_CONFIG_SINGLETON_PK:
+            raise ValidationError(_('Удаление системных настроек сайта запрещено.'))
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.site_name

@@ -106,7 +106,20 @@ class ContactPageContentAdmin(admin.ModelAdmin):
 class ContactSocialLinkAdmin(admin.ModelAdmin):
     """Админка для управления ссылками на соцсети и мессенджеры."""
 
+    exclude = ('site_config',)
+
     list_display = ('id', 'social_type', 'url', 'order', 'is_active')
     list_editable = ('order', 'is_active')
     list_filter = ('social_type', IsActiveOnSiteFilter)
     search_fields = ('url',)
+
+    def save_model(self, request, obj, form, change):
+        """Автоматически подтягиваем единственный SiteConfig при сохранении."""
+        if not hasattr(obj, 'site_config') or obj.site_config is None:
+            from site_config.models import SiteConfig
+
+            # Берем самый первый (и единственный) конфиг
+            config = SiteConfig.objects.first()
+            if config:
+                obj.site_config = config
+        super().save_model(request, obj, form, change)

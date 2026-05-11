@@ -11,8 +11,9 @@ class ContactSocialLinkInline(admin.TabularInline):
     """Настройка отображения ссылок на соцсети внутри конфигурации сайта."""
 
     model = ContactSocialLink
-    extra = 1
+    extra = 0
     fields = ('social_type', 'url', 'order', 'is_active')
+    can_delete = False
 
 
 @admin.register(SiteConfig)
@@ -111,3 +112,14 @@ class ConfigAdmin(BaseAdmin):
             existing_config = SiteConfig.objects.first()
             return redirect(reverse('admin:site_config_siteconfig_change', args=[existing_config.pk]))
         return super().add_view(request, form_url, extra_context)
+
+    def has_delete_permission(self, request, obj=None):
+        """Скрывает кнопку 'Удалить' и запрещает доступ к delete_view."""
+        return False
+
+    def get_actions(self, request):
+        """Удаляет возможность массового удаления из списка объектов."""
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions

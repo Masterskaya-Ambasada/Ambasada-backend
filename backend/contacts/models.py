@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.db.models import Q
@@ -121,10 +122,34 @@ class ContactSocialLink(models.Model):
         verbose_name=_('Дата создания'),
     )
 
+    def clean(self):
+        super().clean()
+        if not hasattr(self, 'site_config') or self.site_config is None:
+            from site_config.models import SiteConfig
+
+            self.site_config = SiteConfig.objects.first()
+
+        if self.site_config:
+            qs = ContactSocialLink.objects.filter(site_config=self.site_config, social_type=self.social_type)
+
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+
+            if qs.exists():
+                raise ValidationError(
+                    {
+                        'social_type': _(
+                            'Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать существующую запись'
+                        )
+                        % {'type': self.get_social_type_display()}
+                    }
+                )
+
     class Meta:
         verbose_name = _('Ссылка на соцсеть / мессенджер')
         verbose_name_plural = _('Ссылки на соцсети / мессенджеры')
         ordering = ('order', 'id')
+        unique_together = ('site_config', 'social_type')
 
     def __str__(self):
         return f'{self.get_social_type_display()} - {self.url}'
