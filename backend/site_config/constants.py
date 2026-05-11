@@ -1,1 +1,14 @@
-CACHE_KEY_INIT = 'site_config_init'
+from django.utils.translation import gettext_lazy as _
+
+CACHE_KEY_SITE_CONFIG = 'site_config:v1'
+TIMEOUT_CACHE = 86400
+
+COOKIE_BUTTON_TEXT_MAX_LENGTH = 20
+SITE_NAME_MAX_LENGTH = 100
+SOCIAL_TYPE_MAX_LENGTH = 20
+SEO_DESCRIPTION_MAX_LENGTH = 250
+COPYRIGHT_MAX_LENGTH = 150
+
+DEFAULT_COOKIE_BUTTON_TEXT = 'OK'
+DEFAULT_COOKIE_MESSAGE = _('Мы используем технические cookie для корректной работы сайта.')
+SITE_CONFIG_SINGLETON_PK = 1
