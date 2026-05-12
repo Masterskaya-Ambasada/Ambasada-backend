@@ -39,17 +39,11 @@ class ConfigAdmin(BaseAdmin):
         (_('Языки'), {'fields': ('languages',), 'classes': ('wide',)}),
         (
             _('Переводы (Русский)'),
-            {
-                'fields': ('seo_description_ru', 'copyright_ru', 'privacy_policy_ru'),
-                'classes': ('collapse',),
-            },
+            {'fields': ('seo_description_ru', 'copyright_ru', 'privacy_policy_ru'), 'classes': ('collapse',)},
         ),
         (
             _('Переводы (Английский)'),
-            {
-                'fields': ('seo_description_en', 'copyright_en', 'privacy_policy_en'),
-                'classes': ('collapse',),
-            },
+            {'fields': ('seo_description_en', 'copyright_en', 'privacy_policy_en'), 'classes': ('collapse',)},
         ),
         (
             _('Переводы (Сербский - Латиница)'),

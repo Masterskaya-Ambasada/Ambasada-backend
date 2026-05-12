@@ -18,7 +18,7 @@ class UserAdmin(BaseUserAdmin, BaseTranslatedAdmin):
 
     date_hierarchy = 'date_joined'
     empty_value_display = '-empty-'
-    ordering = ('email',)
+    ordering = ('-is_public', 'email',)
     list_editable = (
         'role',
         'is_active',

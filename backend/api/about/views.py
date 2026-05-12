@@ -39,7 +39,7 @@ class AboutAPIView(APIView):
             return Response({'detail': _('Страница "О нас" не найдена.')}, status=404)
 
         values = Value.objects.all()
-        members = about.team_members.all()
+        members = about.team_members.all() # User.objects.get_public_team()
         images = GalleryImage.objects.all()
 
         serializer = AboutPageSerializer(

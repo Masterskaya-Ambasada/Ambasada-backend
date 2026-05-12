@@ -5,7 +5,9 @@ from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
-from users.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Value(models.Model):
@@ -123,6 +125,7 @@ class AboutPage(models.Model):
     team_members = models.ManyToManyField(
         User,
         blank=True,
+        limit_choices_to={'is_public': True},
         related_name='about_pages',
         verbose_name=_('Участники команды'),
     )
@@ -156,6 +159,10 @@ class AboutPage(models.Model):
 
     def __str__(self):
         return self.hero_title or 'Страница "О нас"'
+
+    def get_public_team(self):
+        """Возвращает QuerySet активных публичных пользователей."""
+        return User.objects.public()
 
 
 class AboutParagraph(models.Model):
