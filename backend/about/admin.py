@@ -40,7 +40,7 @@ class ValueAdmin(BaseTranslatedAdmin):
         (_('Ценность (Русский)'), {'fields': ('title_ru', 'text_ru'), 'classes': ('collapse',)}),
         (_('Ценность (Английский)'), {'fields': ('title_en', 'text_en'), 'classes': ('collapse',)}),
         (_('Ценность (Сербский - Латиница)'), {'fields': ('title_sr_latn', 'text_sr_latn'), 'classes': ('collapse',)}),
-        (_('Ценность (Сербский - Кирилица)'), {'fields': ('title_sr_cyrl', 'text_sr_cyrl'), 'classes': ('collapse',)}),
+        (_('Ценность (Сербский - Кириллица)'), {'fields': ('title_sr_cyrl', 'text_sr_cyrl'), 'classes': ('collapse',)}),
     )
 
 

@@ -2,209 +2,234 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2026-05-07 19:15+0300\n"
-"PO-Revision-Date: 2026-05-07 20:00+0300\n"
-=======
-"POT-Creation-Date: 2026-05-11 16:42+0300\n"
-"PO-Revision-Date: 2026-05-05 15:40+0300\n"
->>>>>>> develop
-"Last-Translator: Gemini\n"
-"Language-Team: English\n"
+"POT-Creation-Date: 2026-05-12 13:01+0300\n"
+"PO-Revision-Date: 2026-05-12 14:30+0300\n"
+"Last-Translator: System <admin@example.com>\n"
+"Language-Team: English <en@li.org>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: backend/about/admin.py:37
-msgid "Hero"
-msgstr "Hero Section"
+#: backend/about/admin.py:18 backend/contacts/models.py:110
+msgid "Порядок отображения"
+msgstr "Display order"
 
-#: backend/about/admin.py:38
-msgid "About"
-msgstr "About Us"
+#: backend/about/admin.py:19
+msgid "Параграф (Русский)"
+msgstr "Paragraph (Russian)"
 
-#: backend/about/admin.py:39
-msgid "Values"
-msgstr "Our Values"
+#: backend/about/admin.py:20
+msgid "Параграф (Английский)"
+msgstr "Paragraph (English)"
+
+#: backend/about/admin.py:22
+msgid "Параграф (Сербский - Латиница)"
+msgstr "Paragraph (Serbian - Latin)"
+
+#: backend/about/admin.py:26
+msgid "Параграф (Сербский - Кириллица)"
+msgstr "Paragraph (Serbian - Cyrillic)"
+
+#: backend/about/admin.py:40
+msgid "Ценность (Русский)"
+msgstr "Value (Russian)"
 
 #: backend/about/admin.py:41
-msgid "Team"
-msgstr "Team"
+msgid "Ценность (Английский)"
+msgstr "Value (English)"
 
-#: backend/about/admin.py:51
-msgid "Gallery"
-msgstr "Gallery"
+#: backend/about/admin.py:42
+msgid "Ценность (Сербский - Латиница)"
+msgstr "Value (Serbian - Latin)"
 
-#: backend/about/admin.py:53
-msgid "Contacts"
+#: backend/about/admin.py:43
+msgid "Ценность (Сербский - Кириллица)"
+msgstr "Value (Serbian - Cyrillic)"
+
+#: backend/about/admin.py:66
+msgid "Main"
+msgstr "Main"
+
+#: backend/about/admin.py:79
+msgid "Заголовки (Русский)"
+msgstr "Titles (Russian)"
+
+#: backend/about/admin.py:95
+msgid "Заголовки (Английский)"
+msgstr "Titles (English)"
+
+#: backend/about/admin.py:111
+msgid "Заголовки (Сербский - Латиница)"
+msgstr "Titles (Serbian - Latin)"
+
+#: backend/about/admin.py:127
+msgid "Заголовки (Сербский - Кириллица)"
+msgstr "Titles (Serbian - Cyrillic)"
+
+#: backend/about/admin.py:142
+msgid "Контакты"
 msgstr "Contacts"
 
-#: backend/about/apps.py:7 backend/about/models.py:150
-#: backend/about/models.py:151 backend/about/models.py:168
-msgid "Страница \"О нас\""
-msgstr "About Us page"
+#: backend/about/admin.py:148
+msgid "Публичные пользователи не найдены"
+msgstr "No public users found"
 
-#: backend/about/models.py:16 backend/projects/models.py:129
+#: backend/about/admin.py:152
+msgid "Текущий состав команды на сайте"
+msgstr "Current team members on the website"
+
+#: backend/about/apps.py:7 backend/about/models.py:153
+#: backend/about/models.py:154 backend/about/models.py:175
+msgid "Страница \"О нас\""
+msgstr "About Us Page"
+
+#: backend/about/models.py:18 backend/projects/models.py:129
 #: backend/projects/models.py:153 backend/projects/models.py:177
 msgid "Название"
 msgstr "Title"
 
-#: backend/about/models.py:21 backend/projects/models.py:343
+#: backend/about/models.py:23 backend/projects/models.py:343
 msgid "Текст"
 msgstr "Text"
 
-#: backend/about/models.py:26
+#: backend/about/models.py:28
 msgid "Ценность"
 msgstr "Value"
 
-#: backend/about/models.py:27
+#: backend/about/models.py:29
 msgid "Ценности"
 msgstr "Values"
 
-#: backend/about/models.py:39 backend/projects/models.py:248
+#: backend/about/models.py:41 backend/projects/models.py:248
 msgid "Изображение"
 msgstr "Image"
 
-#: backend/about/models.py:45
+#: backend/about/models.py:47
 msgid "Alt текст"
 msgstr "Alt text"
 
-#: backend/about/models.py:50
+#: backend/about/models.py:52
 msgid "Изображение галереи"
 msgstr "Gallery image"
 
-#: backend/about/models.py:51
+#: backend/about/models.py:53
 msgid "Галерея изображений"
 msgstr "Image gallery"
 
-#: backend/about/models.py:63
+#: backend/about/models.py:65
 msgid "Заголовок hero"
-msgstr "Hero heading"
+msgstr "Hero title"
 
-#: backend/about/models.py:68
+#: backend/about/models.py:70
 msgid "Описание hero"
 msgstr "Hero description"
 
-#: backend/about/models.py:74
+#: backend/about/models.py:76
 msgid "Заголовок блока \"О нас\""
-msgstr "\"About Us\" block heading"
+msgstr "About Us section title"
 
-#: backend/about/models.py:79
+#: backend/about/models.py:81
 msgid "Левое изображение hero"
-msgstr "Left hero image"
+msgstr "Hero left image"
 
-#: backend/about/models.py:85
+#: backend/about/models.py:87
 msgid "Правое изображение hero"
-msgstr "Right hero image"
+msgstr "Hero right image"
 
-#: backend/about/models.py:92
+#: backend/about/models.py:94
 msgid "Текст кнопки"
 msgstr "Button text"
 
-#: backend/about/models.py:97
+#: backend/about/models.py:99
 msgid "Ссылка кнопки"
 msgstr "Button link"
 
-#: backend/about/models.py:103
+#: backend/about/models.py:105
 msgid "Заголовок \"Ценности\""
-msgstr "\"Values\" heading"
+msgstr "Values section title"
 
-#: backend/about/models.py:108
+#: backend/about/models.py:110
 msgid "Заголовок \"Команда\""
-msgstr "\"Team\" heading"
+msgstr "Team section title"
 
-#: backend/about/models.py:114
+#: backend/about/models.py:116
 msgid "Кнопка команды (текст)"
-msgstr "Team button (text)"
+msgstr "Team button text"
 
-#: backend/about/models.py:119
+#: backend/about/models.py:121
 msgid "Кнопка команды (ссылка)"
-msgstr "Team button (link)"
+msgstr "Team button link"
 
-#: backend/about/models.py:127
+#: backend/about/models.py:130
 msgid "Участники команды"
 msgstr "Team members"
 
-#: backend/about/models.py:131 backend/contacts/models.py:17
+#: backend/about/models.py:134 backend/contacts/models.py:18
 msgid "Email"
 msgstr "Email"
 
-#: backend/about/models.py:138
+#: backend/about/models.py:141
 msgid "Ссылка для связи"
 msgstr "Contact link"
 
-#: backend/about/models.py:145
+#: backend/about/models.py:148
 msgid "Заголовок галереи"
-msgstr "Gallery heading"
+msgstr "Gallery title"
 
-#: backend/about/models.py:155
+#: backend/about/models.py:158
 msgid "Может существовать только одна страница \"О нас\"."
-msgstr "Only one \"About Us\" page can exist."
+msgstr "Only one About Us page can exist."
 
-#: backend/about/models.py:172
+#: backend/about/models.py:179
 msgid "Акцент (первое предложение)"
 msgstr "Accent (first sentence)"
 
-#: backend/about/models.py:175
+#: backend/about/models.py:182
 msgid "Основной текст"
 msgstr "Main text"
 
-#: backend/about/models.py:179 backend/projects/models.py:254
+#: backend/about/models.py:186 backend/projects/models.py:254
 #: backend/projects/models.py:309 backend/projects/models.py:412
 msgid "Порядок"
 msgstr "Order"
 
-#: backend/about/models.py:184
+#: backend/about/models.py:191
 msgid "Параграф"
 msgstr "Paragraph"
 
-#: backend/about/models.py:185
+#: backend/about/models.py:192
 msgid "Параграфы"
 msgstr "Paragraphs"
 
 #: backend/api/about/views.py:21
 msgid "Получение страницы \"О сообществе\""
-msgstr "Retrieve \"About Community\" page"
+msgstr "Retrieving About Community page"
 
 #: backend/api/about/views.py:22
 msgid "Возвращает данные страницы \"О нас\" со всеми секциями"
-msgstr "Returns the \"About Us\" page data with all sections"
+msgstr "Returns About Us page data with all sections"
 
 #: backend/api/about/views.py:39
 msgid "Страница \"О нас\" не найдена."
-msgstr "\"About Us\" page not found."
+msgstr "About Us page not found."
 
 #: backend/api/apps.py:7
 msgid "Интерфейс API"
 msgstr "API Interface"
 
 #: backend/api/auth/serializers.py:26 backend/api/users/serializers.py:26
-msgid ""
-"Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
-msgstr ""
-"Incorrect email or password. Please check your credentials and try again."
+msgid "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
+msgstr "Invalid email or password. Please check your credentials and try again."
 
 #: backend/api/contacts/views.py:30
 msgid "Создание запроса обратной связи"
-msgstr "Submit a Contact Request"
+msgstr "Creating contact request"
 
 #: backend/api/contacts/views.py:32
-msgid ""
-"Принимает данные формы и сохраняет их. Поле `contact_preference` — "
-"техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается "
-"спамом и игнорируется."
-msgstr ""
-<<<<<<< HEAD
-"Accepts and saves form data. The `contact_preference` field is a technical "
-"anti-spam honeypot field. If the field is filled out, the request is "
-"considered spam and is ignored."
-=======
-"Accepts form data and saves them. The `contact_preference` field is a "
-"technical anti-spam field (honeypot). If the field is filled, the request is "
-"considered spam and ignored."
->>>>>>> develop
+msgid "Принимает данные формы и сохраняет их. Поле `contact_preference` — техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается спамом и игнорируется."
+msgstr "Accepts form data and saves it. The `contact_preference` field is a technical anti-spam honeypot field. If filled, the request is considered spam and ignored."
 
 #: backend/api/contacts/views.py:50
 msgid "Получено"
@@ -212,24 +237,11 @@ msgstr "Received"
 
 #: backend/api/contacts/views.py:53
 msgid "Получение контента блока контактов"
-<<<<<<< HEAD
-msgstr "Retrieve contacts block content"
-=======
-msgstr "Retrieving contact block content"
->>>>>>> develop
+msgstr "Retrieving contacts section content"
 
 #: backend/api/contacts/views.py:54
-msgid ""
-"Возвращает текстовый блок для пожертвований и список активных ссылок на "
-"соцсети и мессенджеры."
-msgstr ""
-<<<<<<< HEAD
-"Returns the donation text block and a list of active social media and "
-"messenger links."
-=======
-"Returns a text block for donations and a list of active links to social "
-"networks and messengers."
->>>>>>> develop
+msgid "Возвращает текстовый блок для пожертвований и список активных ссылок на соцсети и мессенджеры."
+msgstr "Returns donation text block and a list of active social media and messenger links."
 
 #: backend/api/projects/serializers.py:56
 msgid "Перейти к проекту"
@@ -241,7 +253,7 @@ msgstr "Site initialization"
 
 #: backend/api/schemas/init_schemas.py:7
 msgid "Возвращает глобальные настройки: название, SEO, языки и соцсети."
-msgstr "Returns global settings: title, SEO, languages, and social networks."
+msgstr "Returns global settings: name, SEO, languages and social networks."
 
 #: backend/api/schemas/init_schemas.py:21
 msgid "Список доступных языков"
@@ -249,18 +261,13 @@ msgstr "List of available languages"
 
 #: backend/api/schemas/init_schemas.py:31
 msgid "Ссылки на социальные сети"
-msgstr "Links to social networks"
+msgstr "Social media links"
 
 #: backend/api/schemas/init_schemas.py:35
 msgid "Успешный ответ"
 msgstr "Successful response"
 
-<<<<<<< HEAD
-#: backend/api/schemas/init_schemas.py:34
-#: backend/api/site_config/constants.py:8
-=======
 #: backend/api/schemas/init_schemas.py:68
->>>>>>> develop
 msgid "Конфигурация сайта не найдена"
 msgstr "Site configuration not found"
 
@@ -282,245 +289,134 @@ msgstr "Serbian (Cyrillic)"
 
 #: backend/contacts/admin.py:12
 msgid "Отображение на сайте"
-<<<<<<< HEAD
 msgstr "Display on website"
 
 #: backend/contacts/admin.py:17
 msgid "Показываются на сайте"
-msgstr "Displayed on website"
+msgstr "Visible on website"
 
 #: backend/contacts/admin.py:18
 msgid "Скрыты с сайта"
 msgstr "Hidden from website"
-=======
-msgstr "Display on site"
 
-#: backend/contacts/admin.py:17
-msgid "Показываются на сайте"
-msgstr "Shown on site"
-
-#: backend/contacts/admin.py:18
-msgid "Скрыты с сайта"
-msgstr "Hidden from site"
->>>>>>> develop
-
-#: backend/contacts/admin.py:79
-msgid ""
-"Доступной может быть только одна ссылка! Оставьте галочку только на одной из "
-"них"
-msgstr ""
-<<<<<<< HEAD
-"Only one link can be active! Leave the checkbox on only one of them."
-=======
-"Only one link can be available! Keep the checkmark on only one of them."
+#: backend/contacts/admin.py:70
+msgid "Доступной может быть только одна ссылка! Оставьте галочку только на одной из них"
+msgstr "Only one link can be active! Leave the checkbox checked on only one of them"
 
 #: backend/contacts/apps.py:7
 msgid "Обратная связь и соцсети"
-msgstr "Feedback and Social Networks"
->>>>>>> develop
+msgstr "Feedback and social networks"
 
-#: backend/contacts/models.py:14 backend/users/models.py:97
+#: backend/contacts/models.py:15 backend/users/models.py:97
 msgid "Имя"
-msgstr "Name"
+msgstr "First name"
 
-#: backend/contacts/models.py:21
+#: backend/contacts/models.py:22
 msgid "Сообщение"
 msgstr "Message"
 
-#: backend/contacts/models.py:23
+#: backend/contacts/models.py:24
 msgid "Введите сообщение"
 msgstr "Enter your message"
 
-#: backend/contacts/models.py:27
+#: backend/contacts/models.py:28
 msgid "Причина обращения"
-msgstr "Reason for Contact"
+msgstr "Reason for contact"
 
-<<<<<<< HEAD
-#: backend/contacts/models.py:30 backend/contacts/models.py:55
-#: backend/contacts/models.py:111
-msgid "Дата создания"
-msgstr "Creation Date"
-
-#: backend/contacts/models.py:33
-msgid "Запрос обратной связи"
-msgstr "Feedback Request"
-
-#: backend/contacts/models.py:34
-msgid "Запросы обратной связи"
-msgstr "Feedback Requests"
-
-#: backend/contacts/models.py:46
-msgid "Текстовый блок для пожертвований"
-msgstr "Donations text block"
-
-#: backend/contacts/models.py:47
-msgid ""
-"Редактируемый текст с возможностью добавить внешнюю ссылку. В админке "
-"используется TinyMCE."
-msgstr ""
-"Editable text with the ability to add an external link. Uses TinyMCE in the "
-"admin panel."
-
-#: backend/contacts/models.py:51
-msgid "Активно"
-msgstr "Active"
-
-#: backend/contacts/models.py:59
-msgid "Дата обновления"
-msgstr "Update Date"
-
-#: backend/contacts/models.py:63
-msgid "Редактируемая ссылка на пожертвования"
-msgstr "Editable donation link"
-
-#: backend/contacts/models.py:64
-msgid "Редактируемые ссылки на пожертвования"
-msgstr "Editable donation links"
-
-#: backend/contacts/models.py:90
-msgid "Тип соцсети / мессенджера"
-msgstr "Social network / messenger type"
-
-#: backend/contacts/models.py:91
-msgid "Выбор соцсети."
-msgstr "Social network selection."
-
-#: backend/contacts/models.py:94 backend/projects/admin.py:109
-msgid "Ссылка"
-msgstr "Link"
-
-#: backend/contacts/models.py:95
-msgid "Например: https://t.me/tme"
-msgstr "For example: https://t.me/tme"
-
-#: backend/contacts/models.py:99
-msgid "Порядок отображения"
-msgstr "Display order"
-
-#: backend/contacts/models.py:103
-msgid "Показывать на сайте"
-msgstr "Show on website"
-
-#: backend/contacts/models.py:105
-=======
-#: backend/contacts/models.py:31
+#: backend/contacts/models.py:32
 msgid "Обработано"
 msgstr "Processed"
 
-#: backend/contacts/models.py:32
+#: backend/contacts/models.py:33
 msgid "Показывает, обработано ли обращение."
-msgstr "Shows whether the request has been processed."
+msgstr "Indicates whether the request has been processed."
 
-#: backend/contacts/models.py:34 backend/contacts/models.py:59
-#: backend/contacts/models.py:121
+#: backend/contacts/models.py:35 backend/contacts/models.py:60
+#: backend/contacts/models.py:122
 msgid "Дата создания"
-msgstr "Creation Date"
-
-#: backend/contacts/models.py:37
-msgid "Запрос обратной связи"
-msgstr "Feedback Request"
+msgstr "Creation date"
 
 #: backend/contacts/models.py:38
-msgid "Запросы обратной связи"
-msgstr "Feedback Requests"
+msgid "Запрос обратной связи"
+msgstr "Contact request"
 
-#: backend/contacts/models.py:50
+#: backend/contacts/models.py:39
+msgid "Запросы обратной связи"
+msgstr "Contact requests"
+
+#: backend/contacts/models.py:51
 msgid "Текстовый блок для пожертвований"
 msgstr "Donation text block"
 
-#: backend/contacts/models.py:51
+#: backend/contacts/models.py:52
 msgid "Редактируемый текст с возможностью добавить внешнюю ссылку."
 msgstr "Editable text with the ability to add an external link."
 
-#: backend/contacts/models.py:55
+#: backend/contacts/models.py:56
 msgid "Активно"
 msgstr "Active"
 
-#: backend/contacts/models.py:63
+#: backend/contacts/models.py:64
 msgid "Дата обновления"
-msgstr "Update Date"
+msgstr "Update date"
 
-#: backend/contacts/models.py:67
+#: backend/contacts/models.py:68
 msgid "Редактируемая ссылка на пожертвования"
 msgstr "Editable donation link"
 
-#: backend/contacts/models.py:68
+#: backend/contacts/models.py:69
 msgid "Редактируемые ссылки на пожертвования"
 msgstr "Editable donation links"
 
-#: backend/contacts/models.py:86
+#: backend/contacts/models.py:87
 msgid "Telegram"
 msgstr "Telegram"
 
-#: backend/contacts/models.py:87
+#: backend/contacts/models.py:88
 msgid "Instagram"
 msgstr "Instagram"
 
-#: backend/contacts/models.py:88
+#: backend/contacts/models.py:89
 msgid "Facebook"
 msgstr "Facebook"
 
-#: backend/contacts/models.py:89
+#: backend/contacts/models.py:90
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: backend/contacts/models.py:100
+#: backend/contacts/models.py:101
 msgid "Тип соцсети / мессенджера"
 msgstr "Social network / messenger type"
 
-#: backend/contacts/models.py:101
+#: backend/contacts/models.py:102
 msgid "Выбор соцсети."
-msgstr "Selection of social network."
+msgstr "Select social network."
 
-#: backend/contacts/models.py:104 backend/projects/admin.py:109
+#: backend/contacts/models.py:105 backend/projects/admin.py:113
 msgid "Ссылка"
 msgstr "Link"
 
-#: backend/contacts/models.py:105
+#: backend/contacts/models.py:106
 msgid "Например: https://t.me/tme"
 msgstr "For example: https://t.me/tme"
 
-#: backend/contacts/models.py:109
-msgid "Порядок отображения"
-msgstr "Display order"
-
-#: backend/contacts/models.py:113
+#: backend/contacts/models.py:114
 msgid "Показывать на сайте"
-msgstr "Show on site"
-
-#: backend/contacts/models.py:115
->>>>>>> develop
-msgid ""
-"Если галочка включена — ссылка отображается на странице контактов. Если "
-"выключена — ссылка скрыта, но не удаляется."
-msgstr ""
-<<<<<<< HEAD
-"If checked, the link is displayed on the contacts page. If unchecked, the "
-"link is hidden but not deleted."
-
-#: backend/contacts/models.py:115
-msgid "Ссылка на соцсеть / мессенджер"
-msgstr "Social network / messenger link"
+msgstr "Show on website"
 
 #: backend/contacts/models.py:116
-=======
-"If checked, the link is displayed on the contact page. If unchecked, the "
-"link is hidden but not deleted."
+msgid "Если галочка включена — ссылка отображается на странице контактов. Если выключена — ссылка скрыта, но не удаляется."
+msgstr "If checked, the link is displayed on the contacts page. If unchecked, the link is hidden but not deleted."
 
 #: backend/contacts/models.py:142
-msgid ""
-"Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать "
-"существующую запись"
-msgstr ""
-"A link for this social media type has already been added. You can edit the "
-"existing entry."
+msgid "Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать существующую запись"
+msgstr "A link for this social network type already exists. You can edit the existing entry"
 
-#: backend/contacts/models.py:147
+#: backend/contacts/models.py:149
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr "Social network / messenger link"
 
-#: backend/contacts/models.py:148
->>>>>>> develop
+#: backend/contacts/models.py:150
 msgid "Ссылки на соцсети / мессенджеры"
 msgstr "Social network / messenger links"
 
@@ -540,44 +436,43 @@ msgstr "File size %(size).1f MB exceeds the limit of %(max)d MB."
 #: backend/core/validators.py:186
 #, python-format
 msgid "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
-msgstr "File type \"%(mime)s\" is not allowed. Accepted types: %(allowed)s."
+msgstr "File type \"%(mime)s\" is not allowed. Accepted: %(allowed)s."
 
-#: backend/projects/admin.py:58 backend/projects/admin.py:156
+#: backend/projects/admin.py:62 backend/projects/admin.py:161
 msgid "Основная информация"
-msgstr "Basic Information"
+msgstr "Basic information"
 
-#: backend/projects/admin.py:60 backend/projects/admin.py:158
-#: backend/site_config/admin.py:41
+#: backend/projects/admin.py:64 backend/projects/admin.py:163
+#: backend/site_config/admin.py:54
 msgid "Переводы (Русский)"
 msgstr "Translations (Russian)"
 
-#: backend/projects/admin.py:67 backend/projects/admin.py:165
-#: backend/site_config/admin.py:48
+#: backend/projects/admin.py:71 backend/projects/admin.py:170
+#: backend/site_config/admin.py:61
 msgid "Переводы (Английский)"
 msgstr "Translations (English)"
 
-#: backend/projects/admin.py:74 backend/projects/admin.py:172
-#: backend/site_config/admin.py:55
+#: backend/projects/admin.py:78 backend/projects/admin.py:177
+#: backend/site_config/admin.py:68
 msgid "Переводы (Сербский - Латиница)"
 msgstr "Translations (Serbian - Latin)"
 
-#: backend/projects/admin.py:81 backend/projects/admin.py:179
-#: backend/site_config/admin.py:62
+#: backend/projects/admin.py:85 backend/projects/admin.py:184
 msgid "Переводы (Сербский - Кирилица)"
 msgstr "Translations (Serbian - Cyrillic)"
 
-#: backend/projects/admin.py:93 backend/projects/models.py:135
+#: backend/projects/admin.py:97 backend/projects/models.py:135
 #: backend/projects/models.py:204
 msgid "Тип проекта"
-msgstr "Project Type"
+msgstr "Project type"
 
-#: backend/projects/admin.py:105
+#: backend/projects/admin.py:109
 msgid "Просмотр на сайте"
-msgstr "View on site"
+msgstr "View on website"
 
 #: backend/projects/apps.py:11
 msgid "Урбанистические проекты"
-msgstr "Urban Projects"
+msgstr "Urban projects"
 
 #: backend/projects/models.py:123 backend/projects/models.py:147
 msgid "Идентификатор"
@@ -585,23 +480,23 @@ msgstr "Identifier"
 
 #: backend/projects/models.py:126
 msgid "Уникальный идентификатор типа проекта для API и фильтров."
-msgstr "Unique project type identifier for the API and filters."
+msgstr "Unique identifier of the project type for API and filters."
 
 #: backend/projects/models.py:131
 msgid "Отображаемое название типа проекта."
-msgstr "Display name of the project type."
+msgstr "Displayed name of the project type."
 
 #: backend/projects/models.py:136
 msgid "Типы проектов"
-msgstr "Project Types"
+msgstr "Project types"
 
 #: backend/projects/models.py:150
 msgid "Уникальный идентификатор тега для API и фильтров."
-msgstr "Unique tag identifier for the API and filters."
+msgstr "Unique identifier of the tag for API and filters."
 
 #: backend/projects/models.py:155
 msgid "Отображаемое название тега."
-msgstr "Display name of the tag."
+msgstr "Displayed tag name."
 
 #: backend/projects/models.py:159
 msgid "Тег"
@@ -617,19 +512,19 @@ msgstr "Slug"
 
 #: backend/projects/models.py:174
 msgid "Уникальный идентификатор проекта для URL."
-msgstr "Unique project identifier for the URL."
+msgstr "Unique project identifier for URL."
 
 #: backend/projects/models.py:180
 msgid "Название проекта для списка и детальной страницы."
-msgstr "Project name for list and detail pages."
+msgstr "Project name for list and detail page."
 
 #: backend/projects/models.py:185
 msgid "Краткое описание"
-msgstr "Short Description"
+msgstr "Short description"
 
 #: backend/projects/models.py:187
 msgid "Описание проекта для карточек и верхнего блока детальной страницы."
-msgstr "Project description for cards and the detail page header."
+msgstr "Project description for cards and top block of detail page."
 
 #: backend/projects/models.py:190
 msgid "Год"
@@ -637,7 +532,7 @@ msgstr "Year"
 
 #: backend/projects/models.py:192
 msgid "Год реализации или публикации проекта."
-msgstr "Project implementation or publication year."
+msgstr "Year of implementation or publication of the project."
 
 #: backend/projects/models.py:195
 msgid "Обложка"
@@ -645,7 +540,7 @@ msgstr "Cover"
 
 #: backend/projects/models.py:198
 msgid "URL главного изображения проекта."
-msgstr "Main project image URL."
+msgstr "URL of the project's main image."
 
 #: backend/projects/models.py:213
 msgid "Опубликован"
@@ -653,7 +548,7 @@ msgstr "Published"
 
 #: backend/projects/models.py:216
 msgid "Неопубликованные проекты не попадают в публичный API."
-msgstr "Unpublished projects are not exposed to the public API."
+msgstr "Unpublished projects are not included in the public API."
 
 #: backend/projects/models.py:220 backend/projects/models.py:245
 #: backend/projects/models.py:301
@@ -666,11 +561,11 @@ msgstr "Projects"
 
 #: backend/projects/models.py:251
 msgid "Изображение для карусели проекта."
-msgstr "Image for the project carousel."
+msgstr "Image for project carousel."
 
 #: backend/projects/models.py:257
 msgid "Порядок изображения в карусели проекта."
-msgstr "Order of the image in the project carousel."
+msgstr "Image order in project carousel."
 
 #: backend/projects/models.py:261
 msgid "Изображение карусели проекта"
@@ -682,27 +577,26 @@ msgstr "Project carousel images"
 
 #: backend/projects/models.py:293
 msgid "Изображение и список"
-msgstr "Image and List"
+msgstr "Image and list"
 
 #: backend/projects/models.py:294
 msgid "Два изображения"
-msgstr "Two Images"
+msgstr "Two images"
 
 #: backend/projects/models.py:295
 msgid "Изображение и кнопки"
-msgstr "Image and Buttons"
+msgstr "Image and buttons"
 
 #: backend/projects/models.py:304
 msgid "Вариант"
-msgstr "Variant"
+msgstr "Layout option"
 
 #: backend/projects/models.py:306
 msgid "Вариант разметки, который использует фронтенд."
-msgstr "Layout variant used by the frontend."
+msgstr "Layout option used by the frontend."
 
 #: backend/projects/models.py:312
-msgid ""
-"Порядок блока внутри проекта. Используется для сортировки и генерации index."
+msgid "Порядок блока внутри проекта. Используется для сортировки и генерации index."
 msgstr "Block order within the project. Used for sorting and index generation."
 
 #: backend/projects/models.py:315
@@ -715,83 +609,79 @@ msgstr "Project section heading."
 
 #: backend/projects/models.py:320
 msgid "Основное изображение"
-msgstr "Main Image"
+msgstr "Main image"
 
 #: backend/projects/models.py:324
 msgid "Основное изображение блока."
-msgstr "Primary image for the block."
+msgstr "Block main image."
 
 #: backend/projects/models.py:327
 msgid "Дополнительное изображение"
-msgstr "Additional Image"
+msgstr "Additional image"
 
 #: backend/projects/models.py:331
 msgid "Второе изображение для варианта с двумя картинками."
-msgstr "Secondary image for the two-image variant."
+msgstr "Second image for the two-image layout option."
 
 #: backend/projects/models.py:334
 msgid "Список тезисов"
-msgstr "Bullet Points"
+msgstr "List of points"
 
 #: backend/projects/models.py:339
-msgid ""
-"Слева вводите тезисы, а справа отображается технический JSON-код для "
-"системы. Его можно не трогать."
-msgstr ""
-"Enter bullet points on the left; the technical JSON code for the system is "
-"displayed on the right and can be left untouched."
+msgid "Слева вводите тезисы, а справа отображается технический JSON-код для системы. Его можно не трогать."
+msgstr "Enter points on the left, and the technical JSON code for the system is displayed on the right. You can leave it untouched."
 
 #: backend/projects/models.py:345
 msgid "Основной HTML-текст блока."
-msgstr "Main HTML text of the block."
+msgstr "Block main HTML text."
 
 #: backend/projects/models.py:348
 msgid "Акцентный текст"
-msgstr "Accent Text"
+msgstr "Accent text"
 
 #: backend/projects/models.py:350
 msgid "Дополнительный акцентный HTML-текст блока."
-msgstr "Additional accent HTML text for the block."
+msgstr "Additional block accent HTML text."
 
 #: backend/projects/models.py:354
 msgid "Контентный блок проекта"
-msgstr "Project Content Block"
+msgstr "Project content block"
 
 #: backend/projects/models.py:355
 msgid "Контентные блоки проектов"
-msgstr "Project Content Blocks"
+msgstr "Project content blocks"
 
 #: backend/projects/models.py:372
 msgid "Для варианта 1 требуется хотя бы один элемент списка."
-msgstr "Variant 1 (Image and List) requires at least one bullet point."
+msgstr "Layout option 1 requires at least one list item."
 
 #: backend/projects/models.py:374
 msgid "Список тезисов допустим только для варианта 1."
-msgstr "Bullet points are only allowed for variant 1 (Image and List)."
+msgstr "List of points is only allowed for layout option 1."
 
 #: backend/projects/models.py:376
 msgid "Для варианта 2 требуется второе изображение."
-msgstr "Variant 2 (Two Images) requires a second image."
+msgstr "Layout option 2 requires a second image."
 
 #: backend/projects/models.py:378
 msgid "Второе изображение допустимо только для варианта 2."
-msgstr "A second image is only allowed for variant 2 (Two Images)."
+msgstr "Second image is only allowed for layout option 2."
 
 #: backend/projects/models.py:402
 msgid "Скачать файл"
-msgstr "Download File"
+msgstr "Download file"
 
 #: backend/projects/models.py:403
 msgid "Перейти по ссылке"
-msgstr "Follow Link"
+msgstr "Go to link"
 
 #: backend/projects/models.py:409
 msgid "Контентный блок"
-msgstr "Content Block"
+msgstr "Content block"
 
 #: backend/projects/models.py:415
 msgid "Порядок кнопки внутри блока."
-msgstr "Button order within the content block."
+msgstr "Button order within the block."
 
 #: backend/projects/models.py:418
 msgid "Подпись"
@@ -799,7 +689,7 @@ msgstr "Label"
 
 #: backend/projects/models.py:420
 msgid "Текст кнопки для фронтенда."
-msgstr "Button text displayed on the frontend."
+msgstr "Button text for frontend."
 
 #: backend/projects/models.py:423
 msgid "Тип"
@@ -809,25 +699,21 @@ msgstr "Type"
 msgid "Тип действия кнопки."
 msgstr "Button action type."
 
-<<<<<<< HEAD
-#: backend/projects/models.py:429 backend/site_config/models.py:55
-=======
 #: backend/projects/models.py:429
->>>>>>> develop
 msgid "URL"
 msgstr "URL"
 
 #: backend/projects/models.py:431
 msgid "Ссылка для скачивания или перехода."
-msgstr "URL for downloading or navigation."
+msgstr "Download or navigation link."
 
 #: backend/projects/models.py:435
 msgid "Кнопка контентного блока"
-msgstr "Content Block Button"
+msgstr "Content block button"
 
 #: backend/projects/models.py:436
 msgid "Кнопки контентных блоков"
-msgstr "Content Block Buttons"
+msgstr "Content block buttons"
 
 #: backend/projects/resources_admin.py:21
 msgid "slug: Это поле обязательно для заполнения"
@@ -835,119 +721,41 @@ msgstr "slug: This field is required"
 
 #: backend/projects/validators.py:16
 msgid "Поле string_list должно быть списком строк."
-msgstr "The \"Bullet Points\" field must be a list of strings."
+msgstr "The string_list field must be a list of strings."
 
 #: backend/projects/validators.py:19
 #, python-format
 msgid "Допускается не более %(max_items)s элементов списка."
-msgstr "No more than %(max_items)s items are allowed."
+msgstr "No more than %(max_items)s list elements are allowed."
 
 #: backend/projects/validators.py:24
 msgid "Каждый элемент списка должен быть строкой."
-msgstr "Each list item must be a string."
+msgstr "Each list element must be a string."
 
 #: backend/projects/validators.py:27
 #, python-format
-msgid ""
-"Длина каждого элемента списка не должна превышать %(max_length)s символов."
-msgstr "Each list item must not exceed %(max_length)s characters."
+msgid "Длина каждого элемента списка не должна превышать %(max_length)s символов."
+msgstr "The length of each list element must not exceed %(max_length)s characters."
 
-<<<<<<< HEAD
-#: backend/site_config/admin.py:37 backend/site_config/models.py:77
+#: backend/site_config/admin.py:51 backend/site_config/models.py:20
 msgid "Название сайта"
-msgstr "Site Title"
+msgstr "Site name"
 
-#: backend/site_config/admin.py:38 backend/site_config/models.py:59
-msgid "Социальные сети"
-msgstr "Social Networks"
+#: backend/site_config/admin.py:52
+msgid "Cookie"
+msgstr "Cookie"
 
-#: backend/site_config/admin.py:39 backend/site_config/models.py:22
-#: backend/site_config/models.py:83
-msgid "Языки"
-msgstr "Languages"
+#: backend/site_config/admin.py:80
+msgid "Преводи (Сербский - Кириллица)"
+msgstr "Translations (Serbian - Cyrillic)"
 
-#: backend/site_config/apps.py:6 backend/site_config/models.py:87
-#: backend/site_config/models.py:88
-msgid "Настройки сайта"
-msgstr "Site Settings"
-
-#: backend/site_config/models.py:18
-msgid "Код"
-msgstr "Code"
-
-#: backend/site_config/models.py:21
-msgid "Язык"
-msgstr "Language"
-
-#: backend/site_config/models.py:29
-msgid "Название языка"
-msgstr "Language Name"
-
-#: backend/site_config/models.py:47
-msgid "Telegram"
-msgstr "Telegram"
-
-#: backend/site_config/models.py:48
-msgid "Instagram"
-msgstr "Instagram"
-
-#: backend/site_config/models.py:49
-msgid "Facebook"
-msgstr "Facebook"
-
-#: backend/site_config/models.py:50
-msgid "LinkedIn"
-msgstr "LinkedIn"
-
-#: backend/site_config/models.py:53
-msgid "Тип соцсети"
-msgstr "Social Network Type"
-
-#: backend/site_config/models.py:58
-msgid "Социальная сеть"
-msgstr "Social Network"
-
-#: backend/site_config/models.py:77
-msgid "Максимум 100 символов"
-msgstr "Maximum 100 characters"
-
-#: backend/site_config/models.py:79
-msgid "SEO описание"
-msgstr "SEO Description"
-
-#: backend/site_config/models.py:79
-msgid "Максимум 250 символов"
-msgstr "Maximum 250 characters"
-
-#: backend/site_config/models.py:81
-msgid "Политика конфиденциальности"
-msgstr "Privacy Policy"
-
-#: backend/site_config/models.py:82
-msgid "Копирайт"
-msgstr "Copyright"
-
-#: backend/site_config/models.py:82
-msgid "Максимум 150 символов"
-msgstr "Maximum 150 characters"
-
-#: backend/site_config/models.py:84
-msgid "Соцсети"
-msgstr "Social Media"
-
-#: backend/site_config/models.py:98
-=======
 #: backend/site_config/apps.py:10
 msgid "Конфигурация настроек сайта"
 msgstr "Site settings configuration"
 
 #: backend/site_config/constants.py:13
 msgid "Мы используем технические cookie для корректной работы сайта."
-msgstr "We use technical cookies for the correct operation of the site."
-
-#: backend/site_config/models.py:20
-msgid "Название сайта"
-msgstr "Site Title"
+msgstr "We use technical cookies for the proper functioning of the site."
 
 #: backend/site_config/models.py:20
 msgid "Максимум 100 символов"
@@ -955,7 +763,7 @@ msgstr "Maximum 100 characters"
 
 #: backend/site_config/models.py:23
 msgid "SEO описание"
-msgstr "SEO Description"
+msgstr "SEO description"
 
 #: backend/site_config/models.py:23
 msgid "Максимум 250 символов"
@@ -963,7 +771,7 @@ msgstr "Maximum 250 characters"
 
 #: backend/site_config/models.py:25
 msgid "Политика конфиденциальности"
-msgstr "Privacy Policy"
+msgstr "Privacy policy"
 
 #: backend/site_config/models.py:28
 msgid "Текст cookie-сообщения"
@@ -983,20 +791,43 @@ msgstr "Maximum 150 characters"
 
 #: backend/site_config/models.py:43 backend/site_config/models.py:44
 msgid "Настройки сайта"
-msgstr "Site Settings"
+msgstr "Site settings"
 
 #: backend/site_config/models.py:54
->>>>>>> develop
 msgid "Удаление системных настроек сайта запрещено."
-msgstr "Deletion of system site settings is prohibited."
+msgstr "Deleting system site settings is prohibited."
+
+#: backend/users/admin.py:47
+msgid "Персональная информацияы (Русский)"
+msgstr "Personal information (Russian)"
+
+#: backend/users/admin.py:51
+msgid "Персональная информация (Английский)"
+msgstr "Personal information (English)"
+
+#: backend/users/admin.py:55
+msgid "Персональная информация (Сербский - Латиница)"
+msgstr "Personal information (Serbian - Latin)"
+
+#: backend/users/admin.py:62
+msgid "Персональная информация (Сербский - Кирилица)"
+msgstr "Personal information (Serbian - Cyrillic)"
+
+#: backend/users/admin.py:68
+msgid "Разрешения"
+msgstr "Permissions"
 
 #: backend/users/admin.py:69
+msgid "Активность"
+msgstr "Activity"
+
+#: backend/users/admin.py:99
 msgid "Полное имя"
-msgstr "Full Name"
+msgstr "Full name"
 
 #: backend/users/apps.py:10
 msgid "Управление пользователями"
-msgstr "User Management"
+msgstr "User management"
 
 #: backend/users/models.py:39
 msgid "Электронная почта обязательна"
@@ -1016,7 +847,7 @@ msgstr "User"
 
 #: backend/users/models.py:76
 msgid "Контент-редактор"
-msgstr "Content Editor"
+msgstr "Content editor"
 
 #: backend/users/models.py:77
 msgid "Администратор"
@@ -1024,72 +855,55 @@ msgstr "Administrator"
 
 #: backend/users/models.py:82
 msgid "Адрес электронной почты"
-msgstr "Email Address"
+msgstr "Email address"
 
 #: backend/users/models.py:85
 msgid "Используется для входа в систему. Должен быть уникальным."
-msgstr "Used to log into the system. Must be unique."
+msgstr "Used for login. Must be unique."
 
 #: backend/users/models.py:89
 msgid "Уникальный идентификатор"
-msgstr "Unique Identifier"
+msgstr "Unique identifier"
 
 #: backend/users/models.py:93
 msgid "Системный номер. Генерируется автоматически и не подлежит изменению."
-msgstr "System number. Automatically generated and cannot be changed."
+msgstr "System number. Generated automatically and cannot be changed."
 
 #: backend/users/models.py:99
 msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
-msgstr ""
-"Enter the member's first name. It will be displayed in the team block on the "
-"website."
+msgstr "Enter the member's first name. It will be displayed on the website in the team block."
 
 #: backend/users/models.py:102
 msgid "Фамилия"
-msgstr "Last Name"
+msgstr "Last name"
 
 #: backend/users/models.py:104
-msgid ""
-"Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
-msgstr ""
-"Enter the last name. Together with the first name, it forms the full name of "
-"the member on the website."
+msgid "Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
+msgstr "Enter the last name. Together with the first name, it forms the member's full name on the website."
 
 #: backend/users/models.py:108
 msgid "Роль"
 msgstr "Role"
 
 #: backend/users/models.py:114
-msgid ""
-"Определяет уровень доступа к панели управления: Пользователь — нет доступа, "
-"Редактор — управление контентом, Администратор — полный доступ."
-msgstr ""
-"Defines the control panel access level: User — no access, Editor — content "
-"management, Administrator — full access."
+msgid "Определяет уровень доступа к панели управления: Пользователь — нет доступа, Редактор — управление контентом, Администратор — полный доступ."
+msgstr "Determines access level to the admin panel: User — no access, Editor — content management, Administrator — full access."
 
 #: backend/users/models.py:121
 msgid "Должность"
 msgstr "Position"
 
 #: backend/users/models.py:125
-msgid ""
-"Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
-"в карточке сотрудника на сайте."
-msgstr ""
-"Enter the professional role (e.g., 'Lead Architect'). It will be displayed "
-"on the team member's card on the website."
+msgid "Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается в карточке сотрудника на сайте."
+msgstr "Enter the professional role (e.g., 'Lead Architect'). Displayed in the employee card on the website."
 
 #: backend/users/models.py:131
 msgid "Фотография"
 msgstr "Photo"
 
 #: backend/users/models.py:135
-msgid ""
-"Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, "
-"размер до 2 МБ."
-msgstr ""
-"Upload a portrait photo of the member. Recommended format: JPG or PNG, size "
-"up to 2 MB."
+msgid "Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, размер до 2 МБ."
+msgstr "Upload a portrait photo of the member. Recommended format: JPG or PNG, size up to 2 MB."
 
 #: backend/users/models.py:139
 msgid "Биография"
@@ -1097,11 +911,11 @@ msgstr "Biography"
 
 #: backend/users/models.py:143
 msgid "Расскажите об опыте и ключевых компетенциях. Максимум 500 символов."
-msgstr "Describe the experience and key competencies. Maximum 500 characters."
+msgstr "Tell about experience and key competencies. Maximum 500 characters."
 
 #: backend/users/models.py:147
 msgid "Публичный статус"
-msgstr "Public Status"
+msgstr "Public status"
 
 #: backend/users/models.py:150
 msgid "Если галочка стоит, пользователь будет виден в списке команды на сайте."
@@ -1109,4 +923,4 @@ msgstr "If checked, the user will be visible in the team list on the website."
 
 #: backend/users/models.py:160
 msgid "Пользователи и команда"
-msgstr "Users and Team"
+msgstr "Users and team"

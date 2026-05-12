@@ -77,7 +77,7 @@ class ConfigAdmin(BaseAdmin):
             },
         ),
         (
-            _('Преводи (Сербский - Кирилица)'),
+            _('Преводи (Сербский - Кириллица)'),
             {
                 'fields': (
                     'seo_description_sr_cyrl',
