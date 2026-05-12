@@ -101,7 +101,7 @@ INSTALLED_APPS = [
     'users',
     'about',
     'api',
-    'site_config',
+    'site_config.apps.SiteConfigConfig',
     'contacts',
 ]
 

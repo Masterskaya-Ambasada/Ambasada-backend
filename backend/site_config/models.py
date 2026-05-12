@@ -1,87 +1,43 @@
-from django.conf import settings
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .constants import CACHE_KEY_INIT
-
-
-def clear_config_cache():
-    """Единая функция очистки кэша конфигурации."""
-    cache.delete(CACHE_KEY_INIT)
-
-
-class Language(models.Model):
-    """Модель доступных языков на основе настроек проекта."""
-
-    code = models.CharField(max_length=10, unique=True, choices=settings.LANGUAGES, verbose_name=_('Код'))
-
-    class Meta:
-        verbose_name = _('Язык')
-        verbose_name_plural = _('Языки')
-        ordering = ['code']
-
-    def label(self):
-        """Возвращает название языка из настроек проекта."""
-        return self.get_code_display()
-
-    label.short_description = _('Название языка')
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        clear_config_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        clear_config_cache()
-
-    def __str__(self):
-        return f'{self.get_code_display()} ({self.code})'
-
-
-class Social(models.Model):
-    """Модель ссылок на социальные сети."""
-
-    class SocialType(models.TextChoices):
-        TELEGRAM = 'telegram', _('Telegram')
-        INSTAGRAM = 'instagram', _('Instagram')
-        FACEBOOK = 'facebook', _('Facebook')
-        LINKEDIN = 'linkedin', _('LinkedIn')
-
-    social_type = models.CharField(
-        max_length=20, choices=SocialType.choices, verbose_name=_('Тип соцсети'), db_index=True
-    )
-    url = models.URLField(verbose_name=_('URL'))
-
-    class Meta:
-        verbose_name = _('Социальная сеть')
-        verbose_name_plural = _('Социальные сети')
-        constraints = [models.UniqueConstraint(fields=['social_type', 'url'], name='unique_social_type_url')]
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        clear_config_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        clear_config_cache()
-
-    def __str__(self):
-        return f'{self.get_social_type_display()}: {self.url}'
+from .constants import (
+    COOKIE_BUTTON_TEXT_MAX_LENGTH,
+    COPYRIGHT_MAX_LENGTH,
+    DEFAULT_COOKIE_BUTTON_TEXT,
+    DEFAULT_COOKIE_MESSAGE,
+    SEO_DESCRIPTION_MAX_LENGTH,
+    SITE_CONFIG_SINGLETON_PK,
+    SITE_NAME_MAX_LENGTH,
+)
 
 
 class SiteConfig(models.Model):
     """Глобальные настройки сайта (True Singleton для продакшена)."""
 
-    site_name = models.CharField(max_length=100, verbose_name=_('Название сайта'), help_text=_('Максимум 100 символов'))
+    site_name = models.CharField(
+        max_length=SITE_NAME_MAX_LENGTH, verbose_name=_('Название сайта'), help_text=_('Максимум 100 символов')
+    )
     seo_description = models.CharField(
-        max_length=250, verbose_name=_('SEO описание'), help_text=_('Максимум 250 символов')
+        max_length=SEO_DESCRIPTION_MAX_LENGTH, verbose_name=_('SEO описание'), help_text=_('Максимум 250 символов')
     )
     privacy_policy = models.TextField(verbose_name=_('Политика конфиденциальности'), default='')
-    copyright = models.CharField(max_length=150, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов'))
-    languages = models.ManyToManyField('Language', blank=True, related_name='site_configs', verbose_name=_('Языки'))
-    socials = models.ManyToManyField('Social', blank=True, related_name='site_configs', verbose_name=_('Соцсети'))
+
+    cookie_message = models.TextField(
+        verbose_name=_('Текст cookie-сообщения'),
+        default=DEFAULT_COOKIE_MESSAGE,
+    )
+
+    cookie_button_text = models.CharField(
+        max_length=COOKIE_BUTTON_TEXT_MAX_LENGTH,
+        verbose_name=_('Текст кнопки cookie'),
+        default=DEFAULT_COOKIE_BUTTON_TEXT,
+    )
+
+    copyright = models.CharField(
+        max_length=COPYRIGHT_MAX_LENGTH, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов')
+    )
 
     class Meta:
         verbose_name = _('Настройки сайта')
@@ -89,13 +45,14 @@ class SiteConfig(models.Model):
 
     def save(self, *args, **kwargs):
         """Гарантирует уникальность записи на уровне PK и сбрасывает кэш."""
-        self.pk = 1
+        self.pk = SITE_CONFIG_SINGLETON_PK
         super().save(*args, **kwargs)
-        clear_config_cache()
 
     def delete(self, *args, **kwargs):
-        """Запрещает удаление системных настроек."""
-        raise ValidationError(_('Удаление системных настроек сайта запрещено.'))
+        """Запрещает удаление только основной системной записи."""
+        if self.pk == SITE_CONFIG_SINGLETON_PK:
+            raise ValidationError(_('Удаление системных настроек сайта запрещено.'))
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.site_name

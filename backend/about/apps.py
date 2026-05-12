@@ -3,8 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ContactsConfig(AppConfig):
-    name = 'contacts'
-    verbose_name = _('Обратная связь и соцсети')
+    name = 'about'
+    verbose_name = _('Страница "О нас"')
 
     def ready(self):
-        import contacts.signals  # noqa
+        pass
