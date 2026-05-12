@@ -148,7 +148,7 @@ class AboutPage(models.Model):
 
     class Meta:
         verbose_name = _('Страница "О нас"')
-        verbose_name_plural = _('Страницы "О нас"')
+        verbose_name_plural = _('Страница "О нас"')
 
     def clean(self):
         if not self.pk and AboutPage.objects.exists():

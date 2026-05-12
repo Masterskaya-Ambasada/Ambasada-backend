@@ -3,7 +3,7 @@ from django.core.cache import cache
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from django.db import IntegrityError, transaction
-
+from django.conf import settings
 from site_config.models import SiteConfig
 
 
@@ -52,14 +52,15 @@ class InitViewTests(APITestCase):
         self.assertIn('copyright', response.data)
 
     def test_empty_relations(self):
-        """Проверка корректного возврата пустых списков для связей."""
+        """Проверка корректного возврата данных при отсутствии связанных записей в БД."""
         SiteConfig.objects.create(site_name='Test')
 
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['languages'], [])
+        self.assertEqual(len(response.data['languages']), len(settings.LANGUAGES))
         self.assertEqual(response.data['socials'], [])
+        self.assertEqual(response.data['languages'][0]['code'], 'ru')
 
 
     def test_only_one_site_config_allowed(self):
