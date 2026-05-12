@@ -50,15 +50,44 @@ class ConfigAdmin(BaseAdmin):
     fieldsets = (
         (_('Название сайта'), {'fields': ('site_name_sr_latn', 'site_name_sr_cyrl')}),
         (_('Cookie'), {'fields': ('cookie_button_text',)}),
-        (_('Переводы (Русский)'), {'fields': ('seo_description_ru', 'copyright_ru', 'privacy_policy_ru', 'cookie_message_ru'),
-                                   'classes': ('collapse',)}),
-        (_('Переводы (English)'), {'fields': ('seo_description_en', 'copyright_en', 'privacy_policy_en', 'cookie_message_en'),
-                                   'classes': ('collapse',)}),
-        (_('Prevodi (Srpski - Latinica)'), {'fields': ('seo_description_sr_latn', 'copyright_sr_latn', 'privacy_policy_sr_latn', 'cookie_message_sr_latn'),
-                                            'classes': ('collapse',)}),
-        (_('Преводи (Српски - Ћирилица)'),
-            {'fields': ('seo_description_sr_cyrl', 'copyright_sr_cyrl', 'privacy_policy_sr_cyrl', 'cookie_message_sr_cyrl'),
-             'classes': ('collapse',)}),
+        (
+            _('Переводы (Русский)'),
+            {
+                'fields': ('seo_description_ru', 'copyright_ru', 'privacy_policy_ru', 'cookie_message_ru'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            _('Переводы (Английский)'),
+            {
+                'fields': ('seo_description_en', 'copyright_en', 'privacy_policy_en', 'cookie_message_en'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            _('Переводы (Сербский - Латиница)'),
+            {
+                'fields': (
+                    'seo_description_sr_latn',
+                    'copyright_sr_latn',
+                    'privacy_policy_sr_latn',
+                    'cookie_message_sr_latn',
+                ),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            _('Преводи (Сербский - Кирилица)'),
+            {
+                'fields': (
+                    'seo_description_sr_cyrl',
+                    'copyright_sr_cyrl',
+                    'privacy_policy_sr_cyrl',
+                    'cookie_message_sr_cyrl',
+                ),
+                'classes': ('collapse',),
+            },
+        ),
     )
 
     def get_form(self, request, obj=None, **kwargs):

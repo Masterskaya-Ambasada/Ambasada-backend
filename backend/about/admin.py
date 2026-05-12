@@ -2,18 +2,31 @@
 
 from core.base_admin import BaseTranslatedAdmin
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from .models import AboutPage, AboutParagraph, GalleryImage, Value
-from users.models import User
-from django.utils.safestring import mark_safe
 
 
-class AboutParagraphInline(admin.TabularInline):
+class AboutParagraphInline(admin.StackedInline):
     """Inline-редактирование параграфов страницы 'О нас' в админке."""
 
     model = AboutParagraph
     extra = 1
+
+    fieldsets = (
+        (_('Порядок отображения'), {'fields': ('order',)}),
+        (_('Параграф (Русский)'), {'fields': ('first_sentence_ru', 'main_text_ru'), 'classes': ('collapse',)}),
+        (_('Параграф (Английский)'), {'fields': ('first_sentence_en', 'main_text_en'), 'classes': ('collapse',)}),
+        (
+            _('Параграф (Сербский - Латиница)'),
+            {'fields': ('first_sentence_sr_latn', 'main_text_sr_latn'), 'classes': ('collapse',)},
+        ),
+        (
+            _('Параграф (Сербский - Кириллица)'),
+            {'fields': ('first_sentence_sr_cyrl', 'main_text_sr_cyrl'), 'classes': ('collapse',)},
+        ),
+    )
 
 
 @admin.register(Value)
@@ -40,76 +53,131 @@ class GalleryImageAdmin(BaseTranslatedAdmin):
 
 
 @admin.register(AboutPage)
-class AboutPageAdmin(admin.ModelAdmin):
+class AboutPageAdmin(BaseTranslatedAdmin):
     """Настройка отображения страницы 'О нас' в админке."""
 
     inlines = [AboutParagraphInline]
     readonly_fields = ('display_public_users',)
     list_display = ['id']
-
-    # fieldsets = (
-    #     (_('Main'), {'fields': ('image_left', 'image_right', 'display_public_users')}),
-
-    #     (_('Hero====================='), {'fields': (),
-    #                                       'classes': ('wide',)}),
-
-    #     (_('Hero (Русский)'), {'fields': ('hero_title_ru', 'hero_description_ru'),
-    #                            'classes': ('collapse',)}),
-    #     (_('Hero (Английский)'), {'fields': ('hero_title_en', 'hero_description_en'),
-    #                               'classes': ('collapse',)}),
-    #     (_('Hero (Сербский - Латиница)'), {'fields': ('hero_title_sr_latn', 'hero_description_sr_latn'),
-    #                                        'classes': ('collapse',)}),
-    #     (_('Hero (Сербский - Кириллица)'), {'fields': ('hero_title_sr_cyrl', 'hero_description_sr_cyrl'),
-    #                                         'classes': ('collapse',)}),
-
-    #     (_('About====================='), {'fields': ('button_link',),
-    #                                        'classes': ('wide',)}),
-    #     (_('About (Русский)'), {'fields': ('about_title_ru', 'button_label_ru', 'values_title_ru'),
-    #                             'classes': ('collapse',)}),
-    #     (_('About (Английский)'), {'fields': ('about_title_en', 'button_label_en', 'values_title_en'),
-    #                                'classes': ('collapse',)}),
-    #     (_('About (Сербский - Латиница)'), {'fields': ('about_title_sr_latn', 'button_label_sr_latn', 'values_title_sr_latn'),
-    #                                         'classes': ('collapse',)}),
-    #     (_('About (Сербский - Кириллица)'), {'fields': ('about_title_sr_cyrl', 'button_label_sr_cyrl', 'values_title_sr_cyrl'),
-    #                                          'classes': ('collapse',)}),
-
-    #     # (),
-    # )
-
-
-
+    ordering = None
 
     fieldsets = (
-        (_('Hero'), {'fields': ('hero_title', 'hero_description', 'image_left', 'image_right', 'display_public_users')}),
-        (_('About'), {'fields': ('about_title', 'button_label', 'button_link')}),
-        (_('Values'), {'fields': ('values_title',)}),
         (
-            _('Team'),
+            _('Main'),
             {
                 'fields': (
-                    'team_title',
+                    'image_left',
+                    'image_right',
+                    'button_link',
+                    'display_public_users',
                     'team_members',
-                    'team_button_label',
                     'team_button_link',
                 )
             },
         ),
-        (_('Gallery'), {'fields': ('gallery_title',)}),
         (
-            _('Contacts'),
+            _('Заголовки (Русский)'),
             {
                 'fields': (
-                    'email',
-                    'contact_link',
-                )
+                    'hero_title_ru',
+                    'hero_description_ru',
+                    'about_title_ru',
+                    'button_label_ru',
+                    'values_title_ru',
+                    'team_title_ru',
+                    'team_button_label_ru',
+                    'gallery_title_ru',
+                ),
+                'classes': ('collapse',),
             },
         ),
+        (
+            _('Заголовки (Английский)'),
+            {
+                'fields': (
+                    'hero_title_en',
+                    'hero_description_en',
+                    'about_title_en',
+                    'button_label_en',
+                    'values_title_en',
+                    'team_title_en',
+                    'team_button_label_en',
+                    'gallery_title_en',
+                ),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            _('Заголовки (Сербский - Латиница)'),
+            {
+                'fields': (
+                    'hero_title_sr_latn',
+                    'hero_description_sr_latn',
+                    'about_title_sr_latn',
+                    'button_label_sr_latn',
+                    'values_title_sr_latn',
+                    'team_title_sr_latn',
+                    'team_button_label_sr_latn',
+                    'gallery_title_sr_latn',
+                ),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            _('Заголовки (Сербский - Кириллица)'),
+            {
+                'fields': (
+                    'hero_title_sr_cyrl',
+                    'hero_description_sr_cyrl',
+                    'about_title_sr_cyrl',
+                    'button_label_sr_cyrl',
+                    'values_title_sr_cyrl',
+                    'team_title_sr_cyrl',
+                    'team_button_label_sr_cyrl',
+                    'gallery_title_sr_cyrl',
+                ),
+                'classes': ('collapse',),
+            },
+        ),
+        (_('Контакты'), {'fields': ('email', 'contact_link'), 'classes': ('wide',)}),
     )
 
     def display_public_users(self, obj):
         public_users = AboutPage().get_public_team()
         if not public_users.exists():
-            return _("Публичные пользователи не найдены")
-        items = [f"<li><b>{user.full_name} ({user.email})</b></li>" for user in public_users]
+            return _('Публичные пользователи не найдены')
+        items = [f'<li><b>{user.full_name} ({user.email})</b></li>' for user in public_users]
         return mark_safe(f"<ul style='margin: 0;'>{''.join(items)}</ul>")
-    display_public_users.short_description = _("Текущий состав команды на сайте")
+
+    display_public_users.short_description = _('Текущий состав команды на сайте')
+
+    # fieldsets = (
+    #     (_('Hero'), {'fields': ('hero_title',
+    #                             'hero_description',
+    #                             'image_left',
+    #                             'image_right',
+    #                             'display_public_users')}),
+    #     (_('About'), {'fields': ('about_title', 'button_label', 'button_link')}),
+    #     (_('Values'), {'fields': ('values_title',)}),
+    #     (
+    #         _('Team'),
+    #         {
+    #             'fields': (
+    #                 'team_title',
+    #                 'team_members',
+    #                 'team_button_label',
+    #                 'team_button_link',
+    #             )
+    #         },
+    #     ),
+    #     (_('Gallery'), {'fields': ('gallery_title',)}),
+    #     (
+    #         _('Contacts'),
+    #         {
+    #             'fields': (
+    #                 'email',
+    #                 'contact_link',
+    #             )
+    #         },
+    #     ),
+    # )

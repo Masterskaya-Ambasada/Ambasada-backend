@@ -101,6 +101,7 @@ class ContactSocialLinkAdmin(BaseAdmin):
         """Автоматически подтягиваем единственный SiteConfig при сохранении."""
         if not hasattr(obj, 'site_config') or obj.site_config is None:
             from site_config.models import SiteConfig
+
             config = SiteConfig.objects.first()
             if config:
                 obj.site_config = config
