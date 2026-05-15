@@ -1,4 +1,4 @@
-from core.base_admin import BaseAdmin
+from core.base_admin import BaseAdmin, BaseTranslatedAdmin
 from django import forms
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
@@ -29,16 +29,17 @@ class IsActiveOnSiteFilter(admin.SimpleListFilter):
 @admin.register(ContactRequest)
 class ContactRequestAdmin(BaseAdmin):
     list_display = (
-        'id',
+        'reason',
         'name',
         'email',
-        'reason',
         'created_at',
+        'is_processed',
     )
     list_filter = (
-        'reason',
         'created_at',
+        'is_processed',
     )
+    list_editable = ('is_processed',)
     search_fields = (
         'name',
         'email',
@@ -46,7 +47,13 @@ class ContactRequestAdmin(BaseAdmin):
         'reason',
     )
     readonly_fields = ('created_at',)
-    ordering = ('-created_at',)
+    ordering = (
+        'is_processed',
+        '-created_at',
+    )
+
+    def has_add_permission(self, request):
+        return False
 
 
 class ContactPageContentAdminForm(forms.ModelForm):
@@ -69,12 +76,11 @@ class ContactPageContentAdminForm(forms.ModelForm):
                 raise forms.ValidationError(
                     _('Доступной может быть только одна ссылка! Оставьте галочку только на одной из них')
                 )
-
         return cleaned_data
 
 
 @admin.register(ContactPageContent)
-class ContactPageContentAdmin(BaseAdmin):
+class ContactPageContentAdmin(BaseTranslatedAdmin):
     """Админка для управления текстовым блоком пожертвований."""
 
     form = ContactPageContentAdminForm
@@ -82,7 +88,23 @@ class ContactPageContentAdmin(BaseAdmin):
     list_editable = ('is_active',)
     search_fields = ('donation_text',)
     ordering = ['created_at']
-    tinymce_fields = ['donation_text']
+    tinymce_fields = ['donation_text_ru', 'donation_text_en', 'donation_text_sr_latn', 'donation_text_sr_cyrl']
+
+    fieldsets = (
+        (_('Текстовый блок для пожертвований (Русский)'), {'fields': ('donation_text_ru',), 'classes': ('collapse',)}),
+        (
+            _('Текстовый блок для пожертвований (Английский)'),
+            {'fields': ('donation_text_en',), 'classes': ('collapse',)},
+        ),
+        (
+            _('Текстовый блок для пожертвований (Сербский - Латиница)'),
+            {'fields': ('donation_text_sr_latn',), 'classes': ('collapse',)},
+        ),
+        (
+            _('Текстовый блок для пожертвований (Сербский - Кириллица)'),
+            {'fields': ('donation_text_sr_cyrl',), 'classes': ('collapse',)},
+        ),
+    )
 
 
 @admin.register(ContactSocialLink)

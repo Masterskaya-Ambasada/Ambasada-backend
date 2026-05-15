@@ -49,18 +49,29 @@ class ConfigAdmin(BaseAdmin):
 
     fieldsets = (
         (_('Название сайта'), {'fields': ('site_name_sr_latn', 'site_name_sr_cyrl')}),
-        (_('Cookie'), {'fields': ('cookie_button_text',)}),
         (
             _('Переводы (Русский)'),
             {
-                'fields': ('seo_description_ru', 'copyright_ru', 'privacy_policy_ru', 'cookie_message_ru'),
+                'fields': (
+                    'seo_description_ru',
+                    'copyright_ru',
+                    'privacy_policy_ru',
+                    'cookie_message_ru',
+                    'cookie_button_text_ru',
+                ),
                 'classes': ('collapse',),
             },
         ),
         (
             _('Переводы (Английский)'),
             {
-                'fields': ('seo_description_en', 'copyright_en', 'privacy_policy_en', 'cookie_message_en'),
+                'fields': (
+                    'seo_description_en',
+                    'copyright_en',
+                    'privacy_policy_en',
+                    'cookie_message_en',
+                    'cookie_button_text_en',
+                ),
                 'classes': ('collapse',),
             },
         ),
@@ -72,6 +83,7 @@ class ConfigAdmin(BaseAdmin):
                     'copyright_sr_latn',
                     'privacy_policy_sr_latn',
                     'cookie_message_sr_latn',
+                    'cookie_button_text_sr_latn',
                 ),
                 'classes': ('collapse',),
             },
@@ -84,6 +96,7 @@ class ConfigAdmin(BaseAdmin):
                     'copyright_sr_cyrl',
                     'privacy_policy_sr_cyrl',
                     'cookie_message_sr_cyrl',
+                    'cookie_button_text_sr_cyrl',
                 ),
                 'classes': ('collapse',),
             },

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-12 13:01+0300\n"
+"POT-Creation-Date: 2026-05-15 08:56+0300\n"
 "PO-Revision-Date: 2026-05-12 14:30+0300\n"
 "Last-Translator: System <admin@example.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -220,16 +220,24 @@ msgid "Интерфейс API"
 msgstr "API Interface"
 
 #: backend/api/auth/serializers.py:26 backend/api/users/serializers.py:26
-msgid "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
-msgstr "Invalid email or password. Please check your credentials and try again."
+msgid ""
+"Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
+msgstr ""
+"Invalid email or password. Please check your credentials and try again."
 
 #: backend/api/contacts/views.py:30
 msgid "Создание запроса обратной связи"
 msgstr "Creating contact request"
 
 #: backend/api/contacts/views.py:32
-msgid "Принимает данные формы и сохраняет их. Поле `contact_preference` — техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается спамом и игнорируется."
-msgstr "Accepts form data and saves it. The `contact_preference` field is a technical anti-spam honeypot field. If filled, the request is considered spam and ignored."
+msgid ""
+"Принимает данные формы и сохраняет их. Поле `contact_preference` — "
+"техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается "
+"спамом и игнорируется."
+msgstr ""
+"Accepts form data and saves it. The `contact_preference` field is a "
+"technical anti-spam honeypot field. If filled, the request is considered "
+"spam and ignored."
 
 #: backend/api/contacts/views.py:50
 msgid "Получено"
@@ -240,8 +248,12 @@ msgid "Получение контента блока контактов"
 msgstr "Retrieving contacts section content"
 
 #: backend/api/contacts/views.py:54
-msgid "Возвращает текстовый блок для пожертвований и список активных ссылок на соцсети и мессенджеры."
-msgstr "Returns donation text block and a list of active social media and messenger links."
+msgid ""
+"Возвращает текстовый блок для пожертвований и список активных ссылок на "
+"соцсети и мессенджеры."
+msgstr ""
+"Returns donation text block and a list of active social media and messenger "
+"links."
 
 #: backend/api/projects/serializers.py:56
 msgid "Перейти к проекту"
@@ -299,9 +311,32 @@ msgstr "Visible on website"
 msgid "Скрыты с сайта"
 msgstr "Hidden from website"
 
-#: backend/contacts/admin.py:70
-msgid "Доступной может быть только одна ссылка! Оставьте галочку только на одной из них"
-msgstr "Only one link can be active! Leave the checkbox checked on only one of them"
+#: backend/contacts/admin.py:77
+msgid ""
+"Доступной может быть только одна ссылка! Оставьте галочку только на одной из "
+"них"
+msgstr ""
+"Only one link can be active! Leave the checkbox checked on only one of them"
+
+#: backend/contacts/admin.py:94
+#| msgid "Текстовый блок для пожертвований"
+msgid "Текстовый блок для пожертвований (Русский)"
+msgstr "Donation text block (Russian)"
+
+#: backend/contacts/admin.py:96
+#| msgid "Текстовый блок для пожертвований"
+msgid "Текстовый блок для пожертвований (Английский)"
+msgstr "Donation text block (English)"
+
+#: backend/contacts/admin.py:100
+#| msgid "Текстовый блок для пожертвований"
+msgid "Текстовый блок для пожертвований (Сербский - Латиница)"
+msgstr "Donation text block (Serbian - Latin)"
+
+#: backend/contacts/admin.py:104
+#| msgid "Текстовый блок для пожертвований"
+msgid "Текстовый блок для пожертвований (Сербский - Кириллица)"
+msgstr "Donation text block (Serbian - Cyrillic)"
 
 #: backend/contacts/apps.py:7
 msgid "Обратная связь и соцсети"
@@ -405,12 +440,20 @@ msgid "Показывать на сайте"
 msgstr "Show on website"
 
 #: backend/contacts/models.py:116
-msgid "Если галочка включена — ссылка отображается на странице контактов. Если выключена — ссылка скрыта, но не удаляется."
-msgstr "If checked, the link is displayed on the contacts page. If unchecked, the link is hidden but not deleted."
+msgid ""
+"Если галочка включена — ссылка отображается на странице контактов. Если "
+"выключена — ссылка скрыта, но не удаляется."
+msgstr ""
+"If checked, the link is displayed on the contacts page. If unchecked, the "
+"link is hidden but not deleted."
 
 #: backend/contacts/models.py:142
-msgid "Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать существующую запись"
-msgstr "A link for this social network type already exists. You can edit the existing entry"
+msgid ""
+"Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать "
+"существующую запись"
+msgstr ""
+"A link for this social network type already exists. You can edit the "
+"existing entry"
 
 #: backend/contacts/models.py:149
 msgid "Ссылка на соцсеть / мессенджер"
@@ -443,17 +486,17 @@ msgid "Основная информация"
 msgstr "Basic information"
 
 #: backend/projects/admin.py:64 backend/projects/admin.py:163
-#: backend/site_config/admin.py:54
+#: backend/site_config/admin.py:53
 msgid "Переводы (Русский)"
 msgstr "Translations (Russian)"
 
 #: backend/projects/admin.py:71 backend/projects/admin.py:170
-#: backend/site_config/admin.py:61
+#: backend/site_config/admin.py:66
 msgid "Переводы (Английский)"
 msgstr "Translations (English)"
 
 #: backend/projects/admin.py:78 backend/projects/admin.py:177
-#: backend/site_config/admin.py:68
+#: backend/site_config/admin.py:79
 msgid "Переводы (Сербский - Латиница)"
 msgstr "Translations (Serbian - Latin)"
 
@@ -508,7 +551,7 @@ msgstr "Tags"
 
 #: backend/projects/models.py:171
 msgid "Slug"
-msgstr "Slug"
+msgstr ""
 
 #: backend/projects/models.py:174
 msgid "Уникальный идентификатор проекта для URL."
@@ -596,7 +639,8 @@ msgid "Вариант разметки, который использует фр
 msgstr "Layout option used by the frontend."
 
 #: backend/projects/models.py:312
-msgid "Порядок блока внутри проекта. Используется для сортировки и генерации index."
+msgid ""
+"Порядок блока внутри проекта. Используется для сортировки и генерации index."
 msgstr "Block order within the project. Used for sorting and index generation."
 
 #: backend/projects/models.py:315
@@ -628,8 +672,12 @@ msgid "Список тезисов"
 msgstr "List of points"
 
 #: backend/projects/models.py:339
-msgid "Слева вводите тезисы, а справа отображается технический JSON-код для системы. Его можно не трогать."
-msgstr "Enter points on the left, and the technical JSON code for the system is displayed on the right. You can leave it untouched."
+msgid ""
+"Слева вводите тезисы, а справа отображается технический JSON-код для "
+"системы. Его можно не трогать."
+msgstr ""
+"Enter points on the left, and the technical JSON code for the system is "
+"displayed on the right. You can leave it untouched."
 
 #: backend/projects/models.py:345
 msgid "Основной HTML-текст блока."
@@ -734,18 +782,16 @@ msgstr "Each list element must be a string."
 
 #: backend/projects/validators.py:27
 #, python-format
-msgid "Длина каждого элемента списка не должна превышать %(max_length)s символов."
-msgstr "The length of each list element must not exceed %(max_length)s characters."
+msgid ""
+"Длина каждого элемента списка не должна превышать %(max_length)s символов."
+msgstr ""
+"The length of each list element must not exceed %(max_length)s characters."
 
 #: backend/site_config/admin.py:51 backend/site_config/models.py:20
 msgid "Название сайта"
 msgstr "Site name"
 
-#: backend/site_config/admin.py:52
-msgid "Cookie"
-msgstr "Cookie"
-
-#: backend/site_config/admin.py:80
+#: backend/site_config/admin.py:92
 msgid "Преводи (Сербский - Кириллица)"
 msgstr "Translations (Serbian - Cyrillic)"
 
@@ -871,39 +917,56 @@ msgstr "System number. Generated automatically and cannot be changed."
 
 #: backend/users/models.py:99
 msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
-msgstr "Enter the member's first name. It will be displayed on the website in the team block."
+msgstr ""
+"Enter the member's first name. It will be displayed on the website in the "
+"team block."
 
 #: backend/users/models.py:102
 msgid "Фамилия"
 msgstr "Last name"
 
 #: backend/users/models.py:104
-msgid "Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
-msgstr "Enter the last name. Together with the first name, it forms the member's full name on the website."
+msgid ""
+"Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
+msgstr ""
+"Enter the last name. Together with the first name, it forms the member's "
+"full name on the website."
 
 #: backend/users/models.py:108
 msgid "Роль"
 msgstr "Role"
 
 #: backend/users/models.py:114
-msgid "Определяет уровень доступа к панели управления: Пользователь — нет доступа, Редактор — управление контентом, Администратор — полный доступ."
-msgstr "Determines access level to the admin panel: User — no access, Editor — content management, Administrator — full access."
+msgid ""
+"Определяет уровень доступа к панели управления: Пользователь — нет доступа, "
+"Редактор — управление контентом, Администратор — полный доступ."
+msgstr ""
+"Determines access level to the admin panel: User — no access, Editor — "
+"content management, Administrator — full access."
 
 #: backend/users/models.py:121
 msgid "Должность"
 msgstr "Position"
 
 #: backend/users/models.py:125
-msgid "Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается в карточке сотрудника на сайте."
-msgstr "Enter the professional role (e.g., 'Lead Architect'). Displayed in the employee card on the website."
+msgid ""
+"Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
+"в карточке сотрудника на сайте."
+msgstr ""
+"Enter the professional role (e.g., 'Lead Architect'). Displayed in the "
+"employee card on the website."
 
 #: backend/users/models.py:131
 msgid "Фотография"
 msgstr "Photo"
 
 #: backend/users/models.py:135
-msgid "Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, размер до 2 МБ."
-msgstr "Upload a portrait photo of the member. Recommended format: JPG or PNG, size up to 2 MB."
+msgid ""
+"Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, "
+"размер до 2 МБ."
+msgstr ""
+"Upload a portrait photo of the member. Recommended format: JPG or PNG, size "
+"up to 2 MB."
 
 #: backend/users/models.py:139
 msgid "Биография"
@@ -924,3 +987,9 @@ msgstr "If checked, the user will be visible in the team list on the website."
 #: backend/users/models.py:160
 msgid "Пользователи и команда"
 msgstr "Users and team"
+
+#~ msgid "Слаг"
+#~ msgstr "Slug"
+
+#~ msgid "Cookie"
+#~ msgstr "Cookie"

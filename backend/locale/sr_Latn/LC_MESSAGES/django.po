@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-12 13:01+0300\n"
+"POT-Creation-Date: 2026-05-15 08:56+0300\n"
 "PO-Revision-Date: 2026-05-12 16:00+0300\n"
 "Last-Translator: System <admin@example.com>\n"
 "Language-Team: Serbian (Latin) <sr-Latn@li.org>\n"
@@ -10,7 +10,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: backend/about/admin.py:18 backend/contacts/models.py:110
 msgid "Порядок отображения"
@@ -222,7 +223,9 @@ msgstr "API interfejs"
 #: backend/api/auth/serializers.py:26 backend/api/users/serializers.py:26
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
-msgstr "Pogrešan e-pošta ili lozinka. Molimo vas proverite podatke i pokušajte ponovo."
+msgstr ""
+"Pogrešan e-pošta ili lozinka. Molimo vas proverite podatke i pokušajte "
+"ponovo."
 
 #: backend/api/contacts/views.py:30
 msgid "Создание запроса обратной связи"
@@ -233,7 +236,10 @@ msgid ""
 "Принимает данные формы и сохраняет их. Поле `contact_preference` — "
 "техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается "
 "спамом и игнорируется."
-msgstr "Prima podatke forme i čuva ih. Polje `contact_preference` je tehničko antispam polje (honeypot). Ako je polje popunjeno, upit se smatra spamom i ignoriše se."
+msgstr ""
+"Prima podatke forme i čuva ih. Polje `contact_preference` je tehničko "
+"antispam polje (honeypot). Ako je polje popunjeno, upit se smatra spamom i "
+"ignoriše se."
 
 #: backend/api/contacts/views.py:50
 msgid "Получено"
@@ -247,7 +253,9 @@ msgstr "Dobavljanje sadržaja bloka kontakata"
 msgid ""
 "Возвращает текстовый блок для пожертвований и список активных ссылок на "
 "соцсети и мессенджеры."
-msgstr "Vraća tekstualni blok za donacije i spisak aktivnih linkova ka društvenim mrežama i mesendžerima."
+msgstr ""
+"Vraća tekstualni blok za donacije i spisak aktivnih linkova ka društvenim "
+"mrežama i mesendžerima."
 
 #: backend/api/projects/serializers.py:56
 msgid "Перейти к проекту"
@@ -305,11 +313,32 @@ msgstr "Prikazuju se na sajtu"
 msgid "Скрыты с сайта"
 msgstr "Skriveni sa sajta"
 
-#: backend/contacts/admin.py:70
+#: backend/contacts/admin.py:77
 msgid ""
 "Доступной может быть только одна ссылка! Оставьте галочку только на одной из "
 "них"
-msgstr "Dostupan može biti samo jedan link! Ostavite kvčicu samo na jednom od njih"
+msgstr ""
+"Dostupan može biti samo jedan link! Ostavite kvčicu samo na jednom od njih"
+
+#: backend/contacts/admin.py:94
+#| msgid "Текстовый блок для пожертвований"
+msgid "Текстовый блок для пожертвований (Русский)"
+msgstr "Tekstualni blok za donacije (Ruski)"
+
+#: backend/contacts/admin.py:96
+#| msgid "Текстовый блок для пожертвований"
+msgid "Текстовый блок для пожертвований (Английский)"
+msgstr "Tekstualni blok za donacije (Engleski)"
+
+#: backend/contacts/admin.py:100
+#| msgid "Текстовый блок для пожертвований"
+msgid "Текстовый блок для пожертвований (Сербский - Латиница)"
+msgstr "Tekstualni blok za donacije (Srpski - Latinica)"
+
+#: backend/contacts/admin.py:104
+#| msgid "Текстовый блок для пожертвований"
+msgid "Текстовый блок для пожертвований (Сербский - Кириллица)"
+msgstr "Tekstualni blok za donacije (Srpski - Ćirilica)"
 
 #: backend/contacts/apps.py:7
 msgid "Обратная связь и соцсети"
@@ -416,13 +445,16 @@ msgstr "Prikazi na sajtu"
 msgid ""
 "Если галочка включена — ссылка отображается на странице контактов. Если "
 "выключена — ссылка скрыта, но не удаляется."
-msgstr "Ako je kvčica uključena — link se prikazuje na stranici kontakata. Ako je isključena — link je skriven, ali se ne briše."
+msgstr ""
+"Ako je kvčica uključena — link se prikazuje na stranici kontakata. Ako je "
+"isključena — link je skriven, ali se ne briše."
 
 #: backend/contacts/models.py:142
 msgid ""
 "Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать "
 "существующую запись"
-msgstr "Link za ovaj tip društvene mreže je već dodat. Možete urediti postojeći unos"
+msgstr ""
+"Link za ovaj tip društvene mreže je već dodat. Možete urediti postojeći unos"
 
 #: backend/contacts/models.py:149
 msgid "Ссылка на соцсеть / мессенджер"
@@ -455,17 +487,17 @@ msgid "Основная информация"
 msgstr "Osnovne informacije"
 
 #: backend/projects/admin.py:64 backend/projects/admin.py:163
-#: backend/site_config/admin.py:54
+#: backend/site_config/admin.py:53
 msgid "Переводы (Русский)"
 msgstr "Prevodi (Ruski)"
 
 #: backend/projects/admin.py:71 backend/projects/admin.py:170
-#: backend/site_config/admin.py:61
+#: backend/site_config/admin.py:66
 msgid "Переводы (Английский)"
 msgstr "Prevodi (Engleski)"
 
 #: backend/projects/admin.py:78 backend/projects/admin.py:177
-#: backend/site_config/admin.py:68
+#: backend/site_config/admin.py:79
 msgid "Переводы (Сербский - Латиница)"
 msgstr "Prevodi (Srpski - Latinica)"
 
@@ -520,7 +552,7 @@ msgstr "Oznake"
 
 #: backend/projects/models.py:171
 msgid "Slug"
-msgstr "Slug"
+msgstr "Slag"
 
 #: backend/projects/models.py:174
 msgid "Уникальный идентификатор проекта для URL."
@@ -610,7 +642,9 @@ msgstr "Varijanta rasporeda koju koristi frontend."
 #: backend/projects/models.py:312
 msgid ""
 "Порядок блока внутри проекта. Используется для сортировки и генерации index."
-msgstr "Redosled bloka unutar projekta. Koristi se za sortiranje i generisanje indeksa."
+msgstr ""
+"Redosled bloka unutar projekta. Koristi se za sortiranje i generisanje "
+"indeksa."
 
 #: backend/projects/models.py:315
 msgid "Заголовок"
@@ -644,7 +678,9 @@ msgstr "Spisak teza"
 msgid ""
 "Слева вводите тезисы, а справа отображается технический JSON-код для "
 "системы. Его можно не трогать."
-msgstr "Sa leve strane unosite teze, a sa desne strane se prikazuje tehnički JSON kod za sistem. Ne morate ga dirati."
+msgstr ""
+"Sa leve strane unosite teze, a sa desne strane se prikazuje tehnički JSON "
+"kod za sistem. Ne morate ga dirati."
 
 #: backend/projects/models.py:345
 msgid "Основной HTML-текст блока."
@@ -757,11 +793,7 @@ msgstr "Dužina svakog elementa spiska ne sme prelaziti %(max_length)s znakova."
 msgid "Название сайта"
 msgstr "Naziv sajta"
 
-#: backend/site_config/admin.py:52
-msgid "Cookie"
-msgstr "Kolačić"
-
-#: backend/site_config/admin.py:80
+#: backend/site_config/admin.py:92
 msgid "Преводи (Сербский - Кириллица)"
 msgstr "Prevodi (Srpski - Ćirilica)"
 
@@ -906,7 +938,9 @@ msgstr "Uloga"
 msgid ""
 "Определяет уровень доступа к панели управления: Пользователь — нет доступа, "
 "Редактор — управление контентом, Администратор — полный доступ."
-msgstr "Određuje nivo pristupa kontrolnoj tabli: Korisnik — nema pristup, Urednik — upravljanje sadržajem, Administrator — potpun pristup."
+msgstr ""
+"Određuje nivo pristupa kontrolnoj tabli: Korisnik — nema pristup, Urednik — "
+"upravljanje sadržajem, Administrator — potpun pristup."
 
 #: backend/users/models.py:121
 msgid "Должность"
@@ -916,7 +950,9 @@ msgstr "Pozicija"
 msgid ""
 "Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
 "в карточке сотрудника на сайте."
-msgstr "Navedite profesionalnu ulogu (na primer: «Glavni arhitekta»). Prikazuje se u kartici zaposlenog na sajtu."
+msgstr ""
+"Navedite profesionalnu ulogu (na primer: «Glavni arhitekta»). Prikazuje se u "
+"kartici zaposlenog na sajtu."
 
 #: backend/users/models.py:131
 msgid "Фотография"
@@ -926,7 +962,9 @@ msgstr "Fotografija"
 msgid ""
 "Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, "
 "размер до 2 МБ."
-msgstr "Otpremite portretnu fotografiju učesnika. Preporučeni format: JPG ili PNG, veličina do 2 MB."
+msgstr ""
+"Otpremite portretnu fotografiju učesnika. Preporučeni format: JPG ili PNG, "
+"veličina do 2 MB."
 
 #: backend/users/models.py:139
 msgid "Биография"
@@ -942,8 +980,12 @@ msgstr "Javni status"
 
 #: backend/users/models.py:150
 msgid "Если галочка стоит, пользователь будет виден в списке команды на сайте."
-msgstr "Ako je kvčica uključena, korisnik će biti vidljiv na spisku tima na sajtu."
+msgstr ""
+"Ako je kvčica uključena, korisnik će biti vidljiv na spisku tima na sajtu."
 
 #: backend/users/models.py:160
 msgid "Пользователи и команда"
 msgstr "Korisnici i tim"
+
+#~ msgid "Cookie"
+#~ msgstr "Kolačić"
