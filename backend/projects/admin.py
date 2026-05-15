@@ -9,6 +9,11 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from .constants import (
+    ADMIN_EMPTY_VALUE,
+    DEFAULT_FRONTEND_URL,
+    FRONTEND_PROJECT_PATH_TEMPLATE,
+)
 from .models import Project, ProjectContentBlock, ProjectType, Tag
 from .resources_admin import (
     ProjectTypeResource,
@@ -92,7 +97,7 @@ class ProjectAdmin(BaseTranslatedAdmin):
 
     def get_project_type(self, obj):
         """Отображение типа проекта."""
-        return obj.project_type.label if obj.project_type else '-empty-'
+        return obj.project_type.label if obj.project_type else ADMIN_EMPTY_VALUE
 
     get_project_type.short_description = _('Тип проекта')
     get_project_type.admin_order_field = 'project_type__label'
@@ -100,15 +105,15 @@ class ProjectAdmin(BaseTranslatedAdmin):
     def get_view_on_site(self, obj):
         """Отображение ссылки на проект."""
         if obj.slug:
-            frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
-            absolute_url = f'{frontend_url}/projects/{obj.slug}/'
+            frontend_url = getattr(settings, 'FRONTEND_URL', DEFAULT_FRONTEND_URL)
+            absolute_url = FRONTEND_PROJECT_PATH_TEMPLATE.format(frontend_url=frontend_url, slug=obj.slug)
             return format_html(
                 '<a href="{}" target="_blank" rel="noopener noreferrer">{} {}</a>',
                 absolute_url,
                 '🔗',
                 _('Просмотр на сайте'),
             )
-        return '-empty-'
+        return ADMIN_EMPTY_VALUE
 
     get_view_on_site.short_description = _('Ссылка')
 
