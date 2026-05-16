@@ -134,8 +134,8 @@ def test_project_block_button_bulk_create_auto_sets_orders(buttons_block):
 
 
 @pytest.mark.django_db
-def test_content_block_with_list_variant_requires_string_list(published_project):
-    """Проверяет, что для блока варианта IMAGE_WITH_LIST список string_list обязателен."""
+def test_content_block_with_list_variant_allows_empty_string_list(published_project):
+    """Проверяет, что вариант IMAGE_WITH_LIST можно сохранить без списка тезисов."""
     block = ProjectContentBlock(
         project=published_project,
         variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
@@ -146,14 +146,12 @@ def test_content_block_with_list_variant_requires_string_list(published_project)
         text='',
         accented_text='',
     )
-    with pytest.raises(ValidationError) as exc_info:
-        block.full_clean()
-    assert 'string_list' in exc_info.value.message_dict
+    block.full_clean()
 
 
 @pytest.mark.django_db
-def test_content_block_non_list_variant_forbids_string_list(published_project):
-    """Проверяет, что для вариантов, отличных от IMAGE_WITH_LIST, поле string_list запрещено."""
+def test_content_block_non_list_variant_allows_string_list(published_project):
+    """Проверяет, что нерелевантный список тезисов можно сохранить для другого варианта."""
     block = ProjectContentBlock(
         project=published_project,
         variant=ProjectContentBlock.Variant.TWO_IMAGES,
@@ -165,14 +163,12 @@ def test_content_block_non_list_variant_forbids_string_list(published_project):
         text='',
         accented_text='',
     )
-    with pytest.raises(ValidationError) as exc_info:
-        block.full_clean()
-    assert 'string_list' in exc_info.value.message_dict
+    block.full_clean()
 
 
 @pytest.mark.django_db
-def test_two_images_variant_requires_left_image(published_project):
-    """Проверяет, что для блока варианта TWO_IMAGES поле left_image обязательно."""
+def test_two_images_variant_allows_empty_left_image(published_project):
+    """Проверяет, что вариант TWO_IMAGES можно сохранить без второго изображения."""
     block = ProjectContentBlock(
         project=published_project,
         variant=ProjectContentBlock.Variant.TWO_IMAGES,
@@ -184,14 +180,12 @@ def test_two_images_variant_requires_left_image(published_project):
         text='',
         accented_text='',
     )
-    with pytest.raises(ValidationError) as exc_info:
-        block.full_clean()
-    assert 'left_image' in exc_info.value.message_dict
+    block.full_clean()
 
 
 @pytest.mark.django_db
-def test_non_two_images_variant_forbids_left_image(published_project):
-    """Проверяет, что для вариантов, отличных от TWO_IMAGES, поле left_image запрещено."""
+def test_non_two_images_variant_allows_left_image(published_project):
+    """Проверяет, что нерелевантное второе изображение можно сохранить для другого варианта."""
     block = ProjectContentBlock(
         project=published_project,
         variant=ProjectContentBlock.Variant.IMAGE_WITH_BUTTONS,
@@ -203,9 +197,7 @@ def test_non_two_images_variant_forbids_left_image(published_project):
         text='',
         accented_text='',
     )
-    with pytest.raises(ValidationError) as exc_info:
-        block.full_clean()
-    assert 'left_image' in exc_info.value.message_dict
+    block.full_clean()
 
 
 @pytest.mark.django_db
@@ -220,7 +212,7 @@ def test_content_block_bulk_create_validates_objects(published_project):
                     order=0,
                     title='Broken block',
                     image='https://example.com/broken.jpg',
-                    string_list=[],
+                    string_list='not-a-list',
                     text='',
                     accented_text='',
                 )
