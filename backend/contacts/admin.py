@@ -46,7 +46,13 @@ class ContactRequestAdmin(BaseAdmin):
         'message',
         'reason',
     )
-    readonly_fields = ('created_at',)
+    readonly_fields = (
+        'name',
+        'email',
+        'message',
+        'reason',
+        'created_at',
+    )
     ordering = (
         'is_processed',
         '-created_at',
