@@ -1,20 +1,28 @@
-"""Регистрация моделей Project, ProjectContentBlock, Tag, ProjectType в админ-панели."""
-
 import os
 import shutil
 
-from core.base_admin import BaseTranslatedAdmin, ImportExportMixin
+from core.base_admin import BaseAdminMixin, BaseTranslatedAdmin, ImportExportMixin
 from django.conf import settings
 from django.contrib import admin
+from django.db import models
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
+from tinymce.widgets import TinyMCE
 
 from .constants import (
     ADMIN_EMPTY_VALUE,
     DEFAULT_FRONTEND_URL,
     FRONTEND_PROJECT_PATH_TEMPLATE,
 )
-from .models import Project, ProjectContentBlock, ProjectType, Tag
+from .models import (
+    Project,
+    ProjectBlockButton,
+    ProjectContentBlock,
+    ProjectGalleryImage,
+    ProjectType,
+    Tag,
+)
 from .resources_admin import (
     ProjectTypeResource,
     TagResource,
@@ -44,9 +52,87 @@ class ProjectTypeAdmin(TagAdmin):
     resource_classes = [ProjectTypeResource]
 
 
+class ProjectGalleryImageInline(NestedTabularInline):
+    """Инлайн для картинок верхней карусели проекта."""
+
+    model = ProjectGalleryImage
+    extra = 0
+    fk_name = 'project'
+    fields = ('order', 'image')
+
+
+class ProjectBlockButtonInline(NestedTabularInline):
+    """Инлайн для кнопок внутри контентного блока (самый нижний уровень)."""
+
+    model = ProjectBlockButton
+    extra = 0
+    fk_name = 'block'
+    fields = ('order', 'label', 'type', 'url')
+
+
+class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
+    """Инлайн для контентных блоков внутри проекта (средний уровень)."""
+
+    model = ProjectContentBlock
+    extra = 0
+    fk_name = 'project'
+    inlines = [ProjectBlockButtonInline]
+
+    # Перебиваем дефолтный ordering='slug' из BaseAdminMixin, чтобы не было ошибок
+    ordering = ('order',)
+
+    # Принудительно подключаем TinyMCE для текстовых полей внутри инлайна
+    formfield_overrides = {
+        models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 15, 'style': 'width: 100%;'})},
+    }
+
+    tinymce_fields = [
+        'text_ru',
+        'text_en',
+        'text_sr_latn',
+        'text_sr_cyrl',
+        'accented_text_ru',
+        'accented_text_en',
+        'accented_text_sr_latn',
+        'accented_text_sr_cyrl',
+    ]
+
+    fieldsets = (
+        (_('Основная информация'), {'fields': ('variant', 'order', 'image', 'left_image')}),
+        (
+            _('Переводы (Русский)'),
+            {
+                'fields': ('title_ru', 'text_ru', 'accented_text_ru', 'string_list_ru'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            _('Переводы (Английский)'),
+            {
+                'fields': ('title_en', 'text_en', 'accented_text_en', 'string_list_en'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            _('Переводы (Сербский - Латиница)'),
+            {
+                'fields': ('title_sr_latn', 'text_sr_latn', 'accented_text_sr_latn', 'string_list_sr_latn'),
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            _('Переводы (Сербский - Кириллица)'),
+            {
+                'fields': ('title_sr_cyrl', 'text_sr_cyrl', 'accented_text_sr_cyrl', 'string_list_sr_cyrl'),
+                'classes': ('collapse',),
+            },
+        ),
+    )
+
+
 @admin.register(Project)
-class ProjectAdmin(BaseTranslatedAdmin):
-    """Класс администрирования проектов."""
+class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
+    """Класс администрирования проектов с вложенными блоками и кнопками."""
 
     list_display = [
         'title',
@@ -63,6 +149,10 @@ class ProjectAdmin(BaseTranslatedAdmin):
     )
     list_filter = ['project_type', 'year', 'is_published']
     ordering = ('-is_published', '-year')
+
+    # Подключаем карусель изображений и матрешку контентных блоков в проект
+    inlines = [ProjectGalleryImageInline, ProjectContentBlockInline]
+
     fieldsets = (
         (_('Основная информация'), {'fields': ('slug', 'year', 'project_type', 'tags', 'cover_image', 'is_published')}),
         (
@@ -87,7 +177,7 @@ class ProjectAdmin(BaseTranslatedAdmin):
             },
         ),
         (
-            _('Переводы (Сербский - Кирилица)'),
+            _('Переводы (Сербский - Кириллица)'),
             {
                 'fields': ('title_sr_cyrl', 'description_sr_cyrl'),
                 'classes': ('collapse',),
@@ -134,83 +224,7 @@ class ProjectAdmin(BaseTranslatedAdmin):
 
     cover_image_thumbnail.short_description = Project._meta.get_field('cover_image').verbose_name
 
+    class Media:
+        """Автоматизация интерфейса динамического переключения полей."""
 
-@admin.register(ProjectContentBlock)
-class ProjectContentBlockAdmin(BaseTranslatedAdmin):
-    """Класс администрирования детальной страницы проектов."""
-
-    ordering = (
-        'project__slug',
-        'order',
-    )
-    list_display = [
-        'project__title',
-        'order',
-        'title',
-        'main_image_thumbnail',
-        'left_image_thumbnail',
-    ]
-    list_editable = ('order',)
-    tinymce_fields = [
-        'text_ru',
-        'text_en',
-        'text_sr_latn',
-        'text_sr_cyrl',
-        'accented_text_ru',
-        'accented_text_en',
-        'accented_text_sr_latn',
-        'accented_text_sr_cyrl',
-    ]
-
-    fieldsets = (
-        (_('Основная информация'), {'fields': ('project', 'variant', 'order', 'image', 'left_image')}),
-        (
-            _('Переводы (Русский)'),
-            {
-                'fields': ('title_ru', 'text_ru', 'accented_text_ru', 'string_list_ru'),
-                'classes': ('collapse',),
-            },
-        ),
-        (
-            _('Переводы (Английский)'),
-            {
-                'fields': ('title_en', 'text_en', 'accented_text_en', 'string_list_en'),
-                'classes': ('collapse',),
-            },
-        ),
-        (
-            _('Переводы (Сербский - Латиница)'),
-            {
-                'fields': ('title_sr_latn', 'text_sr_latn', 'accented_text_sr_latn', 'string_list_sr_latn'),
-                'classes': ('collapse',),
-            },
-        ),
-        (
-            _('Переводы (Сербский - Кирилица)'),
-            {
-                'fields': ('title_sr_cyrl', 'text_sr_cyrl', 'accented_text_sr_cyrl', 'string_list_sr_cyrl'),
-                'classes': ('collapse',),
-            },
-        ),
-    )
-
-    def delete_queryset(self, request, queryset):
-        """Массовое удаление объектов ProjectContentBlock с удалением связанных файлов."""
-        for project_block in queryset:
-            if project_block.image and os.path.exists(project_block.image.path):
-                os.remove(project_block.image.path)
-            if project_block.left_image and os.path.exists(project_block.left_image.path):
-                os.remove(project_block.left_image.path)
-            project_block.delete()
-
-    def main_image_thumbnail(self, obj):
-        """Метод для отображения миниатюры изображения в списке."""
-        return self.get_image_thumbnail(obj, 'image')
-
-    main_image_thumbnail.short_description = ProjectContentBlock._meta.get_field('image').verbose_name
-
-    def left_image_thumbnail(self, obj):
-        """Метод для отображения миниатюры левого изображения в списке."""
-        return self.get_image_thumbnail(obj, 'left_image')
-
-    left_image_thumbnail.short_description = ProjectContentBlock._meta.get_field('left_image').verbose_name
+        js = ('projects/js/admin_variant_toggle.js',)

@@ -41,6 +41,14 @@ class BaseAdminMixin:
                 form.base_fields[field_name].widget = TinyMCE()
         return form
 
+    def get_formset(self, request, obj=None, **kwargs):
+        """Переопределение формы для поддержки TinyMCE во inline-моделях."""
+        formset = super().get_formset(request, obj, **kwargs)
+        for field_name in self.tinymce_fields:
+            if field_name in formset.form.base_fields:
+                formset.form.base_fields[field_name].widget = TinyMCE()
+        return formset
+
     def get_image_thumbnail(self, obj, field_name):
         """Универсальный метод для создания миниатюры из поля ImageField."""
         image_field = getattr(obj, field_name, None)

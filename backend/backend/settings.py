@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'import_export',
     'tinymce',
+    'nested_admin',
     'django_jsonform',
     # local
     'projects',
@@ -240,10 +241,6 @@ TIME_ZONE = 'Europe/Moscow'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static',
-# ]
 
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
