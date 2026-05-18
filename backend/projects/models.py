@@ -81,6 +81,9 @@ class OrderedValidationQuerySet(models.QuerySet):
             pending_orders[related_id] += ORDER_STEP
             obj.order = max_orders[related_id] + pending_orders[related_id]
 
+    def _validate_prepared_objects(self, objs: list[models.Model]) -> None:
+        """Выполняет дополнительные проверки после автозаполнения order."""
+
     def bulk_create(
         self,
         objs,
@@ -93,6 +96,7 @@ class OrderedValidationQuerySet(models.QuerySet):
         """Проверяет и подготавливает объекты перед массовым созданием."""
         objs = list(objs)
         self._set_missing_orders(objs)
+        self._validate_prepared_objects(objs)
         for obj in objs:
             obj.full_clean()
         return super().bulk_create(
@@ -109,6 +113,19 @@ class ProjectContentBlockQuerySet(OrderedValidationQuerySet):
     """QuerySet для контентных блоков проекта."""
 
     related_field_name = 'project'
+
+    def _validate_prepared_objects(self, objs: list[models.Model]) -> None:
+        super()._validate_prepared_objects(objs)
+        seen_orders = set()
+        for obj in objs:
+            if not obj.project_id or not obj.order:
+                continue
+            order_key = (obj.project_id, obj.order)
+            if order_key in seen_orders:
+                raise ValidationError(
+                    {'order': _('Контентные блоки одного проекта не должны иметь одинаковый порядок.')}
+                )
+            seen_orders.add(order_key)
 
 
 class ProjectBlockButtonQuerySet(OrderedValidationQuerySet):
@@ -362,8 +379,11 @@ class ProjectContentBlock(models.Model):
         verbose_name = _('Контентный блок проекта')
         verbose_name_plural = _('Контентные блоки проектов')
         ordering = ('order', 'pk')
-        indexes = [
-            models.Index(fields=('project', 'order')),
+        constraints = [
+            models.UniqueConstraint(
+                fields=('project', 'order'),
+                name='unique_project_content_block_order',
+            ),
         ]
 
     def __str__(self) -> str:
@@ -376,6 +396,16 @@ class ProjectContentBlock(models.Model):
             validate_string_list(self.string_list)
         except ValidationError as error:
             raise ValidationError({'string_list': error.messages}) from error
+        if self.project_id and self.order:
+            duplicate_order_exists = (
+                ProjectContentBlock.objects.filter(project_id=self.project_id, order=self.order)
+                .exclude(pk=self.pk)
+                .exists()
+            )
+            if duplicate_order_exists:
+                raise ValidationError(
+                    {'order': _('Контентный блок с таким порядком уже существует в этом проекте.')}
+                )
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок блока в пределах проекта."""

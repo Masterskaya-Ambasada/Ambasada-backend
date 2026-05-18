@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 from tinymce.widgets import TinyMCE
 
+from .admin_forms import ProjectContentBlockInlineFormSet
 from .constants import (
     ADMIN_EMPTY_VALUE,
     DEFAULT_FRONTEND_URL,
@@ -77,6 +78,7 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
     extra = 0
     fk_name = 'project'
     inlines = [ProjectBlockButtonInline]
+    formset = ProjectContentBlockInlineFormSet
 
     # Перебиваем дефолтный ordering='slug' из BaseAdminMixin, чтобы не было ошибок
     ordering = ('order',)

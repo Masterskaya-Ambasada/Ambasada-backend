@@ -1,6 +1,5 @@
 import pytest
 from django.core.exceptions import ValidationError
-
 from projects.models import ProjectBlockButton, ProjectContentBlock
 
 
@@ -106,6 +105,91 @@ def test_content_block_bulk_create_auto_sets_orders(published_project):
     )
     assert blocks[0].order == 1
     assert blocks[1].order == 2
+
+
+@pytest.mark.django_db
+def test_content_block_order_must_be_unique_within_project(published_project):
+    """Проверяет, что порядок контентных блоков уникален внутри одного проекта."""
+    ProjectContentBlock.objects.create(
+        project=published_project,
+        variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+        order=10,
+        title='First ordered block',
+        image='https://example.com/first.jpg',
+        string_list=['One'],
+        text='',
+        accented_text='',
+    )
+    duplicate_block = ProjectContentBlock(
+        project=published_project,
+        variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+        order=10,
+        title='Duplicate ordered block',
+        image='https://example.com/duplicate.jpg',
+        string_list=['Two'],
+        text='',
+        accented_text='',
+    )
+    with pytest.raises(ValidationError) as exc_info:
+        duplicate_block.full_clean()
+    assert 'order' in exc_info.value.message_dict
+
+
+@pytest.mark.django_db
+def test_content_block_order_can_repeat_for_different_projects(published_project, second_published_project):
+    """Проверяет, что одинаковый порядок разрешен для блоков разных проектов."""
+    ProjectContentBlock.objects.create(
+        project=published_project,
+        variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+        order=10,
+        title='First project block',
+        image='https://example.com/first-project.jpg',
+        string_list=['One'],
+        text='',
+        accented_text='',
+    )
+    second_project_block = ProjectContentBlock(
+        project=second_published_project,
+        variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+        order=10,
+        title='Second project block',
+        image='https://example.com/second-project.jpg',
+        string_list=['Two'],
+        text='',
+        accented_text='',
+    )
+    second_project_block.full_clean()
+
+
+@pytest.mark.django_db
+def test_content_block_bulk_create_rejects_duplicate_order_in_same_project(published_project):
+    """Проверяет, что bulk_create не сохраняет дубли порядка внутри одного проекта."""
+    with pytest.raises(ValidationError) as exc_info:
+        ProjectContentBlock.objects.bulk_create(
+            [
+                ProjectContentBlock(
+                    project=published_project,
+                    variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+                    order=10,
+                    title='Bulk duplicate 1',
+                    image='https://example.com/bulk-duplicate-1.jpg',
+                    string_list=['One'],
+                    text='',
+                    accented_text='',
+                ),
+                ProjectContentBlock(
+                    project=published_project,
+                    variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+                    order=10,
+                    title='Bulk duplicate 2',
+                    image='https://example.com/bulk-duplicate-2.jpg',
+                    string_list=['Two'],
+                    text='',
+                    accented_text='',
+                ),
+            ]
+        )
+    assert 'order' in exc_info.value.message_dict
 
 
 @pytest.mark.django_db
