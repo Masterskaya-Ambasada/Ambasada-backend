@@ -12,7 +12,7 @@ def _content_block_form_data(index: int, order: int, title: str) -> dict[str, st
         f'{prefix}-title': title,
         f'{prefix}-image': f'https://example.com/{title}.jpg',
         f'{prefix}-left_image': '',
-        f'{prefix}-text': '',
+        f'{prefix}-text': '<p>Block text</p>',
         f'{prefix}-accented_text': '',
         f'{prefix}-string_list': '["One"]',
     }
@@ -39,4 +39,4 @@ def test_project_content_block_inline_rejects_duplicate_order(published_project)
     }
     formset = formset_class(data=form_data, instance=published_project, prefix='content_blocks')
     assert not formset.is_valid()
-    assert 'order' in str(formset.non_form_errors())
+    assert 'Порядок контентных блоков' in str(formset.non_form_errors())

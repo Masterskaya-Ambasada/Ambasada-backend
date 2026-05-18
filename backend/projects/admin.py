@@ -1,6 +1,3 @@
-import os
-import shutil
-
 from core.base_admin import BaseAdminMixin, BaseTranslatedAdmin, ImportExportMixin
 from django.conf import settings
 from django.contrib import admin
@@ -208,17 +205,6 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
         return ADMIN_EMPTY_VALUE
 
     get_view_on_site.short_description = _('Ссылка')
-
-    def delete_queryset(self, request, queryset):
-        """Массовое удаление объектов Project с удалением файлов фото."""
-        for project in queryset:
-            if project.cover_image:
-                full_path = project.cover_image.path
-                cover_dir = os.path.dirname(full_path)
-                project_dir = os.path.dirname(cover_dir)
-                if os.path.exists(project_dir):
-                    shutil.rmtree(project_dir)
-            project.delete()
 
     def cover_image_thumbnail(self, obj):
         """Метод для отображения миниатюры изображения в списке."""

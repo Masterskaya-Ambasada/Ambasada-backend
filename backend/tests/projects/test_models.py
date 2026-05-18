@@ -1,6 +1,13 @@
 import pytest
 from django.core.exceptions import ValidationError
-from projects.models import ProjectBlockButton, ProjectContentBlock
+from django.test import override_settings
+from projects.constants import (
+    PROJECT_BLOCKS_DIRECTORY,
+    PROJECT_COVER_DIRECTORY,
+    PROJECT_GALLERY_DIRECTORY,
+    PROJECT_MEDIA_DIRECTORY,
+)
+from projects.models import Project, ProjectBlockButton, ProjectContentBlock, ProjectGalleryImage
 
 
 @pytest.mark.django_db
@@ -46,7 +53,7 @@ def test_content_block_save_auto_sets_order(published_project):
         title='First block',
         image='https://example.com/1.jpg',
         string_list=['A'],
-        text='',
+        text='<p>First text</p>',
         accented_text='',
     )
     second_block = ProjectContentBlock.objects.create(
@@ -56,7 +63,7 @@ def test_content_block_save_auto_sets_order(published_project):
         title='Second block',
         image='https://example.com/2.jpg',
         string_list=['B'],
-        text='',
+        text='<p>Second text</p>',
         accented_text='',
     )
     assert first_block.order == 1
@@ -88,7 +95,7 @@ def test_content_block_bulk_create_auto_sets_orders(published_project):
                 title='Bulk 1',
                 image='https://example.com/bulk1.jpg',
                 string_list=['One'],
-                text='',
+                text='<p>Bulk 1 text</p>',
                 accented_text='',
             ),
             ProjectContentBlock(
@@ -98,7 +105,7 @@ def test_content_block_bulk_create_auto_sets_orders(published_project):
                 title='Bulk 2',
                 image='https://example.com/bulk2.jpg',
                 string_list=['Two'],
-                text='',
+                text='<p>Bulk 2 text</p>',
                 accented_text='',
             ),
         ]
@@ -117,7 +124,7 @@ def test_content_block_order_must_be_unique_within_project(published_project):
         title='First ordered block',
         image='https://example.com/first.jpg',
         string_list=['One'],
-        text='',
+        text='<p>First text</p>',
         accented_text='',
     )
     duplicate_block = ProjectContentBlock(
@@ -127,7 +134,7 @@ def test_content_block_order_must_be_unique_within_project(published_project):
         title='Duplicate ordered block',
         image='https://example.com/duplicate.jpg',
         string_list=['Two'],
-        text='',
+        text='<p>Duplicate text</p>',
         accented_text='',
     )
     with pytest.raises(ValidationError) as exc_info:
@@ -145,7 +152,7 @@ def test_content_block_order_can_repeat_for_different_projects(published_project
         title='First project block',
         image='https://example.com/first-project.jpg',
         string_list=['One'],
-        text='',
+        text='<p>First project text</p>',
         accented_text='',
     )
     second_project_block = ProjectContentBlock(
@@ -155,7 +162,7 @@ def test_content_block_order_can_repeat_for_different_projects(published_project
         title='Second project block',
         image='https://example.com/second-project.jpg',
         string_list=['Two'],
-        text='',
+        text='<p>Second project text</p>',
         accented_text='',
     )
     second_project_block.full_clean()
@@ -174,7 +181,7 @@ def test_content_block_bulk_create_rejects_duplicate_order_in_same_project(publi
                     title='Bulk duplicate 1',
                     image='https://example.com/bulk-duplicate-1.jpg',
                     string_list=['One'],
-                    text='',
+                    text='<p>Bulk duplicate 1 text</p>',
                     accented_text='',
                 ),
                 ProjectContentBlock(
@@ -184,7 +191,7 @@ def test_content_block_bulk_create_rejects_duplicate_order_in_same_project(publi
                     title='Bulk duplicate 2',
                     image='https://example.com/bulk-duplicate-2.jpg',
                     string_list=['Two'],
-                    text='',
+                    text='<p>Bulk duplicate 2 text</p>',
                     accented_text='',
                 ),
             ]
@@ -218,8 +225,8 @@ def test_project_block_button_bulk_create_auto_sets_orders(buttons_block):
 
 
 @pytest.mark.django_db
-def test_content_block_with_list_variant_allows_empty_string_list(published_project):
-    """Проверяет, что вариант IMAGE_WITH_LIST можно сохранить без списка тезисов."""
+def test_content_block_with_list_variant_requires_string_list(published_project):
+    """Проверяет, что вариант IMAGE_WITH_LIST требует список тезисов."""
     block = ProjectContentBlock(
         project=published_project,
         variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
@@ -227,10 +234,12 @@ def test_content_block_with_list_variant_allows_empty_string_list(published_proj
         title='Invalid list block',
         image='https://example.com/list.jpg',
         string_list=[],
-        text='',
+        text='<p>List text</p>',
         accented_text='',
     )
-    block.full_clean()
+    with pytest.raises(ValidationError) as exc_info:
+        block.full_clean()
+    assert 'string_list' in exc_info.value.message_dict
 
 
 @pytest.mark.django_db
@@ -244,15 +253,15 @@ def test_content_block_non_list_variant_allows_string_list(published_project):
         image='https://example.com/main.jpg',
         left_image='https://example.com/left.jpg',
         string_list=['Should not be here'],
-        text='',
+        text='<p>Two images text</p>',
         accented_text='',
     )
     block.full_clean()
 
 
 @pytest.mark.django_db
-def test_two_images_variant_allows_empty_left_image(published_project):
-    """Проверяет, что вариант TWO_IMAGES можно сохранить без второго изображения."""
+def test_two_images_variant_requires_left_image(published_project):
+    """Проверяет, что вариант TWO_IMAGES требует второе изображение."""
     block = ProjectContentBlock(
         project=published_project,
         variant=ProjectContentBlock.Variant.TWO_IMAGES,
@@ -261,10 +270,12 @@ def test_two_images_variant_allows_empty_left_image(published_project):
         image='https://example.com/main.jpg',
         left_image='',
         string_list=[],
-        text='',
+        text='<p>Two images text</p>',
         accented_text='',
     )
-    block.full_clean()
+    with pytest.raises(ValidationError) as exc_info:
+        block.full_clean()
+    assert 'left_image' in exc_info.value.message_dict
 
 
 @pytest.mark.django_db
@@ -278,10 +289,94 @@ def test_non_two_images_variant_allows_left_image(published_project):
         image='https://example.com/main.jpg',
         left_image='https://example.com/left.jpg',
         string_list=[],
-        text='',
+        text='<p>Buttons text</p>',
         accented_text='',
     )
     block.full_clean()
+
+
+@pytest.mark.django_db
+def test_content_block_requires_common_image_and_text(published_project):
+    """Проверяет, что для любого варианта нужны основное изображение и текст."""
+    block = ProjectContentBlock(
+        project=published_project,
+        variant=ProjectContentBlock.Variant.IMAGE_WITH_BUTTONS,
+        order=1,
+        title='Invalid common fields block',
+        image='',
+        left_image='',
+        string_list=[],
+        text='',
+        accented_text='',
+    )
+    with pytest.raises(ValidationError) as exc_info:
+        block.full_clean()
+    assert {'image', 'text'} <= set(exc_info.value.message_dict)
+
+
+@pytest.mark.django_db(transaction=True)
+def test_project_queryset_delete_removes_project_media_directory(published_project, tmp_path):
+    """Проверяет, что папка проекта удаляется при любом удалении Project через queryset."""
+    with override_settings(MEDIA_ROOT=str(tmp_path)):
+        project_dir = tmp_path / PROJECT_MEDIA_DIRECTORY / published_project.slug
+        cover_dir = project_dir / PROJECT_COVER_DIRECTORY
+        cover_dir.mkdir(parents=True)
+        (cover_dir / 'cover.jpg').write_text('cover')
+        Project.objects.filter(pk=published_project.pk).delete()
+        assert not project_dir.exists()
+
+
+@pytest.mark.django_db(transaction=True)
+def test_project_slug_change_moves_media_directory_and_updates_file_paths(published_project, tmp_path):
+    """Проверяет, что смена slug переносит медиа-папку и обновляет пути файлов."""
+    old_slug = published_project.slug
+    new_slug = 'central-park-renamed'
+    with override_settings(MEDIA_ROOT=str(tmp_path)):
+        old_project_dir = tmp_path / PROJECT_MEDIA_DIRECTORY / old_slug
+        old_cover_dir = old_project_dir / PROJECT_COVER_DIRECTORY
+        old_gallery_dir = old_project_dir / PROJECT_GALLERY_DIRECTORY
+        old_blocks_dir = old_project_dir / PROJECT_BLOCKS_DIRECTORY
+        for directory in (old_cover_dir, old_gallery_dir, old_blocks_dir):
+            directory.mkdir(parents=True)
+        (old_cover_dir / 'cover.jpg').write_text('cover')
+        (old_gallery_dir / 'gallery.jpg').write_text('gallery')
+        (old_blocks_dir / 'main.jpg').write_text('main')
+        (old_blocks_dir / 'left.jpg').write_text('left')
+        published_project.cover_image = f'{PROJECT_MEDIA_DIRECTORY}/{old_slug}/{PROJECT_COVER_DIRECTORY}/cover.jpg'
+        published_project.save()
+        gallery_image = ProjectGalleryImage.objects.create(
+            project=published_project,
+            image=f'{PROJECT_MEDIA_DIRECTORY}/{old_slug}/{PROJECT_GALLERY_DIRECTORY}/gallery.jpg',
+            order=1,
+        )
+        content_block = ProjectContentBlock.objects.create(
+            project=published_project,
+            variant=ProjectContentBlock.Variant.TWO_IMAGES,
+            order=1,
+            title='Two images block',
+            image=f'{PROJECT_MEDIA_DIRECTORY}/{old_slug}/{PROJECT_BLOCKS_DIRECTORY}/main.jpg',
+            left_image=f'{PROJECT_MEDIA_DIRECTORY}/{old_slug}/{PROJECT_BLOCKS_DIRECTORY}/left.jpg',
+            string_list=[],
+            text='<p>Two images text</p>',
+            accented_text='',
+        )
+        published_project.slug = new_slug
+        published_project.save()
+        published_project.refresh_from_db()
+        gallery_image.refresh_from_db()
+        content_block.refresh_from_db()
+        assert not old_project_dir.exists()
+        assert (tmp_path / PROJECT_MEDIA_DIRECTORY / new_slug / PROJECT_COVER_DIRECTORY / 'cover.jpg').exists()
+        assert published_project.cover_image.name == (
+            f'{PROJECT_MEDIA_DIRECTORY}/{new_slug}/{PROJECT_COVER_DIRECTORY}/cover.jpg'
+        )
+        assert gallery_image.image.name == (
+            f'{PROJECT_MEDIA_DIRECTORY}/{new_slug}/{PROJECT_GALLERY_DIRECTORY}/gallery.jpg'
+        )
+        assert content_block.image.name == f'{PROJECT_MEDIA_DIRECTORY}/{new_slug}/{PROJECT_BLOCKS_DIRECTORY}/main.jpg'
+        assert content_block.left_image.name == (
+            f'{PROJECT_MEDIA_DIRECTORY}/{new_slug}/{PROJECT_BLOCKS_DIRECTORY}/left.jpg'
+        )
 
 
 @pytest.mark.django_db
@@ -297,7 +392,7 @@ def test_content_block_bulk_create_validates_objects(published_project):
                     title='Broken block',
                     image='https://example.com/broken.jpg',
                     string_list='not-a-list',
-                    text='',
+                    text='<p>Broken text</p>',
                     accented_text='',
                 )
             ]

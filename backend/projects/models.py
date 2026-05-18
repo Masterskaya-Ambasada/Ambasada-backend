@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import shutil
 from collections import defaultdict
+from pathlib import Path
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Max
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from django_jsonform.models.fields import JSONField
 
@@ -35,6 +40,86 @@ from projects.constants import (
 )
 
 from .validators import validate_string_list
+
+
+def _get_max_order(queryset: models.QuerySet, related_field_name: str, related_id: int) -> int:
+    """Возвращает максимальный order в пределах связанного объекта."""
+    return (
+        queryset.filter(**{f'{related_field_name}_id': related_id})
+        .aggregate(max_order=Max('order'))
+        .get('max_order')
+        or DEFAULT_ORDER
+    )
+
+
+def _assign_next_order(instance: models.Model, queryset: models.QuerySet, related_field_name: str) -> None:
+    """Назначает следующий order, если он не задан явно."""
+    if instance.order:
+        return
+    related_id = getattr(instance, f'{related_field_name}_id')
+    if related_id is None:
+        return
+    instance.order = _get_max_order(queryset, related_field_name, related_id) + ORDER_STEP
+
+
+def _project_media_path(slug: str) -> Path:
+    """Возвращает безопасный путь к медиа-папке проекта."""
+    media_root = Path(settings.MEDIA_ROOT).resolve()
+    project_dir = (media_root / PROJECT_MEDIA_DIRECTORY / slug).resolve()
+    if not project_dir.is_relative_to(media_root):
+        raise ValidationError(_('Некорректный путь к медиа-папке проекта.'))
+    return project_dir
+
+
+def _delete_project_media_directory(slug: str) -> None:
+    """Удаляет папку проекта из MEDIA_ROOT."""
+    project_dir = _project_media_path(slug)
+    if project_dir.exists():
+        shutil.rmtree(project_dir)
+
+
+def _merge_directories(source: Path, destination: Path) -> None:
+    """Перемещает содержимое source в destination, сохраняя уже существующие новые файлы."""
+    destination.mkdir(parents=True, exist_ok=True)
+    for child in source.iterdir():
+        target = destination / child.name
+        if child.is_dir() and target.is_dir():
+            _merge_directories(child, target)
+            child.rmdir()
+            continue
+        if target.exists():
+            if child.is_dir():
+                shutil.rmtree(child)
+            else:
+                child.unlink()
+            continue
+        shutil.move(str(child), str(target))
+    source.rmdir()
+
+
+def _move_project_media_directory(old_slug: str, new_slug: str) -> None:
+    """Переименовывает медиа папку проекта при изменении slug."""
+    old_dir = _project_media_path(old_slug)
+    if not old_dir.exists():
+        return
+    new_dir = _project_media_path(new_slug)
+    if old_dir == new_dir:
+        return
+    if new_dir.exists():
+        _merge_directories(old_dir, new_dir)
+        return
+    new_dir.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(old_dir), str(new_dir))
+
+
+def _replace_project_media_slug(file_name: str | None, old_slug: str, new_slug: str) -> str | None:
+    """Обновляет slug в сохраненном пути файла проекта."""
+    if not file_name:
+        return file_name
+    old_prefix = f'{PROJECT_MEDIA_DIRECTORY}/{old_slug}/'
+    if not file_name.startswith(old_prefix):
+        return file_name
+    return f'{PROJECT_MEDIA_DIRECTORY}/{new_slug}/{file_name[len(old_prefix):]}'
 
 
 def project_cover_image_path(instance: 'Project', filename: str) -> str:
@@ -72,12 +157,7 @@ class OrderedValidationQuerySet(models.QuerySet):
             if related_id is None:
                 continue
             if related_id not in max_orders:
-                max_orders[related_id] = (
-                    self.filter(**{f'{related_field_name}_id': related_id})
-                    .aggregate(max_order=Max('order'))
-                    .get('max_order')
-                    or DEFAULT_ORDER
-                )
+                max_orders[related_id] = _get_max_order(self, related_field_name, related_id)
             pending_orders[related_id] += ORDER_STEP
             obj.order = max_orders[related_id] + pending_orders[related_id]
 
@@ -252,6 +332,46 @@ class Project(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    def _get_persisted_slug(self) -> str | None:
+        """Возвращает slug проекта из БД до текущего сохранения."""
+        if self._state.adding or not self.pk:
+            return None
+        return Project.objects.filter(pk=self.pk).values_list('slug', flat=True).first()
+
+    def _sync_media_paths_after_slug_change(self, old_slug: str) -> None:
+        """Обновляет сохраненные пути файлов при переименовании slug проекта."""
+        if old_slug == self.slug:
+            return
+        new_cover_image_name = _replace_project_media_slug(self.cover_image.name, old_slug, self.slug)
+        if new_cover_image_name != self.cover_image.name:
+            self.cover_image.name = new_cover_image_name
+            Project.objects.filter(pk=self.pk).update(cover_image=new_cover_image_name)
+        for gallery_image in self.gallery_images.all():
+            new_image_name = _replace_project_media_slug(gallery_image.image.name, old_slug, self.slug)
+            if new_image_name != gallery_image.image.name:
+                gallery_image.image.name = new_image_name
+                ProjectGalleryImage.objects.filter(pk=gallery_image.pk).update(image=new_image_name)
+        for content_block in self.content_blocks.all():
+            update_fields = {}
+            new_image_name = _replace_project_media_slug(content_block.image.name, old_slug, self.slug)
+            if new_image_name != content_block.image.name:
+                content_block.image.name = new_image_name
+                update_fields['image'] = new_image_name
+            new_left_image_name = _replace_project_media_slug(content_block.left_image.name, old_slug, self.slug)
+            if new_left_image_name != content_block.left_image.name:
+                content_block.left_image.name = new_left_image_name
+                update_fields['left_image'] = new_left_image_name
+            if update_fields:
+                ProjectContentBlock.objects.filter(pk=content_block.pk).update(**update_fields)
+
+    def save(self, *args, **kwargs):
+        """Синхронизирует медиа пути при изменении slug проекта."""
+        old_slug = self._get_persisted_slug()
+        super().save(*args, **kwargs)
+        if old_slug and old_slug != self.slug:
+            self._sync_media_paths_after_slug_change(old_slug)
+            transaction.on_commit(lambda: _move_project_media_directory(old_slug, self.slug))
+
 
 class ProjectGalleryImage(models.Model):
     """Изображение для карусели в верхнем блоке детальной страницы проекта."""
@@ -286,14 +406,7 @@ class ProjectGalleryImage(models.Model):
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок изображения в пределах проекта."""
-        if not self.order:
-            max_order = (
-                ProjectGalleryImage.objects.filter(project=self.project)
-                .aggregate(max_order=Max('order'))
-                .get('max_order')
-                or DEFAULT_ORDER
-            )
-            self.order = max_order + ORDER_STEP
+        _assign_next_order(self, ProjectGalleryImage.objects, 'project')
         self.full_clean()
         super().save(*args, **kwargs)
 
@@ -367,12 +480,17 @@ class ProjectContentBlock(models.Model):
     text = models.TextField(
         _('Текст'),
         blank=True,
-        help_text=_('Основной HTML-текст блока.'),
+        help_text=_(
+            'Основной текст блока. Обязателен для всех вариантов, поддерживает HTML через редактор.'
+        ),
     )
     accented_text = models.TextField(
         _('Акцентный текст'),
         blank=True,
-        help_text=_('Дополнительный акцентный HTML-текст блока.'),
+        help_text=_(
+            'Дополнительный выделенный текст или подпись. Используйте, если в макете нужен акцентный текст; '
+            'иначе поле можно оставить пустым.'
+        ),
     )
 
     class Meta:
@@ -396,6 +514,7 @@ class ProjectContentBlock(models.Model):
             validate_string_list(self.string_list)
         except ValidationError as error:
             raise ValidationError({'string_list': error.messages}) from error
+        self._validate_variant_required_fields()
         if self.project_id and self.order:
             duplicate_order_exists = (
                 ProjectContentBlock.objects.filter(project_id=self.project_id, order=self.order)
@@ -407,16 +526,23 @@ class ProjectContentBlock(models.Model):
                     {'order': _('Контентный блок с таким порядком уже существует в этом проекте.')}
                 )
 
+    def _validate_variant_required_fields(self) -> None:
+        """Проверяет обязательные поля для выбранного варианта блока."""
+        errors = {}
+        if not self.image:
+            errors['image'] = _('Добавьте основное изображение для выбранного варианта блока.')
+        if not self.text:
+            errors['text'] = _('Заполните основной текст для выбранного варианта блока.')
+        if self.variant == self.Variant.IMAGE_WITH_LIST and not self.string_list:
+            errors['string_list'] = _('Добавьте хотя бы один тезис для варианта "Изображение и список".')
+        if self.variant == self.Variant.TWO_IMAGES and not self.left_image:
+            errors['left_image'] = _('Добавьте второе изображение для варианта "Два изображения".')
+        if errors:
+            raise ValidationError(errors)
+
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок блока в пределах проекта."""
-        if not self.order:
-            max_order = (
-                ProjectContentBlock.objects.filter(project=self.project)
-                .aggregate(max_order=Max('order'))
-                .get('max_order')
-                or DEFAULT_ORDER
-            )
-            self.order = max_order + ORDER_STEP
+        _assign_next_order(self, ProjectContentBlock.objects, 'project')
         self.full_clean()
         super().save(*args, **kwargs)
 
@@ -472,11 +598,12 @@ class ProjectBlockButton(models.Model):
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок кнопки в пределах блока."""
-        if not self.order:
-            max_order = (
-                ProjectBlockButton.objects.filter(block=self.block).aggregate(max_order=Max('order')).get('max_order')
-                or DEFAULT_ORDER
-            )
-            self.order = max_order + ORDER_STEP
+        _assign_next_order(self, ProjectBlockButton.objects, 'block')
         self.full_clean()
         super().save(*args, **kwargs)
+
+
+@receiver(post_delete, sender=Project)
+def delete_project_media_directory_on_project_delete(sender, instance: Project, **kwargs) -> None:
+    """Удаляет медиа папку проекта после удаления объекта Project."""
+    transaction.on_commit(lambda: _delete_project_media_directory(instance.slug))
