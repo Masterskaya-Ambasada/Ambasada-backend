@@ -4,11 +4,9 @@ import shutil
 from core.base_admin import BaseAdminMixin, BaseTranslatedAdmin, ImportExportMixin
 from django.conf import settings
 from django.contrib import admin
-from django.db import models
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
-from tinymce.widgets import TinyMCE
 
 from .constants import (
     ADMIN_EMPTY_VALUE,
@@ -77,14 +75,7 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
     extra = 0
     fk_name = 'project'
     inlines = [ProjectBlockButtonInline]
-
-    # Перебиваем дефолтный ordering='slug' из BaseAdminMixin, чтобы не было ошибок
     ordering = ('order',)
-
-    # Принудительно подключаем TinyMCE для текстовых полей внутри инлайна
-    formfield_overrides = {
-        models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 15, 'style': 'width: 100%;'})},
-    }
 
     tinymce_fields = [
         'text_ru',
