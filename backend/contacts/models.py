@@ -76,14 +76,6 @@ class ContactPageContent(models.Model):
             )
         ]
 
-    def save(self, *args, **kwargs):
-        if self.is_active:
-            from django.db import transaction
-
-            with transaction.atomic():
-                ContactPageContent.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return str(self._meta.verbose_name)
 
