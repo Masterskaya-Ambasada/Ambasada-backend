@@ -41,7 +41,7 @@ if APP_ENV == 'production':
 
 SESSION_COOKIE_NAME = 'ambasada_sessionid'
 CSRF_COOKIE_NAME = 'ambasada_csrftoken'
-
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
