@@ -42,7 +42,6 @@ class AboutPageAdmin(admin.ModelAdmin):
             {
                 'fields': (
                     'team_title',
-                    'team_members',
                     'team_button_label',
                     'team_button_link',
                 )
