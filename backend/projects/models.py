@@ -45,9 +45,7 @@ from .validators import validate_string_list
 def _get_max_order(queryset: models.QuerySet, related_field_name: str, related_id: int) -> int:
     """Возвращает максимальный order в пределах связанного объекта."""
     return (
-        queryset.filter(**{f'{related_field_name}_id': related_id})
-        .aggregate(max_order=Max('order'))
-        .get('max_order')
+        queryset.filter(**{f'{related_field_name}_id': related_id}).aggregate(max_order=Max('order')).get('max_order')
         or DEFAULT_ORDER
     )
 
@@ -480,9 +478,7 @@ class ProjectContentBlock(models.Model):
     text = models.TextField(
         _('Текст'),
         blank=True,
-        help_text=_(
-            'Основной текст блока. Обязателен для всех вариантов, поддерживает HTML через редактор.'
-        ),
+        help_text=_('Основной текст блока. Обязателен для всех вариантов, поддерживает HTML через редактор.'),
     )
     accented_text = models.TextField(
         _('Акцентный текст'),
@@ -522,9 +518,7 @@ class ProjectContentBlock(models.Model):
                 .exists()
             )
             if duplicate_order_exists:
-                raise ValidationError(
-                    {'order': _('Контентный блок с таким порядком уже существует в этом проекте.')}
-                )
+                raise ValidationError({'order': _('Контентный блок с таким порядком уже существует в этом проекте.')})
 
     def _validate_variant_required_fields(self) -> None:
         """Проверяет обязательные поля для выбранного варианта блока."""

@@ -8,18 +8,9 @@ def normalize_project_content_block_orders(apps, schema_editor):
     ProjectContentBlock = apps.get_model('projects', 'ProjectContentBlock')
     db_alias = schema_editor.connection.alias
 
-    project_ids = (
-        ProjectContentBlock.objects.using(db_alias)
-        .order_by()
-        .values_list('project_id', flat=True)
-        .distinct()
-    )
+    project_ids = ProjectContentBlock.objects.using(db_alias).order_by().values_list('project_id', flat=True).distinct()
     for project_id in project_ids.iterator():
-        blocks = list(
-            ProjectContentBlock.objects.using(db_alias)
-            .filter(project_id=project_id)
-            .order_by('order', 'pk')
-        )
+        blocks = list(ProjectContentBlock.objects.using(db_alias).filter(project_id=project_id).order_by('order', 'pk'))
         used_orders = set()
         next_order = max((block.order for block in blocks), default=0)
 
@@ -49,9 +40,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='projectcontentblock',
-            constraint=models.UniqueConstraint(
-                fields=('project', 'order'), name='unique_project_content_block_order'
-            ),
+            constraint=models.UniqueConstraint(fields=('project', 'order'), name='unique_project_content_block_order'),
         ),
         migrations.RemoveIndex(
             model_name='projectcontentblock',
