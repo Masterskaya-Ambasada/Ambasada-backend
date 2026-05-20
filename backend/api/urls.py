@@ -64,7 +64,7 @@ project_urlpatterns = [
     path('', ProjectListView.as_view(), name='projects-list'),
     path('tags/', ProjectTagListView.as_view(), name='projects-tags'),
     path('types/', ProjectTypeListView.as_view(), name='projects-types'),
-    path('<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
+    path('<slug:project_slug>/', ProjectDetailView.as_view(), name='projects-detail'),
 ]
 
 # Эндпоинты страницы "О нас"
