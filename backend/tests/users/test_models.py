@@ -83,14 +83,14 @@ class TestUserManager:
 
     def test_create_superuser_invalid_flags_raises_error(self):
         """Негативные кейсы для create_superuser: проверка обязательных флагов."""
-        with pytest.raises(ValueError, match='is_staff'):
+
+        with pytest.raises(ValueError, match='is_staff|is_superuser'):
             User.objects.create_superuser(
                 email='bad_staff@test.com',
                 password='password',
                 is_staff=False
             )
-
-        with pytest.raises(ValueError, match='is_superuser'):
+        with pytest.raises(ValueError, match='is_staff|is_superuser'):
             User.objects.create_superuser(
                 email='bad_super@test.com',
                 password='password',

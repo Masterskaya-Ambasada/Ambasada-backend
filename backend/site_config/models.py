@@ -17,26 +17,46 @@ class SiteConfig(models.Model):
     """Глобальные настройки сайта (True Singleton для продакшена)."""
 
     site_name = models.CharField(
-        max_length=SITE_NAME_MAX_LENGTH, verbose_name=_('Название сайта'), help_text=_('Максимум 100 символов')
+        max_length=SITE_NAME_MAX_LENGTH,
+        verbose_name=_('Название сайта'),
+        help_text=_('Отображается во вкладке браузера и в заголовках писем. Максимум 100 символов.'),
     )
     seo_description = models.CharField(
-        max_length=SEO_DESCRIPTION_MAX_LENGTH, verbose_name=_('SEO описание'), help_text=_('Максимум 250 символов')
+        max_length=SEO_DESCRIPTION_MAX_LENGTH,
+        verbose_name=_('SEO описание'),
+        help_text=_(
+            'Краткое описание сайта для поисковых систем (Google, Яндекс). '
+            'Важно для продвижения. Максимум 250 символов.'
+        ),
     )
-    privacy_policy = models.TextField(verbose_name=_('Политика конфиденциальности'), default='')
-
+    privacy_policy = models.TextField(
+        verbose_name=_('Политика конфиденциальности'),
+        default='',
+        help_text=_(
+            'Текст соглашения под формами обратной связи. Ссылку на страницу '
+            'политик можно быстро выбрать через редактор TinyMCE.'
+        ),
+    )
     cookie_message = models.TextField(
         verbose_name=_('Текст cookie-сообщения'),
         default=DEFAULT_COOKIE_MESSAGE,
+        help_text=_('Текст всплывающего уведомления (плашки) об использовании файлов Cookie.'),
     )
-
     cookie_button_text = models.CharField(
         max_length=COOKIE_BUTTON_TEXT_MAX_LENGTH,
         verbose_name=_('Текст кнопки cookie'),
         default=DEFAULT_COOKIE_BUTTON_TEXT,
+        help_text=_(
+            'Надпись на кнопке согласия во всплывающем уведомлении Cookie ' '(например: "Хорошо" или "Принять").'
+        ),
     )
-
     copyright = models.CharField(
-        max_length=COPYRIGHT_MAX_LENGTH, verbose_name=_('Копирайт'), help_text=_('Максимум 150 символов')
+        max_length=COPYRIGHT_MAX_LENGTH,
+        verbose_name=_('Копирайт'),
+        help_text=_(
+            'Текст в самом низу страницы (футере) сайта. '
+            'Обычно включает год и название компании. Максимум 150 символов.'
+        ),
     )
 
     class Meta:

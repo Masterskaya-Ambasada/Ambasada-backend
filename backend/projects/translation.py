@@ -1,5 +1,3 @@
-"""Регистрация переводимых полей моделей приложения projects."""
-
 from modeltranslation.translator import TranslationOptions, register
 
 from projects.models import (

@@ -1,5 +1,3 @@
-"""Base settings."""
-
 import sys
 from datetime import timedelta
 from pathlib import Path
@@ -95,6 +93,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'import_export',
     'tinymce',
+    'nested_admin',
     'django_jsonform',
     # local
     'projects',
@@ -241,10 +240,6 @@ TIME_ZONE = 'Europe/Moscow'
 
 STATIC_URL = 'static/'
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static',
-# ]
-
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
     cast=bool,
@@ -368,12 +363,32 @@ SPECTACULAR_SETTINGS = {
 
 
 TINYMCE_DEFAULT_CONFIG = {
-    'height': 200,
+    'height': 300,
     'menubar': False,
     'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
     'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
     'code,help,wordcount',
-    'toolbar': 'undo redo | formatselect | bold italic backcolor | '
+    'toolbar': 'undo redo | formatselect fontfamily fontsize | '
+    'bold italic forecolor backcolor | removeformat | '
     'alignleft aligncenter alignright alignjustify | '
-    'bullist numlist outdent indent | removeformat | help',
+    'bullist numlist outdent indent | link unlink | code fullscreen help',
+    # Отключаем внешние таргеты
+    'link_assume_external_targets': False,
+    'relative_urls': False,  # Запрещает TinyMCE превращать пути в относительные
+    'remove_script_host': True,  # Не добавляет протокол и домен (оставляет чистый /path)
+    'convert_urls': False,  # Запрещает редактору вообще как-либо менять ссылки
+    'link_list': [
+        {'title': 'Home Page', 'value': '/'},
+        {'title': 'Projects (List)', 'value': '/projects'},
+        {'title': 'About Us', 'value': '/about'},
+        {'title': 'Contacts', 'value': '/contacts'},
+        {'title': 'Privacy Policy', 'value': '/policy'},
+    ],
+    'font_formats': 'System Font=-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;'
+    'Inter=Inter,sans-serif;'
+    'Roboto=Roboto,sans-serif;'
+    'Open Sans=Open Sans,sans-serif;'
+    'Georgia=Georgia,serif;'
+    'Monospace=monospace',
+    'fontsize_formats': '12px 14px 16px 18px 20px 24px 28px 36px',
 }

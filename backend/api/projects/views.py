@@ -1,5 +1,3 @@
-"""Представления API для каталога и страницы проекта."""
-
 from __future__ import annotations
 
 from django.db.models import Prefetch, Q
