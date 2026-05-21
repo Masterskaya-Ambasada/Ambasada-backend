@@ -76,6 +76,9 @@ class ContactPageContent(models.Model):
             )
         ]
 
+    def __str__(self):
+        return str(self._meta.verbose_name)
+
     def save(self, *args, **kwargs):
         if self.is_active:
             from django.db import transaction
@@ -83,9 +86,6 @@ class ContactPageContent(models.Model):
             with transaction.atomic():
                 ContactPageContent.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
         super().save(*args, **kwargs)
-
-    def __str__(self):
-        return str(self._meta.verbose_name)
 
 
 class ContactSocialLink(models.Model):
@@ -149,7 +149,6 @@ class ContactSocialLink(models.Model):
                         'social_type': _(
                             'Ссылка для этого типа соцсети уже добавлена. Вы можете отредактировать существующую запись'
                         )
-                        % {'type': self.get_social_type_display()}
                     }
                 )
 
@@ -157,7 +156,19 @@ class ContactSocialLink(models.Model):
         verbose_name = _('Ссылка на соцсеть / мессенджер')
         verbose_name_plural = _('Ссылки на соцсети / мессенджеры')
         ordering = ('order', 'id')
-        unique_together = ('site_config', 'social_type')
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=['site_config', 'social_type'],
+                name='unique_site_config_social_type',
+                violation_error_message=_('Ссылка для этого типа соцсети уже добавлена.'),
+            ),
+            models.UniqueConstraint(
+                fields=['order'],
+                name='unique_contact_social_link_order',
+                violation_error_message=_('Этот порядок отображения уже занят. Укажите другое число.'),
+            ),
+        ]
 
     def __str__(self):
         return f'{self.get_social_type_display()} - {self.url}'

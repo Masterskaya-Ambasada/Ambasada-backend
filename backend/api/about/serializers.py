@@ -1,8 +1,17 @@
-"""Сериализаторы для API."""
-
-from about.models import AboutPage, GalleryImage, Value
+from about.models import AboutPage, AboutParagraph, GalleryImage, Value
 from api.users.serializers import TeamMemberSerializer
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
+
+User = get_user_model()
+
+
+class AboutParagraphSerializer(serializers.ModelSerializer):
+    """Сериализация параграфов страницы."""
+
+    class Meta:
+        model = AboutParagraph
+        fields = ['first_sentence', 'main_text']
 
 
 class ValueSerializer(serializers.ModelSerializer):
@@ -26,28 +35,39 @@ class GalleryImageSerializer(serializers.ModelSerializer):
 class AboutPageSerializer(serializers.ModelSerializer):
     """Сериализация страницы 'О сообществе' с вложенной структурой согласно ТЗ."""
 
+    image_left = serializers.ImageField(read_only=True)
+    image_right = serializers.ImageField(read_only=True)
+
+    class Meta:
+        model = AboutPage
+        fields = '__all__'
+
     def to_representation(self, instance):
-        ctx = self.context
-        values = ctx.get('values', [])
-        members = ctx.get('members', [])
-        images = ctx.get('images', [])
+        request = self.context.get('request')
+
+        values = self.context.get('values') or Value.objects.all()
+        images = self.context.get('images') or GalleryImage.objects.all()
+        members = self.context.get('members') or User.objects.public()
+
+        image_left_url = (
+            self.fields['image_left'].to_representation(instance.image_left) if instance.image_left else None
+        )
+        image_right_url = (
+            self.fields['image_right'].to_representation(instance.image_right) if instance.image_right else None
+        )
 
         return {
             'hero': {
                 'title': instance.hero_title,
                 'description': instance.hero_description,
-                'image_left': instance.image_left.url if instance.image_left else None,
-                'image_right': instance.image_right.url if instance.image_right else None,
+                'image_left': image_left_url,
+                'image_right': image_right_url,
             },
             'about_section': {
                 'title': instance.about_title,
-                'paragraphs': [
-                    {
-                        'first_sentence': p.first_sentence,
-                        'main_text': p.main_text,
-                    }
-                    for p in instance.paragraphs.all()
-                ],
+                'paragraphs': AboutParagraphSerializer(
+                    instance.paragraphs.all(), many=True, context={'request': request}
+                ).data,
                 'action_button': {
                     'text': instance.button_label,
                     'link': instance.button_link,
@@ -55,11 +75,11 @@ class AboutPageSerializer(serializers.ModelSerializer):
             },
             'values': {
                 'title': instance.values_title,
-                'items': ValueSerializer(values, many=True).data,
+                'items': ValueSerializer(values, many=True, context={'request': request}).data,
             },
             'team': {
                 'title': instance.team_title,
-                'members': TeamMemberSerializer(members, many=True).data,
+                'members': TeamMemberSerializer(members, many=True, context={'request': request}).data,
                 'action_button': {
                     'label': instance.team_button_label,
                     'link': instance.team_button_link,
@@ -67,10 +87,6 @@ class AboutPageSerializer(serializers.ModelSerializer):
             },
             'gallery_carousel': {
                 'title': instance.gallery_title,
-                'images': GalleryImageSerializer(images, many=True).data,
+                'images': GalleryImageSerializer(images, many=True, context={'request': request}).data,
             },
         }
-
-    class Meta:
-        model = AboutPage
-        fields = []

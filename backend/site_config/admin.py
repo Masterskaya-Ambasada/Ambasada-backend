@@ -22,14 +22,13 @@ class ConfigAdmin(BaseAdmin):
     """Администрирование глобальных настроек сайта (Singleton)."""
 
     ordering = ('id',)
-
     inlines = [ContactSocialLinkInline]
 
     list_display = [
         'site_name_sr_latn',
         'site_name_sr_cyrl',
-        'seo_description',
-        'copyright',
+        'seo_description_sr_latn',
+        'copyright_sr_latn',
     ]
 
     tinymce_fields = [
@@ -104,21 +103,22 @@ class ConfigAdmin(BaseAdmin):
     )
 
     def get_form(self, request, obj=None, **kwargs):
+        """Исключает ненужные локализации для названия сайта."""
         form = super().get_form(request, obj, **kwargs)
-        if 'site_name_ru' in form.base_fields:
-            del form.base_fields['site_name_ru']
-        if 'site_name_en' in form.base_fields:
-            del form.base_fields['site_name_en']
+        form.base_fields.pop('site_name_ru', None)
+        form.base_fields.pop('site_name_en', None)
         return form
 
     def has_add_permission(self, request):
+        """Разрешает добавление только если конфигурация еще не создана."""
         if SiteConfig.objects.exists():
             return False
         return super().has_add_permission(request)
 
     def add_view(self, request, form_url='', extra_context=None):
-        if SiteConfig.objects.exists():
-            existing_config = SiteConfig.objects.first()
+        """Редиректит на редактирование, если конфиг уже существует."""
+        existing_config = SiteConfig.objects.only('pk').first()
+        if existing_config:
             return redirect(reverse('admin:site_config_siteconfig_change', args=[existing_config.pk]))
         return super().add_view(request, form_url, extra_context)
 
@@ -129,6 +129,5 @@ class ConfigAdmin(BaseAdmin):
     def get_actions(self, request):
         """Удаляет возможность массового удаления из списка объектов."""
         actions = super().get_actions(request)
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
+        actions.pop('delete_selected', None)
         return actions

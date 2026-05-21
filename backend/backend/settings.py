@@ -365,12 +365,21 @@ SPECTACULAR_SETTINGS = {
 
 
 TINYMCE_DEFAULT_CONFIG = {
-    'height': 200,
+    'height': 300,
     'menubar': False,
     'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
     'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
     'code,help,wordcount',
-    'toolbar': 'undo redo | formatselect | bold italic backcolor | '
+    'toolbar': 'undo redo | formatselect fontfamily fontsize | '
+    'bold italic forecolor backcolor | removeformat | '
     'alignleft aligncenter alignright alignjustify | '
-    'bullist numlist outdent indent | removeformat | help',
+    'bullist numlist outdent indent | link unlink | code fullscreen help',
+    'link_assume_external_targets': True,
+    'font_formats': 'System Font=-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;'
+    'Inter=Inter,sans-serif;'
+    'Roboto=Roboto,sans-serif;'
+    'Open Sans=Open Sans,sans-serif;'
+    'Georgia=Georgia,serif;'
+    'Monospace=monospace',
+    'fontsize_formats': '12px 14px 16px 18px 20px 24px 28px 36px',
 }
