@@ -1,5 +1,3 @@
-"""Регистрация моделей для Django admin."""
-
 from core.base_admin import BaseTranslatedAdmin
 from django.contrib import admin
 from django.utils.safestring import mark_safe
@@ -33,9 +31,17 @@ class AboutParagraphInline(admin.StackedInline):
 class ValueAdmin(BaseTranslatedAdmin):
     """Настройка отображения ценностей в админке."""
 
-    list_display = ('title', 'text')
+    list_display = ('title', 'text_preview')
+    search_fields = ('title',)
     ordering = ['title']
     tinymce_fields = ['text_ru', 'text_en', 'text_sr_latn', 'text_sr_cyrl']
+
+    def text_preview(self, obj):
+        text = obj.text or ''
+        return f'{text[:50]}...' if len(text) > 50 else text
+
+    text_preview.short_description = _('Предпросмотр текста')
+
     fieldsets = (
         (_('Ценность (Русский)'), {'fields': ('title_ru', 'text_ru'), 'classes': ('collapse',)}),
         (_('Ценность (Английский)'), {'fields': ('title_en', 'text_en'), 'classes': ('collapse',)}),
@@ -48,8 +54,16 @@ class ValueAdmin(BaseTranslatedAdmin):
 class GalleryImageAdmin(BaseTranslatedAdmin):
     """Настройка отображения изображений галереи в админке."""
 
-    list_display = ('alt',)
+    list_display = ('alt', 'image_preview')
+    search_fields = ('alt',)
     ordering = None
+
+    def image_preview(self, obj):
+        if obj.image:
+            return mark_safe(f'<img src="{obj.image.url}" width="60" height="60" />')
+        return _('Нет изображения')
+
+    image_preview.short_description = _('Изображение')
 
 
 @admin.register(AboutPage)
@@ -58,7 +72,7 @@ class AboutPageAdmin(BaseTranslatedAdmin):
 
     inlines = [AboutParagraphInline]
     readonly_fields = ('display_public_users',)
-    list_display = ['id']
+    list_display = ['id', 'email']
     ordering = None
 
     fieldsets = (
@@ -143,41 +157,28 @@ class AboutPageAdmin(BaseTranslatedAdmin):
     )
 
     def display_public_users(self, obj):
-        public_users = AboutPage().get_public_team()
-        if not public_users.exists():
+        if not obj or not obj.pk:
+            return _('Сохраните страницу, чтобы увидеть список команды')
+
+        public_users = obj.get_public_team()
+        if not public_users or not public_users.exists():
             return _('Публичные пользователи не найдены')
-        items = [f'<li><b>{user.full_name} ({user.email})</b></li>' for user in public_users]
-        return mark_safe(f"<ul style='margin: 0;'>{''.join(items)}</ul>")
+
+        result = []
+        for user in public_users:
+            full_name = getattr(user, 'full_name', '').strip()
+            email = user.email
+            if full_name and full_name != email:
+                result.append(f'{full_name} ({email})')
+            else:
+                result.append(email)
+
+        return ', '.join(result)
 
     display_public_users.short_description = _('Текущий состав команды на сайте')
 
-    # fieldsets = (
-    #     (_('Hero'), {'fields': ('hero_title',
-    #                             'hero_description',
-    #                             'image_left',
-    #                             'image_right',
-    #                             'display_public_users')}),
-    #     (_('About'), {'fields': ('about_title', 'button_label', 'button_link')}),
-    #     (_('Values'), {'fields': ('values_title',)}),
-    #     (
-    #         _('Team'),
-    #         {
-    #             'fields': (
-    #                 'team_title',
-    #                 'team_members',
-    #                 'team_button_label',
-    #                 'team_button_link',
-    #             )
-    #         },
-    #     ),
-    #     (_('Gallery'), {'fields': ('gallery_title',)}),
-    #     (
-    #         _('Contacts'),
-    #         {
-    #             'fields': (
-    #                 'email',
-    #                 'contact_link',
-    #             )
-    #         },
-    #     ),
-    # )
+    def has_add_permission(self, request):
+        return not AboutPage.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False

@@ -80,3 +80,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, 800); // Немного увеличили таймаут для тяжелых страниц с TinyMCE
 });
+
+(function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        /* Гарантированный отступ между контентными блоками (старыми и вновь созданными) */
+        .djn-inline-form {
+            margin-bottom: 35px !important;
+            border: 1px solid #cbd5e1 !important; /* Четкая серая граница вокруг каждого блока */
+            background: #ffffff !important;
+            padding: 20px !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important; /* Легкая тень для объема */
+            display: block !important;
+            clear: both !important;
+        }
+
+        /* Дополнительный отступ для внутренних групп (например, кнопок внутри блока) */
+        .djn-inline-form .djn-group {
+            margin-top: 20px !important;
+            margin-bottom: 10px !important;
+        }
+
+        /* Делаем красивую заплатку, чтобы шапка блока отделялась от полей */
+        .djn-inline-form > h3 {
+            background: #f1f5f9 !important;
+            margin: -20px -20px 20px -20px !important;
+            padding: 12px 20px !important;
+            border-bottom: 1px solid #cbd5e1 !important;
+        }
+    `;
+    document.head.appendChild(style);
+})();
