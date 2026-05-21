@@ -1,8 +1,8 @@
 import logging
 
+from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponse
-from django.conf import settings
 
 security_logger = logging.getLogger('security')
 

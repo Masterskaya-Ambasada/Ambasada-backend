@@ -93,7 +93,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'drf_spectacular',
-    # 'django_import_export',  # Temporarily disabled due to installation issues
+    'import_export',
     'tinymce',
     'django_jsonform',
     # local
@@ -231,7 +231,11 @@ MODELTRANSLATION_FALLBACK_VALUES = None
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
 
-LOCALE_PATHS = [config('PRODUCTION_LOCALE_PATH', default='/var/www/django/locale') if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
+LOCALE_PATHS = [
+    config('PRODUCTION_LOCALE_PATH', default='/var/www/django/locale')
+    if APP_ENV == 'production'
+    else str(BASE_DIR / 'locale')
+]
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -254,7 +258,11 @@ STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else config('PRODUCTION_STATIC_
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'
-MEDIA_ROOT = config('PRODUCTION_MEDIA_ROOT', default='/var/www/django/media') if APP_ENV == 'production' else str(BASE_DIR / 'media')
+MEDIA_ROOT = (
+    config('PRODUCTION_MEDIA_ROOT', default='/var/www/django/media')
+    if APP_ENV == 'production'
+    else str(BASE_DIR / 'media')
+)
 
 
 # REST Framework
