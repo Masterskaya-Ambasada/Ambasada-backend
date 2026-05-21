@@ -1,6 +1,4 @@
-"""APIView для получения данных страницы 'О нас'."""
-
-from about.models import AboutPage, GalleryImage, Value
+from about.models import AboutPage
 from api.schemas.about_schemas import ABOUT_SCHEMA
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
@@ -20,9 +18,7 @@ class AboutAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        about = AboutPage.objects.prefetch_related(
-            'paragraphs',
-        ).first()
+        about = AboutPage.objects.prefetch_related('paragraphs', 'values', 'gallery_images').first()
 
         if not about:
             return Response(
@@ -34,8 +30,8 @@ class AboutAPIView(APIView):
                 status=404,
             )
 
-        values = Value.objects.all()
-        images = GalleryImage.objects.all()
+        values = about.values.all()
+        images = about.gallery_images.all()
         members = User.objects.public()
 
         serializer = AboutPageSerializer(

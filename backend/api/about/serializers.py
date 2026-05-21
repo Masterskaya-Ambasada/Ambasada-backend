@@ -33,10 +33,7 @@ class GalleryImageSerializer(serializers.ModelSerializer):
 
 
 class AboutPageSerializer(serializers.ModelSerializer):
-    """Сериализация страницы 'О сообществе' с вложенной структурой согласно ТЗ."""
-
-    image_left = serializers.ImageField(read_only=True)
-    image_right = serializers.ImageField(read_only=True)
+    """Сериализация страницы 'О сообществе'."""
 
     class Meta:
         model = AboutPage
@@ -45,23 +42,15 @@ class AboutPageSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
 
-        values = self.context.get('values') or Value.objects.all()
-        images = self.context.get('images') or GalleryImage.objects.all()
-        members = self.context.get('members') or User.objects.public()
-
-        image_left_url = (
-            self.fields['image_left'].to_representation(instance.image_left) if instance.image_left else None
-        )
-        image_right_url = (
-            self.fields['image_right'].to_representation(instance.image_right) if instance.image_right else None
-        )
+        values = self.context.get('values', instance.values.all())
+        images = self.context.get('images', instance.gallery_images.all())
+        members = self.context.get('members', User.objects.public())
 
         return {
             'hero': {
                 'title': instance.hero_title,
                 'description': instance.hero_description,
-                'image_left': image_left_url,
-                'image_right': image_right_url,
+                # Убрали image_left и image_right отсюда
             },
             'about_section': {
                 'title': instance.about_title,
@@ -88,5 +77,9 @@ class AboutPageSerializer(serializers.ModelSerializer):
             'gallery_carousel': {
                 'title': instance.gallery_title,
                 'images': GalleryImageSerializer(images, many=True, context={'request': request}).data,
+            },
+            'contacts': {
+                'email': instance.email,
+                'link': instance.contact_link,
             },
         }

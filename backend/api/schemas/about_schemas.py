@@ -1,5 +1,3 @@
-"""OpenAPI схемы для About API."""
-
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import (
     OpenApiExample,
@@ -25,8 +23,7 @@ ABOUT_SCHEMA = extend_schema_view(
                             fields={
                                 'title': serializers.CharField(),
                                 'description': serializers.CharField(),
-                                'image_left': serializers.URLField(allow_null=True),
-                                'image_right': serializers.URLField(allow_null=True),
+                                # Убрали image_left и image_right
                             },
                         ),
                         'about_section': inline_serializer(

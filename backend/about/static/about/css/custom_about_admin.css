@@ -1,4 +1,51 @@
 /* ==========================================================================
+   Фикс полей URL (Выстраиваем "Сейчас/Изменить" в одну линию без уезжания сетки)
+   ========================================================================== */
+
+/* Переводим блок ячейки, где лежит URL-инпут, в режим flexbox */
+.form-row .field-button_link > div,
+.form-row .field-team_button_link > div,
+.form-row .field-contact_link > div {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* Наводим структурный порядок внутри дефолтного абзаца Django <p class="url"> */
+.field-button_link p.url, 
+.field-team_button_link p.url,
+.field-contact_link p.url {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 0 0 4px 0 !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+}
+
+/* Корректируем отображение инпута, если он находится внутри <p class="url"> */
+.field-button_link p.url input,
+.field-team_button_link p.url input,
+.field-contact_link p.url input {
+    margin: 0 !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+/* Выравниваем и убираем лишние левые сдвиги у справочного текста под инпутами */
+.field-button_link .help,
+.field-team_button_link .help,
+.field-contact_link .help {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    display: block !important;
+}
+
+
+/* ==========================================================================
    Сброс ломающей верстки Django-админки
    ========================================================================== */
 
@@ -31,10 +78,10 @@
 .team-widget-container {
     display: flex !important;
     flex-direction: row;
-    gap: 16px; /* Уменьшено с 32px для плотной компоновки колонок */
+    gap: 16px;
     align-items: flex-start;
     width: 100%;
-    margin-top: 4px; /* Минимальный отступ от стандартного лейбла Django */
+    margin-top: 4px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     box-sizing: border-box;
 }
@@ -44,7 +91,7 @@
     flex: 0 1 auto !important;
     display: flex !important;
     flex-direction: column;
-    gap: 10px; /* Сжато расстояние между списком карточек и кнопкой управления */
+    gap: 10px;
     min-width: 320px;
     max-width: 500px;
 }
@@ -61,7 +108,7 @@
 .team-cards-wrapper {
     display: flex !important;
     flex-direction: column !important;
-    gap: 6px !important; /* Уменьшен зазор между карточками пользователей */
+    gap: 6px !important;
     width: 100%;
 }
 
@@ -74,7 +121,7 @@
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
-    padding: 6px 12px; /* Чуть уменьшены внутренние паддинги для компактности */
+    padding: 6px 12px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease;
     box-sizing: border-box;
@@ -101,7 +148,7 @@
 }
 
 .status-dot::after {
-    content: "активен";
+    content: "enabled";
 }
 
 /* Текст имени пользователя */
@@ -153,7 +200,7 @@
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-left: 4px solid #94a3b8;
-    padding: 12px 14px 12px 32px; /* Уплотнены внутренние отступы */
+    padding: 12px 14px 12px 32px;
     border-radius: 6px;
     color: #475569;
     font-size: 13px;

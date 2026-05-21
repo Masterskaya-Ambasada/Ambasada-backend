@@ -1,5 +1,3 @@
-"""OpenAPI схемы для эндпоинтов модуля projects."""
-
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (

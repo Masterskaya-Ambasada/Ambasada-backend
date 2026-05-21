@@ -1,6 +1,8 @@
 from core.base_admin import BaseTranslatedAdmin
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+from django.db import models
+from django.forms import Textarea, TextInput
 from django.forms.models import BaseInlineFormSet
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -9,8 +11,20 @@ from .models import AboutPage, AboutParagraph, GalleryImage, Value
 
 User = get_user_model()
 
+FIELD_OVERRIDES = {
+    models.CharField: {'widget': TextInput(attrs={'style': 'width: 100%; max-width: 400px; border-radius: 4px;'})},
+    models.TextField: {
+        'widget': Textarea(
+            attrs={'rows': 4, 'style': 'width: 100%; max-width: 400px; border-radius: 4px; resize: vertical;'}
+        )
+    },
+    models.URLField: {'widget': TextInput(attrs={'style': 'width: 100%; max-width: 400px; border-radius: 4px;'})},
+}
+
 
 class AboutParagraphInlineFormSet(BaseInlineFormSet):
+    """Формсет для валидации уникальности порядка параграфов."""
+
     def clean(self):
         super().clean()
         orders = []
@@ -26,90 +40,118 @@ class AboutParagraphInlineFormSet(BaseInlineFormSet):
 
 
 class AboutParagraphInline(admin.StackedInline):
+    """Инлайн для параграфов секции 'О нас'."""
+
     model = AboutParagraph
     formset = AboutParagraphInlineFormSet
-    extra = 1
+    extra = 0
+    ordering = ('order',)
+    verbose_name = _('Параграф секции "О нас"')
+    verbose_name_plural = _('📋 Параграфы секции "О нас"')
+    classes = ['collapse']
+    formfield_overrides = FIELD_OVERRIDES
+
     fieldsets = (
-        (_('Порядок отображения'), {'fields': ('order',)}),
-        (_('Параграф (Русский)'), {'fields': ('first_sentence_ru', 'main_text_ru'), 'classes': ('collapse',)}),
-        (_('Параграф (Английский)'), {'fields': ('first_sentence_en', 'main_text_en'), 'classes': ('collapse',)}),
+        (_('Основная информация'), {'fields': ('order',)}),
+        (_('Переводы (Русский)'), {'fields': ('first_sentence_ru', 'main_text_ru'), 'classes': ('collapse',)}),
+        (_('Переводы (Английский)'), {'fields': ('first_sentence_en', 'main_text_en'), 'classes': ('collapse',)}),
         (
-            _('Параграф (Сербский - Латиница)'),
+            _('Переводы (Сербский - Латиница)'),
             {'fields': ('first_sentence_sr_latn', 'main_text_sr_latn'), 'classes': ('collapse',)},
         ),
         (
-            _('Параграф (Сербский - Кириллица)'),
+            _('Переводы (Сербский - Кириллица)'),
             {'fields': ('first_sentence_sr_cyrl', 'main_text_sr_cyrl'), 'classes': ('collapse',)},
         ),
     )
 
 
-@admin.register(Value)
-class ValueAdmin(BaseTranslatedAdmin):
-    list_display = ('title', 'text_preview')
-    search_fields = ('title',)
-    ordering = ['title']
-    tinymce_fields = ['text_ru', 'text_en', 'text_sr_latn', 'text_sr_cyrl']
+class ValueInline(admin.StackedInline):
+    """Инлайн для ценностей сообщества."""
 
-    def text_preview(self, obj):
-        text = obj.text or ''
-        return f'{text[:50]}...' if len(text) > 50 else text
-
-    text_preview.short_description = _('Предпросмотр текста')
+    model = Value
+    extra = 0
+    verbose_name = _('Ценность')
+    verbose_name_plural = _('💎 Ценности сообщества')
+    classes = ['collapse']
+    formfield_overrides = FIELD_OVERRIDES
 
     fieldsets = (
-        (_('Ценность (Русский)'), {'fields': ('title_ru', 'text_ru'), 'classes': ('collapse',)}),
-        (_('Ценность (Английский)'), {'fields': ('title_en', 'text_en'), 'classes': ('collapse',)}),
-        (_('Ценность (Сербский - Латиница)'), {'fields': ('title_sr_latn', 'text_sr_latn'), 'classes': ('collapse',)}),
-        (_('Ценность (Сербский - Кириллица)'), {'fields': ('title_sr_cyrl', 'text_sr_cyrl'), 'classes': ('collapse',)}),
+        (_('Переводы (Русский)'), {'fields': ('title_ru', 'text_ru'), 'classes': ('collapse',)}),
+        (_('Переводы (Английский)'), {'fields': ('title_en', 'text_en'), 'classes': ('collapse',)}),
+        (_('Переводы (Сербский - Латиница)'), {'fields': ('title_sr_latn', 'text_sr_latn'), 'classes': ('collapse',)}),
+        (_('Переводы (Сербский - Кириллица)'), {'fields': ('title_sr_cyrl', 'text_sr_cyrl'), 'classes': ('collapse',)}),
     )
 
 
-@admin.register(GalleryImage)
-class GalleryImageAdmin(BaseTranslatedAdmin):
-    list_display = ('alt', 'image_preview')
-    search_fields = ('alt',)
-    ordering = None
+class GalleryImageInline(admin.StackedInline):
+    """Инлайн для фотогалереи."""
 
-    def image_preview(self, obj):
-        if obj.image:
-            return mark_safe(f'<img src="{obj.image.url}" width="60" height="60" />')
-        return _('Нет изображения')
+    model = GalleryImage
+    extra = 0
+    readonly_fields = ('image_preview_field',)
+    verbose_name = _('Изображение')
+    verbose_name_plural = _('🖼️ Фотогалерея')
+    classes = ['collapse']  # Делаем весь блок инлайнов раскрываемым
+    formfield_overrides = FIELD_OVERRIDES
 
-    image_preview.short_description = _('Изображение')
+    fieldsets = (
+        (_('Основная информация'), {'fields': ('image', 'image_preview_field')}),
+        (_('Переводы (Русский)'), {'fields': ('alt_ru',), 'classes': ('collapse',)}),
+        (_('Переводы (Английский)'), {'fields': ('alt_en',), 'classes': ('collapse',)}),
+        (_('Переводы (Сербский - Латиница)'), {'fields': ('alt_sr_latn',), 'classes': ('collapse',)}),
+        (_('Переводы (Сербский - Кириллица)'), {'fields': ('alt_sr_cyrl',), 'classes': ('collapse',)}),
+    )
+
+    @admin.display(description=_('Превью'))
+    def image_preview_field(self, obj):
+        if obj and obj.image:
+            return mark_safe(
+                f'<img src="{obj.image.url}" style="max-height: 80px; border-radius: 4px; border: '
+                f'1px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" />'
+            )
+        return mark_safe(f'<span style="color: #999; font-size: 11px;">{_("Нет файла")}</span>')
 
 
 @admin.register(AboutPage)
 class AboutPageAdmin(BaseTranslatedAdmin):
-    inlines = [AboutParagraphInline]
+    """Класс администрирования страницы 'О нас'."""
+
+    formfield_overrides = FIELD_OVERRIDES
+
+    inlines = [AboutParagraphInline, ValueInline, GalleryImageInline]
     readonly_fields = ('display_public_users',)
-    list_display = ['id', 'email']
+    list_display = ['id', 'hero_title', 'email']
+    list_display_links = ['id', 'hero_title']
     ordering = None
 
     fieldsets = (
         (
-            _('Основное (Общие настройки)'),
-            {'fields': ('image_left', 'image_right', 'button_link', 'team_button_link', 'display_public_users')},
-        ),
-        (
-            _('Заголовки (Русский)'),
+            _('⚙️ Навигация и Ссылки'),
             {
+                'fields': (('button_label_ru', 'button_link'), ('team_button_label_ru', 'team_button_link')),
+                'description': _('Настройки текста и ссылок для кнопок переходов.'),
+            },
+        ),
+        (_('👥 Состав команды'), {'fields': ('display_public_users',)}),
+        (
+            _('Переводы (Русский)'),
+            {
+                'classes': ('collapse',),
                 'fields': (
                     'hero_title_ru',
                     'hero_description_ru',
                     'about_title_ru',
-                    'button_label_ru',
                     'values_title_ru',
                     'team_title_ru',
-                    'team_button_label_ru',
                     'gallery_title_ru',
                 ),
-                'classes': ('collapse',),
             },
         ),
         (
-            _('Заголовки (Английский)'),
+            _('Переводы (Английский)'),
             {
+                'classes': ('collapse',),
                 'fields': (
                     'hero_title_en',
                     'hero_description_en',
@@ -120,12 +162,12 @@ class AboutPageAdmin(BaseTranslatedAdmin):
                     'team_button_label_en',
                     'gallery_title_en',
                 ),
-                'classes': ('collapse',),
             },
         ),
         (
-            _('Заголовки (Сербский - Латиница)'),
+            _('Переводы (Сербский - Латиница)'),
             {
+                'classes': ('collapse',),
                 'fields': (
                     'hero_title_sr_latn',
                     'hero_description_sr_latn',
@@ -136,12 +178,12 @@ class AboutPageAdmin(BaseTranslatedAdmin):
                     'team_button_label_sr_latn',
                     'gallery_title_sr_latn',
                 ),
-                'classes': ('collapse',),
             },
         ),
         (
-            _('Заголовки (Сербский - Кириллица)'),
+            _('Переводы (Сербский - Кириллица)'),
             {
+                'classes': ('collapse',),
                 'fields': (
                     'hero_title_sr_cyrl',
                     'hero_description_sr_cyrl',
@@ -152,53 +194,37 @@ class AboutPageAdmin(BaseTranslatedAdmin):
                     'team_button_label_sr_cyrl',
                     'gallery_title_sr_cyrl',
                 ),
-                'classes': ('collapse',),
             },
         ),
-        (_('Контакты'), {'fields': ('email', 'contact_link'), 'classes': ('wide',)}),
+        (_('📬 Контакты'), {'fields': (('email', 'contact_link'),)}),
     )
 
+    @admin.display(description=_('Текущий состав команды'))
     def display_public_users(self, obj):
         if not obj or not obj.pk:
             return _('Сохраните страницу, чтобы увидеть список команды')
 
         public_users = User.objects.public()
-
         if not public_users or not public_users.exists():
             users_html = f'<div class="team-empty-warning">⚠️ {_("Публичные пользователи не найдены")}</div>'
         else:
-            cards = []
-            for user in public_users:
-                full_name = getattr(user, 'full_name', '').strip()
-                email = user.email
-                display_name = full_name if (full_name and full_name != email) else email
-                cards.append(
-                    f'<div class="team-user-card">'
-                    f'<div class="status-dot"></div>'
-                    f'<span class="user-name">{display_name}</span>'
-                    f'</div>'
-                )
+            cards = [
+                f'<div class="team-user-card"><div class="status-dot"></div><span class="user-name">'
+                f'{u.full_name or u.email}</span></div>'
+                for u in public_users
+            ]
             users_html = f'<div class="team-cards-wrapper">{"".join(cards)}</div>'
 
         manage_link = (
             f'<a href="/admin/users/user/" class="team-manage-btn"><span>+</span> {_("Управление командой")}</a>'
         )
-        help_text = _(
-            'Если вы хотите добавить участника команды, перейдите в раздел '
-            '"Пользователи и команда", создайте нового пользователя или '
-            'отредактируйте существующего, обязательно установив галочку "Публичный".'
-        )
-
         return mark_safe(
             f'<div class="team-widget-root">'
-            f'<div class="team-widget-container">'
-            f'<div class="team-left-column">{users_html}{manage_link}</div>'
-            f'<div class="team-right-column team-help-text">{help_text}</div>'
-            f'</div>'
+            f'  <div class="team-widget-container">'
+            f'    <div class="team-left-column">{users_html}{manage_link}</div>'
+            f'  </div>'
             f'</div>'
         )
-
-    display_public_users.short_description = _('Текущий состав команды на сайте')
 
     def has_add_permission(self, request):
         return not AboutPage.objects.exists()

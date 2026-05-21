@@ -1,5 +1,3 @@
-"""Сериализаторы для API проектов."""
-
 from __future__ import annotations
 
 from django.utils.encoding import force_str

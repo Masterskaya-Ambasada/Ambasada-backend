@@ -2,23 +2,24 @@ import logging
 
 from django.core.cache import cache
 from django.http import HttpResponse
+from django.utils.translation import gettext_lazy as _
 
 security_logger = logging.getLogger('security')
 
 
 class AdminLoginThrottleMiddleware:
     """
-    Limits the number of login attempts to Django Admin.
+    Middleware для ограничения количества попыток входа в админку.
 
-    10 attempts per minute from a single IP address, then a 5-minute lockout.
+    Блокирует IP на 5 минут после 10 неудачных попыток в минуту.
     """
 
     MAX_ATTEMPTS = 10
-    WINDOW_SECONDS = 60  # attempt counting window
-    BLOCK_SECONDS = 300  # blocking time after exceeding
+    WINDOW_SECONDS = 60
+    BLOCK_SECONDS = 300
 
     def __init__(self, get_response):
-        """Initialize middleware with the next handler in the chain."""
+        """Инициализация middleware."""
         self.get_response = get_response
 
     def __call__(self, request):
@@ -27,15 +28,13 @@ class AdminLoginThrottleMiddleware:
             block_key = f'admin_login_block:{ip}'
             count_key = f'admin_login_count:{ip}'
 
-            # Checking the blocking
             if cache.get(block_key):
                 security_logger.warning('Admin login blocked: IP=%s', ip)
                 return HttpResponse(
-                    'Too many login attempts. Try again later.',
+                    _('Слишком много попыток входа. Попробуйте позже.'),
                     status=429,
                 )
 
-            # Count attempts
             attempts = cache.get(count_key, 0) + 1
             cache.set(count_key, attempts, self.WINDOW_SECONDS)
 
@@ -47,6 +46,7 @@ class AdminLoginThrottleMiddleware:
 
     @staticmethod
     def _get_ip(request):
+        """Получение реального IP адреса клиента."""
         forwarded = request.META.get('HTTP_X_FORWARDED_FOR')
         if forwarded:
             return forwarded.split(',')[0].strip()
