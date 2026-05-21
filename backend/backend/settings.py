@@ -93,7 +93,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'drf_spectacular',
-    'import_export',
+    # 'django_import_export',  # Temporarily disabled due to installation issues
     'tinymce',
     'django_jsonform',
     # local
@@ -101,7 +101,7 @@ INSTALLED_APPS = [
     'users',
     'about',
     'api',
-    'site_config.apps.SiteConfigConfig',
+    'site_config',
     'contacts',
 ]
 
@@ -231,7 +231,7 @@ MODELTRANSLATION_FALLBACK_VALUES = None
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
 
-LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
+LOCALE_PATHS = [config('PRODUCTION_LOCALE_PATH', default='/var/www/django/locale') if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -250,11 +250,11 @@ _COLLECTSTATIC_DRYRUN = config(
     cast=bool,
     default=False,
 )
-STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
+STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else config('PRODUCTION_STATIC_ROOT', default='/var/www/django/static')
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'
-MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DIR / 'media')
+MEDIA_ROOT = config('PRODUCTION_MEDIA_ROOT', default='/var/www/django/media') if APP_ENV == 'production' else str(BASE_DIR / 'media')
 
 
 # REST Framework
@@ -282,10 +282,10 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '120/hour',
-        'user': '600/hour',
-        'contact': '5/hour',  # форма обратной связи
-        'auth': '10/minute',  # вход в Admin — защита от brute-force
+        'anon': config('THROTTLE_RATE_ANON', default='120/hour'),
+        'user': config('THROTTLE_RATE_USER', default='600/hour'),
+        'contact': config('THROTTLE_RATE_CONTACT', default='5/hour'),  # форма обратной связи
+        'auth': config('THROTTLE_RATE_AUTH', default='10/minute'),  # вход в Admin — защита от brute-force
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
@@ -293,8 +293,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=config('JWT_ACCESS_TOKEN_MINUTES', default=60, cast=int)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=config('JWT_REFRESH_TOKEN_DAYS', default=1, cast=int)),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -328,7 +328,7 @@ LOGGING = {
             'formatter': 'console',
             'filters': ['require_debug_false'],
             'level': 'WARNING',
-            'filename': 'debug.log',
+            'filename': config('LOG_FILE_PATH', default='debug.log'),
         },
     },
     'loggers': {

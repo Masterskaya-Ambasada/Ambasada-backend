@@ -2,6 +2,7 @@ import logging
 
 from django.core.cache import cache
 from django.http import HttpResponse
+from django.conf import settings
 
 security_logger = logging.getLogger('security')
 
@@ -13,9 +14,9 @@ class AdminLoginThrottleMiddleware:
     10 attempts per minute from a single IP address, then a 5-minute lockout.
     """
 
-    MAX_ATTEMPTS = 10
-    WINDOW_SECONDS = 60  # attempt counting window
-    BLOCK_SECONDS = 300  # blocking time after exceeding
+    MAX_ATTEMPTS = int(getattr(settings, 'ADMIN_LOGIN_MAX_ATTEMPTS', 10))
+    WINDOW_SECONDS = int(getattr(settings, 'ADMIN_LOGIN_WINDOW_SECONDS', 60))  # attempt counting window
+    BLOCK_SECONDS = int(getattr(settings, 'ADMIN_LOGIN_BLOCK_SECONDS', 300))  # blocking time after exceeding
 
     def __init__(self, get_response):
         """Initialize middleware with the next handler in the chain."""
