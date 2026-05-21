@@ -69,9 +69,15 @@ ABOUT_SCHEMA = extend_schema_view(
                             name='AboutTeam',
                             fields={
                                 'title': serializers.CharField(),
-                                'members': serializers.ListField(
-                                    child=serializers.DictField(),
-                                    help_text=_('Список участников команды (TeamMemberSerializer)'),
+                                'members': inline_serializer(
+                                    name='AboutTeamMember',
+                                    fields={
+                                        'id': serializers.IntegerField(),
+                                        'name': serializers.CharField(),
+                                        'position': serializers.CharField(allow_blank=True),
+                                        'photo': serializers.URLField(allow_null=True),
+                                    },
+                                    many=True,
                                 ),
                                 'action_button': inline_serializer(
                                     name='TeamActionButton',
