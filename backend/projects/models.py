@@ -287,9 +287,7 @@ class ProjectContentBlockQuerySet(OrderedValidationQuerySet):
         for project_id, orders in order_keys_by_project.items():
             order_filters |= Q(project_id=project_id, order__in=orders)
         if order_filters and self.filter(order_filters).exists():
-            raise ValidationError(
-                {'order': _('Контентный блок с таким порядком уже существует в этом проекте.')}
-            )
+            raise ValidationError({'order': _('Контентный блок с таким порядком уже существует в этом проекте.')})
 
     def _validate_objects(self, objs: list[models.Model]) -> None:
         """Валидирует блоки без повторных запросов на UniqueConstraint для каждой записи."""
