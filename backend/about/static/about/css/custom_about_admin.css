@@ -1,0 +1,226 @@
+/* ==========================================================================
+   Сброс ломающей верстки Django-админки
+   ========================================================================== */
+
+/* Расправляем родительский контейнер Django на всю ширину страницы */
+.form-row.field-display_public_users,
+.form-row.field-display_public_users div {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Обнуляем встроенные стили для readonly элементов */
+.form-row.field-display_public_users .readonly {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Корневой изоляционный блок виджета */
+.team-widget-root {
+    width: 100%;
+    clear: both;
+    display: block;
+}
+
+/* ==========================================================================
+   Контейнер виджета (Разделение на две колонки)
+   ========================================================================== */
+.team-widget-container {
+    display: flex !important;
+    flex-direction: row;
+    gap: 16px; /* Уменьшено с 32px для плотной компоновки колонок */
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 4px; /* Минимальный отступ от стандартного лейбла Django */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+/* Левая колонка — теперь компактная, НЕ растягивается на весь экран */
+.team-left-column {
+    flex: 0 1 auto !important;
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px; /* Сжато расстояние между списком карточек и кнопкой управления */
+    min-width: 320px;
+    max-width: 500px;
+}
+
+/* Правая колонка с подсказкой */
+.team-right-column {
+    flex: 0 0 320px !important;
+    max-width: 360px;
+}
+
+/* ==========================================================================
+   Список и карточки пользователей (Спокойный стиль)
+   ========================================================================== */
+.team-cards-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important; /* Уменьшен зазор между карточками пользователей */
+    width: 100%;
+}
+
+/* Элегантная карточка без лишнего объема */
+.team-user-card {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 6px 12px; /* Чуть уменьшены внутренние паддинги для компактности */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* Легкий нейтральный интерактив при наведении */
+.team-user-card:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+/* Текстовый статус без использования иконок */
+.status-dot {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: #0d9488;
+    background-color: #f0fdfa;
+    padding: 1px 6px;
+    border-radius: 12px;
+    border: 1px solid #ccfbf1;
+    text-transform: lowercase;
+}
+
+.status-dot::after {
+    content: "активен";
+}
+
+/* Текст имени пользователя */
+.user-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   Кнопка действия "Управление командой"
+   ========================================================================== */
+.team-manage-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px;
+    align-self: flex-start;
+    background: #f1f5f9;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.team-manage-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a !important;
+    border-color: #94a3b8;
+}
+
+.team-manage-btn span {
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* ==========================================================================
+   Эстетичный блок подсказки справа без внешних ресурсов
+   ========================================================================== */
+.team-right-column.team-help-text {
+    position: relative;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #94a3b8;
+    padding: 12px 14px 12px 32px; /* Уплотнены внутренние отступы */
+    border-radius: 6px;
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 400;
+    box-sizing: border-box;
+}
+
+/* Инфо-иконка через стандартный Юникод-символ */
+.team-right-column.team-help-text::before {
+    content: "ⓘ";
+    position: absolute;
+    left: 12px;
+    top: 11px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #64748b;
+    line-height: 1;
+}
+
+/* Варнинг, если команда пуста */
+.team-empty-warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 100%;
+}
+
+/* ==========================================================================
+   Поддержка темной темы Django (Системная + Переключатель админки)
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .team-user-card { background: #1e1e1e; border-color: #2d2d2d; }
+    :root:not([data-theme="light"]) .team-user-card:hover { background: #252526; border-color: #3e3e3e; }
+    :root:not([data-theme="light"]) .user-name { color: #e2e8f0; }
+    :root:not([data-theme="light"]) .status-dot { color: #2ec4b6; background-color: rgba(46, 196, 182, 0.1); border-color: rgba(46, 196, 182, 0.2); }
+    :root:not([data-theme="light"]) .team-manage-btn { background: #2d2d2d; color: #cbd5e1 !important; border-color: #3e3e3e; }
+    :root:not([data-theme="light"]) .team-manage-btn:hover { background: #3e3e3e; color: #fff !important; }
+    :root:not([data-theme="light"]) .team-right-column.team-help-text { background: #1e293b; border-color: #334155; border-left-color: #64748b; color: #cbd5e1; }
+    :root:not([data-theme="light"]) .team-right-column.team-help-text::before { color: #94a3b8; }
+    :root:not([data-theme="light"]) .team-empty-warning { background: #3a2a10; color: #fde68a; border-color: #4d3d1e; }
+}
+
+/* Принудительный темный режим через дата-атрибут Django */
+[data-theme="dark"] .team-user-card { background: #1e1e1e; border-color: #2d2d2d; }
+[data-theme="dark"] .team-user-card:hover { background: #252526; border-color: #3e3e3e; }
+[data-theme="dark"] .user-name { color: #e2e8f0; }
+[data-theme="dark"] .status-dot { color: #2ec4b6; background-color: rgba(46, 196, 182, 0.1); border-color: rgba(46, 196, 182, 0.2); }
+[data-theme="dark"] .team-manage-btn { background: #2d2d2d; color: #cbd5e1 !important; border-color: #3e3e3e; }
+[data-theme="dark"] .team-manage-btn:hover { background: #3e3e3e; color: #fff !important; }
+[data-theme="dark"] .team-right-column.team-help-text { background: #1e293b; border-color: #334155; border-left-color: #64748b; color: #cbd5e1; }
+[data-theme="dark"] .team-right-column.team-help-text::before { color: #94a3b8; }
+[data-theme="dark"] .team-empty-warning { background: #3a2a10; color: #fde68a; border-color: #4d3d1e; }
+
+/* ==========================================================================
+   Адаптивность для узких экранов
+   ========================================================================== */
+@media (max-width: 900px) {
+    .team-widget-container {
+        flex-direction: column !important;
+        gap: 12px;
+    }
+    .team-left-column, .team-right-column {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}

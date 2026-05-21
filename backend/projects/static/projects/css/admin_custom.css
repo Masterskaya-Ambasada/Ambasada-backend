@@ -3,7 +3,6 @@
    ===================================================================== */
 
 /* 1. ОСНОВНОЙ КОНТЕЙНЕР КАРТОЧКИ */
-/* Делаем чистую белую панель с мягкой тенью и скруглениями */
 #projectcontentblock_set-group > .djn-items > .djn-inline-form {
     margin-bottom: 40px !important;
     border: 1px solid #e2e8f0 !important; 
@@ -14,14 +13,12 @@
     transition: box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
-/* Эффект "парения" при наведении на блок */
 #projectcontentblock_set-group > .djn-items > .djn-inline-form:hover {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
     border-color: #cbd5e1 !important;
 }
 
 /* 2. ШАПКА КАРТОЧКИ */
-/* Спокойный светло-серый фон, современный шрифт */
 #projectcontentblock_set-group > .djn-items > .djn-inline-form > h3 {
     background-color: #f8fafc !important;
     color: #334155 !important;
@@ -35,7 +32,6 @@
     letter-spacing: 0.05em;
 }
 
-/* Элегантный крестик удаления (полупрозрачный, краснеет/становится четким при наведении) */
 #projectcontentblock_set-group > .djn-items > .djn-inline-form > h3 .inline-deletelink {
     filter: grayscale(100%);
     opacity: 0.4;
@@ -47,7 +43,6 @@
 }
 
 /* 3. СВОРАЧИВАЕМЫЕ БЛОКИ (Переводы) */
-/* Аккуратные рамки внутри карточки вместо дефолтных джанговских плашек */
 #projectcontentblock_set-group > .djn-items > .djn-inline-form fieldset.module {
     border: 1px solid #e2e8f0 !important;
     border-radius: 6px !important;
@@ -65,8 +60,7 @@
     font-weight: 500 !important;
 }
 
-/* 4. ВЛОЖЕННЫЕ ТАБЛИЦЫ (Например: Кнопки Контентных Блоков) */
-/* Превращаем вложенную таблицу в красивый дата-грид */
+/* 4. ВЛОЖЕННЫЕ ТАБЛИЦЫ */
 .djn-group.djn-tabular {
     border: 1px solid #e2e8f0 !important;
     margin: 20px !important;
@@ -75,7 +69,6 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Заголовок вложенной таблицы */
 .djn-group.djn-tabular > h2,
 .djn-group.djn-tabular > h3 {
     background-color: #f8fafc !important;
@@ -89,7 +82,6 @@
     margin: 0 !important;
 }
 
-/* Шапка столбцов (названия полей) */
 .djn-group.djn-tabular thead th {
     background-color: #ffffff !important;
     color: #64748b !important;
@@ -101,6 +93,41 @@
     border-bottom: 1px solid #e2e8f0 !important;
 }
 
-/* Чередование строк (зебра) для лучшей читаемости */
 .djn-group.djn-tabular tbody tr.row1 { background-color: #ffffff !important; }
 .djn-group.djn-tabular tbody tr.row2 { background-color: #f8fafc !important; }
+
+
+/* =====================================================================
+   ГЛОБАЛЬНАЯ ПОДДЕРЖКА ТЕМНОЙ ТЕМЫ (Системная + Кнопка Django)
+   ===================================================================== */
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) #projectcontentblock_set-group > .djn-items > .djn-inline-form { background-color: #1e1e1e !important; border-color: #2d2d2d !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important; }
+    :root:not([data-theme="light"]) #projectcontentblock_set-group > .djn-items > .djn-inline-form:hover { border-color: #3e3e3e !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important; }
+    :root:not([data-theme="light"]) #projectcontentblock_set-group > .djn-items > .djn-inline-form > h3 { background-color: #252526 !important; color: #cbd5e1 !important; border-bottom-color: #2d2d2d !important; }
+    :root:not([data-theme="light"]) #projectcontentblock_set-group > .djn-items > .djn-inline-form fieldset.module { border-color: #2d2d2d !important; background: #1e1e1e !important; }
+    :root:not([data-theme="light"]) #projectcontentblock_set-group > .djn-items > .djn-inline-form fieldset.module h2 { background: #2d2d2d !important; color: #e2e8f0 !important; border-bottom-color: #2d2d2d !important; }
+    
+    /* Исправление вложенных таблиц и их полей ввода */
+    :root:not([data-theme="light"]) .djn-group.djn-tabular { border-color: #2d2d2d !important; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2) !important; background: #121212 !important; }
+    :root:not([data-theme="light"]) .djn-group.djn-tabular > h2, :root:not([data-theme="light"]) .djn-group.djn-tabular > h3 { background-color: #252526 !important; color: #cbd5e1 !important; border-bottom-color: #2d2d2d !important; }
+    :root:not([data-theme="light"]) .djn-group.djn-tabular thead th { background-color: #1e1e1e !important; color: #94a3b8 !important; border-bottom-color: #2d2d2d !important; }
+    :root:not([data-theme="light"]) .djn-group.djn-tabular tbody tr.row1 { background-color: #1e1e1e !important; }
+    :root:not([data-theme="light"]) .djn-group.djn-tabular tbody tr.row2 { background-color: #252526 !important; }
+    :root:not([data-theme="light"]) .djn-group.djn-tabular input, :root:not([data-theme="light"]) .djn-group.djn-tabular select { background-color: #1a1a1a !important; color: #e0e0e0 !important; border-color: #444 !important; }
+}
+
+/* Принудительный темный режим при переключении через data-theme в Django */
+[data-theme="dark"] #projectcontentblock_set-group > .djn-items > .djn-inline-form { background-color: #1e1e1e !important; border-color: #2d2d2d !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important; }
+[data-theme="dark"] #projectcontentblock_set-group > .djn-items > .djn-inline-form:hover { border-color: #3e3e3e !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important; }
+[data-theme="dark"] #projectcontentblock_set-group > .djn-items > .djn-inline-form > h3 { background-color: #252526 !important; color: #cbd5e1 !important; border-bottom-color: #2d2d2d !important; }
+[data-theme="dark"] #projectcontentblock_set-group > .djn-items > .djn-inline-form fieldset.module { border-color: #2d2d2d !important; background: #1e1e1e !important; }
+[data-theme="dark"] #projectcontentblock_set-group > .djn-items > .djn-inline-form fieldset.module h2 { background: #2d2d2d !important; color: #e2e8f0 !important; border-bottom-color: #2d2d2d !important; }
+
+/* Исправление вложенных таблиц и их полей ввода для [data-theme="dark"] */
+[data-theme="dark"] .djn-group.djn-tabular { border-color: #2d2d2d !important; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2) !important; background: #121212 !important; }
+[data-theme="dark"] .djn-group.djn-tabular > h2, [data-theme="dark"] .djn-group.djn-tabular > h3 { background-color: #252526 !important; color: #cbd5e1 !important; border-bottom-color: #2d2d2d !important; }
+[data-theme="dark"] .djn-group.djn-tabular thead th { background-color: #1e1e1e !important; color: #94a3b8 !important; border-bottom-color: #2d2d2d !important; }
+[data-theme="dark"] .djn-group.djn-tabular tbody tr.row1 { background-color: #1e1e1e !important; }
+[data-theme="dark"] .djn-group.djn-tabular tbody tr.row2 { background-color: #252526 !important; }
+[data-theme="dark"] .djn-group.djn-tabular input, [data-theme="dark"] .djn-group.djn-tabular select { background-color: #1a1a1a !important; color: #e0e0e0 !important; border-color: #444 !important; }

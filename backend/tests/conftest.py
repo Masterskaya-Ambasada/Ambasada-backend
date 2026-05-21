@@ -327,7 +327,9 @@ def about_full_setup(about_page, values, gallery_images, team_members):
     - участники команды
     - галерея
     """
-    about_page.team_members.set(team_members)
+    for user in team_members:
+        user.is_public = True
+        user.save()
     return {
         "page": about_page,
         "values": values,

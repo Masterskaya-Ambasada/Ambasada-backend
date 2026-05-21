@@ -1,17 +1,34 @@
 from core.base_admin import BaseTranslatedAdmin
 from django.contrib import admin
+from django.contrib.auth import get_user_model
+from django.forms.models import BaseInlineFormSet
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from .models import AboutPage, AboutParagraph, GalleryImage, Value
 
+User = get_user_model()
+
+
+class AboutParagraphInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        orders = []
+        for form in self.forms:
+            if not form.is_valid() or form.cleaned_data.get('DELETE'):
+                continue
+            order = form.cleaned_data.get('order')
+            if order is not None:
+                if order in orders:
+                    form.add_error('order', _('Параграф с таким порядковым номером уже добавлен.'))
+                else:
+                    orders.append(order)
+
 
 class AboutParagraphInline(admin.StackedInline):
-    """Inline-редактирование параграфов страницы 'О нас' в админке."""
-
     model = AboutParagraph
+    formset = AboutParagraphInlineFormSet
     extra = 1
-
     fieldsets = (
         (_('Порядок отображения'), {'fields': ('order',)}),
         (_('Параграф (Русский)'), {'fields': ('first_sentence_ru', 'main_text_ru'), 'classes': ('collapse',)}),
@@ -29,8 +46,6 @@ class AboutParagraphInline(admin.StackedInline):
 
 @admin.register(Value)
 class ValueAdmin(BaseTranslatedAdmin):
-    """Настройка отображения ценностей в админке."""
-
     list_display = ('title', 'text_preview')
     search_fields = ('title',)
     ordering = ['title']
@@ -52,8 +67,6 @@ class ValueAdmin(BaseTranslatedAdmin):
 
 @admin.register(GalleryImage)
 class GalleryImageAdmin(BaseTranslatedAdmin):
-    """Настройка отображения изображений галереи в админке."""
-
     list_display = ('alt', 'image_preview')
     search_fields = ('alt',)
     ordering = None
@@ -68,8 +81,6 @@ class GalleryImageAdmin(BaseTranslatedAdmin):
 
 @admin.register(AboutPage)
 class AboutPageAdmin(BaseTranslatedAdmin):
-    """Настройка отображения страницы 'О нас' в админке."""
-
     inlines = [AboutParagraphInline]
     readonly_fields = ('display_public_users',)
     list_display = ['id', 'email']
@@ -77,17 +88,8 @@ class AboutPageAdmin(BaseTranslatedAdmin):
 
     fieldsets = (
         (
-            _('Main'),
-            {
-                'fields': (
-                    'image_left',
-                    'image_right',
-                    'button_link',
-                    'display_public_users',
-                    'team_members',
-                    'team_button_link',
-                )
-            },
+            _('Основное (Общие настройки)'),
+            {'fields': ('image_left', 'image_right', 'button_link', 'team_button_link', 'display_public_users')},
         ),
         (
             _('Заголовки (Русский)'),
@@ -160,20 +162,41 @@ class AboutPageAdmin(BaseTranslatedAdmin):
         if not obj or not obj.pk:
             return _('Сохраните страницу, чтобы увидеть список команды')
 
-        public_users = obj.get_public_team()
+        public_users = User.objects.public()
+
         if not public_users or not public_users.exists():
-            return _('Публичные пользователи не найдены')
+            users_html = f'<div class="team-empty-warning">⚠️ {_("Публичные пользователи не найдены")}</div>'
+        else:
+            cards = []
+            for user in public_users:
+                full_name = getattr(user, 'full_name', '').strip()
+                email = user.email
+                display_name = full_name if (full_name and full_name != email) else email
+                cards.append(
+                    f'<div class="team-user-card">'
+                    f'<div class="status-dot"></div>'
+                    f'<span class="user-name">{display_name}</span>'
+                    f'</div>'
+                )
+            users_html = f'<div class="team-cards-wrapper">{"".join(cards)}</div>'
 
-        result = []
-        for user in public_users:
-            full_name = getattr(user, 'full_name', '').strip()
-            email = user.email
-            if full_name and full_name != email:
-                result.append(f'{full_name} ({email})')
-            else:
-                result.append(email)
+        manage_link = (
+            f'<a href="/admin/users/user/" class="team-manage-btn"><span>+</span> {_("Управление командой")}</a>'
+        )
+        help_text = _(
+            'Если вы хотите добавить участника команды, перейдите в раздел '
+            '"Пользователи и команда", создайте нового пользователя или '
+            'отредактируйте существующего, обязательно установив галочку "Публичный".'
+        )
 
-        return ', '.join(result)
+        return mark_safe(
+            f'<div class="team-widget-root">'
+            f'<div class="team-widget-container">'
+            f'<div class="team-left-column">{users_html}{manage_link}</div>'
+            f'<div class="team-right-column team-help-text">{help_text}</div>'
+            f'</div>'
+            f'</div>'
+        )
 
     display_public_users.short_description = _('Текущий состав команды на сайте')
 
@@ -182,3 +205,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    class Media:
+        css = {'all': ('about/css/custom_about_admin.css',)}

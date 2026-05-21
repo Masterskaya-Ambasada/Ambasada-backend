@@ -23,6 +23,8 @@ class AboutPageTranslationOptions(TranslationOptions):
 
 @register(AboutParagraph)
 class AboutParagraphTranslationOptions(TranslationOptions):
+    """Переводимые поля параграфов."""
+
     fields = ('first_sentence', 'main_text')
 
 

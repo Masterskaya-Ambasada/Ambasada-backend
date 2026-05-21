@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-21 03:12+0300\n"
+"POT-Creation-Date: 2026-05-21 04:42+0300\n"
 "PO-Revision-Date: 2026-05-20 16:30+0300\n"
 "Last-Translator: System <admin@example.com>\n"
 "Language-Team: Serbian (Cyrillic) <sr-Cyrl@li.org>\n"
@@ -13,134 +13,143 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
-#: backend/about/admin.py:16 backend/contacts/models.py:118
+#: backend/about/admin.py:23
+msgid "Параграф с таким порядковым номером уже добавлен."
+msgstr "Параграф са овим редним бројем је већ додат."
+
+#: backend/about/admin.py:33 backend/contacts/models.py:118
 msgid "Порядок отображения"
 msgstr "Редослед приказивања"
 
-#: backend/about/admin.py:17
+#: backend/about/admin.py:34
 msgid "Параграф (Русский)"
 msgstr "Параграф (Руски)"
 
-#: backend/about/admin.py:18
+#: backend/about/admin.py:35
 msgid "Параграф (Английский)"
 msgstr "Преводи (Енглески)"
 
-#: backend/about/admin.py:20
+#: backend/about/admin.py:36
 msgid "Параграф (Сербский - Латиница)"
 msgstr "Преводи (Српски - Латиница)"
 
-#: backend/about/admin.py:24
+#: backend/about/admin.py:37
 msgid "Параграф (Сербский - Кириллица)"
 msgstr "Преводи (Српски - Ћирилица)"
 
-#: backend/about/admin.py:43
+#: backend/about/admin.py:51
 msgid "Предпросмотр текста"
 msgstr "Преглед на сајту"
 
-#: backend/about/admin.py:46
+#: backend/about/admin.py:54
 msgid "Ценность (Русский)"
 msgstr "Вредност (Руски)"
 
-#: backend/about/admin.py:47
+#: backend/about/admin.py:55
 msgid "Ценность (Английский)"
 msgstr "Вредност (Енглески)"
 
-#: backend/about/admin.py:48
+#: backend/about/admin.py:56
 msgid "Ценность (Сербский - Латиница)"
 msgstr "Вредност (Српски - Латиница)"
 
-#: backend/about/admin.py:49
+#: backend/about/admin.py:57
 msgid "Ценность (Сербский - Кириллица)"
 msgstr "Вредност (Српски - Ћирилица)"
 
-#: backend/about/admin.py:64
+#: backend/about/admin.py:70
 msgid "Нет изображения"
 msgstr "Две слике"
 
-#: backend/about/admin.py:66 backend/about/models.py:41
+#: backend/about/admin.py:71 backend/about/models.py:44
 #: backend/projects/models.py:249
 msgid "Изображение"
 msgstr "Слика"
 
-#: backend/about/admin.py:80
-msgid "Main"
-msgstr "Главно"
+#: backend/about/admin.py:82
+msgid "Основное (Общие настройки)"
+msgstr "Главно (Општа подешавања)"
 
-#: backend/about/admin.py:93
+#: backend/about/admin.py:83
 msgid "Заголовки (Русский)"
 msgstr "Наслови (Руски)"
 
-#: backend/about/admin.py:109
+#: backend/about/admin.py:84
 msgid "Заголовки (Английский)"
 msgstr "Наслови (Енглески)"
 
-#: backend/about/admin.py:125
+#: backend/about/admin.py:85
 msgid "Заголовки (Сербский - Латиница)"
 msgstr "Наслови (Српски - Латиница)"
 
-#: backend/about/admin.py:141
+#: backend/about/admin.py:86
 msgid "Заголовки (Сербский - Кириллица)"
 msgstr "Наслови (Српски - Ћирилица)"
 
-#: backend/about/admin.py:156
+#: backend/about/admin.py:87
 msgid "Контакты"
 msgstr "Контакти"
 
-#: backend/about/admin.py:161
+#: backend/about/admin.py:92
 msgid "Сохраните страницу, чтобы увидеть список команды"
 msgstr "Сачувајте страницу да бисте видели списак тима"
 
-#: backend/about/admin.py:165
-msgid "Публичные пользователи не найдены"
-msgstr "Јавни корисници нису пронађени"
+#: backend/about/admin.py:113
+msgid ""
+"Если вы хотите добавить участника команды, перейдите в раздел \"Пользователи "
+"и команда\", создайте нового пользователя или отредактируйте существующего, "
+"обязательно установив галочку \"Публичный\"."
+msgstr ""
+"Ако желите да додате члана тима, идите у одељак „Корисници и тим“, креирајте "
+"новог корисника или уредите постојећег, и обавезно означите кућицу „Јавно“."
 
-#: backend/about/admin.py:179
+#: backend/about/admin.py:123
 msgid "Текущий состав команды на сайте"
 msgstr "Тренутни састав тима на сајту"
 
-#: backend/about/apps.py:7 backend/about/models.py:153
-#: backend/about/models.py:154 backend/about/models.py:175
+#: backend/about/apps.py:7 backend/about/models.py:132
+#: backend/about/models.py:133 backend/about/models.py:156
 msgid "Страница \"О нас\""
 msgstr "Страница \"О нама\""
 
-#: backend/about/models.py:18 backend/projects/models.py:130
+#: backend/about/models.py:23 backend/projects/models.py:130
 #: backend/projects/models.py:154 backend/projects/models.py:178
 msgid "Название"
 msgstr "Назив"
 
-#: backend/about/models.py:23 backend/projects/models.py:351
+#: backend/about/models.py:27 backend/projects/models.py:351
 msgid "Текст"
 msgstr "Текст"
 
-#: backend/about/models.py:28
+#: backend/about/models.py:31
 msgid "Ценность"
 msgstr "Вредност"
 
-#: backend/about/models.py:29
+#: backend/about/models.py:32
 msgid "Ценности"
 msgstr "Вредности"
 
-#: backend/about/models.py:47
+#: backend/about/models.py:40
 msgid "Alt текст"
 msgstr "Alt текст"
 
-#: backend/about/models.py:52
+#: backend/about/models.py:56
 msgid "Изображение галереи"
 msgstr "Слика галерије"
 
-#: backend/about/models.py:53
+#: backend/about/models.py:57
 msgid "Галерея изображений"
 msgstr "Галерија слика"
 
-#: backend/about/models.py:65
+#: backend/about/models.py:69
 msgid "Заголовок hero"
 msgstr "Херо наслов"
 
-#: backend/about/models.py:70
+#: backend/about/models.py:73
 msgid "Описание hero"
 msgstr "Херо опис"
 
-#: backend/about/models.py:76
+#: backend/about/models.py:77
 msgid "Заголовок блока \"О нас\""
 msgstr "Наслов блока \"О нама\""
 
@@ -152,82 +161,70 @@ msgstr "Лева херо слика"
 msgid "Правое изображение hero"
 msgstr "Десна херо слика"
 
-#: backend/about/models.py:94
+#: backend/about/models.py:93
 msgid "Текст кнопки"
 msgstr "Текст дугмета"
 
-#: backend/about/models.py:99
+#: backend/about/models.py:97
 msgid "Ссылка кнопки"
 msgstr "Линк дугмета"
 
-#: backend/about/models.py:105
+#: backend/about/models.py:101
 msgid "Заголовок \"Ценности\""
 msgstr "Наслов \"Вредности\""
 
-#: backend/about/models.py:110
+#: backend/about/models.py:105
 msgid "Заголовок \"Команда\""
 msgstr "Наслов \"Тим\""
 
-#: backend/about/models.py:116
+#: backend/about/models.py:109
 msgid "Кнопка команды (текст)"
 msgstr "Дугме тима (текст)"
 
-#: backend/about/models.py:121
+#: backend/about/models.py:113
 msgid "Кнопка команды (ссылка)"
 msgstr "Дугме тима (линк)"
 
-#: backend/about/models.py:130
-msgid "Участники команды"
-msgstr "Чланови тима"
-
-#: backend/about/models.py:134 backend/contacts/models.py:18
+#: backend/about/models.py:116 backend/contacts/models.py:18
 msgid "Email"
 msgstr "Е-пошта"
 
-#: backend/about/models.py:141
+#: backend/about/models.py:122
 msgid "Ссылка для связи"
 msgstr "Линк за контакт"
 
-#: backend/about/models.py:148
-msgid "Заголовок галереи"
+#: backend/about/models.py:128
+msgid "Заголовок gallery"
 msgstr "Наслов галерије"
 
-#: backend/about/models.py:158
+#: backend/about/models.py:137 backend/about/models.py:142
 msgid "Может существовать только одна страница \"О нас\"."
 msgstr "Може постојати само једна страница \"О нама\"."
 
-#: backend/about/models.py:179
+#: backend/about/models.py:160
 msgid "Акцент (первое предложение)"
 msgstr "Акценат (прва реченица)"
 
-#: backend/about/models.py:182
+#: backend/about/models.py:163
 msgid "Основной текст"
 msgstr "Главни текст"
 
-#: backend/about/models.py:186 backend/projects/models.py:255
+#: backend/about/models.py:167 backend/projects/models.py:255
 #: backend/projects/models.py:317 backend/projects/models.py:412
 msgid "Порядок"
 msgstr "Редослед"
 
-#: backend/about/models.py:191
+#: backend/about/models.py:172
 msgid "Параграф"
 msgstr "Параграф"
 
-#: backend/about/models.py:192
+#: backend/about/models.py:173
 msgid "Параграфы"
 msgstr "Параграфи"
 
-#: backend/api/about/views.py:21
-msgid "Получение страницы \"О сообществе\""
-msgstr "Добављање странице \"О заједници\""
-
-#: backend/api/about/views.py:22
-msgid "Возвращает данные страницы \"О нас\" со всеми секциями"
-msgstr "Враћа податке странице \"О нама\" са свим секцијама"
-
-#: backend/api/about/views.py:39
-msgid "Страница \"О нас\" не найдена."
-msgstr "Страница \"О нама\" није пронађена."
+#: backend/api/about/views.py:33
+msgid "Информация о сообществе не найдена"
+msgstr "Информације о заједници нису пронађене"
 
 #: backend/api/apps.py:7
 msgid "Интерфейс API"
@@ -274,6 +271,27 @@ msgstr ""
 msgid "Перейти к проекту"
 msgstr "Иди на пројекат"
 
+#: backend/api/schemas/about_schemas.py:15
+msgid "Получение страницы \"О сообществе\""
+msgstr "Добављање странице \"О заједници\""
+
+#: backend/api/schemas/about_schemas.py:16
+msgid "Возвращает данные страницы \"О нас\" со всеми секциями."
+msgstr "Враћа податке странице \"О нама\" са свим секцијама."
+
+#: backend/api/schemas/about_schemas.py:19
+#: backend/api/schemas/init_schemas.py:35
+msgid "Успешный ответ"
+msgstr "Успешан одговор"
+
+#: backend/api/schemas/about_schemas.py:74
+msgid "Список участников команды (TeamMemberSerializer)"
+msgstr "Списак чланова тима (TeamMemberSerializer)"
+
+#: backend/api/schemas/about_schemas.py:112
+msgid "Страница не найдена"
+msgstr "Страница није пронађена"
+
 #: backend/api/schemas/init_schemas.py:6
 msgid "Инициализация сайта"
 msgstr "Иницијализација сајта"
@@ -289,10 +307,6 @@ msgstr "Списак доступних језика"
 #: backend/api/schemas/init_schemas.py:31
 msgid "Ссылки на социальные сети"
 msgstr "Линкови ка друштвеним мрежама"
-
-#: backend/api/schemas/init_schemas.py:35
-msgid "Успешный ответ"
-msgstr "Успешан одговор"
 
 #: backend/api/schemas/init_schemas.py:68
 msgid "Конфигурация сайта не найдена"
@@ -368,7 +382,7 @@ msgstr "Списак ознака објављених пројеката."
 
 #: backend/api/schemas/project_schemas.py:202
 msgid "Список типов проектов"
-msgstr "Списак типовa пројеката"
+msgstr "Списак типова пројеката"
 
 #: backend/api/schemas/project_schemas.py:203
 msgid "Возвращает типы проектов для фильтрации и поиска на фронтенде."
@@ -529,7 +543,7 @@ msgstr "На пример: https://t.me/tme"
 
 #: backend/contacts/models.py:122
 msgid "Показывать на сайте"
-msgstr "Прикази на сајту"
+msgstr "Прикажи на сајту"
 
 #: backend/contacts/models.py:124
 msgid ""
@@ -739,7 +753,7 @@ msgstr "Варијанта распореда коју користи фронт
 
 #: backend/projects/models.py:320
 msgid ""
-"Порядок блока внутри проекта. Используется для продажи и генерации index."
+"Порядок блока внутри проекта. Используется для сортировки и генерации index."
 msgstr ""
 "Редослед блока унутар пројекта. Користи се за сортирање и генерисање индекса."
 
@@ -999,8 +1013,8 @@ msgid "Системный номер. Генерируется автомати�
 msgstr "Системски број. Генерише се аутоматски и не може се мењати."
 
 #: backend/users/models.py:99
-msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
-msgstr "Наведите име учесника. Приказиваће се на сајту в блоку тима."
+msgid "Укажите имя участника. Оно будет отображаться на сайте в blockе команды."
+msgstr "Наведите име учесника. Приказиваће се на сајту у блоку тима."
 
 #: backend/users/models.py:102
 msgid "Фамилия"
@@ -1033,7 +1047,7 @@ msgid ""
 "в карточке сотрудника на сайте."
 msgstr ""
 "Наведите професионалну улогу (на пример: «Главни архитекта»). Приказује се у "
-"картици запосленог на сајту."
+"картици запоселног на сајту."
 
 #: backend/users/models.py:131
 msgid "Фотография"
@@ -1067,3 +1081,12 @@ msgstr ""
 #: backend/users/models.py:160
 msgid "Пользователи и команда"
 msgstr "Корисници и тим"
+
+#~ msgid "Main"
+#~ msgstr "Главно"
+
+#~ msgid "Публичные пользователи не найдены"
+#~ msgstr "Јавни корисници нису пронађени"
+
+#~ msgid "Участники команды"
+#~ msgstr "Чланови тима"
