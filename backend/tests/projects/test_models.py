@@ -1,6 +1,7 @@
 import pytest
 from django.core.exceptions import ValidationError
 from django.test import override_settings
+from projects import models as project_models
 from projects.constants import (
     PROJECT_BLOCKS_DIRECTORY,
     PROJECT_COVER_DIRECTORY,
@@ -112,6 +113,98 @@ def test_content_block_bulk_create_auto_sets_orders(published_project):
     )
     assert blocks[0].order == 1
     assert blocks[1].order == 2
+
+
+@pytest.mark.django_db
+def test_content_block_bulk_create_gets_max_orders_in_single_batch(
+    published_project,
+    second_published_project,
+    monkeypatch,
+):
+    """Проверяет, что bulk_create не делает отдельный запрос max(order) для каждого объекта."""
+    calls = []
+    original_get_max_orders = project_models._get_max_orders
+
+    def spy_get_max_orders(queryset, related_field_name, related_ids):
+        calls.append((related_field_name, set(related_ids)))
+        return original_get_max_orders(queryset, related_field_name, related_ids)
+
+    monkeypatch.setattr(project_models, '_get_max_orders', spy_get_max_orders)
+    blocks = ProjectContentBlock.objects.bulk_create(
+        [
+            ProjectContentBlock(
+                project=published_project,
+                variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+                order=0,
+                title='First project bulk 1',
+                image='https://example.com/first-project-bulk-1.jpg',
+                string_list=['One'],
+                text='<p>Bulk text</p>',
+                accented_text='',
+            ),
+            ProjectContentBlock(
+                project=published_project,
+                variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+                order=0,
+                title='First project bulk 2',
+                image='https://example.com/first-project-bulk-2.jpg',
+                string_list=['Two'],
+                text='<p>Bulk text</p>',
+                accented_text='',
+            ),
+            ProjectContentBlock(
+                project=second_published_project,
+                variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+                order=0,
+                title='Second project bulk 1',
+                image='https://example.com/second-project-bulk-1.jpg',
+                string_list=['One'],
+                text='<p>Bulk text</p>',
+                accented_text='',
+            ),
+        ]
+    )
+    assert calls == [('project', {published_project.pk, second_published_project.pk})]
+    assert [block.order for block in blocks] == [1, 2, 1]
+
+
+@pytest.mark.django_db
+def test_content_block_save_locks_project_before_auto_order(published_project, monkeypatch):
+    """Проверяет, что автоназначение order блокирует проект от параллельного расчета."""
+    calls = []
+
+    def spy_lock_related_rows(model, related_field_name, related_ids):
+        calls.append((model, related_field_name, set(related_ids)))
+
+    monkeypatch.setattr(project_models, '_lock_related_rows', spy_lock_related_rows)
+    ProjectContentBlock.objects.create(
+        project=published_project,
+        variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+        order=0,
+        title='Locked auto order block',
+        image='https://example.com/locked-auto-order.jpg',
+        string_list=['One'],
+        text='<p>Locked text</p>',
+        accented_text='',
+    )
+    assert calls == [(ProjectContentBlock, 'project', {published_project.pk})]
+
+
+@pytest.mark.django_db
+def test_content_block_save_without_title_does_not_raise_validation_error(published_project):
+    """Проверяет, что save не вызывает full_clean и не ломает сохранение из nested admin."""
+    block = ProjectContentBlock(
+        project=published_project,
+        variant=ProjectContentBlock.Variant.IMAGE_WITH_LIST,
+        order=0,
+        image='https://example.com/no-title.jpg',
+        string_list=['One'],
+        text='<p>Text without title</p>',
+        accented_text='',
+    )
+    block.save()
+    assert block.pk is not None
+    assert block.order == 1
 
 
 @pytest.mark.django_db

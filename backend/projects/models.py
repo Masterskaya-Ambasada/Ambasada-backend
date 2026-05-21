@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import shutil
 from collections import defaultdict
+from collections.abc import Iterable
 from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
-from django.db.models import Max
+from django.db.models import Max, Q
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
@@ -42,22 +43,75 @@ from projects.constants import (
 from .validators import validate_string_list
 
 
+def _is_missing_order(order: int | None) -> bool:
+    """Проверяет, что order не задан и должен быть назначен автоматически."""
+    return order is None or order == DEFAULT_ORDER
+
+
+def _get_max_orders(
+    queryset: models.QuerySet,
+    related_field_name: str,
+    related_ids: Iterable[int],
+) -> dict[int, int]:
+    """Возвращает максимальные order для набора связанных объектов одним запросом."""
+    related_ids = set(related_ids)
+    if not related_ids:
+        return {}
+    related_id_field = f'{related_field_name}_id'
+    rows = (
+        queryset.filter(**{f'{related_id_field}__in': related_ids})
+        .values(related_id_field)
+        .annotate(max_order=Max('order'))
+    )
+    return {row[related_id_field]: row['max_order'] for row in rows if row['max_order'] is not None}
+
+
 def _get_max_order(queryset: models.QuerySet, related_field_name: str, related_id: int) -> int:
     """Возвращает максимальный order в пределах связанного объекта."""
-    return (
-        queryset.filter(**{f'{related_field_name}_id': related_id}).aggregate(max_order=Max('order')).get('max_order')
-        or DEFAULT_ORDER
-    )
+    return _get_max_orders(queryset, related_field_name, [related_id]).get(related_id, DEFAULT_ORDER)
+
+
+def _lock_related_rows(
+    model: type[models.Model],
+    related_field_name: str,
+    related_ids: Iterable[int],
+) -> None:
+    """Блокирует связанные объекты, чтобы параллельное автоназначение order не получило одинаковое значение."""
+    related_ids = sorted(set(related_ids))
+    if not related_ids:
+        return
+    related_model = model._meta.get_field(related_field_name).remote_field.model
+    list(related_model._default_manager.select_for_update().filter(pk__in=related_ids).order_by('pk'))
 
 
 def _assign_next_order(instance: models.Model, queryset: models.QuerySet, related_field_name: str) -> None:
     """Назначает следующий order, если он не задан явно."""
-    if instance.order:
+    if not _is_missing_order(instance.order):
         return
     related_id = getattr(instance, f'{related_field_name}_id')
     if related_id is None:
         return
     instance.order = _get_max_order(queryset, related_field_name, related_id) + ORDER_STEP
+
+
+def _save_with_auto_order_lock(
+    instance: models.Model,
+    queryset: models.QuerySet,
+    related_field_name: str,
+    save_callback,
+    *args,
+    **kwargs,
+) -> None:
+    """Сохраняет объект, блокируя родителя на время автоназначения order."""
+    if not _is_missing_order(instance.order):
+        save_callback(*args, **kwargs)
+        return
+    related_id = getattr(instance, f'{related_field_name}_id')
+    with transaction.atomic():
+        if related_id is not None:
+            _lock_related_rows(queryset.model, related_field_name, [related_id])
+        _assign_next_order(instance, queryset, related_field_name)
+        save_callback(*args, **kwargs)
 
 
 def _project_media_path(slug: str) -> Path:
@@ -141,26 +195,48 @@ class OrderedValidationQuerySet(models.QuerySet):
 
     related_field_name: str | None = None
 
+    def _get_missing_order_related_ids(self, objs: list[models.Model]) -> set[int]:
+        """Возвращает связанные объекты, для которых нужно автоматически назначить order."""
+        if not self.related_field_name:
+            return set()
+        related_id_field = f'{self.related_field_name}_id'
+        return {
+            related_id
+            for obj in objs
+            if _is_missing_order(obj.order) and (related_id := getattr(obj, related_id_field)) is not None
+        }
+
+    def _lock_related_objects(self, related_ids: Iterable[int]) -> None:
+        """Блокирует родительские объекты перед расчетом следующего order."""
+        if not self.related_field_name:
+            return
+        _lock_related_rows(self.model, self.related_field_name, related_ids)
+
     def _set_missing_orders(self, objs: list[models.Model]) -> None:
         """Заполняет пропущенные порядковые номера в пределах связанного объекта."""
         if not self.related_field_name:
             return
         pending_orders: defaultdict[int, int] = defaultdict(int)
-        max_orders: dict[int, int] = {}
         related_field_name = self.related_field_name
+        related_id_field = f'{related_field_name}_id'
+        related_ids = self._get_missing_order_related_ids(objs)
+        max_orders = _get_max_orders(self, related_field_name, related_ids)
         for obj in objs:
-            if obj.order:
+            if not _is_missing_order(obj.order):
                 continue
-            related_id = getattr(obj, f'{related_field_name}_id')
+            related_id = getattr(obj, related_id_field)
             if related_id is None:
                 continue
-            if related_id not in max_orders:
-                max_orders[related_id] = _get_max_order(self, related_field_name, related_id)
             pending_orders[related_id] += ORDER_STEP
-            obj.order = max_orders[related_id] + pending_orders[related_id]
+            obj.order = max_orders.get(related_id, DEFAULT_ORDER) + pending_orders[related_id]
 
     def _validate_prepared_objects(self, objs: list[models.Model]) -> None:
         """Выполняет дополнительные проверки после автозаполнения order."""
+
+    def _validate_objects(self, objs: list[models.Model]) -> None:
+        """Выполняет полную валидацию объектов перед bulk_create."""
+        for obj in objs:
+            obj.full_clean()
 
     def bulk_create(
         self,
@@ -173,18 +249,19 @@ class OrderedValidationQuerySet(models.QuerySet):
     ):
         """Проверяет и подготавливает объекты перед массовым созданием."""
         objs = list(objs)
-        self._set_missing_orders(objs)
-        self._validate_prepared_objects(objs)
-        for obj in objs:
-            obj.full_clean()
-        return super().bulk_create(
-            objs,
-            batch_size=batch_size,
-            ignore_conflicts=ignore_conflicts,
-            update_conflicts=update_conflicts,
-            update_fields=update_fields,
-            unique_fields=unique_fields,
-        )
+        with transaction.atomic():
+            self._lock_related_objects(self._get_missing_order_related_ids(objs))
+            self._set_missing_orders(objs)
+            self._validate_prepared_objects(objs)
+            self._validate_objects(objs)
+            return super().bulk_create(
+                objs,
+                batch_size=batch_size,
+                ignore_conflicts=ignore_conflicts,
+                update_conflicts=update_conflicts,
+                update_fields=update_fields,
+                unique_fields=unique_fields,
+            )
 
 
 class ProjectContentBlockQuerySet(OrderedValidationQuerySet):
@@ -195,8 +272,10 @@ class ProjectContentBlockQuerySet(OrderedValidationQuerySet):
     def _validate_prepared_objects(self, objs: list[models.Model]) -> None:
         super()._validate_prepared_objects(objs)
         seen_orders = set()
+        order_filters = Q()
+        order_keys_by_project: defaultdict[int, set[int]] = defaultdict(set)
         for obj in objs:
-            if not obj.project_id or not obj.order:
+            if obj.project_id is None or _is_missing_order(obj.order):
                 continue
             order_key = (obj.project_id, obj.order)
             if order_key in seen_orders:
@@ -204,6 +283,22 @@ class ProjectContentBlockQuerySet(OrderedValidationQuerySet):
                     {'order': _('Контентные блоки одного проекта не должны иметь одинаковый порядок.')}
                 )
             seen_orders.add(order_key)
+            order_keys_by_project[obj.project_id].add(obj.order)
+        for project_id, orders in order_keys_by_project.items():
+            order_filters |= Q(project_id=project_id, order__in=orders)
+        if order_filters and self.filter(order_filters).exists():
+            raise ValidationError(
+                {'order': _('Контентный блок с таким порядком уже существует в этом проекте.')}
+            )
+
+    def _validate_objects(self, objs: list[models.Model]) -> None:
+        """Валидирует блоки без повторных запросов на UniqueConstraint для каждой записи."""
+        for obj in objs:
+            obj._skip_order_duplicate_validation = True
+            try:
+                obj.full_clean(validate_constraints=False)
+            finally:
+                del obj._skip_order_duplicate_validation
 
 
 class ProjectBlockButtonQuerySet(OrderedValidationQuerySet):
@@ -404,9 +499,7 @@ class ProjectGalleryImage(models.Model):
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок изображения в пределах проекта."""
-        _assign_next_order(self, ProjectGalleryImage.objects, 'project')
-        self.full_clean()
-        super().save(*args, **kwargs)
+        _save_with_auto_order_lock(self, ProjectGalleryImage.objects, 'project', super().save, *args, **kwargs)
 
 
 class ProjectContentBlock(models.Model):
@@ -511,7 +604,11 @@ class ProjectContentBlock(models.Model):
         except ValidationError as error:
             raise ValidationError({'string_list': error.messages}) from error
         self._validate_variant_required_fields()
-        if self.project_id and self.order:
+        if (
+            self.project_id is not None
+            and not _is_missing_order(self.order)
+            and not getattr(self, '_skip_order_duplicate_validation', False)
+        ):
             duplicate_order_exists = (
                 ProjectContentBlock.objects.filter(project_id=self.project_id, order=self.order)
                 .exclude(pk=self.pk)
@@ -536,9 +633,7 @@ class ProjectContentBlock(models.Model):
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок блока в пределах проекта."""
-        _assign_next_order(self, ProjectContentBlock.objects, 'project')
-        self.full_clean()
-        super().save(*args, **kwargs)
+        _save_with_auto_order_lock(self, ProjectContentBlock.objects, 'project', super().save, *args, **kwargs)
 
 
 class ProjectBlockButton(models.Model):
@@ -592,9 +687,7 @@ class ProjectBlockButton(models.Model):
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок кнопки в пределах блока."""
-        _assign_next_order(self, ProjectBlockButton.objects, 'block')
-        self.full_clean()
-        super().save(*args, **kwargs)
+        _save_with_auto_order_lock(self, ProjectBlockButton.objects, 'block', super().save, *args, **kwargs)
 
 
 @receiver(post_delete, sender=Project)
