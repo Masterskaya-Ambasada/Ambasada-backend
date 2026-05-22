@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.projects.constants import (
-    PATH_PARAM_PROJECT_ID,
+    PATH_PARAM_PROJECT_SLUG,
     PROJECT_TYPES_RESPONSE_KEY,
     QUERY_PARAM_PROJECT_TYPE,
     QUERY_PARAM_SEARCH,
@@ -90,7 +90,7 @@ class ProjectDetailView(RetrieveAPIView):
     permission_classes = (AllowAny,)
     serializer_class = ProjectDetailSerializer
     lookup_field = 'slug'
-    lookup_url_kwarg = PATH_PARAM_PROJECT_ID
+    lookup_url_kwarg = PATH_PARAM_PROJECT_SLUG
 
     def get_queryset(self):
         """Собирает queryset опубликованных проектов для детального просмотра."""

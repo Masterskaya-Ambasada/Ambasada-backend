@@ -9,8 +9,8 @@ def test_project_detail_returns_only_published_project(
     unpublished_project,
 ):
     """Проверяет, что детальная ручка доступна только для опубликованного проекта."""
-    published_url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
-    unpublished_url = reverse('api:projects-detail', kwargs={'project_id': unpublished_project.slug})
+    published_url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
+    unpublished_url = reverse('api:projects-detail', kwargs={'project_slug': unpublished_project.slug})
     published_response = api_client.get(published_url)
     unpublished_response = api_client.get(unpublished_url)
     assert published_response.status_code == 200
@@ -26,7 +26,7 @@ def test_project_detail_returns_info_and_content_blocks(
     buttons_block,
 ):
     """Проверяет, что детальная ручка проекта возвращает блок info и список content_blocks."""
-    url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
+    url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200
     data = response.json()
@@ -45,7 +45,7 @@ def test_project_detail_formats_content_block_indexes(
     buttons_block,
 ):
     """Проверяет, что индексы контентных блоков сериализуются в строковом формате с ведущими нулями."""
-    url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
+    url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200
     blocks = response.json()['content_blocks']
@@ -63,7 +63,7 @@ def test_project_detail_hides_variant_specific_fields_for_list_block(
     """Проверяет, что для блока варианта IMAGE_WITH_LIST в ответе остаются только допустимые для него поля."""
     list_block.left_image = 'https://example.com/hidden-left-image.jpg'
     list_block.save()
-    url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
+    url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200
     block = response.json()['content_blocks'][0]
@@ -83,7 +83,7 @@ def test_project_detail_hides_variant_specific_fields_for_two_images_block(
     """Проверяет, что для блока варианта TWO_IMAGES в ответе остаются только допустимые для него поля."""
     two_images_block.string_list = ['Hidden list item']
     two_images_block.save()
-    url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
+    url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200
     block = response.json()['content_blocks'][1]
@@ -105,7 +105,7 @@ def test_project_detail_hides_variant_specific_fields_for_buttons_block(
     buttons_block.left_image = 'https://example.com/hidden-left-image.jpg'
     buttons_block.string_list = ['Hidden list item']
     buttons_block.save()
-    url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
+    url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200
     block = response.json()['content_blocks'][2]
@@ -125,7 +125,7 @@ def test_project_detail_returns_buttons_in_expected_order(
     buttons_block,
 ):
     """Проверяет, что кнопки в блоке проекта возвращаются в ожидаемом порядке."""
-    url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
+    url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200
     buttons = response.json()['content_blocks'][2]['buttons']

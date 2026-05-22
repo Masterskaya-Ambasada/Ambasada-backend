@@ -1,4 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
+    function hasErrors(element) {
+        return Boolean(
+            element && (
+                element.classList.contains('errors') ||
+                element.querySelector('.errorlist, .errors')
+            )
+        );
+    }
+
+    function expandParentFieldset(element) {
+        const fieldset = element.closest('fieldset');
+        if (fieldset) {
+            fieldset.classList.remove('collapsed');
+            fieldset.style.display = '';
+        }
+    }
+
+    function setElementDisplay(element, displayValue) {
+        if (!element) return;
+
+        if (hasErrors(element)) {
+            element.style.display = '';
+            expandParentFieldset(element);
+            return;
+        }
+
+        element.style.display = displayValue;
+    }
+
+    function setRowsDisplay(rows, displayValue) {
+        rows.forEach(row => setElementDisplay(row, displayValue));
+    }
+
+    function findButtonsGroup(blockSuite) {
+        const managementInput = blockSuite.querySelector('input[name$="-buttons-TOTAL_FORMS"]');
+        if (managementInput) {
+            return managementInput.closest('.djn-group');
+        }
+
+        return blockSuite.querySelector(
+            '.djn-group[id*="-buttons-group"], ' +
+            '.djn-group[id*="-projectblockbutton-"], ' +
+            '.djn-group[id*="-button-"], ' +
+            '.djn-group[class*="-buttons"], ' +
+            '.djn-group[class*="-button"], ' +
+            '.djn-group[class*="-projectblockbutton"]'
+        );
+    }
+
+    function revealErrors(blockSuite) {
+        blockSuite.querySelectorAll('.errorlist, .errors').forEach(errorNode => {
+            const row = errorNode.closest('.form-row');
+            const group = errorNode.closest('.djn-group');
+
+            if (row) row.style.display = '';
+            if (group) group.style.display = '';
+            expandParentFieldset(errorNode);
+        });
+    }
+
     // Функция скрытия/показа полей внутри конкретного блока
     function toggleFields(blockSuite) {
         // Находим селектор поля variant
@@ -19,47 +79,42 @@ document.addEventListener('DOMContentLoaded', () => {
         const rowsAccentedText = blockSuite.querySelectorAll('.form-row[class*="field-accented_text_"]');
         const allTextRows = [...rowsText, ...rowsAccentedText];
 
-        // УЛУЧШЕННЫЙ ПОИСК ДЛЯ nested-admin:
-        // Ищем группу кнопок по классу djn-group, у которой id или класс содержит упоминание кнопочной модели
-        const buttonsGroup = blockSuite.querySelector(
-            '.djn-group[id*="-projectblockbutton-"], ' +
-            '.djn-group[id*="-button-"], ' +
-            '.djn-group[class*="-button"], ' +
-            '.djn-group[class*="-projectblockbutton"]'
-        );
+        const buttonsGroup = findButtonsGroup(blockSuite);
 
         // Вариант 1: Изображение и список (BLOCK_VARIANT_IMAGE_WITH_LIST)
         if (variant === '1') {
-            if (rowImage) rowImage.style.display = '';
-            if (rowLeftImage) rowLeftImage.style.display = 'none';
-            rowsStringList.forEach(r => r.style.display = '');
-            allTextRows.forEach(r => r.style.display = 'none');
-            if (buttonsGroup) buttonsGroup.style.display = 'none';
+            setElementDisplay(rowImage, '');
+            setElementDisplay(rowLeftImage, 'none');
+            setRowsDisplay(rowsStringList, '');
+            setRowsDisplay(allTextRows, '');
+            setElementDisplay(buttonsGroup, 'none');
         } 
         // Вариант 2: Два изображения (BLOCK_VARIANT_TWO_IMAGES)
         else if (variant === '2') {
-            if (rowImage) rowImage.style.display = '';
-            if (rowLeftImage) rowLeftImage.style.display = '';
-            rowsStringList.forEach(r => r.style.display = 'none');
-            allTextRows.forEach(r => r.style.display = 'none');
-            if (buttonsGroup) buttonsGroup.style.display = 'none';
+            setElementDisplay(rowImage, '');
+            setElementDisplay(rowLeftImage, '');
+            setRowsDisplay(rowsStringList, 'none');
+            setRowsDisplay(allTextRows, '');
+            setElementDisplay(buttonsGroup, 'none');
         } 
         // Вариант 3: Изображение и кнопки (BLOCK_VARIANT_IMAGE_WITH_BUTTONS)
         else if (variant === '3') {
-            if (rowImage) rowImage.style.display = '';
-            if (rowLeftImage) rowLeftImage.style.display = 'none';
-            rowsStringList.forEach(r => r.style.display = 'none');
-            allTextRows.forEach(r => r.style.display = ''); 
-            if (buttonsGroup) buttonsGroup.style.display = ''; // Показываем группу кнопок
+            setElementDisplay(rowImage, '');
+            setElementDisplay(rowLeftImage, 'none');
+            setRowsDisplay(rowsStringList, 'none');
+            setRowsDisplay(allTextRows, ''); 
+            setElementDisplay(buttonsGroup, ''); // Показываем группу кнопок
         } 
         // Если вариант не выбран (значение "---------")
         else {
-            if (rowImage) rowImage.style.display = '';
-            if (rowLeftImage) rowLeftImage.style.display = '';
-            rowsStringList.forEach(r => r.style.display = '');
-            allTextRows.forEach(r => r.style.display = '');
-            if (buttonsGroup) buttonsGroup.style.display = '';
+            setElementDisplay(rowImage, '');
+            setElementDisplay(rowLeftImage, '');
+            setRowsDisplay(rowsStringList, '');
+            setRowsDisplay(allTextRows, '');
+            setElementDisplay(buttonsGroup, '');
         }
+
+        revealErrors(blockSuite);
     }
 
     // Ловим переключения "Варианта" пользователем во всей админке
@@ -70,6 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    revealErrors(document);
+
     // Инициализация интерфейса при загрузке страницы для уже сохраненных блоков
     setTimeout(() => {
         document.querySelectorAll('.djn-inline-form').forEach(blockSuite => {
@@ -78,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleFields(blockSuite);
             }
         });
+        revealErrors(document);
     }, 800); // Немного увеличили таймаут для тяжелых страниц с TinyMCE
 });
 
