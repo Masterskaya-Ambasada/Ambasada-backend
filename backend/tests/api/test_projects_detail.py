@@ -61,6 +61,8 @@ def test_project_detail_hides_variant_specific_fields_for_list_block(
     list_block,
 ):
     """Проверяет, что для блока варианта IMAGE_WITH_LIST в ответе остаются только допустимые для него поля."""
+    list_block.left_image = 'https://example.com/hidden-left-image.jpg'
+    list_block.save()
     url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200
@@ -79,6 +81,8 @@ def test_project_detail_hides_variant_specific_fields_for_two_images_block(
     two_images_block,
 ):
     """Проверяет, что для блока варианта TWO_IMAGES в ответе остаются только допустимые для него поля."""
+    two_images_block.string_list = ['Hidden list item']
+    two_images_block.save()
     url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200
@@ -98,6 +102,9 @@ def test_project_detail_hides_variant_specific_fields_for_buttons_block(
     buttons_block,
 ):
     """Проверяет, что для блока варианта IMAGE_WITH_BUTTONS в ответе остаются только допустимые для него поля."""
+    buttons_block.left_image = 'https://example.com/hidden-left-image.jpg'
+    buttons_block.string_list = ['Hidden list item']
+    buttons_block.save()
     url = reverse('api:projects-detail', kwargs={'project_id': published_project.slug})
     response = api_client.get(url)
     assert response.status_code == 200

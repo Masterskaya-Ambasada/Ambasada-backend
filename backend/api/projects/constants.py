@@ -1,5 +1,3 @@
-"""Константы API модуля projects."""
-
 from django.utils.translation import gettext_lazy as _
 
 ACCEPT_LANGUAGE_HEADER = 'Accept-Language'

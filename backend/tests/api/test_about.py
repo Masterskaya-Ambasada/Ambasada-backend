@@ -42,7 +42,14 @@ def test_about_page_not_found(api_client):
     response = api_client.get(url)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert 'detail' in response.json()
+    
+    data = response.json()
+
+    assert data == {
+        'status':404,
+        'code':'NOT_FOUND',
+        'message':'Информация о сообществе не найдена'
+    }
 
 
 @pytest.mark.django_db

@@ -1,5 +1,3 @@
-"""Модели проектов и связанных сущностей для API."""
-
 from __future__ import annotations
 
 from collections import defaultdict
@@ -376,14 +374,6 @@ class ProjectContentBlock(models.Model):
             validate_string_list(self.string_list)
         except ValidationError as error:
             raise ValidationError({'string_list': error.messages}) from error
-        if self.variant == self.Variant.IMAGE_WITH_LIST and not self.string_list:
-            raise ValidationError({'string_list': _('Для варианта 1 требуется хотя бы один элемент списка.')})
-        if self.variant != self.Variant.IMAGE_WITH_LIST and self.string_list:
-            raise ValidationError({'string_list': _('Список тезисов допустим только для варианта 1.')})
-        if self.variant == self.Variant.TWO_IMAGES and not self.left_image:
-            raise ValidationError({'left_image': _('Для варианта 2 требуется второе изображение.')})
-        if self.variant != self.Variant.TWO_IMAGES and self.left_image:
-            raise ValidationError({'left_image': _('Второе изображение допустимо только для варианта 2.')})
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок блока в пределах проекта."""

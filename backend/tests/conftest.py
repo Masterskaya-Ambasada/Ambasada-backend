@@ -266,38 +266,38 @@ def about_page(db):
     from about.models import AboutPage
 
     return AboutPage.objects.create(
-        hero_title="Hero",
-        hero_description="Hero description",
-        about_title="About",
-        button_label="Button",
-        button_link="/projects",
-        values_title="Values",
-        team_title="Team",
-        team_button_label="Join",
-        team_button_link="/join",
-        gallery_title="Gallery",
+        hero_title='Hero',
+        hero_description='Hero description',
+        about_title='About',
+        button_label='Button',
+        button_link='/projects',
+        values_title='Values',
+        team_title='Team',
+        team_button_label='Join',
+        team_button_link='/join',
+        gallery_title='Gallery',
     )
 
 
 @pytest.fixture
-def values(db):
-    """Создает список ценностей."""
+def values(db, about_page):
+    """Создает список ценностей, привязанных к странице."""
     from about.models import Value
 
     return Value.objects.bulk_create([
-        Value(title="Value 1", text="Text 1"),
-        Value(title="Value 2", text="Text 2"),
+        Value(about=about_page, title='Value 1', text='Text 1'),
+        Value(about=about_page, title='Value 2', text='Text 2'),
     ])
 
 
 @pytest.fixture
-def gallery_images(db):
-    """Создает изображения галереи."""
+def gallery_images(db, about_page):
+    """Создает изображения галереи, привязанные к странице."""
     from about.models import GalleryImage
 
     return GalleryImage.objects.bulk_create([
-        GalleryImage(alt="Image 1"),
-        GalleryImage(alt="Image 2"),
+        GalleryImage(about=about_page, alt='Image 1'),
+        GalleryImage(about=about_page, alt='Image 2'),
     ])
 
 
@@ -306,14 +306,14 @@ def team_members(db, django_user_model):
     """Создает участников команды."""
     return [
         django_user_model.objects.create(
-            email="user1@test.com",
-            first_name="User",
-            last_name="One",
+            email='user1@test.com',
+            first_name='User',
+            last_name='One',
         ),
         django_user_model.objects.create(
-            email="user2@test.com",
-            first_name="User",
-            last_name="Two",
+            email='user2@test.com',
+            first_name='User',
+            last_name='Two',
         ),
     ]
 
@@ -327,10 +327,12 @@ def about_full_setup(about_page, values, gallery_images, team_members):
     - участники команды
     - галерея
     """
-    about_page.team_members.set(team_members)
+    for user in team_members:
+        user.is_public = True
+        user.save()
     return {
-        "page": about_page,
-        "values": values,
-        "members": team_members,
-        "images": gallery_images,
+        'page': about_page,
+        'values': values,
+        'members': team_members,
+        'images': gallery_images,
     }

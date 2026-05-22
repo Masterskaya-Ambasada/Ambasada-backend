@@ -1,5 +1,3 @@
-"""Классы ресурсов для импорта csv."""
-
 from django.utils.translation import gettext_lazy as _
 from import_export import resources
 
@@ -17,7 +15,7 @@ class BaseResource(resources.ModelResource):
 
     def before_import_row(self, row, **kwargs):
         """Проверка обязательных полей перед импортом."""
-        if not row.get('slug'):  # добавить проверку всех обязательных полей
+        if not row.get('slug'):
             raise ValueError(_('slug: Это поле обязательно для заполнения'))
         return row
 

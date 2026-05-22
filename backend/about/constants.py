@@ -1,0 +1,10 @@
+"""Константы модуля About."""
+
+TITLE_MAX_LENGTH = 100
+DESCRIPTION_MAX_LENGTH = 255
+TEXT_MAX_LENGTH = 250
+
+UPLOAD_GALLERY = 'about/gallery/'
+UPLOAD_ABOUT = 'about/'
+
+PARAGRAPH_DEFAULT_ORDER = 0

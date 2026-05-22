@@ -1,185 +1,149 @@
-"""Модели для раздела 'О сообществе'."""
-
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db import models
-from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
-from users.models import User
 
-
-class Value(models.Model):
-    """Сущность ценности."""
-
-    title = models.CharField(
-        max_length=100,
-        verbose_name=_('Название'),
-        default='',
-    )
-    text = models.TextField(
-        validators=[MaxLengthValidator(250)],
-        verbose_name=_('Текст'),
-        default='',
-    )
-
-    class Meta:
-        verbose_name = _('Ценность')
-        verbose_name_plural = _('Ценности')
-        ordering = ['id']
-
-    def __str__(self):
-        return Truncator(self.title).chars(50)
-
-
-class GalleryImage(models.Model):
-    """Сущность изображения для галереи."""
-
-    image = models.ImageField(
-        upload_to='gallery/',
-        verbose_name=_('Изображение'),
-        blank=True,
-        null=True,
-    )
-    alt = models.CharField(
-        max_length=255,
-        verbose_name=_('Alt текст'),
-        default='',
-    )
-
-    class Meta:
-        verbose_name = _('Изображение галереи')
-        verbose_name_plural = _('Галерея изображений')
-        ordering = ['id']
-
-    def __str__(self):
-        return Truncator(self.alt).chars(50)
+from .constants import (
+    DESCRIPTION_MAX_LENGTH,
+    PARAGRAPH_DEFAULT_ORDER,
+    TEXT_MAX_LENGTH,
+    TITLE_MAX_LENGTH,
+    UPLOAD_GALLERY,
+)
 
 
 class AboutPage(models.Model):
-    """Сущность страницы 'О нас'."""
+    """Сущность страницы 'О нас' (Singleton)."""
 
     hero_title = models.CharField(
-        max_length=100,
+        max_length=TITLE_MAX_LENGTH,
         verbose_name=_('Заголовок hero'),
-        default='',
+        help_text=_('Главный заголовок, отображаемый на первом экране страницы.'),
     )
     hero_description = models.CharField(
-        max_length=255,
+        max_length=DESCRIPTION_MAX_LENGTH,
         verbose_name=_('Описание hero'),
-        default='',
+        help_text=_('Подзаголовок или краткий рекламный текст под основным заголовком.'),
     )
-
     about_title = models.CharField(
-        max_length=100,
+        max_length=TITLE_MAX_LENGTH,
         verbose_name=_('Заголовок блока "О нас"'),
-        default='',
+        help_text=_('Заголовок для текстового раздела с описанием деятельности.'),
     )
-    image_left = models.ImageField(
-        upload_to='about/',
-        verbose_name=_('Левое изображение hero'),
-        blank=True,
-        null=True,
-    )
-    image_right = models.ImageField(
-        upload_to='about/',
-        verbose_name=_('Правое изображение hero'),
-        blank=True,
-        null=True,
-    )
-
     button_label = models.CharField(
-        max_length=100,
-        verbose_name=_('Текст кнопки'),
-        default='',
+        max_length=TITLE_MAX_LENGTH,
+        verbose_name=_('Главная кнопка (текст)'),
+        help_text=_('Надпись на кнопке в блоке "О нас" (например, "Подробнее").'),
     )
-    button_link = models.CharField(
-        max_length=255,
-        verbose_name=_('Ссылка кнопки'),
-        default='',
+    button_link = models.URLField(
+        max_length=DESCRIPTION_MAX_LENGTH,
+        verbose_name=_('Главная кнопка (ссылка)'),
+        help_text=_('URL-адрес, на который ведет главная кнопка (включая https://).'),
     )
 
     values_title = models.CharField(
-        max_length=100,
+        max_length=TITLE_MAX_LENGTH,
         verbose_name=_('Заголовок "Ценности"'),
-        default='',
+        help_text=_('Заголовок для блока с перечислением ценностей сообщества.'),
     )
     team_title = models.CharField(
-        max_length=100,
+        max_length=TITLE_MAX_LENGTH,
         verbose_name=_('Заголовок "Команда"'),
-        default='',
+        help_text=_('Заголовок для секции с участниками команды.'),
     )
-
     team_button_label = models.CharField(
-        max_length=100,
+        max_length=TITLE_MAX_LENGTH,
         verbose_name=_('Кнопка команды (текст)'),
-        default='',
+        help_text=_('Надпись на кнопке для перехода к списку всей команды.'),
     )
-    team_button_link = models.CharField(
-        max_length=255,
+    team_button_link = models.URLField(
+        max_length=DESCRIPTION_MAX_LENGTH,
         verbose_name=_('Кнопка команды (ссылка)'),
-        default='',
+        help_text=_('URL-адрес для кнопки команды.'),
     )
-
-    team_members = models.ManyToManyField(
-        User,
-        blank=True,
-        related_name='about_pages',
-        verbose_name=_('Участники команды'),
-    )
-
     email = models.EmailField(
-        verbose_name=_('Email'),
-        blank=True,
-        default='',
+        verbose_name=_('Email'), blank=True, default='', help_text=_('Контактный email для связи.')
     )
-
-    contact_link = models.CharField(
-        max_length=255,
+    contact_link = models.URLField(
+        max_length=DESCRIPTION_MAX_LENGTH,
         verbose_name=_('Ссылка для связи'),
         blank=True,
-        default='',
+        help_text=_('Прямая ссылка для связи (например, Telegram-бот или форма).'),
     )
-
     gallery_title = models.CharField(
-        max_length=100,
+        max_length=TITLE_MAX_LENGTH,
         verbose_name=_('Заголовок галереи'),
-        default='',
+        help_text=_('Заголовок для фотогалереи сообщества.'),
     )
 
     class Meta:
         verbose_name = _('Страница "О нас"')
         verbose_name_plural = _('Страница "О нас"')
 
-    def clean(self):
+    def save(self, *args, **kwargs):
         if not self.pk and AboutPage.objects.exists():
             raise ValidationError(_('Может существовать только одна страница "О нас".'))
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.hero_title or 'Страница "О нас"'
+        return self.hero_title or _('Страница "О нас"')
 
 
 class AboutParagraph(models.Model):
-    """Параграф страницы 'О нас' (разделён на акцент и основной текст)."""
-
     about = models.ForeignKey(
-        AboutPage,
-        on_delete=models.CASCADE,
-        related_name='paragraphs',
-        verbose_name=_('Страница "О нас"'),
+        AboutPage, on_delete=models.CASCADE, related_name='paragraphs', verbose_name=_('Страница')
     )
     first_sentence = models.CharField(
-        max_length=255,
-        verbose_name=_('Акцент (первое предложение)'),
+        max_length=DESCRIPTION_MAX_LENGTH,
+        verbose_name=_('Акцент'),
+        help_text=_('Первое предложение абзаца, которое выделяется жирным или цветом.'),
     )
     main_text = models.TextField(
-        verbose_name=_('Основной текст'),
+        verbose_name=_('Основной текст'), help_text=_('Развернутое описание основного содержания абзаца.')
     )
     order = models.PositiveIntegerField(
-        default=0,
+        default=PARAGRAPH_DEFAULT_ORDER,
         verbose_name=_('Порядок'),
+        help_text=_('Числовой индекс для сортировки абзацев (чем меньше число, тем выше блок).'),
     )
 
     class Meta:
-        ordering = ['order']
+        ordering = ['order', 'id']
         verbose_name = _('Параграф')
-        verbose_name_plural = _('Параграфы')
+        constraints = [models.UniqueConstraint(fields=['about', 'order'], name='unique_about_paragraph_order')]
+
+
+class Value(models.Model):
+    about = models.ForeignKey(AboutPage, on_delete=models.CASCADE, related_name='values', verbose_name=_('Страница'))
+    title = models.CharField(
+        max_length=TITLE_MAX_LENGTH, verbose_name=_('Название'), help_text=_('Краткий заголовок ценности.')
+    )
+    text = models.TextField(
+        validators=[MaxLengthValidator(TEXT_MAX_LENGTH)],
+        verbose_name=_('Текст'),
+        help_text=_('Подробное описание сути ценности.'),
+    )
+
+    class Meta:
+        verbose_name = _('Ценность')
+        ordering = ['id']
+
+
+class GalleryImage(models.Model):
+    about = models.ForeignKey(
+        AboutPage, on_delete=models.CASCADE, related_name='gallery_images', verbose_name=_('Страница')
+    )
+    image = models.ImageField(
+        upload_to=UPLOAD_GALLERY,
+        verbose_name=_('Изображение'),
+        help_text=_('Загрузите фото для галереи. Оптимально в высоком качестве.'),
+    )
+    alt = models.CharField(
+        max_length=DESCRIPTION_MAX_LENGTH,
+        verbose_name=_('Alt текст'),
+        blank=True,
+        help_text=_('Описание изображения для людей с нарушениями зрения и SEO.'),
+    )
+
+    class Meta:
+        verbose_name = _('Изображение галереи')
