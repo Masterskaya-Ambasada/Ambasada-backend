@@ -64,7 +64,7 @@ def test_project_content_block_inline_rejects_duplicate_order(published_project)
 
 @pytest.mark.django_db
 def test_project_content_block_inline_shows_translated_field_errors(published_project):
-    """Проверяет, что ошибки translated-полей не падают в админке как ValueError."""
+    """Проверяет, что ошибки переводных полей не падают в админке как ValueError."""
     formset_class = inlineformset_factory(
         Project,
         ProjectContentBlock,
@@ -102,7 +102,7 @@ def test_project_admin_add_renders_content_block_translated_field_error(
     admin_user,
     project_type_architecture,
 ):
-    """Проверяет, что admin add не падает при ошибке translated-поля контентного блока."""
+    """Проверяет, что форма создания проекта не падает при ошибке переводного поля контентного блока."""
     client.force_login(admin_user)
     slug = 'admin-invalid-content-block'
     response = client.post(
