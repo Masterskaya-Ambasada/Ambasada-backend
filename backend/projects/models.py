@@ -11,6 +11,7 @@ from django.db import models, transaction
 from django.db.models import Max, Q
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django_jsonform.models.fields import JSONField
 
@@ -44,6 +45,12 @@ from .validators import validate_string_list
 def _is_missing_order(order: int | None) -> bool:
     """Проверяет, что order не задан и должен быть назначен автоматически."""
     return order is None or order == DEFAULT_ORDER
+
+
+def _get_current_translation_field_name(field_name: str) -> str:
+    """Возвращает имя переводного поля для текущего языка modeltranslation."""
+    language = (get_language() or settings.MODELTRANSLATION_DEFAULT_LANGUAGE).replace('-', '_')
+    return f'{field_name}_{language}'
 
 
 def _get_max_orders(
@@ -595,10 +602,11 @@ class ProjectContentBlock(models.Model):
     def clean(self) -> None:
         """Проверяет согласованность полей для выбранного варианта блока."""
         super().clean()
+        string_list_field_name = _get_current_translation_field_name('string_list')
         try:
             validate_string_list(self.string_list)
         except ValidationError as error:
-            raise ValidationError({'string_list': error.messages}) from error
+            raise ValidationError({string_list_field_name: error.messages}) from error
         self._validate_variant_required_fields()
         if (
             self.project_id is not None
@@ -616,12 +624,14 @@ class ProjectContentBlock(models.Model):
     def _validate_variant_required_fields(self) -> None:
         """Проверяет обязательные поля для выбранного варианта блока."""
         errors = {}
+        text_field_name = _get_current_translation_field_name('text')
+        string_list_field_name = _get_current_translation_field_name('string_list')
         if not self.image:
             errors['image'] = _('Добавьте основное изображение для выбранного варианта блока.')
         if not self.text:
-            errors['text'] = _('Заполните основной текст для выбранного варианта блока.')
+            errors[text_field_name] = _('Заполните основной текст для выбранного варианта блока.')
         if self.variant == self.Variant.IMAGE_WITH_LIST and not self.string_list:
-            errors['string_list'] = _('Добавьте хотя бы один тезис для варианта "Изображение и список".')
+            errors[string_list_field_name] = _('Добавьте хотя бы один тезис для варианта "Изображение и список".')
         if self.variant == self.Variant.TWO_IMAGES and not self.left_image:
             errors['left_image'] = _('Добавьте второе изображение для варианта "Два изображения".')
         if errors:

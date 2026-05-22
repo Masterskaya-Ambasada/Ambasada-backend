@@ -332,7 +332,7 @@ def test_content_block_with_list_variant_requires_string_list(published_project)
     )
     with pytest.raises(ValidationError) as exc_info:
         block.full_clean()
-    assert 'string_list' in exc_info.value.message_dict
+    assert 'string_list_ru' in exc_info.value.message_dict
 
 
 @pytest.mark.django_db
@@ -404,7 +404,7 @@ def test_content_block_requires_common_image_and_text(published_project):
     )
     with pytest.raises(ValidationError) as exc_info:
         block.full_clean()
-    assert {'image', 'text'} <= set(exc_info.value.message_dict)
+    assert {'image', 'text_ru'} <= set(exc_info.value.message_dict)
 
 
 @pytest.mark.django_db(transaction=True)
