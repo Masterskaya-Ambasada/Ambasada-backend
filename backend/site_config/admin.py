@@ -1,5 +1,6 @@
 from contacts.models import ContactSocialLink
 from core.base_admin import BaseAdmin
+from django import forms
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -17,10 +18,88 @@ class ContactSocialLinkInline(admin.TabularInline):
     can_delete = False
 
 
+class SiteConfigAdminForm(forms.ModelForm):
+    """Кастомная форма админки для подстановки языковых HTML-шаблонов."""
+
+    class Meta:
+        model = SiteConfig
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        """Инициализация формы с предзаполнением полей для новых объектов."""
+        super().__init__(*args, **kwargs)
+
+        if not self.instance.pk:
+            # ==================================================================
+            # 1. РУССКИЙ ЯЗЫК (RU)
+            # ==================================================================
+            if 'privacy_policy_ru' in self.fields:
+                self.fields['privacy_policy_ru'].initial = (
+                    '<p>Нажимая кнопку «Отправить», вы соглашаетесь с '
+                    '<a href="/policy">Политикой конфиденциальности</a> '
+                    'и даёте согласие на обработку персональных данных.</p>'
+                )
+            if 'cookie_message_ru' in self.fields:
+                self.fields[
+                    'cookie_message_ru'
+                ].initial = '<p>Мы используем технические cookie для корректной работы сайта.</p>'
+            if 'cookie_button_text_ru' in self.fields:
+                self.fields['cookie_button_text_ru'].initial = 'Принять'
+
+            # ==================================================================
+            # 2. АНГЛИЙСКИЙ ЯЗЫК (EN)
+            # ==================================================================
+            if 'privacy_policy_en' in self.fields:
+                self.fields['privacy_policy_en'].initial = (
+                    '<p>By clicking "Submit", you agree to our '
+                    '<a href="/policy">Privacy Policy</a> and consent to '
+                    'the processing of your personal data.</p>'
+                )
+            if 'cookie_message_en' in self.fields:
+                self.fields[
+                    'cookie_message_en'
+                ].initial = '<p>We use technical cookies for the correct operation of the website.</p>'
+            if 'cookie_button_text_en' in self.fields:
+                self.fields['cookie_button_text_en'].initial = 'Accept'
+
+            # ==================================================================
+            # 3. СЕРБСКИЙ ЯЗЫК (ЛАТИНИЦА - SR_LATN)
+            # ==================================================================
+            if 'privacy_policy_sr_latn' in self.fields:
+                self.fields['privacy_policy_sr_latn'].initial = (
+                    '<p>Klikom na dugme "Pošalji", prihvatate '
+                    '<a href="/policy">Politiku privatnosti</a> '
+                    'i dajete saglasnost za obradu podataka o ličnosti.</p>'
+                )
+            if 'cookie_message_sr_latn' in self.fields:
+                self.fields[
+                    'cookie_message_sr_latn'
+                ].initial = '<p>Koristimo tehničke kolačiće za ispravan rad veb sajta.</p>'
+            if 'cookie_button_text_sr_latn' in self.fields:
+                self.fields['cookie_button_text_sr_latn'].initial = 'Prihvati'
+
+            # ==================================================================
+            # 4. СЕРБСКИЙ ЯЗЫК (КИРИЛЛИЦА - SR_CYRL)
+            # ==================================================================
+            if 'privacy_policy_sr_cyrl' in self.fields:
+                self.fields['privacy_policy_sr_cyrl'].initial = (
+                    '<p>Кликом на дугме "Пошаљи", прихватате '
+                    '<a href="/policy">Политику приватности</a> '
+                    'и дајете сагласност за обраду података о личности.</p>'
+                )
+            if 'cookie_message_sr_cyrl' in self.fields:
+                self.fields[
+                    'cookie_message_sr_cyrl'
+                ].initial = '<p>Користимо техничке колачиће за исправан рад веб сајта.</p>'
+            if 'cookie_button_text_sr_cyrl' in self.fields:
+                self.fields['cookie_button_text_sr_cyrl'].initial = 'Прихвати'
+
+
 @admin.register(SiteConfig)
 class ConfigAdmin(BaseAdmin):
     """Администрирование глобальных настроек сайта (Singleton)."""
 
+    form = SiteConfigAdminForm
     ordering = ('id',)
     inlines = [ContactSocialLinkInline]
 
@@ -44,6 +123,10 @@ class ConfigAdmin(BaseAdmin):
         'privacy_policy_en',
         'privacy_policy_sr_latn',
         'privacy_policy_sr_cyrl',
+        'cookie_message_ru',
+        'cookie_message_en',
+        'cookie_message_sr_latn',
+        'cookie_message_sr_cyrl',
     ]
 
     fieldsets = (
@@ -119,7 +202,12 @@ class ConfigAdmin(BaseAdmin):
         """Редиректит на редактирование, если конфиг уже существует."""
         existing_config = SiteConfig.objects.only('pk').first()
         if existing_config:
-            return redirect(reverse('admin:site_config_siteconfig_change', args=[existing_config.pk]))
+            return redirect(
+                reverse(
+                    'admin:site_config_siteconfig_change',
+                    args=[existing_config.pk],
+                )
+            )
         return super().add_view(request, form_url, extra_context)
 
     def has_delete_permission(self, request, obj=None):

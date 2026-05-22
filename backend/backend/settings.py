@@ -1,5 +1,3 @@
-"""Base settings."""
-
 import sys
 from datetime import timedelta
 from pathlib import Path
@@ -374,7 +372,18 @@ TINYMCE_DEFAULT_CONFIG = {
     'bold italic forecolor backcolor | removeformat | '
     'alignleft aligncenter alignright alignjustify | '
     'bullist numlist outdent indent | link unlink | code fullscreen help',
-    'link_assume_external_targets': True,
+    # Отключаем внешние таргеты
+    'link_assume_external_targets': False,
+    'relative_urls': False,  # Запрещает TinyMCE превращать пути в относительные
+    'remove_script_host': True,  # Не добавляет протокол и домен (оставляет чистый /path)
+    'convert_urls': False,  # Запрещает редактору вообще как-либо менять ссылки
+    'link_list': [
+        {'title': 'Home Page', 'value': '/'},
+        {'title': 'Projects (List)', 'value': '/projects'},
+        {'title': 'About Us', 'value': '/about'},
+        {'title': 'Contacts', 'value': '/contacts'},
+        {'title': 'Privacy Policy', 'value': '/policy'},
+    ],
     'font_formats': 'System Font=-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;'
     'Inter=Inter,sans-serif;'
     'Roboto=Roboto,sans-serif;'

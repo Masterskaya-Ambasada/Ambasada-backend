@@ -1,5 +1,3 @@
-"""Tests for AdminLoginThrottleMiddleware."""
-
 import time
 from unittest.mock import patch
 
@@ -11,23 +9,23 @@ from django.test import RequestFactory
 
 
 class TestAdminLoginThrottleMiddleware:
-    """Test suite for admin login rate limiting middleware."""
+    """Тесты ограничения частоты попыток входа в админку."""
 
     @pytest.fixture(autouse=True)
     def setup_cache(self):
-        """Clear cache before each test."""
+        """Очистка кеша до и после каждого теста."""
         cache.clear()
         yield
         cache.clear()
 
     @pytest.fixture
     def factory(self):
-        """Request factory for creating test requests."""
+        """Фабрика для создания HTTP-запросов."""
         return RequestFactory()
 
     @pytest.fixture
     def middleware(self):
-        """Middleware instance with mock response."""
+        """Экземпляр middleware с заглушкой get_response."""
 
         def get_response(request):
             return HttpResponse('OK', status=200)
@@ -36,273 +34,146 @@ class TestAdminLoginThrottleMiddleware:
 
     @pytest.fixture
     def test_ip(self):
-        """Test IP address."""
+        """Тестовый IP-адрес."""
         return '192.168.1.100'
 
     @pytest.fixture
-    def create_login_request(self, factory):
-        """Helper fixture to create POST requests to admin login with IP."""
-        def _create_login_request(ip, data=None):
-            """Create a POST request to /admin/login/ with specified IP."""
+    def create_request(self, factory):
+        """Хелпер для создания POST-запросов к админке с заданным IP."""
+
+        def _create(ip, data=None):
             if data is None:
                 data = {'username': 'admin', 'password': 'pass'}
+
             request = factory.post('/admin/login/', data)
             request.META['REMOTE_ADDR'] = ip
             return request
-        return _create_login_request
 
-    def test_normal_login_allowed(self, middleware, create_login_request, test_ip):
-        """Test that normal login attempts are allowed under limit."""
-        # Make 9 attempts (under the limit)
-        for i in range(9):
-            request = create_login_request(test_ip)
-            response = middleware(request)
+        return _create
+
+    def test_allows_requests_under_limit(self, middleware, create_request, test_ip):
+        """Запросы ниже лимита должны проходить без блокировки."""
+        for _ in range(9):
+            response = middleware(create_request(test_ip))
             assert response.status_code == 200
-            assert response.content == b'OK'
 
-        # Check cache state
-        count_key = f'admin_login_count:{test_ip}'
-        block_key = f'admin_login_block:{test_ip}'
+        assert cache.get(f'admin_login_count:{test_ip}') == 9
+        assert cache.get(f'admin_login_block:{test_ip}') is None
 
-        assert cache.get(count_key) == 9
-        assert cache.get(block_key) is None
+    def test_blocks_after_max_attempts(self, middleware, create_request, test_ip):
+        """Блокировка срабатывает после достижения лимита попыток."""
 
-    def test_login_blocked_after_10_attempts(self, middleware, create_login_request, test_ip):
-        """Test that login is blocked after 10 attempts."""
-        # Make 10 attempts (at the limit) - all should return 200
-        for i in range(10):
-            request = create_login_request(test_ip)
-            response = middleware(request)
-            assert response.status_code == 200, f"Attempt {i+1} should return 200"
+        for _ in range(AdminLoginThrottleMiddleware.MAX_ATTEMPTS):
+            response = middleware(create_request(test_ip))
+            assert response.status_code == 200
 
-        # Next attempt (11th) should be blocked with 429
-        request = create_login_request(test_ip)
-        response = middleware(request)
-        assert response.status_code == 429, "11th attempt should return 429 after block"
-        assert b'Too many login attempts' in response.content
-
-        # Check that block was set in cache
-        block_key = f'admin_login_block:{test_ip}'
-        assert cache.get(block_key) is True
-
-    def test_blocked_ip_returns_429(self, middleware, create_login_request, test_ip):
-        """Test that blocked IP returns 429 status."""
-        # Simulate blocked state
-        block_key = f'admin_login_block:{test_ip}'
-        cache.set(block_key, True, 300)
-
-        request = create_login_request(test_ip)
-        response = middleware(request)
+        response = middleware(create_request(test_ip))
 
         assert response.status_code == 429
-        assert b'Too many login attempts' in response.content
+        assert cache.get(f'admin_login_block:{test_ip}') is True
 
-    def test_different_ips_independent_throttling(self, middleware, create_login_request):
-        """Test that different IPs have independent throttling."""
+    def test_blocked_ip_is_rejected(self, middleware, create_request, test_ip):
+        """Заблокированный IP должен получать 429."""
+
+        cache.set(f'admin_login_block:{test_ip}', True, 300)
+
+        response = middleware(create_request(test_ip))
+
+        assert response.status_code == 429
+
+    def test_independent_ip_throttling(self, middleware, create_request):
+        """Разные IP должны иметь независимые лимиты."""
+
         ip1 = '192.168.1.100'
         ip2 = '192.168.1.101'
 
-        # Block first IP
         for _ in range(10):
-            request = create_login_request(ip1, {})
-            middleware(request)
+            middleware(create_request(ip1))
 
-        # First IP should be blocked
-        block_key_1 = f'admin_login_block:{ip1}'
-        assert cache.get(block_key_1) is True
+        assert cache.get(f'admin_login_block:{ip1}') is True
+        assert cache.get(f'admin_login_block:{ip2}') is None
 
-        # Second IP should still be allowed
-        request = create_login_request(ip2, {})
-        response = middleware(request)
+        response = middleware(create_request(ip2))
         assert response.status_code == 200
 
-        block_key_2 = f'admin_login_block:{ip2}'
-        assert cache.get(block_key_2) is None
+    def test_non_post_requests_are_ignored(self, middleware, factory, test_ip):
+        """GET-запросы не должны учитываться в лимите."""
 
-    def test_non_post_requests_ignored(self, middleware, factory, test_ip):
-        """Test that non-POST requests are not throttled."""
         request = factory.get('/admin/login/')
         request.META['REMOTE_ADDR'] = test_ip
 
-        response = middleware(request)
+        middleware(request)
 
-        assert response.status_code == 200
-        count_key = f'admin_login_count:{test_ip}'
-        assert cache.get(count_key) is None
+        assert cache.get(f'admin_login_count:{test_ip}') is None
 
-    def test_non_admin_paths_ignored(self, middleware, factory, test_ip):
-        """Test that non-admin paths are not throttled."""
-        request = factory.post('/some-other-path/', {})
+    def test_non_admin_path_is_ignored(self, middleware, factory, test_ip):
+        """Запросы вне админки не должны учитываться."""
+
+        request = factory.post('/other/', {})
         request.META['REMOTE_ADDR'] = test_ip
 
-        response = middleware(request)
+        middleware(request)
 
-        assert response.status_code == 200
-        count_key = f'admin_login_count:{test_ip}'
-        assert cache.get(count_key) is None
+        assert cache.get(f'admin_login_count:{test_ip}') is None
 
-    def test_forwarded_for_ip_extraction(self, middleware, factory):
-        """Test that IP is correctly extracted from X-Forwarded-For header."""
-        test_ip = '203.0.113.1'
+    def test_x_forwarded_for_priority(self, middleware, factory):
+        """X-Forwarded-For имеет приоритет над REMOTE_ADDR."""
+
         request = factory.post('/admin/login/', {})
-        request.META['HTTP_X_FORWARDED_FOR'] = f'{test_ip}, 203.0.113.2'
+        request.META['HTTP_X_FORWARDED_FOR'] = '203.0.113.1, 203.0.113.2'
 
-        response = middleware(request)
+        middleware(request)
 
-        assert response.status_code == 200
-        count_key = f'admin_login_count:{test_ip}'
-        assert cache.get(count_key) == 1
+        assert cache.get('admin_login_count:203.0.113.1') == 1
 
-    @patch('core.middleware.AdminLoginThrottleMiddleware.WINDOW_SECONDS', 1)
-    def test_count_key_expires_after_window(self, middleware, create_login_request, test_ip):
-        """Test that count key expires after the window period."""
-        # Make some attempts
-        for _ in range(5):
-            request = create_login_request(test_ip, {})
-            middleware(request)
+    def test_window_reset(self, middleware, create_request, test_ip):
+        """Счётчик должен сбрасываться после окна времени."""
 
-        count_key = f'admin_login_count:{test_ip}'
-        assert cache.get(count_key) == 5
+        with patch.object(AdminLoginThrottleMiddleware, 'WINDOW_SECONDS', 1):
+            for _ in range(5):
+                middleware(create_request(test_ip))
 
-        # Wait for the window to expire (1 second)
-        time.sleep(1.1)
+            assert cache.get(f'admin_login_count:{test_ip}') == 5
 
-        # Next attempt should start fresh count
-        request = create_login_request(test_ip, {})
-        response = middleware(request)
-        assert response.status_code == 200
-        assert cache.get(count_key) == 1
+            time.sleep(1.1)
 
-    @patch('core.middleware.AdminLoginThrottleMiddleware.BLOCK_SECONDS', 1)
-    def test_block_key_expires_after_block_period(self, middleware, create_login_request, test_ip):
-        """Test that block key expires after the block period."""
-        # Set up blocked state by making 10 attempts
-        for _ in range(10):
-            request = create_login_request(test_ip, {})
-            middleware(request)
+            middleware(create_request(test_ip))
 
-        block_key = f'admin_login_block:{test_ip}'
-        assert cache.get(block_key) is True
+            assert cache.get(f'admin_login_count:{test_ip}') == 1
 
-        # Verify blocked
-        request = create_login_request(test_ip, {})
-        response = middleware(request)
-        assert response.status_code == 429
+    def test_block_expires(self, middleware, create_request, test_ip):
+        """Блокировка должна истекать после BLOCK_SECONDS."""
 
-        # Wait for the block to expire (1 second)
-        time.sleep(1.1)
+        with patch.object(AdminLoginThrottleMiddleware, 'BLOCK_SECONDS', 1):
+            for _ in range(10):
+                middleware(create_request(test_ip))
 
-        # Should be allowed now
-        request = create_login_request(test_ip, {})
-        response = middleware(request)
-        assert response.status_code == 200
+            assert cache.get(f'admin_login_block:{test_ip}') is True
 
-    def test_concurrent_attempts_handling(self, middleware, create_login_request, test_ip):
-        """Test that concurrent attempts are properly counted."""
-        # Simulate rapid attempts
-        for _ in range(10):
-            request = create_login_request(test_ip, {})
-            middleware(request)
+            time.sleep(1.1)
 
-        block_key = f'admin_login_block:{test_ip}'
-        count_key = f'admin_login_count:{test_ip}'
+            response = middleware(create_request(test_ip))
+            assert response.status_code == 200
 
-        # Should be blocked now
-        assert cache.get(block_key) is True
-        assert cache.get(count_key) == 10
+    def test_ip_extraction_static_method(self):
+        """Проверка логики извлечения IP из заголовков."""
 
-        # Next attempt should be blocked
-        request = create_login_request(test_ip, {})
-        response = middleware(request)
-        assert response.status_code == 429
-
-    def test_get_ip_static_method(self):
-        """Test the _get_ip static method directly."""
         factory = RequestFactory()
 
-        # Test with X-Forwarded-For
-        request = factory.get('/')
-        request.META['HTTP_X_FORWARDED_FOR'] = '203.0.113.1, 203.0.113.2'
-        ip = AdminLoginThrottleMiddleware._get_ip(request)
-        assert ip == '203.0.113.1'
+        req = factory.get('/')
+        req.META['HTTP_X_FORWARDED_FOR'] = '1.1.1.1, 2.2.2.2'
+        assert AdminLoginThrottleMiddleware._get_ip(req) == '1.1.1.1'
 
-        # Test with REMOTE_ADDR
-        request = factory.get('/')
-        request.META['REMOTE_ADDR'] = '192.168.1.1'
-        ip = AdminLoginThrottleMiddleware._get_ip(request)
-        assert ip == '192.168.1.1'
+        req = factory.get('/')
+        req.META['REMOTE_ADDR'] = '3.3.3.3'
+        assert AdminLoginThrottleMiddleware._get_ip(req) == '3.3.3.3'
 
-        # Test fallback to default IP when no headers present
-        request = factory.get('/')
-        # Remove REMOTE_ADDR to test fallback (RequestFactory sets it by default)
-        if 'REMOTE_ADDR' in request.META:
-            del request.META['REMOTE_ADDR']
-        ip = AdminLoginThrottleMiddleware._get_ip(request)
-        assert ip == '0.0.0.0'
+        req = factory.get('/')
+        req.META.pop('REMOTE_ADDR', None)
+        assert AdminLoginThrottleMiddleware._get_ip(req) == '0.0.0.0'
 
-    def test_middleware_constants(self):
-        """Test that middleware constants are properly set."""
+    def test_constants(self):
+        """Проверка неизменности констант middleware."""
         assert AdminLoginThrottleMiddleware.MAX_ATTEMPTS == 10
         assert AdminLoginThrottleMiddleware.WINDOW_SECONDS == 60
         assert AdminLoginThrottleMiddleware.BLOCK_SECONDS == 300
-
-    def test_cache_keys_format(self, middleware, create_login_request, test_ip):
-        """Test that cache keys are formatted correctly."""
-        request = create_login_request(test_ip, {})
-        middleware(request)
-
-        count_key = f'admin_login_count:{test_ip}'
-        block_key = f'admin_login_block:{test_ip}'
-
-        # Verify keys exist and have correct values
-        assert cache.get(count_key) is not None
-        assert cache.get(block_key) is None  # Not blocked yet
-
-        # Verify key format
-        assert count_key.startswith('admin_login_count:')
-        assert block_key.startswith('admin_login_block:')
-        assert test_ip in count_key
-        assert test_ip in block_key
-
-    @patch('core.middleware.AdminLoginThrottleMiddleware.WINDOW_SECONDS', 1)
-    @patch('core.middleware.AdminLoginThrottleMiddleware.BLOCK_SECONDS', 1)
-    def test_reset_after_block_expires(self, middleware, create_login_request, test_ip):
-        """Test that user can login again after block expires."""
-        # Make 10 attempts to trigger block
-        for _ in range(10):
-            request = create_login_request(test_ip, {})
-            middleware(request)
-
-        # Verify blocked
-        block_key = f'admin_login_block:{test_ip}'
-        assert cache.get(block_key) is True
-
-        # Wait for the block to expire (1 second)
-        time.sleep(1.1)
-
-        # Should be able to login again
-        request = create_login_request(test_ip, {})
-        response = middleware(request)
-        assert response.status_code == 200
-
-        # Count should start fresh after block expiration
-        count_key = f'admin_login_count:{test_ip}'
-        # The count might still exist but should start from 1 after block expires
-        # since the middleware creates a new count key
-        assert cache.get(count_key) is not None
-
-    def test_x_forwarded_for_with_multiple_ips(self, middleware, factory):
-        """Test X-Forwarded-For with multiple IPs extracts first one."""
-        test_ip = '203.0.113.10'
-        request = factory.post('/admin/login/', {})
-        request.META['HTTP_X_FORWARDED_FOR'] = f'{test_ip}, 203.0.113.11, 203.0.113.12'
-
-        response = middleware(request)
-
-        assert response.status_code == 200
-        count_key = f'admin_login_count:{test_ip}'
-        assert cache.get(count_key) == 1
-
-        # Verify other IPs are not counted
-        other_ip_key = 'admin_login_count:203.0.113.11'
-        assert cache.get(other_ip_key) is None

@@ -1,5 +1,3 @@
-"""Модели проектов и связанных сущностей для API."""
-
 from __future__ import annotations
 
 import shutil
