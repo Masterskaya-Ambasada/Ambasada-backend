@@ -39,6 +39,7 @@ jobs:
     needs: test
     env:
       CI_DEBUG: False
+      CI_APP_ENV: production
       CI_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       CI_DJANGO_SUPERUSER_EMAIL: ${{ secrets.DJANGO_SUPERUSER_EMAIL }}
       CI_DJANGO_SUPERUSER_PASSWORD: ${{ secrets.DJANGO_SUPERUSER_PASSWORD }}
