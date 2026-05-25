@@ -363,6 +363,7 @@ SPECTACULAR_SETTINGS = {
 
 
 TINYMCE_DEFAULT_CONFIG = {
+    'license_key': 'gpl',
     'height': 300,
     'menubar': False,
     'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
