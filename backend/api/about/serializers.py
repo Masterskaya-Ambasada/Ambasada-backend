@@ -47,11 +47,6 @@ class AboutPageSerializer(serializers.ModelSerializer):
         members = self.context.get('members', User.objects.public())
 
         return {
-            'hero': {
-                'title': instance.hero_title,
-                'description': instance.hero_description,
-                # Убрали image_left и image_right отсюда
-            },
             'about_section': {
                 'title': instance.about_title,
                 'paragraphs': AboutParagraphSerializer(

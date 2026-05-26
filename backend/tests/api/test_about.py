@@ -22,7 +22,7 @@ def test_about_page_success(api_client, about_full_setup):
 
     data = response.json()
 
-    assert 'hero' in data
+    assert 'hero' not in data
     assert 'about_section' in data
     assert 'values' in data
     assert 'team' in data
@@ -42,14 +42,10 @@ def test_about_page_not_found(api_client):
     response = api_client.get(url)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    
+
     data = response.json()
 
-    assert data == {
-        'status':404,
-        'code':'NOT_FOUND',
-        'message':'Информация о сообществе не найдена'
-    }
+    assert data == {'status': 404, 'code': 'NOT_FOUND', 'message': 'Информация о сообществе не найдена'}
 
 
 @pytest.mark.django_db

@@ -15,16 +15,6 @@ from .constants import (
 class AboutPage(models.Model):
     """Сущность страницы 'О нас' (Singleton)."""
 
-    hero_title = models.CharField(
-        max_length=TITLE_MAX_LENGTH,
-        verbose_name=_('Заголовок hero'),
-        help_text=_('Главный заголовок, отображаемый на первом экране страницы.'),
-    )
-    hero_description = models.CharField(
-        max_length=DESCRIPTION_MAX_LENGTH,
-        verbose_name=_('Описание hero'),
-        help_text=_('Подзаголовок или краткий рекламный текст под основным заголовком.'),
-    )
     about_title = models.CharField(
         max_length=TITLE_MAX_LENGTH,
         verbose_name=_('Заголовок блока "О нас"'),
@@ -86,7 +76,7 @@ class AboutPage(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.hero_title or _('Страница "О нас"')
+        return self.about_title or _('Страница "О нас"')
 
 
 class AboutParagraph(models.Model):
