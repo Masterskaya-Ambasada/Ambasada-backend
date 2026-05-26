@@ -8,7 +8,7 @@ from projects.admin import ProjectAdmin
 from projects.admin_forms import ProjectContentBlockInlineFormSet
 from projects.models import Project, ProjectContentBlock
 
-TINY_PNG = b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgAAAABAAB9hc4VQAAAABJRU5ErkKC')
+TINY_PNG = b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4//8/AAX+Av4N70a4AAAAAElFTkSuQmCC')
 
 
 def _image_file(name: str) -> SimpleUploadedFile:
@@ -173,3 +173,51 @@ def test_project_admin_makes_slug_readonly_after_creation(published_project):
     project_admin = ProjectAdmin(Project, admin.site)
     assert 'slug' not in project_admin.get_readonly_fields(request=None, obj=None)
     assert 'slug' in project_admin.get_readonly_fields(request=None, obj=published_project)
+
+
+@pytest.mark.django_db
+def test_project_admin_prepopulates_slug_from_russian_title_only_on_create(published_project):
+    """Проверяет автозаполнение slug из русского названия только при создании проекта."""
+    project_admin = ProjectAdmin(Project, admin.site)
+
+    assert project_admin.get_prepopulated_fields(request=None, obj=None) == {'slug': ('title_ru',)}
+    assert project_admin.get_prepopulated_fields(request=None, obj=published_project) == {}
+
+
+@pytest.mark.django_db
+def test_project_admin_add_generates_slug_from_russian_title(
+    client,
+    admin_user,
+    project_type_architecture,
+):
+    """Проверяет, что проект создаётся с пустым slug и русским названием с первого submit."""
+    client.force_login(admin_user)
+    response = client.post(
+        '/admin/projects/project/add/',
+        data={
+            'slug': '',
+            'year': '2026',
+            'project_type': str(project_type_architecture.pk),
+            'is_published': 'on',
+            'title_ru': 'Парк Победы',
+            'description_ru': 'Описание проекта',
+            'title_en': '',
+            'description_en': '',
+            'title_sr_latn': '',
+            'description_sr_latn': '',
+            'title_sr_cyrl': '',
+            'description_sr_cyrl': '',
+            'cover_image': _image_file('cover.png'),
+            'gallery_images-TOTAL_FORMS': '0',
+            'gallery_images-INITIAL_FORMS': '0',
+            'gallery_images-MIN_NUM_FORMS': '0',
+            'gallery_images-MAX_NUM_FORMS': '1000',
+            'content_blocks-TOTAL_FORMS': '0',
+            'content_blocks-INITIAL_FORMS': '0',
+            'content_blocks-MIN_NUM_FORMS': '0',
+            'content_blocks-MAX_NUM_FORMS': '1000',
+            '_save': 'Сохранить',
+        },
+    )
+    assert response.status_code == 302
+    assert Project.objects.filter(slug='park-pobedy', title_ru='Парк Победы').exists()

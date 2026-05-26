@@ -6,6 +6,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
@@ -27,6 +28,70 @@ from .resources_admin import (
     ProjectTypeResource,
     TagResource,
 )
+
+CYRILLIC_TO_LATIN = str.maketrans(
+    {
+        'а': 'a',
+        'б': 'b',
+        'в': 'v',
+        'г': 'g',
+        'д': 'd',
+        'е': 'e',
+        'ё': 'e',
+        'ж': 'zh',
+        'з': 'z',
+        'и': 'i',
+        'й': 'y',
+        'к': 'k',
+        'л': 'l',
+        'м': 'm',
+        'н': 'n',
+        'о': 'o',
+        'п': 'p',
+        'р': 'r',
+        'с': 's',
+        'т': 't',
+        'у': 'u',
+        'ф': 'f',
+        'х': 'kh',
+        'ц': 'ts',
+        'ч': 'ch',
+        'ш': 'sh',
+        'щ': 'sch',
+        'ъ': '',
+        'ы': 'y',
+        'ь': '',
+        'э': 'e',
+        'ю': 'yu',
+        'я': 'ya',
+    }
+)
+
+
+def make_slug_from_russian_title(title: str) -> str:
+    """Создаёт URL-safe slug из русского названия проекта."""
+    return slugify(title.lower().translate(CYRILLIC_TO_LATIN))
+
+
+class ProjectAdminForm(forms.ModelForm):
+    """Форма проекта с серверной генерацией slug из русского названия."""
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        """Разрешает оставить slug пустым, чтобы форма сгенерировала его из title_ru."""
+        super().__init__(*args, **kwargs)
+        if 'slug' in self.fields:
+            self.fields['slug'].required = False
+
+    def clean(self):
+        """Заполняет пустой slug после валидации всех полей формы."""
+        cleaned_data = super().clean()
+        if not cleaned_data.get('slug'):
+            cleaned_data['slug'] = make_slug_from_russian_title(cleaned_data.get('title_ru', ''))
+        return cleaned_data
 
 
 @admin.register(Tag)
@@ -66,7 +131,6 @@ class ProjectGalleryImageInline(NestedTabularInline):
     extra = 0
     fk_name = 'project'
     fields = ('order', 'image')
-
 
 class ProjectBlockButtonInline(NestedTabularInline):
     """Инлайн для кнопок внутри контентного блока (самый нижний уровень)."""
@@ -127,10 +191,12 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
     )
 
 
+
 @admin.register(Project)
 class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
     """Класс администрирования проектов с вложенными blocks и кнопками."""
 
+    form = ProjectAdminForm
     list_display = [
         'title',
         'slug',
@@ -147,8 +213,21 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
     inlines = [ProjectGalleryImageInline, ProjectContentBlockInline]
 
     fieldsets = (
-        (_('Основная информация'), {'fields': ('slug', 'year', 'project_type', 'tags', 'cover_image', 'is_published')}),
-        (_('Переводы (Русский)'), {'fields': ('title_ru', 'description_ru'), 'classes': ('collapse',)}),
+        (
+            _('Основная информация'),
+            {
+                'fields': (
+                    'title_ru',
+                    'slug',
+                    'year',
+                    'project_type',
+                    'tags',
+                    'cover_image',
+                    'is_published',
+                )
+            },
+        ),
+        (_('Переводы (Русский)'), {'fields': ('description_ru',), 'classes': ('collapse',)}),
         (_('Переводы (Английский)'), {'fields': ('title_en', 'description_en'), 'classes': ('collapse',)}),
         (
             _('Переводы (Сербский - Латиница)'),
@@ -179,6 +258,9 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         return list(self.readonly_fields) + ['slug'] if obj else self.readonly_fields
+
+    def get_prepopulated_fields(self, request, obj=None):
+        return {} if obj else {'slug': ('title_ru',)}
 
     def get_project_type(self, obj):
         return obj.project_type.label if obj.project_type else ADMIN_EMPTY_VALUE
@@ -213,6 +295,7 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
         return self.get_image_thumbnail(obj, 'cover_image')
 
     cover_image_thumbnail.short_description = Project._meta.get_field('cover_image').verbose_name
+
 
     class Media:
         js = ('projects/js/admin_variant_toggle.js',)
