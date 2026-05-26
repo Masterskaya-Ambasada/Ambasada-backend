@@ -1,6 +1,7 @@
 import uuid
 from typing import Any, TypeVar
 
+from core.validators import MediaFileValidator
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import MaxLengthValidator
 from django.db import models
@@ -132,7 +133,8 @@ class User(AbstractUser):
         upload_to=team_photo_path,
         blank=True,
         null=True,
-        help_text=_('Загрузите портретное фото участника. Рекомендуемый формат: JPG или PNG, размер до 2 МБ.'),
+        validators=[MediaFileValidator()],
+        help_text=_('Загрузите портретное фото участника. Формат: JPG, PNG или WEBP, размер до 20 МБ.'),
     )
 
     bio = models.TextField(
