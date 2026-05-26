@@ -1,3 +1,4 @@
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -175,6 +176,28 @@ class ContactSocialLink(models.Model):
                 violation_error_message=_('Этот порядок отображения уже занят для данного сайта.'),
             ),
         ]
+
+    def clean(self):
+        """Проверяет уникальность соцсети и порядка для скрытого в админке SiteConfig."""
+        super().clean()
+        site_config_id = self.site_config_id
+        if site_config_id is None:
+            site_config = get_default_site_config()
+            if site_config is not None:
+                site_config_id = site_config.pk
+                self.site_config = site_config
+        if site_config_id is None:
+            raise ValidationError({NON_FIELD_ERRORS: _('Сначала создайте настройки сайта.')})
+        errors = {}
+        links = ContactSocialLink.objects.filter(site_config_id=site_config_id)
+        if self.pk:
+            links = links.exclude(pk=self.pk)
+        if self.social_type and links.filter(social_type=self.social_type).exists():
+            errors['social_type'] = _('Для данного сайта уже добавлена ссылка этого типа соцсети.')
+        if self.order is not None and links.filter(order=self.order).exists():
+            errors['order'] = _('Этот порядок отображения уже занят для данного сайта.')
+        if errors:
+            raise ValidationError(errors)
 
     def __str__(self):
         return f'{self.get_social_type_display()} - {self.url}'
