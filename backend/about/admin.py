@@ -1,4 +1,4 @@
-from core.base_admin import BaseTranslatedAdmin
+from core.base_admin import BaseAdminMixin, BaseTranslatedAdmin
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -84,7 +84,7 @@ class ValueInline(admin.StackedInline):
     )
 
 
-class GalleryImageInline(admin.StackedInline):
+class GalleryImageInline(BaseAdminMixin, admin.StackedInline):
     """Инлайн для фотогалереи."""
 
     model = GalleryImage
@@ -105,12 +105,7 @@ class GalleryImageInline(admin.StackedInline):
 
     @admin.display(description=_('Превью'))
     def image_preview_field(self, obj):
-        if obj and obj.image:
-            return mark_safe(
-                f'<img src="{obj.image.url}" style="max-height: 80px; border-radius: 4px; border: '
-                f'1px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" />'
-            )
-        return mark_safe(f'<span style="color: #999; font-size: 11px;">{_("Нет файла")}</span>')
+        return self.get_admin_image_preview(obj, 'image', width=240, height=160)
 
 
 @admin.register(AboutPage)
@@ -121,8 +116,8 @@ class AboutPageAdmin(BaseTranslatedAdmin):
 
     inlines = [AboutParagraphInline, ValueInline, GalleryImageInline]
     readonly_fields = ('display_public_users',)
-    list_display = ['id', 'hero_title', 'email']
-    list_display_links = ['id', 'hero_title']
+    list_display = ['id', 'about_title', 'email']
+    list_display_links = ['id', 'about_title']
     ordering = None
 
     fieldsets = (
@@ -139,8 +134,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             {
                 'classes': ('collapse',),
                 'fields': (
-                    'hero_title_ru',
-                    'hero_description_ru',
                     'about_title_ru',
                     'values_title_ru',
                     'team_title_ru',
@@ -153,8 +146,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             {
                 'classes': ('collapse',),
                 'fields': (
-                    'hero_title_en',
-                    'hero_description_en',
                     'about_title_en',
                     'button_label_en',
                     'values_title_en',
@@ -169,8 +160,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             {
                 'classes': ('collapse',),
                 'fields': (
-                    'hero_title_sr_latn',
-                    'hero_description_sr_latn',
                     'about_title_sr_latn',
                     'button_label_sr_latn',
                     'values_title_sr_latn',
@@ -185,8 +174,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             {
                 'classes': ('collapse',),
                 'fields': (
-                    'hero_title_sr_cyrl',
-                    'hero_description_sr_cyrl',
                     'about_title_sr_cyrl',
                     'button_label_sr_cyrl',
                     'values_title_sr_cyrl',
@@ -233,4 +220,5 @@ class AboutPageAdmin(BaseTranslatedAdmin):
         return False
 
     class Media:
-        css = {'all': ('about/css/custom_about_admin.css',)}
+        js = ('core/js/admin_image_preview_inline.js',)
+        css = {'all': ('core/css/admin_image_preview.css', 'about/css/custom_about_admin.css')}

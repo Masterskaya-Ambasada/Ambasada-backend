@@ -124,13 +124,20 @@ class ProjectTypeAdmin(BaseTranslatedAdmin, ImportExportMixin):
     search_fields = ['slug']
 
 
-class ProjectGalleryImageInline(NestedTabularInline):
+class ProjectGalleryImageInline(BaseAdminMixin, NestedTabularInline):
     """Инлайн для картинок верхней карусели проекта."""
 
     model = ProjectGalleryImage
     extra = 0
     fk_name = 'project'
-    fields = ('order', 'image')
+    ordering = ('order',)
+    readonly_fields = ('image_preview',)
+    fields = ('order', 'image', 'image_preview')
+
+    @admin.display(description=_('Превью'))
+    def image_preview(self, obj):
+        return self.get_admin_image_preview(obj, 'image', width=220, height=140)
+
 
 class ProjectBlockButtonInline(NestedTabularInline):
     """Инлайн для кнопок внутри контентного блока (самый нижний уровень)."""
@@ -149,6 +156,7 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
     fk_name = 'project'
     inlines = [ProjectBlockButtonInline]
     formset = ProjectContentBlockInlineFormSet
+    readonly_fields = ('image_preview', 'left_image_preview')
 
     # Перебиваем дефолтный ordering='slug' из BaseAdminMixin, чтобы не было ошибок
     ordering = ('order',)
@@ -165,7 +173,10 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
     ]
 
     fieldsets = (
-        (_('Основная информация'), {'fields': ('variant', 'order', 'image', 'left_image')}),
+        (
+            _('Основная информация'),
+            {'fields': ('variant', 'order', 'image', 'image_preview', 'left_image', 'left_image_preview')},
+        ),
         (
             _('Переводы (Русский)'),
             {'fields': ('title_ru', 'text_ru', 'accented_text_ru', 'string_list_ru'), 'classes': ('collapse',)},
@@ -190,6 +201,13 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
         ),
     )
 
+    @admin.display(description=_('Превью изображения'))
+    def image_preview(self, obj):
+        return self.get_admin_image_preview(obj, 'image', width=240, height=160)
+
+    @admin.display(description=_('Превью левого изображения'))
+    def left_image_preview(self, obj):
+        return self.get_admin_image_preview(obj, 'left_image', width=240, height=160)
 
 
 @admin.register(Project)
@@ -209,6 +227,7 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
     list_editable = ('is_published',)
     list_filter = ['project_type', 'year', 'is_published']
     ordering = ('-is_published', '-year')
+    readonly_fields = ('cover_image_preview',)
 
     inlines = [ProjectGalleryImageInline, ProjectContentBlockInline]
 
@@ -223,6 +242,7 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
                     'project_type',
                     'tags',
                     'cover_image',
+                    'cover_image_preview',
                     'is_published',
                 )
             },
@@ -296,7 +316,10 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
 
     cover_image_thumbnail.short_description = Project._meta.get_field('cover_image').verbose_name
 
+    @admin.display(description=_('Превью обложки'))
+    def cover_image_preview(self, obj):
+        return self.get_admin_image_preview(obj, 'cover_image', width=260, height=170)
 
     class Media:
-        js = ('projects/js/admin_variant_toggle.js',)
-        css = {'all': ('projects/css/admin_custom.css',)}
+        js = ('core/js/admin_image_preview_inline.js', 'projects/js/admin_variant_toggle.js')
+        css = {'all': ('core/css/admin_image_preview.css', 'projects/css/admin_custom.css')}
