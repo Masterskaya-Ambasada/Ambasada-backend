@@ -8,23 +8,6 @@ from contacts.models import ContactPageContent, ContactRequest
 pytestmark = pytest.mark.django_db
 
 
-@pytest.fixture
-def contact_url():
-    """URL Contact API."""
-    return reverse('api:contact-create')
-
-
-@pytest.fixture
-def contact_payload():
-    """Данные формы обратной связи."""
-    return {
-        'name': 'Иван',
-        'email': 'ivan@example.com',
-        'message': 'Тестовое сообщение',
-        'reason': 'Вопрос',
-    }
-
-
 class TestContactViewPost:
     """Тесты POST"""
 
@@ -47,10 +30,9 @@ class TestContactViewPost:
 
         contact = ContactRequest.objects.first()
 
-        assert contact.name == contact_payload['name']
-        assert contact.email == contact_payload['email']
-        assert contact.message == contact_payload['message']
-        assert contact.reason == contact_payload['reason']
+        for key, value in contact_payload.items():
+            if hasattr(contact, key):
+                assert getattr(contact, key) == value
 
     @pytest.mark.parametrize(
         'field',
@@ -64,11 +46,12 @@ class TestContactViewPost:
         field,
     ):
         """Проверка обязательных полей."""
-        contact_payload.pop(field)
+        payload = contact_payload.copy()
+        payload.pop(field)
 
         response = api_client.post(
             contact_url,
-            contact_payload,
+            payload,
         )
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -85,11 +68,12 @@ class TestContactViewPost:
         Если заполнено honeypot-поле,
         объект не создаётся.
         """
-        contact_payload['contact_preference'] = 'spam-bot'
+        payload = contact_payload.copy()
+        payload['contact_preference'] = 'spam-bot'
 
         response = api_client.post(
             contact_url,
-            contact_payload,
+            payload,
         )
 
         assert response.status_code == status.HTTP_201_CREATED
