@@ -1,5 +1,4 @@
 import pytest
-from django.urls import reverse
 from django.utils.translation import gettext as _
 from rest_framework import status
 
@@ -56,7 +55,6 @@ class TestContactViewPost:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert field in response.data
-        
 
     def test_honeypot_field_blocks_creation(
         self,
@@ -121,15 +119,17 @@ class TestContactPageContentModel:
         При создании нового активного блока
         предыдущий автоматически деактивируется.
         """
-        first = ContactPageContent.objects.create(
+        first = ContactPageContent(
             donation_text='Первый блок',
             is_active=True,
         )
+        first.save()
 
-        second = ContactPageContent.objects.create(
+        second = ContactPageContent(
             donation_text='Второй блок',
             is_active=True,
         )
+        second.save()
 
         first.refresh_from_db()
         second.refresh_from_db()
