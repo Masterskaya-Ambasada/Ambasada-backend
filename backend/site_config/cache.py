@@ -7,10 +7,18 @@ from site_config.models import SiteConfig
 from .constants import CACHE_KEY_SITE_CONFIG, SITE_CONFIG_SINGLETON_PK, TIMEOUT_CACHE
 
 
+def format_locale_code_for_frontend(code: str) -> str:
+    """Возвращает код локали в формате, который ожидает фронтенд."""
+    language, separator, script = code.partition('-')
+    if not separator:
+        return language
+    return f'{language}-{script.capitalize()}'
+
+
 def get_config_cache_key(language=None):
     """Генерирует ключ кэша с учетом языка."""
     lang = language or get_language() or settings.LANGUAGE_CODE
-    return f'{CACHE_KEY_SITE_CONFIG}:{lang}'
+    return f'{CACHE_KEY_SITE_CONFIG}:{lang.lower()}'
 
 
 def get_site_config_cached(language=None):
@@ -41,7 +49,9 @@ def get_site_config_cached(language=None):
             for s in config.socials.all()
             if getattr(s, 'is_active', True)
         ],
-        'languages': [{'code': code, 'label': label} for code, label in settings.LANGUAGES],
+        'languages': [
+            {'code': format_locale_code_for_frontend(code), 'label': label} for code, label in settings.LANGUAGES
+        ],
     }
 
     cache.set(cache_key, data, timeout=TIMEOUT_CACHE)

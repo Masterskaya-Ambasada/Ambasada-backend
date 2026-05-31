@@ -5,6 +5,7 @@ from collections import defaultdict
 from collections.abc import Iterable
 from pathlib import Path
 
+from core.validators import MediaFileValidator
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
@@ -389,6 +390,7 @@ class Project(models.Model):
         _('Обложка'),
         upload_to=project_cover_image_path,
         max_length=URL_MAX_LENGTH,
+        validators=[MediaFileValidator()],
         help_text=_('URL главного изображения проекта.'),
     )
     project_type = models.ForeignKey(
@@ -482,6 +484,7 @@ class ProjectGalleryImage(models.Model):
         _('Изображение'),
         upload_to=project_gallery_image_path,
         max_length=URL_MAX_LENGTH,
+        validators=[MediaFileValidator()],
         help_text=_('Изображение для карусели проекта.'),
     )
     order = models.PositiveIntegerField(
@@ -552,6 +555,7 @@ class ProjectContentBlock(models.Model):
         _('Основное изображение'),
         upload_to=project_block_image_path,
         max_length=URL_MAX_LENGTH,
+        validators=[MediaFileValidator()],
         blank=True,  # добавил из-за проблем с импортом
         help_text=_('Основное изображение блока.'),
     )
@@ -559,6 +563,7 @@ class ProjectContentBlock(models.Model):
         _('Дополнительное изображение'),
         upload_to=project_block_image_path,
         max_length=URL_MAX_LENGTH,
+        validators=[MediaFileValidator()],
         blank=True,
         help_text=_('Второе изображение для варианта с двумя картинками.'),
     )

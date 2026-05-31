@@ -54,6 +54,8 @@ CORS_ALLOWED_ORIGINS = config(
     default='http://localhost:3000',
 )
 
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000').rstrip('/')
+
 CORS_ALLOW_CREDENTIALS = False
 
 # Allowed headers - adding Accept-Language for localization

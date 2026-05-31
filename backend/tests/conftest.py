@@ -1,10 +1,9 @@
 """Pytest configuration for test environment."""
 
 import pytest
+from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.test import override_settings
-from rest_framework.test import APIClient
-from django.contrib.auth import get_user_model
 from projects.models import (
     Project,
     ProjectBlockButton,
@@ -12,6 +11,7 @@ from projects.models import (
     ProjectType,
     Tag,
 )
+from rest_framework.test import APIClient
 
 User = get_user_model()
 
@@ -20,23 +20,21 @@ User = get_user_model()
 # USERS
 # =========================================================
 
+
 @pytest.fixture
 def user_factory(db):
     """Фабрика для создания пользователей с произвольными параметрами."""
+
     def create_user(email='test@example.com', password='password', **kwargs):
         return User.objects.create_user(email=email, password=password, **kwargs)
+
     return create_user
 
 
 @pytest.fixture
 def regular_user(user_factory):
     """Обычный пользователь (роль USER, без прав staff)."""
-    return user_factory(
-        email='user@test.com',
-        first_name='Ivan',
-        last_name='Ivanov',
-        role=User.Role.USER
-    )
+    return user_factory(email='user@test.com', first_name='Ivan', last_name='Ivanov', role=User.Role.USER)
 
 
 @pytest.fixture
@@ -49,11 +47,9 @@ def editor_user(user_factory):
 def admin_user(db):
     """Суперпользователь."""
     return User.objects.create_superuser(
-        email='admin@test.com',
-        password='adminpassword',
-        first_name='Admin',
-        last_name='Adminov'
+        email='admin@test.com', password='adminpassword', first_name='Admin', last_name='Adminov'
     )
+
 
 # Test settings with local memory cache instead of Redis
 TEST_CACHE_SETTINGS = {
@@ -70,14 +66,17 @@ def configure_cache(settings):
     with override_settings(CACHES=TEST_CACHE_SETTINGS):
         # Reconfigure cache with new settings
         from django.core.cache import caches
+
         cache.close()
         caches['default'].close()
         yield
         cache.clear()
 
+
 # =========================================================
 # API
 # =========================================================
+
 
 @pytest.fixture
 def api_client():
@@ -88,6 +87,7 @@ def api_client():
 # =========================================================
 # ROJECT TYPES
 # =========================================================
+
 
 @pytest.fixture
 def project_type_architecture():
@@ -110,6 +110,7 @@ def project_type_research():
 # =========================================================
 # TAGS
 # =========================================================
+
 
 @pytest.fixture
 def tag_urban():
@@ -141,6 +142,7 @@ def tag_hidden():
 # =========================================================
 # PROJECTS
 # =========================================================
+
 
 @pytest.fixture
 def published_project(project_type_architecture, tag_urban, tag_social):
@@ -194,6 +196,7 @@ def unpublished_project(project_type_architecture, tag_hidden):
 # CONTENT BLOCKS
 # =========================================================
 
+
 @pytest.fixture
 def list_block(published_project):
     """Контент-блок с изображением и списком."""
@@ -227,6 +230,7 @@ def two_images_block(published_project):
 # =========================================================
 # BUTTONS BLOCK
 # =========================================================
+
 
 @pytest.fixture
 def buttons_block(published_project):
@@ -266,8 +270,6 @@ def about_page(db):
     from about.models import AboutPage
 
     return AboutPage.objects.create(
-        hero_title='Hero',
-        hero_description='Hero description',
         about_title='About',
         button_label='Button',
         button_link='/projects',
@@ -284,10 +286,12 @@ def values(db, about_page):
     """Создает список ценностей, привязанных к странице."""
     from about.models import Value
 
-    return Value.objects.bulk_create([
-        Value(about=about_page, title='Value 1', text='Text 1'),
-        Value(about=about_page, title='Value 2', text='Text 2'),
-    ])
+    return Value.objects.bulk_create(
+        [
+            Value(about=about_page, title='Value 1', text='Text 1'),
+            Value(about=about_page, title='Value 2', text='Text 2'),
+        ]
+    )
 
 
 @pytest.fixture
@@ -295,10 +299,12 @@ def gallery_images(db, about_page):
     """Создает изображения галереи, привязанные к странице."""
     from about.models import GalleryImage
 
-    return GalleryImage.objects.bulk_create([
-        GalleryImage(about=about_page, alt='Image 1'),
-        GalleryImage(about=about_page, alt='Image 2'),
-    ])
+    return GalleryImage.objects.bulk_create(
+        [
+            GalleryImage(about=about_page, alt='Image 1'),
+            GalleryImage(about=about_page, alt='Image 2'),
+        ]
+    )
 
 
 @pytest.fixture

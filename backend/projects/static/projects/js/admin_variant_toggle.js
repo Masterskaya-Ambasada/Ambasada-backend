@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const style = document.createElement('style');
     style.textContent = `
         /* Гарантированный отступ между контентными блоками (старыми и вновь созданными) */
-        .djn-inline-form {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
             margin-bottom: 35px !important;
             border: 1px solid #cbd5e1 !important; /* Четкая серая граница вокруг каждого блока */
             background: #ffffff !important;
@@ -154,13 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /* Дополнительный отступ для внутренних групп (например, кнопок внутри блока) */
-        .djn-inline-form .djn-group {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form .djn-group {
             margin-top: 20px !important;
             margin-bottom: 10px !important;
         }
 
         /* Делаем красивую заплатку, чтобы шапка блока отделялась от полей */
-        .djn-inline-form > h3 {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
             background: #f1f5f9 !important;
             margin: -20px -20px 20px -20px !important;
             padding: 12px 20px !important;
