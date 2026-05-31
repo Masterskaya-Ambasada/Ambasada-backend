@@ -4,6 +4,7 @@ import pytest
 from django.contrib import admin
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms.models import inlineformset_factory
+from django.test import override_settings
 from projects.admin import ProjectAdmin
 from projects.admin_forms import ProjectContentBlockInlineFormSet
 from projects.models import Project, ProjectContentBlock
@@ -182,6 +183,18 @@ def test_project_admin_prepopulates_slug_from_russian_title_only_on_create(publi
 
     assert project_admin.get_prepopulated_fields(request=None, obj=None) == {'slug': ('title_ru',)}
     assert project_admin.get_prepopulated_fields(request=None, obj=published_project) == {}
+
+
+@pytest.mark.django_db
+@override_settings(FRONTEND_URL='https://ambasada.example/')
+def test_project_admin_view_on_site_uses_frontend_url_from_settings(published_project):
+    """Проверяет, что ссылка на проект в админке строится от настроенного домена фронтенда."""
+    project_admin = ProjectAdmin(Project, admin.site)
+
+    link = str(project_admin.get_view_on_site(published_project))
+
+    assert f'https://ambasada.example/projects/{published_project.slug}/' in link
+    assert 'localhost:3000' not in link
 
 
 @pytest.mark.django_db

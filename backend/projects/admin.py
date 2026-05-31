@@ -290,7 +290,7 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
 
     def get_view_on_site(self, obj):
         if obj.slug:
-            frontend_url = getattr(settings, 'FRONTEND_URL', DEFAULT_FRONTEND_URL)
+            frontend_url = getattr(settings, 'FRONTEND_URL', DEFAULT_FRONTEND_URL).rstrip('/')
             absolute_url = FRONTEND_PROJECT_PATH_TEMPLATE.format(frontend_url=frontend_url, slug=obj.slug)
             return format_html(
                 '<a href="{}" target="_blank" rel="noopener noreferrer">🔗 {}</a>',
