@@ -44,7 +44,9 @@ INIT_VIEW_SCHEMA = extend_schema(
                         'cookie_button_text': 'OK',
                         'languages': [
                             {'code': 'ru', 'label': 'Russian'},
-                            {'code': 'sr-latn', 'label': 'Serbian (Latin)'},
+                            {'code': 'en', 'label': 'English'},
+                            {'code': 'sr-Latn', 'label': 'Serbian (Latin)'},
+                            {'code': 'sr-Cyrl', 'label': 'Serbian (Cyrillic)'},
                         ],
                         'socials': [
                             {'social_type': 'Telegram', 'url': 'https://t.me/test'},

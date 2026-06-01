@@ -1,8 +1,22 @@
 import pytest
-from django.db.utils import IntegrityError
+from core.validators import MediaFileValidator
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.utils import IntegrityError
 
 User = get_user_model()
+
+TINY_GIF = (
+    b'GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!'
+    b'\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01'
+    b'\x00\x00\x02\x02D\x01\x00;'
+)
+
+
+def _uploaded_gif(name: str = 'avatar.gif') -> SimpleUploadedFile:
+    return SimpleUploadedFile(name, TINY_GIF, content_type='image/gif')
+
 
 @pytest.mark.django_db
 class TestUserModel:
@@ -21,7 +35,7 @@ class TestUserModel:
         """Проверка full_name, если одно из полей пустое (граничный случай)."""
         user_only_first = user_factory(email='first@test.com', first_name='Дмитрий', last_name='')
         assert user_only_first.full_name == 'Дмитрий'
-        
+
         user_empty = user_factory(email='empty@test.com', first_name='', last_name='')
         assert user_empty.full_name == 'empty@test.com'
 
@@ -60,6 +74,31 @@ class TestUserModel:
         with pytest.raises(IntegrityError):
             user_factory(email='UNIQUE@test.com')
 
+    def test_photo_uses_media_file_validator(self):
+        """Проверяет, что фото пользователя валидируется через общий media-валидатор."""
+        validators = [
+            validator
+            for validator in User._meta.get_field('photo').validators
+            if isinstance(validator, MediaFileValidator)
+        ]
+
+        assert len(validators) == 1
+        assert validators[0].max_size_mb == 20
+
+    def test_photo_rejects_disallowed_uploaded_image_type(self):
+        """Проверяет, что загрузка неподдерживаемого формата фото отклоняется."""
+        user = User(
+            email='invalid-photo@test.com',
+            first_name='Invalid',
+            last_name='Photo',
+            photo=_uploaded_gif(),
+        )
+
+        with pytest.raises(ValidationError) as exc_info:
+            user.full_clean()
+
+        assert 'photo' in exc_info.value.message_dict
+
 
 @pytest.mark.django_db
 class TestUserManager:
@@ -83,19 +122,10 @@ class TestUserManager:
 
     def test_create_superuser_invalid_flags_raises_error(self):
         """Негативные кейсы для create_superuser: проверка обязательных флагов."""
-
         with pytest.raises(ValueError, match='is_staff|is_superuser'):
-            User.objects.create_superuser(
-                email='bad_staff@test.com',
-                password='password',
-                is_staff=False
-            )
+            User.objects.create_superuser(email='bad_staff@test.com', password='password', is_staff=False)
         with pytest.raises(ValueError, match='is_staff|is_superuser'):
-            User.objects.create_superuser(
-                email='bad_super@test.com',
-                password='password',
-                is_superuser=False
-            )
+            User.objects.create_superuser(email='bad_super@test.com', password='password', is_superuser=False)
 
     def test_create_user_no_email_raises_error(self):
         """Проверка валидации обязательного email в менеджере."""
@@ -107,6 +137,7 @@ class TestUserManager:
 def test_team_photo_path_format(regular_user):
     """Проверка генерации пути для фото участника."""
     from users.models import team_photo_path
+
     filename = 'avatar.jpg'
     path = team_photo_path(regular_user, filename)
     assert path == f'team_photos/{regular_user.uuid}/{filename}'

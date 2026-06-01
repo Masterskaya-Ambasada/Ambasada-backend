@@ -1,5 +1,7 @@
 import pytest
+from core.validators import MediaFileValidator
 from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from projects import models as project_models
 from projects.constants import (
@@ -9,6 +11,16 @@ from projects.constants import (
     PROJECT_MEDIA_DIRECTORY,
 )
 from projects.models import Project, ProjectBlockButton, ProjectContentBlock, ProjectGalleryImage
+
+TINY_GIF = (
+    b'GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!'
+    b'\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01'
+    b'\x00\x00\x02\x02D\x01\x00;'
+)
+
+
+def _uploaded_gif(name: str = 'image.gif') -> SimpleUploadedFile:
+    return SimpleUploadedFile(name, TINY_GIF, content_type='image/gif')
 
 
 @pytest.mark.django_db
@@ -405,6 +417,37 @@ def test_content_block_requires_common_image_and_text(published_project):
     with pytest.raises(ValidationError) as exc_info:
         block.full_clean()
     assert {'image', 'text_ru'} <= set(exc_info.value.message_dict)
+
+
+def test_project_image_fields_use_media_file_validator():
+    """Проверяет, что изображения проектов валидируются через общий media-валидатор."""
+    fields = (
+        Project._meta.get_field('cover_image'),
+        ProjectGalleryImage._meta.get_field('image'),
+        ProjectContentBlock._meta.get_field('image'),
+        ProjectContentBlock._meta.get_field('left_image'),
+    )
+    validators = [
+        validator for field in fields for validator in field.validators if isinstance(validator, MediaFileValidator)
+    ]
+    assert len(validators) == len(fields)
+    assert all(validator.max_size_mb == 20 for validator in validators)
+
+
+@pytest.mark.django_db
+def test_project_cover_image_rejects_disallowed_uploaded_image_type(project_type_architecture):
+    """Проверяет, что загрузка неподдерживаемого формата изображения отклоняется."""
+    project = Project(
+        slug='invalid-image-project',
+        title='Invalid image project',
+        description='Invalid image project description',
+        year=2026,
+        cover_image=_uploaded_gif(),
+        project_type=project_type_architecture,
+    )
+    with pytest.raises(ValidationError) as exc_info:
+        project.full_clean()
+    assert 'cover_image' in exc_info.value.message_dict
 
 
 @pytest.mark.django_db(transaction=True)

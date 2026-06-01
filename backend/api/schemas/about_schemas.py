@@ -18,14 +18,6 @@ ABOUT_SCHEMA = extend_schema_view(
                 response=inline_serializer(
                     name='AboutPageResponse',
                     fields={
-                        'hero': inline_serializer(
-                            name='AboutHero',
-                            fields={
-                                'title': serializers.CharField(),
-                                'description': serializers.CharField(),
-                                # Убрали image_left и image_right
-                            },
-                        ),
                         'about_section': inline_serializer(
                             name='AboutSection',
                             fields={
