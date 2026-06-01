@@ -4,6 +4,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.test import override_settings
+from django.urls import reverse
 from projects.models import (
     Project,
     ProjectBlockButton,
@@ -341,4 +342,25 @@ def about_full_setup(about_page, values, gallery_images, team_members):
         'values': values,
         'members': team_members,
         'images': gallery_images,
+    }
+
+
+# =========================================================
+# CONTACTS
+# =========================================================
+
+@pytest.fixture
+def contact_url():
+    """URL Contact API."""
+    return reverse('api:contact-create')
+
+
+@pytest.fixture
+def contact_payload():
+    """Данные формы обратной связи."""
+    return {
+        'name': 'Иван',
+        'email': 'ivan@example.com',
+        'message': 'Тестовое сообщение',
+        'reason': 'Вопрос',
     }
