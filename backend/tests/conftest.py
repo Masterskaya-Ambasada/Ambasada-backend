@@ -21,12 +21,14 @@ User = get_user_model()
 # USERS
 # =========================================================
 
-
 @pytest.fixture
 def user_factory(db):
     """Фабрика для создания пользователей с произвольными параметрами."""
 
     def create_user(email='test@example.com', password='password', **kwargs):
+        if 'role' in kwargs and kwargs['role'] in [User.Position.USER, User.Position.EDITOR, User.Position.ADMIN]:
+            kwargs['position'] = kwargs.pop('role')
+            
         return User.objects.create_user(email=email, password=password, **kwargs)
 
     return create_user
@@ -35,44 +37,32 @@ def user_factory(db):
 @pytest.fixture
 def regular_user(user_factory):
     """Обычный пользователь (роль USER, без прав staff)."""
-    return user_factory(email='user@test.com', first_name='Ivan', last_name='Ivanov', role=User.Role.USER)
+    return user_factory(
+        email='user@test.com', 
+        first_name='Ivan', 
+        last_name='Ivanov', 
+        position=User.Position.USER
+    )
 
 
 @pytest.fixture
 def editor_user(user_factory):
     """Пользователь-редактор контента."""
-    return user_factory(email='editor@test.com', role=User.Role.EDITOR)
+    return user_factory(
+        email='editor@test.com', 
+        position=User.Position.EDITOR
+    )
 
 
 @pytest.fixture
 def admin_user(db):
     """Суперпользователь."""
     return User.objects.create_superuser(
-        email='admin@test.com', password='adminpassword', first_name='Admin', last_name='Adminov'
+        email='admin@test.com', 
+        password='adminpassword', 
+        first_name='Admin', 
+        last_name='Adminov'
     )
-
-
-# Test settings with local memory cache instead of Redis
-TEST_CACHE_SETTINGS = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
-    }
-}
-
-
-@pytest.fixture(autouse=True)
-def configure_cache(settings):
-    """Configure local memory cache for tests instead of Redis."""
-    with override_settings(CACHES=TEST_CACHE_SETTINGS):
-        # Reconfigure cache with new settings
-        from django.core.cache import caches
-
-        cache.close()
-        caches['default'].close()
-        yield
-        cache.clear()
-
 
 # =========================================================
 # API
@@ -264,7 +254,7 @@ def buttons_block(published_project):
     return block
 
 
-# Для ABOUT (новые фикстуры)
+# Для ABOUT
 @pytest.fixture
 def about_page(db):
     """Создает страницу 'О нас'."""

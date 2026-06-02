@@ -9,7 +9,7 @@ from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
 
-from .constants import BIO_MAX_LENGTH, NAME_MAX_LENGTH, POSITION_MAX_LENGTH, ROLE_MAX_LENGTH
+from .constants import BIO_MAX_LENGTH, NAME_MAX_LENGTH, POSITION_MAX_LENGTH, ROLE_MAX_LENGTH, USERS_DEFAULT_ORDER
 
 TUser = TypeVar('TUser', bound='User')
 
@@ -59,7 +59,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('role', User.Role.ADMIN)
+        extra_fields.setdefault('position', User.Position.ADMIN)
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError(_('Суперпользователь должен иметь is_staff=True'))
@@ -72,8 +72,8 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     """Модель пользователя (используется как участник команды)."""
 
-    class Role(models.TextChoices):
-        USER = 'USER', _('Пользователь')
+    class Position(models.TextChoices):
+        USER = 'USER', _('Участник команды')
         EDITOR = 'EDITOR', _('Контент-редактор')
         ADMIN = 'ADMIN', _('Администратор')
 
@@ -105,22 +105,22 @@ class User(AbstractUser):
         help_text=_('Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте.'),
     )
 
-    role = models.CharField(
+    position = models.CharField(
         _('Роль'),
-        max_length=ROLE_MAX_LENGTH,
-        choices=Role.choices,
-        default=Role.USER,
+        max_length=POSITION_MAX_LENGTH,
+        choices=Position.choices,
+        default=Position.USER,
         db_index=True,
         help_text=_(
-            'Определяет уровень доступа к панели управления: '
-            'Пользователь — нет доступа, Редактор — управление контентом, '
+            'Определяет уровень доступа к панели управления админки: '
+            'Участник команды — нет доступа, Редактор — управление контентом, '
             'Администратор — полный доступ.'
         ),
     )
 
-    position = models.CharField(
+    role = models.CharField(
         _('Должность'),
-        max_length=POSITION_MAX_LENGTH,
+        max_length=ROLE_MAX_LENGTH,
         blank=True,
         help_text=_(
             'Укажите профессиональную роль (например: «Ведущий архитектор»). '
@@ -142,7 +142,7 @@ class User(AbstractUser):
         blank=True,
         max_length=BIO_MAX_LENGTH,
         validators=[MaxLengthValidator(BIO_MAX_LENGTH)],
-        help_text=_('Расскажите об опыте и ключевых компетенциях. ' 'Максимум 500 символов.'),
+        help_text=_('Расскажите об опыте и ключевых компетенциях. Максимум 500 символов.'),
     )
 
     is_public = models.BooleanField(
@@ -150,6 +150,13 @@ class User(AbstractUser):
         default=False,
         db_index=True,
         help_text=_('Если галочка стоит, пользователь будет виден в списке команды на сайте.'),
+    )
+
+    order = models.PositiveIntegerField(
+        _('Порядок отображения'),
+        default=USERS_DEFAULT_ORDER,
+        db_index=True,
+        help_text=_('Определяет порядок сортировки. Меньшее значение выводит пользователя выше в списке.'),
     )
 
     objects = UserManager()
@@ -160,7 +167,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = _('Пользователь')
         verbose_name_plural = _('Пользователи и команда')
-        ordering = ('email',)
+        ordering = ('order', 'last_name', 'first_name')
         constraints = [
             UniqueConstraint(
                 Lower('email'),
@@ -169,36 +176,41 @@ class User(AbstractUser):
         ]
 
     def __str__(self) -> str:
-        return f'{self.email} ({self.get_role_display()})'
+        return f'{self.email} ({self.get_position_display()})'
 
     def save(self, *args, **kwargs):
-        """Автоматическое управление доступом к админке в зависимости от роли."""
-        if self.role in {self.Role.EDITOR, self.Role.ADMIN}:
+        """Автоматический расчет порядка и управление доступом к админке."""
+        if not self.pk and self.order == USERS_DEFAULT_ORDER:
+            max_order = User.objects.aggregate(models.Max('order'))['order__max']
+            self.order = (max_order or 0) + 10
+
+        if self.position in {self.Position.EDITOR, self.Position.ADMIN}:
             self.is_staff = True
         elif not self.is_superuser:
             self.is_staff = False
+
         super().save(*args, **kwargs)
 
     @property
     def full_name(self) -> str:
-        """Возвращает полное имя пользователя."""
+        """Returns the user's full name."""
         name = f'{self.first_name} {self.last_name}'.strip()
         return name or self.email
 
     @property
     def is_editor(self) -> bool:
         """Проверка, является ли пользователь редактором."""
-        return self.role == self.Role.EDITOR
+        return self.position == self.Position.EDITOR
 
     @property
     def is_admin(self) -> bool:
         """Проверка, является ли пользователь администратором."""
-        return self.role == self.Role.ADMIN
+        return self.position == self.Position.ADMIN
 
-    def has_role(self, *roles: str) -> bool:
-        """Проверка наличия одной из указанных ролей."""
-        return self.role in roles
+    def has_role(self, *positions: str) -> bool:
+        """Проверка наличия одной из указанных системных должностей."""
+        return self.position in positions
 
     def can_edit_content(self) -> bool:
         """Проверка прав на редактирование контента."""
-        return self.role in {self.Role.ADMIN, self.Role.EDITOR}
+        return self.position in {self.Position.ADMIN, self.Position.EDITOR}
