@@ -17,6 +17,12 @@ from rest_framework.test import APIClient
 User = get_user_model()
 
 
+@pytest.fixture(autouse=True)
+def disable_scoped_throttling(monkeypatch):
+    """Гарантированно отключает ScopedRateThrottle, используемый во вьюхах через свойство throttle_scope."""
+    from rest_framework.throttling import ScopedRateThrottle
+    monkeypatch.setattr(ScopedRateThrottle, "allow_request", lambda self, request, view: True)
+
 # =========================================================
 # USERS
 # =========================================================
