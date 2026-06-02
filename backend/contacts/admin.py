@@ -1,10 +1,10 @@
-from core.base_admin import BaseAdmin, BaseTranslatedAdmin
+from core.base_admin import BaseAdmin
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
 
-from contacts.models import ContactPageContent, ContactRequest, ContactSocialLink
+from contacts.models import ContactRequest, ContactSocialLink
 
 
 class IsActiveOnSiteFilter(admin.SimpleListFilter):
@@ -42,70 +42,6 @@ class ContactRequestAdmin(BaseAdmin):
 
     def has_add_permission(self, request):
         return False
-
-
-class ContactPageContentFormSet(BaseModelFormSet):
-    """Перехватчик ошибок валидации для вывода их наверх."""
-
-    def clean(self):
-        super().clean()
-
-        active_count = 0
-        for form in self.forms:
-            if self.can_delete and self._should_delete_form(form):
-                continue
-            cleaned_data = getattr(form, 'cleaned_data', {})
-            if cleaned_data and cleaned_data.get('is_active'):
-                active_count += 1
-
-        if active_count > 1:
-            self._clear_form_errors()
-            raise ValidationError(
-                _('Вы не можете активировать несколько блоков одновременно через список. Выберите только один.')
-            )
-        self._clear_form_errors()
-
-    def _clear_form_errors(self):
-        """Вспомогательный метод для полной очистки строк от системных ошибок constraints."""
-        for form in self.forms:
-            if '__all__' in form._errors:
-                form._errors.pop('__all__')
-            if 'is_active' in form._errors:
-                form._errors.pop('is_active')
-
-
-@admin.register(ContactPageContent)
-class ContactPageContentAdmin(BaseTranslatedAdmin):
-    """Админка для управления текстовым блоком пожертвований."""
-
-    list_display = ('updated_at', 'is_active')
-    list_editable = ('is_active',)
-
-    search_fields = ('donation_text_ru', 'donation_text_en')
-    ordering = ['created_at']
-    tinymce_fields = ['donation_text_ru', 'donation_text_en', 'donation_text_sr_latn', 'donation_text_sr_cyrl']
-
-    fieldsets = (
-        (None, {'fields': ('is_active',)}),
-        (_('Текстовый блок для пожертвований (Русский)'), {'fields': ('donation_text_ru',), 'classes': ('collapse',)}),
-        (
-            _('Текстовый блок для пожертвований (Английский)'),
-            {'fields': ('donation_text_en',), 'classes': ('collapse',)},
-        ),
-        (
-            _('Текстовый блок для пожертвований (Сербский - Латиница)'),
-            {'fields': ('donation_text_sr_latn',), 'classes': ('collapse',)},
-        ),
-        (
-            _('Текстовый блок для пожертвований (Сербский - Кириллица)'),
-            {'fields': ('donation_text_sr_cyrl',), 'classes': ('collapse',)},
-        ),
-    )
-
-    def get_changelist_formset(self, request, **kwargs):
-        """Подменяем стандартный FormSet на наш перехватчик."""
-        kwargs['formset'] = ContactPageContentFormSet
-        return super().get_changelist_formset(request, **kwargs)
 
 
 class ContactSocialLinkFormSet(BaseModelFormSet):
