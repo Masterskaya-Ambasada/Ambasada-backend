@@ -33,11 +33,11 @@ class IsActiveOnSiteFilter(admin.SimpleListFilter):
 class ContactRequestAdmin(BaseAdmin):
     """Админка для обработки входящих заявок с формы контактов."""
 
-    list_display = ('reason', 'name', 'email', 'created_at', 'is_processed')
+    list_display = ('name', 'email', 'created_at', 'is_processed')
     list_filter = ('created_at', 'is_processed')
     list_editable = ('is_processed',)
-    search_fields = ('name', 'email', 'message', 'reason')
-    readonly_fields = ('name', 'email', 'message', 'reason', 'created_at')
+    search_fields = ('name', 'email', 'message')
+    readonly_fields = ('name', 'email', 'message', 'created_at')
     ordering = ('is_processed', '-created_at')
 
     def has_add_permission(self, request):

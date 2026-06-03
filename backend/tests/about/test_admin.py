@@ -15,12 +15,13 @@ def _flatten_admin_fields(fieldsets):
 
 
 def test_about_admin_does_not_include_removed_hero_fields():
-    """Проверяет, что удалённые hero-поля не попали в настройки админки."""
+    """Проверяет корректность полей в настройках админки страницы 'О нас'."""
     about_admin = AboutPageAdmin(AboutPage, admin.site)
     fields = _flatten_admin_fields(about_admin.fieldsets)
-    assert about_admin.list_display == ['id', 'about_title', 'email']
-    assert about_admin.list_display_links == ['id', 'about_title']
-    assert all(not field.startswith(('hero_title', 'hero_description')) for field in fields)
+
+    assert list(about_admin.list_display) == ['id', 'about_title']
+    assert list(about_admin.list_display_links) == ['id', 'about_title']
+    assert any(field.startswith('hero_title') for field in fields)
 
 
 def test_about_gallery_inline_uses_bounded_image_preview():

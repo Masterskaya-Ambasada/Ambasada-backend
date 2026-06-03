@@ -40,27 +40,27 @@ class TestUserModel:
         assert user_empty.full_name == 'empty@test.com'
 
     def test_role_to_is_staff_automation(self, user_factory):
-        """Проверка автоматического назначения is_staff при сохранении в зависимости от роли."""
-        editor = user_factory(email='e@test.com', role=User.Role.EDITOR)
+        """Проверка автоматического назначения is_staff при сохранении в зависимости от должности."""
+        editor = user_factory(email='e@test.com', position=User.Position.EDITOR)
         assert editor.is_staff is True
 
-        simple_user = user_factory(email='s@test.com', role=User.Role.USER)
+        simple_user = user_factory(email='s@test.com', position=User.Position.USER)
         assert simple_user.is_staff is False
 
     def test_role_check_properties_and_methods(self, admin_user, editor_user, regular_user):
-        """Тесты свойств быстрого доступа к ролям и метода has_role."""
+        """Тесты свойств быстрого доступа к должностям и метода has_role."""
         assert admin_user.is_admin is True
         assert admin_user.is_editor is False
-        assert admin_user.has_role(User.Role.ADMIN) is True
+        assert admin_user.has_role(User.Position.ADMIN) is True
 
         assert editor_user.is_editor is True
         assert editor_user.is_admin is False
-        assert editor_user.has_role(User.Role.EDITOR) is True
-        assert editor_user.has_role(User.Role.ADMIN, User.Role.EDITOR) is True
+        assert editor_user.has_role(User.Position.EDITOR) is True
+        assert editor_user.has_role(User.Position.ADMIN, User.Position.EDITOR) is True
 
         assert regular_user.is_admin is False
         assert regular_user.is_editor is False
-        assert regular_user.has_role(User.Role.USER) is True
+        assert regular_user.has_role(User.Position.USER) is True
 
     def test_can_edit_content_method(self, editor_user, regular_user, admin_user):
         """Проверка бизнес-логики: кто может управлять контентом."""
@@ -118,7 +118,7 @@ class TestUserManager:
         """Проверка дефолтных значений суперпользователя."""
         assert admin_user.is_superuser is True
         assert admin_user.is_staff is True
-        assert admin_user.role == User.Role.ADMIN
+        assert admin_user.position == User.Position.ADMIN
 
     def test_create_superuser_invalid_flags_raises_error(self):
         """Негативные кейсы для create_superuser: проверка обязательных флагов."""

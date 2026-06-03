@@ -17,16 +17,56 @@ from rest_framework.test import APIClient
 User = get_user_model()
 
 
+@pytest.fixture(autouse=True)
+def disable_scoped_throttling(monkeypatch):
+    """Гарантированно отключает ScopedRateThrottle, используемый во вьюхах через свойство throttle_scope."""
+    from rest_framework.throttling import ScopedRateThrottle
+    monkeypatch.setattr(ScopedRateThrottle, "allow_request", lambda self, request, view: True)
+
+
+@pytest.fixture(autouse=True)
+def clear_django_cache():
+    """Автоматически очищает кэш перед каждым тестом, чтобы исключить влияние старых данных."""
+    cache.clear()
+
+
+# =========================================================
+# GLOBAL SITE CONFIG FIXTURE (без поля email)
+# =========================================================
+
+@pytest.fixture(autouse=True)
+def default_site_config(db):
+    """
+    Автоматически создает базовый синглтон настроек сайта для всех тестов,
+    чтобы избежать ошибок из-за отсутствия конфигурации в базе.
+    """
+    from site_config.models import SiteConfig
+    from site_config.constants import SITE_CONFIG_SINGLETON_PK
+    
+    config, _ = SiteConfig.objects.get_or_create(
+        pk=SITE_CONFIG_SINGLETON_PK,
+        defaults={
+            'site_name': 'Ambasada',
+            'team_title': 'Команда',
+            'main_team_button_label': 'Присоединиться к команде',
+            'about_team_button_label': 'Присоединиться',
+        }
+    )
+    return config
+
+
 # =========================================================
 # USERS
 # =========================================================
-
 
 @pytest.fixture
 def user_factory(db):
     """Фабрика для создания пользователей с произвольными параметрами."""
 
     def create_user(email='test@example.com', password='password', **kwargs):
+        if 'role' in kwargs and kwargs['role'] in [User.Position.USER, User.Position.EDITOR, User.Position.ADMIN]:
+            kwargs['position'] = kwargs.pop('role')
+            
         return User.objects.create_user(email=email, password=password, **kwargs)
 
     return create_user
@@ -35,44 +75,32 @@ def user_factory(db):
 @pytest.fixture
 def regular_user(user_factory):
     """Обычный пользователь (роль USER, без прав staff)."""
-    return user_factory(email='user@test.com', first_name='Ivan', last_name='Ivanov', role=User.Role.USER)
+    return user_factory(
+        email='user@test.com', 
+        first_name='Ivan', 
+        last_name='Ivanov', 
+        position=User.Position.USER
+    )
 
 
 @pytest.fixture
 def editor_user(user_factory):
     """Пользователь-редактор контента."""
-    return user_factory(email='editor@test.com', role=User.Role.EDITOR)
+    return user_factory(
+        email='editor@test.com', 
+        position=User.Position.EDITOR
+    )
 
 
 @pytest.fixture
 def admin_user(db):
     """Суперпользователь."""
     return User.objects.create_superuser(
-        email='admin@test.com', password='adminpassword', first_name='Admin', last_name='Adminov'
+        email='admin@test.com', 
+        password='adminpassword', 
+        first_name='Admin', 
+        last_name='Adminov'
     )
-
-
-# Test settings with local memory cache instead of Redis
-TEST_CACHE_SETTINGS = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
-    }
-}
-
-
-@pytest.fixture(autouse=True)
-def configure_cache(settings):
-    """Configure local memory cache for tests instead of Redis."""
-    with override_settings(CACHES=TEST_CACHE_SETTINGS):
-        # Reconfigure cache with new settings
-        from django.core.cache import caches
-
-        cache.close()
-        caches['default'].close()
-        yield
-        cache.clear()
-
 
 # =========================================================
 # API
@@ -86,7 +114,7 @@ def api_client():
 
 
 # =========================================================
-# ROJECT TYPES
+# PROJECT TYPES
 # =========================================================
 
 
@@ -264,10 +292,13 @@ def buttons_block(published_project):
     return block
 
 
-# Для ABOUT (новые фикстуры)
+# =========================================================
+# ABOUT (Исправлено: поля удалены)
+# =========================================================
+
 @pytest.fixture
 def about_page(db):
-    """Создает страницу 'О нас'."""
+    """Создает страницу 'О нас' без удаленных полей команды."""
     from about.models import AboutPage
 
     return AboutPage.objects.create(
@@ -275,9 +306,6 @@ def about_page(db):
         button_label='Button',
         button_link='/projects',
         values_title='Values',
-        team_title='Team',
-        team_button_label='Join',
-        team_button_link='/join',
         gallery_title='Gallery',
     )
 
@@ -327,13 +355,7 @@ def team_members(db, django_user_model):
 
 @pytest.fixture
 def about_full_setup(about_page, values, gallery_images, team_members):
-    """
-    Полная подготовка данных для About API:
-    - страница
-    - ценности
-    - участники команды
-    - галерея
-    """
+    """Полная подготовка данных для About API."""
     for user in team_members:
         user.is_public = True
         user.save()

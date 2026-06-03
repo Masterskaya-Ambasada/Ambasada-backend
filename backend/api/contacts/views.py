@@ -27,11 +27,10 @@ class ContactView(APIView):
         serializer.save()
 
     def post(self, request, *args, **kwargs):
-        """Создаёт запрос обратной связи."""
-        if not request.data.get('contact_preference'):
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
+        """Создаёт запрос обратной связи со встроенной валидацией антиспама."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
 
         return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
 

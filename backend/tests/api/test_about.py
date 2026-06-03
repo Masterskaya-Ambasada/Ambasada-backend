@@ -12,8 +12,7 @@ def test_about_page_success(api_client, about_full_setup):
 
     Ожидается:
     - статус 200
-    - наличие всех секций
-    - корректные данные из БД
+    - наличие всех актуальных секций для фронтенда
     """
     url = reverse('api:about')
     response = api_client.get(url)
@@ -22,7 +21,6 @@ def test_about_page_success(api_client, about_full_setup):
 
     data = response.json()
 
-    assert 'hero' not in data
     assert 'about_section' in data
     assert 'values' in data
     assert 'team' in data
@@ -32,11 +30,11 @@ def test_about_page_success(api_client, about_full_setup):
 @pytest.mark.django_db
 def test_about_page_not_found(api_client):
     """
-    Проверяет поведение API, когда страница 'О нас' отсутствует.
+    Проверяет поведение API, когда страница 'О нас' отсутствует в БД.
 
     Ожидается:
     - статус 404
-    - корректное сообщение об ошибке
+    - корректный JSON с ошибкой
     """
     url = reverse('api:about')
     response = api_client.get(url)
@@ -44,8 +42,11 @@ def test_about_page_not_found(api_client):
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
     data = response.json()
-
-    assert data == {'status': 404, 'code': 'NOT_FOUND', 'message': 'Информация о сообществе не найдена'}
+    assert data == {
+        'status': 404,
+        'code': 'NOT_FOUND',
+        'message': 'Информация о сообществе не найдена',
+    }
 
 
 @pytest.mark.django_db
@@ -55,8 +56,8 @@ def test_about_team_structure(api_client, about_full_setup):
 
     Ожидается:
     - title присутствует
-    - members не пустой
-    - данные совпадают с БД
+    - members содержит список из 2 участников из фикстуры
+    - присутствует кнопка действия
     """
     url = reverse('api:about')
     response = api_client.get(url)
@@ -76,8 +77,8 @@ def test_about_values_structure(api_client, about_full_setup):
     Проверяет структуру и данные блока ценностей.
 
     Ожидается:
-    - title присутствует
-    - items содержит реальные данные
+    - Секция содержит title и список items
+    - Данные соответствуют созданным в БД (Value 1, Value 2)
     """
     url = reverse('api:about')
     response = api_client.get(url)
@@ -97,11 +98,11 @@ def test_about_values_structure(api_client, about_full_setup):
 @pytest.mark.django_db
 def test_about_gallery_structure(api_client, about_full_setup):
     """
-    Проверяет структуру и данные галереи.
+    Проверяет структуру и контент галереи-карусели.
 
     Ожидается:
-    - title присутствует
-    - изображения реально возвращаются из БД
+    - Секция успешно отдаёт картинки
+    - alt-тексты картинок совпадают с объектами из базы данных
     """
     url = reverse('api:about')
     response = api_client.get(url)

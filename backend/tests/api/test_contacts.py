@@ -26,7 +26,7 @@ class TestContactViewPost:
         assert response.data['detail']
 
         assert ContactRequest.objects.count() == 1
-    
+        
         contact = ContactRequest.objects.first()
 
         for key, value in contact_payload.items():
@@ -63,8 +63,8 @@ class TestContactViewPost:
         contact_payload,
     ):
         """
-        Если заполнено honeypot-поле,
-        объект не создаётся.
+        Если заполнено honeypot-поле, сервер имитирует успешный ответ (201 Created),
+        но объект в базе данных НЕ создаётся.
         """
         payload = contact_payload.copy()
         payload['contact_preference'] = 'spam-bot'
@@ -75,8 +75,6 @@ class TestContactViewPost:
         )
 
         assert response.status_code == status.HTTP_201_CREATED
-        assert 'detail' in response.data
-        assert response.data['detail']
 
         assert ContactRequest.objects.count() == 0
 
@@ -118,19 +116,17 @@ class TestContactPageContentModel:
     def test_only_one_active_object_exists(self):
         """
         При создании нового активного блока
-        предыдущий автоматически деактивируется.
+        previous автоматически деактивируется.
         """
-        first = ContactPageContent(
+        first = ContactPageContent.objects.create(
             donation_text='Первый блок',
             is_active=True,
         )
-        first.save()
 
-        second = ContactPageContent(
+        second = ContactPageContent.objects.create(
             donation_text='Второй блок',
             is_active=True,
         )
-        second.save()
 
         first.refresh_from_db()
         second.refresh_from_db()

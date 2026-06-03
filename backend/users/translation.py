@@ -10,6 +10,6 @@ class UserTranslationOptions(TranslationOptions):
     fields = (
         'first_name',
         'last_name',
-        'position',
-        'bio',
+        'role',
+        # 'bio',
     )
