@@ -8,6 +8,8 @@ from contacts.constants import (
     MAX_NAME_LENGTH,
     MAX_REASON_LENGTH,
     SOCIAL_TYPE_MAX_LENGTH,
+    DEFAULT_SOCIAL_ORDER,
+    DONATION_TEXT_PREVIEW_LENGTH
 )
 
 
@@ -104,7 +106,7 @@ class ContactPageContent(models.Model):
         ]
 
     def __str__(self):
-        return self.donation_text[:50] if self.donation_text else str(self._meta.verbose_name)
+        return self.donation_text[:DONATION_TEXT_PREVIEW_LENGTH] if self.donation_text else str(self._meta.verbose_name)
 
 
 def get_default_site_config():
@@ -144,7 +146,7 @@ class ContactSocialLink(models.Model):
     )
 
     order = models.PositiveSmallIntegerField(
-        default=0,
+        default=DEFAULT_SOCIAL_ORDER,
         verbose_name=_('Порядок отображения'),
     )
 
