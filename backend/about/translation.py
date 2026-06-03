@@ -1,5 +1,3 @@
-"""Настройка мультиязычности моделей через django-modeltranslation."""
-
 from modeltranslation.translator import TranslationOptions, register
 
 from .models import AboutPage, AboutParagraph, GalleryImage, Value
@@ -10,11 +8,11 @@ class AboutPageTranslationOptions(TranslationOptions):
     """Переводимые поля страницы 'О нас'."""
 
     fields = (
+        'hero_title',
+        'hero_description',
         'about_title',
         'button_label',
         'values_title',
-        'team_title',
-        'team_button_label',
         'gallery_title',
     )
 

@@ -13,7 +13,7 @@ class UserLoginResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'name', 'position', 'photo', 'is_staff')
+        fields = ('id', 'email', 'name', 'role', 'photo', 'is_staff')
         read_only_fields = fields
 
 
