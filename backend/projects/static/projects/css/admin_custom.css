@@ -131,3 +131,17 @@
 [data-theme="dark"] .djn-group.djn-tabular tbody tr.row1 { background-color: #1e1e1e !important; }
 [data-theme="dark"] .djn-group.djn-tabular tbody tr.row2 { background-color: #252526 !important; }
 [data-theme="dark"] .djn-group.djn-tabular input, [data-theme="dark"] .djn-group.djn-tabular select { background-color: #1a1a1a !important; color: #e0e0e0 !important; border-color: #444 !important; }
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form { background-color: #1e1e1e !important; border-color: #2d2d2d !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important; }
+    :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form:hover { border-color: #3e3e3e !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important; }
+    :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 { background-color: #252526 !important; color: #cbd5e1 !important; border-bottom-color: #2d2d2d !important; }
+    :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module { border-color: #2d2d2d !important; background: #1e1e1e !important; }
+    :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 { background: #2d2d2d !important; color: #e2e8f0 !important; border-bottom-color: #2d2d2d !important; }
+}
+
+[data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form { background-color: #1e1e1e !important; border-color: #2d2d2d !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important; }
+[data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form:hover { border-color: #3e3e3e !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important; }
+[data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 { background-color: #252526 !important; color: #cbd5e1 !important; border-bottom-color: #2d2d2d !important; }
+[data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module { border-color: #2d2d2d !important; background: #1e1e1e !important; }
+[data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 { background: #2d2d2d !important; color: #e2e8f0 !important; border-bottom-color: #2d2d2d !important; }

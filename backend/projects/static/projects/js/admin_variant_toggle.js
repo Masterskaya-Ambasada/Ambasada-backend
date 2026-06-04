@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const style = document.createElement('style');
     style.textContent = `
         /* Гарантированный отступ между контентными блоками (старыми и вновь созданными) */
-        .djn-inline-form {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
             margin-bottom: 35px !important;
             border: 1px solid #cbd5e1 !important; /* Четкая серая граница вокруг каждого блока */
             background: #ffffff !important;
@@ -154,17 +154,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /* Дополнительный отступ для внутренних групп (например, кнопок внутри блока) */
-        .djn-inline-form .djn-group {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form .djn-group {
             margin-top: 20px !important;
             margin-bottom: 10px !important;
         }
 
         /* Делаем красивую заплатку, чтобы шапка блока отделялась от полей */
-        .djn-inline-form > h3 {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
             background: #f1f5f9 !important;
             margin: -20px -20px 20px -20px !important;
             padding: 12px 20px !important;
             border-bottom: 1px solid #cbd5e1 !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
+            background: #1e1e1e !important;
+            border-color: #2d2d2d !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
+            background: #252526 !important;
+            color: #cbd5e1 !important;
+            border-bottom-color: #2d2d2d !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module {
+            background: #1e1e1e !important;
+            border-color: #2d2d2d !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 {
+            background: #2d2d2d !important;
+            color: #e2e8f0 !important;
+            border-bottom-color: #2d2d2d !important;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
+                background: #1e1e1e !important;
+                border-color: #2d2d2d !important;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
+                background: #252526 !important;
+                color: #cbd5e1 !important;
+                border-bottom-color: #2d2d2d !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module {
+                background: #1e1e1e !important;
+                border-color: #2d2d2d !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 {
+                background: #2d2d2d !important;
+                color: #e2e8f0 !important;
+                border-bottom-color: #2d2d2d !important;
+            }
         }
     `;
     document.head.appendChild(style);

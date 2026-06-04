@@ -54,6 +54,8 @@ CORS_ALLOWED_ORIGINS = config(
     default='http://localhost:3000',
 )
 
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000').rstrip('/')
+
 CORS_ALLOW_CREDENTIALS = False
 
 # Allowed headers - adding Accept-Language for localization
@@ -102,6 +104,7 @@ INSTALLED_APPS = [
     'api',
     'site_config.apps.SiteConfigConfig',
     'contacts',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -229,6 +232,7 @@ MODELTRANSLATION_FALLBACK_VALUES = None
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
+MODELTRANSLATION_CLEAN_FIELDS = True
 
 LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
 

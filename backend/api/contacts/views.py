@@ -44,7 +44,7 @@ class ContactView(APIView):
             raise
 
     def post(self, request, *args, **kwargs):
-        """Создаёт запрос обратной связи."""       
+        """Создаёт запрос обратной связи со встроенной валидацией антиспама."""       
         try:
             if not request.data.get('contact_preference'):
                 logger.debug("Валидация данных запроса обратной связи")
@@ -77,13 +77,6 @@ class ContactView(APIView):
 
     def get(self, request, *args, **kwargs):
         """Возвращает текст пожертвований."""
-        # content = ContactPageContent.objects.filter(is_active=True).first()
-        # return Response(
-        #     {
-        #         'donation_text': (ContactPageContentSerializer(content).data['donation_text'] if content else ''),
-        #     }
-        # )
-
         logger.info(f"GET запрос контактной информации от {request.META.get('REMOTE_ADDR')}")
         try:
             logger.debug("Поиск активного контента контактной страницы")

@@ -12,6 +12,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from api.about.views import AboutAPIView
 from api.auth.views import AmbasadaTokenObtainPairView
 from api.contacts.views import ContactView
+from api.home.views import HomeAPIView
 from api.projects.views import (
     ProjectDetailView,
     ProjectListView,
@@ -79,6 +80,7 @@ contact_urlpatterns = [
 
 # Объединение всех эндпоинтов версии v1
 v1_urlpatterns = [
+    path('home/', HomeAPIView.as_view(), name='home'),
     path('init/', InitView.as_view(), name='init'),
     path('auth/', include(auth_urlpatterns)),
     path('users/', include(user_urlpatterns)),

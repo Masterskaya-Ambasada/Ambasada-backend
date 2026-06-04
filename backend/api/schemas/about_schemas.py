@@ -3,13 +3,14 @@ from drf_spectacular.utils import (
     OpenApiExample,
     OpenApiResponse,
     extend_schema,
-    extend_schema_view,
     inline_serializer,
 )
 from rest_framework import serializers
 
-ABOUT_SCHEMA = extend_schema_view(
-    get=extend_schema(
+
+def about_page_schema_decorator(cls):
+    """Декоратор для AboutAPIView."""
+    return extend_schema(
         summary=_('Получение страницы "О сообществе"'),
         description=_('Возвращает данные страницы "О нас" со всеми секциями.'),
         responses={
@@ -18,20 +19,12 @@ ABOUT_SCHEMA = extend_schema_view(
                 response=inline_serializer(
                     name='AboutPageResponse',
                     fields={
-                        'hero': inline_serializer(
-                            name='AboutHero',
-                            fields={
-                                'title': serializers.CharField(),
-                                'description': serializers.CharField(),
-                                # Убрали image_left и image_right
-                            },
-                        ),
                         'about_section': inline_serializer(
-                            name='AboutSection',
+                            name='AboutSectionSchema',
                             fields={
                                 'title': serializers.CharField(),
                                 'paragraphs': inline_serializer(
-                                    name='AboutParagraph',
+                                    name='AboutParagraphSchema',
                                     fields={
                                         'first_sentence': serializers.CharField(),
                                         'main_text': serializers.CharField(),
@@ -39,7 +32,7 @@ ABOUT_SCHEMA = extend_schema_view(
                                     many=True,
                                 ),
                                 'action_button': inline_serializer(
-                                    name='AboutActionButton',
+                                    name='AboutActionButtonSchema',
                                     fields={
                                         'text': serializers.CharField(),
                                         'link': serializers.CharField(),
@@ -48,11 +41,11 @@ ABOUT_SCHEMA = extend_schema_view(
                             },
                         ),
                         'values': inline_serializer(
-                            name='AboutValues',
+                            name='AboutValuesSchema',
                             fields={
                                 'title': serializers.CharField(),
                                 'items': inline_serializer(
-                                    name='AboutValueItem',
+                                    name='AboutValueItemSchema',
                                     fields={
                                         'id': serializers.IntegerField(),
                                         'title': serializers.CharField(),
@@ -63,21 +56,21 @@ ABOUT_SCHEMA = extend_schema_view(
                             },
                         ),
                         'team': inline_serializer(
-                            name='AboutTeam',
+                            name='AboutTeamSchema',
                             fields={
                                 'title': serializers.CharField(),
                                 'members': inline_serializer(
-                                    name='AboutTeamMember',
+                                    name='AboutTeamMemberSchema',
                                     fields={
                                         'id': serializers.IntegerField(),
                                         'name': serializers.CharField(),
-                                        'position': serializers.CharField(allow_blank=True),
+                                        'role': serializers.CharField(allow_blank=True),
                                         'photo': serializers.URLField(allow_null=True),
                                     },
                                     many=True,
                                 ),
                                 'action_button': inline_serializer(
-                                    name='TeamActionButton',
+                                    name='AboutTeamActionButtonSchema',
                                     fields={
                                         'label': serializers.CharField(),
                                         'link': serializers.CharField(),
@@ -86,11 +79,11 @@ ABOUT_SCHEMA = extend_schema_view(
                             },
                         ),
                         'gallery_carousel': inline_serializer(
-                            name='AboutGallery',
+                            name='AboutGallerySchema',
                             fields={
                                 'title': serializers.CharField(),
                                 'images': inline_serializer(
-                                    name='AboutGalleryImage',
+                                    name='AboutGalleryImageSchema',
                                     fields={
                                         'id': serializers.IntegerField(),
                                         'url': serializers.URLField(),
@@ -125,5 +118,4 @@ ABOUT_SCHEMA = extend_schema_view(
                 ],
             ),
         },
-    )
-)
+    )(cls)
