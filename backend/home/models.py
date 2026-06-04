@@ -39,6 +39,11 @@ from home.constants import (
 )
 
 
+def home_hero_path(instance, filename):
+    """Временный fallback для старой миграции 0001_initial."""
+    return f'home/{filename}'
+
+
 def get_upload_path(upload_path, instance, filename):
     """Возвращает путь для загрузки медиа контента."""
     return os.path.join(upload_path, filename)
