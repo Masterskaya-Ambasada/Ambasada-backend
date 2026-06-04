@@ -166,11 +166,10 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             _('⚙️ Навигация и Ссылки главного экрана (Hero)'),
             {
                 'fields': (
-                    'hero_title_ru',
                     'button_label_ru',
                     'button_link',
                 ),
-                'description': _('Управление контентом главного приветственного блока ' 'и кнопкой действия.'),
+                'description': _('Управление контентом главного приветственного блока и кнопкой действия.'),
             },
         ),
         (
@@ -185,7 +184,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             {
                 'classes': ('collapse',),
                 'fields': (
-                    'hero_description_ru',
                     'about_title_ru',
                     'values_title_ru',
                     'gallery_title_ru',
@@ -197,8 +195,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             {
                 'classes': ('collapse',),
                 'fields': (
-                    'hero_title_en',
-                    'hero_description_en',
                     'about_title_en',
                     'button_label_en',
                     'values_title_en',
@@ -211,8 +207,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             {
                 'classes': ('collapse',),
                 'fields': (
-                    'hero_title_sr_latn',
-                    'hero_description_sr_latn',
                     'about_title_sr_latn',
                     'button_label_sr_latn',
                     'values_title_sr_latn',
@@ -225,8 +219,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
             {
                 'classes': ('collapse',),
                 'fields': (
-                    'hero_title_sr_cyrl',
-                    'hero_description_sr_cyrl',
                     'about_title_sr_cyrl',
                     'button_label_sr_cyrl',
                     'values_title_sr_cyrl',
@@ -238,8 +230,6 @@ class AboutPageAdmin(BaseTranslatedAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        if 'hero_title_ru' in form.base_fields:
-            form.base_fields['hero_title_ru'].label = _('Главный заголовок (Экран Hero)')
         if 'button_label_ru' in form.base_fields:
             form.base_fields['button_label_ru'].label = _('Текст целевой кнопки')
         if 'button_link' in form.base_fields:

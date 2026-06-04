@@ -31,6 +31,7 @@ HOME_VIEW_SCHEMA = extend_schema(
                         fields={
                             'title': serializers.CharField(),
                             'text': serializers.CharField(),
+                            'image': serializers.CharField(allow_null=True),
                             'action_button': inline_serializer(
                                 name='AboutPreviewButton',
                                 fields={
@@ -106,48 +107,67 @@ HOME_VIEW_SCHEMA = extend_schema(
                     'Пример ответа Главной страницы',
                     value={
                         'hero': {
-                            'title': 'Ambasada za urbanizam',
-                            'subtitle': 'Istražujemo, projektujemo i menjamo urbanu sredinu',
+                            'title': 'Амбасада за урбанизам',
+                            'subtitle': ('Исследуем, проектируем и меняем городскую среду Белграда'),
                             'image_left': 'https://cdn.example.com/hero1.webp',
                             'image_right': 'https://cdn.example.com/hero2.webp',
-                            'action_button': {'label': 'Saznajte više', 'link': '/projects'},
+                            'action_button': {
+                                'label': 'Смотреть проекты',
+                                'link': '/projects',
+                            },
                         },
                         'about_preview': {
-                            'title': 'O zajednici',
-                            'text': 'Mi smo udruženje arhitekata i urbanista...',
-                            'action_button': {'label': 'Saznajte više', 'link': '/about'},
+                            'title': 'О сообществе',
+                            'text': (
+                                'Мы объединяем урбанистов, архитекторов и жителей для ' 'создания комфортного города.'
+                            ),
+                            'image': 'https://cdn.example.com/about.webp',
+                            'action_button': {
+                                'label': 'Узнать больше',
+                                'link': '/about',
+                            },
                         },
                         'team_preview': {
-                            'title': 'Tim',
+                            'title': 'Команда',
                             'members': [
                                 {
-                                    'name': 'Petar Petrović',
-                                    'role': 'Arhitekta',
+                                    'name': 'Петр Петрович',
+                                    'role': 'Архитектор',
                                     'photo': 'https://cdn.example.com/p1.jpg',
                                 },
-                                {'name': 'Nikola Nikolić', 'role': 'Dizajner', 'photo': None},
+                                {
+                                    'name': 'Николай Николаевич',
+                                    'role': 'Дизайнер',
+                                    'photo': None,
+                                },
                             ],
-                            'action_button': {'label': 'Pridruži se timu', 'link': '/contacts'},
+                            'action_button': {
+                                'label': 'Присоединиться к команде',
+                                'link': '/contacts',
+                            },
                         },
                         'projects_preview': {
-                            'title': 'Projekti',
+                            'title': 'Наши проекты',
                             'items': [
                                 {
                                     'id': 'zvezdarska-suma',
-                                    'title': 'Zvezdarska šuma',
-                                    'description': 'Zvezdarska šuma je jedna od najvećih zelenih zona...',
-                                    'project_type': 'Navigacija',
-                                    'tags': ['Urbanizam', 'Beograd'],
+                                    'title': 'Звездарский лес',
+                                    'description': ('Звездарский лес — одна из крупнейших зеленых зон...'),
+                                    'project_type': 'Навигация',
+                                    'tags': ['Урбанистика', 'Белград'],
                                     'year': '2023',
                                     'image': 'https://cdn.example.com/z1.webp',
                                     'isFirst': True,
                                     'action_button': {
-                                        'label': 'Pregledaj projekat',
+                                        'label': 'Перейти к проекту',
                                         'link': '/projects/zvezdarska-suma',
                                     },
                                 }
                             ],
-                            'action_button': {'label': 'Svi projekti', 'link': '/projects'},
+                            'action_button': {
+                                'label': 'Все проекты',
+                                'link': '/projects',
+                            },
                         },
                     },
                 )

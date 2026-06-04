@@ -30,9 +30,9 @@ class HomePageContentAdminForm(forms.ModelForm):
             if 'about_title_ru' in self.fields:
                 self.fields['about_title_ru'].initial = 'О сообществе'
             if 'about_text_ru' in self.fields:
-                self.fields[
-                    'about_text_ru'
-                ].initial = 'Мы объединяем урбанистов, архитекторов и жителей для создания комфортного города.'
+                self.fields['about_text_ru'].initial = (
+                    'Мы объединяем урбанистов, архитекторов и жителей для ' 'создания комфортного города.'
+                )
             if 'projects_title_ru' in self.fields:
                 self.fields['projects_title_ru'].initial = 'Наши проекты'
             if 'projects_button_label_ru' in self.fields:
@@ -42,17 +42,17 @@ class HomePageContentAdminForm(forms.ModelForm):
             if 'title_en' in self.fields:
                 self.fields['title_en'].initial = 'Ambasada za Urbanizam'
             if 'subtitle_en' in self.fields:
-                self.fields[
-                    'subtitle_en'
-                ].initial = 'Exploring, designing and changing the urban environment of Belgrade'
+                self.fields['subtitle_en'].initial = (
+                    'Exploring, designing and changing the urban environment ' 'of Belgrade'
+                )
             if 'hero_button_label_en' in self.fields:
                 self.fields['hero_button_label_en'].initial = 'View Projects'
             if 'about_title_en' in self.fields:
                 self.fields['about_title_en'].initial = 'About community'
             if 'about_text_en' in self.fields:
-                self.fields[
-                    'about_text_en'
-                ].initial = 'We bring together urbanists, architects, and citizens to create a liveable city.'
+                self.fields['about_text_en'].initial = (
+                    'We bring together urbanists, architects, and citizens ' 'to create a liveable city.'
+                )
             if 'projects_title_en' in self.fields:
                 self.fields['projects_title_en'].initial = 'Our Projects'
             if 'projects_button_label_en' in self.fields:
@@ -62,15 +62,17 @@ class HomePageContentAdminForm(forms.ModelForm):
             if 'title_sr_latn' in self.fields:
                 self.fields['title_sr_latn'].initial = 'Ambasada za urbanizam'
             if 'subtitle_sr_latn' in self.fields:
-                self.fields['subtitle_sr_latn'].initial = 'Istražujemo, projektujemo i menjamo urbanu sredinu Beograda'
+                self.fields['subtitle_sr_latn'].initial = (
+                    'Istražujemo, projektujemo i menjamo urbanu sredinu ' 'Beograda'
+                )
             if 'hero_button_label_sr_latn' in self.fields:
                 self.fields['hero_button_label_sr_latn'].initial = 'Pogledaj projekte'
             if 'about_title_sr_latn' in self.fields:
                 self.fields['about_title_sr_latn'].initial = 'O zajednici'
             if 'about_text_sr_latn' in self.fields:
-                self.fields[
-                    'about_text_sr_latn'
-                ].initial = 'Spajamo urbaniste, arhitekte i građane radi stvaranja udobnog grada.'
+                self.fields['about_text_sr_latn'].initial = (
+                    'Spajamo urbaniste, arhitekte i građane radi stvaranja ' 'udobnog grada.'
+                )
             if 'projects_title_sr_latn' in self.fields:
                 self.fields['projects_title_sr_latn'].initial = 'Naši projekti'
             if 'projects_button_label_sr_latn' in self.fields:
@@ -86,9 +88,9 @@ class HomePageContentAdminForm(forms.ModelForm):
             if 'about_title_sr_cyrl' in self.fields:
                 self.fields['about_title_sr_cyrl'].initial = 'О заједници'
             if 'about_text_sr_cyrl' in self.fields:
-                self.fields[
-                    'about_text_sr_cyrl'
-                ].initial = 'Спајамо урбанисте, архитекте и грађане ради стварања удобног града.'
+                self.fields['about_text_sr_cyrl'].initial = (
+                    'Спајамо урбанисте, архитекте и грађане ради стварања ' 'удобног града.'
+                )
             if 'projects_title_sr_cyrl' in self.fields:
                 self.fields['projects_title_sr_cyrl'].initial = 'Наши пројекти'
             if 'projects_button_label_sr_cyrl' in self.fields:
@@ -97,13 +99,17 @@ class HomePageContentAdminForm(forms.ModelForm):
 
 @admin.register(HomePageContent)
 class HomePageContentAdmin(BaseAdmin):
-    """Администрирование контента главной страницы (Singleton)."""
+    """Адменистрирование контента главной страницы (Singleton)."""
 
     form = HomePageContentAdminForm
     ordering = ('id',)
     list_display = ['__str__']
     tinymce_fields = []
-    readonly_fields = ('image_left_preview', 'image_right_preview')
+    readonly_fields = (
+        'image_left_preview',
+        'image_right_preview',
+        'about_image_preview',
+    )
 
     fieldsets = (
         (
@@ -114,10 +120,12 @@ class HomePageContentAdmin(BaseAdmin):
                     'image_left_preview',
                     'image_right',
                     'image_right_preview',
+                    'about_image',
+                    'about_image_preview',
                     'hero_button_link',
                     'projects_button_link',
                 ),
-                'description': _('Изображения и целевые ссылки, общие для всех языковых версий.'),
+                'description': _('Изображения и целевые ссылки, общие для всех версий.'),
             },
         ),
         (
@@ -133,7 +141,7 @@ class HomePageContentAdmin(BaseAdmin):
                     'projects_button_label_ru',
                 ),
                 'classes': ('collapse',),
-                'description': _('Контент и заголовки главного экрана на русском языке.'),
+                'description': _('Контент экрана на русском языке.'),
             },
         ),
         (
@@ -149,7 +157,7 @@ class HomePageContentAdmin(BaseAdmin):
                     'projects_button_label_en',
                 ),
                 'classes': ('collapse',),
-                'description': _('Контент и заголовки главного экрана на английском языке.'),
+                'description': _('Контент экрана на английском языке.'),
             },
         ),
         (
@@ -165,7 +173,7 @@ class HomePageContentAdmin(BaseAdmin):
                     'projects_button_label_sr_latn',
                 ),
                 'classes': ('collapse',),
-                'description': _('Контент и заголовки главного экрана на сербской латинице.'),
+                'description': _('Контент экрана на сербской латинице.'),
             },
         ),
         (
@@ -181,7 +189,7 @@ class HomePageContentAdmin(BaseAdmin):
                     'projects_button_label_sr_cyrl',
                 ),
                 'classes': ('collapse',),
-                'description': _('Контент и заголовки главного экрана на сербской кириллице.'),
+                'description': _('Контент экрана на сербской кириллице.'),
             },
         ),
     )
@@ -201,6 +209,11 @@ class HomePageContentAdmin(BaseAdmin):
         """Рендеринг превью правого изображения."""
         return self.get_admin_image_preview(obj, 'image_right', width=220, height=220)
 
+    @admin.display(description=_('Превью изображения секции О Нас'))
+    def about_image_preview(self, obj):
+        """Рендеринг превью изображения секции О Нас."""
+        return self.get_admin_image_preview(obj, 'about_image', width=220, height=220)
+
     def has_add_permission(self, request):
         """Запрет на создание более одного экземпляра контента."""
         if HomePageContent.objects.exists():
@@ -208,7 +221,7 @@ class HomePageContentAdmin(BaseAdmin):
         return super().has_add_permission(request)
 
     def changelist_view(self, request, extra_context=None):
-        """Перенаправление со списка на редактирование единственной записи."""
+        """Перенаправление со списка на редактирование синглтона."""
         existing_instance = HomePageContent.objects.only('pk').first()
         if existing_instance:
             return redirect(

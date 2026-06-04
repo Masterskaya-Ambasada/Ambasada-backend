@@ -1,9 +1,16 @@
 import pytest
+from django.urls import reverse
 from rest_framework import status
 
 from contacts.models import ContactPageContent, ContactRequest
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture
+def contact_url():
+    """Локальная фикстура для URL контактов, чтобы не зависеть от внешних conftest.py."""
+    return reverse('api:contact-create')
 
 
 class TestContactViewPost:
@@ -75,7 +82,6 @@ class TestContactViewPost:
         )
 
         assert response.status_code == status.HTTP_201_CREATED
-
         assert ContactRequest.objects.count() == 0
 
 

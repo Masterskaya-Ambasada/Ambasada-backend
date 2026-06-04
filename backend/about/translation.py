@@ -8,8 +8,6 @@ class AboutPageTranslationOptions(TranslationOptions):
     """Переводимые поля страницы 'О нас'."""
 
     fields = (
-        'hero_title',
-        'hero_description',
         'about_title',
         'button_label',
         'values_title',

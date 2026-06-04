@@ -19,13 +19,6 @@ def about_page_schema_decorator(cls):
                 response=inline_serializer(
                     name='AboutPageResponse',
                     fields={
-                        'hero_section': inline_serializer(
-                            name='AboutHeroSectionSchema',
-                            fields={
-                                'title': serializers.CharField(),
-                                'description': serializers.CharField(),
-                            },
-                        ),
                         'about_section': inline_serializer(
                             name='AboutSectionSchema',
                             fields={

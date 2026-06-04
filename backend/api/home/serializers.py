@@ -25,7 +25,17 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'title', 'description', 'project_type', 'tags', 'year', 'image', 'isFirst', 'action_button')
+        fields = (
+            'id',
+            'title',
+            'description',
+            'project_type',
+            'tags',
+            'year',
+            'image',
+            'isFirst',
+            'action_button',
+        )
 
     @extend_schema_field(serializers.CharField(allow_null=True))
     def get_image(self, obj) -> str | None:
@@ -52,7 +62,7 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
 
 
 class BaseHomeSectionSerializer(serializers.Serializer):
-    """Базовый класс секций с хелпером для мультиязычного кэша."""
+    """Базовый класс секций с хелперами для мультиязычного кэша и путей."""
 
     def _get_lang_value(self, obj, base_key, default='') -> str:
         if not obj:
@@ -60,6 +70,14 @@ class BaseHomeSectionSerializer(serializers.Serializer):
         request = self.context.get('request')
         lang = request.query_params.get('lang', 'ru') if request else 'ru'
         return obj.get(f'{base_key}_{lang}') or obj.get(base_key) or default
+
+    def _get_absolute_url(self, url_path: str | None) -> str | None:
+        if not url_path:
+            return None
+        request = self.context.get('request')
+        if request and not url_path.startswith('http'):
+            return request.build_absolute_uri(url_path)
+        return url_path
 
 
 class HomeHeroSectionSerializer(BaseHomeSectionSerializer):
@@ -79,14 +97,6 @@ class HomeHeroSectionSerializer(BaseHomeSectionSerializer):
     def get_subtitle(self, obj) -> str:
         return self._get_lang_value(obj, 'subtitle')
 
-    def _get_absolute_url(self, url_path: str | None) -> str | None:
-        if not url_path:
-            return None
-        request = self.context.get('request')
-        if request and not url_path.startswith('http'):
-            return request.build_absolute_uri(url_path)
-        return url_path
-
     @extend_schema_field(serializers.CharField(allow_null=True))
     def get_image_left(self, obj) -> str | None:
         return self._get_absolute_url(obj.get('image_left'))
@@ -98,7 +108,7 @@ class HomeHeroSectionSerializer(BaseHomeSectionSerializer):
     @extend_schema_field(ActionButtonSerializer)
     def get_action_button(self, obj) -> dict:
         return {
-            'label': self._get_lang_value(obj, 'hero_button_label') or 'Смотреть проекты',
+            'label': (self._get_lang_value(obj, 'hero_button_label') or 'Смотреть проекты'),
             'link': obj.get('hero_button_link') or '/projects',
         }
 
@@ -108,6 +118,7 @@ class HomeAboutPreviewSectionSerializer(BaseHomeSectionSerializer):
 
     title = serializers.SerializerMethodField()
     text = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     action_button = serializers.SerializerMethodField()
 
     @extend_schema_field(serializers.CharField())
@@ -117,6 +128,10 @@ class HomeAboutPreviewSectionSerializer(BaseHomeSectionSerializer):
     @extend_schema_field(serializers.CharField())
     def get_text(self, obj) -> str:
         return self._get_lang_value(obj, 'about_text')
+
+    @extend_schema_field(serializers.CharField(allow_null=True))
+    def get_image(self, obj) -> str | None:
+        return self._get_absolute_url(obj.get('about_image'))
 
     @extend_schema_field(ActionButtonSerializer)
     def get_action_button(self, obj) -> dict:
@@ -147,7 +162,7 @@ class HomeTeamPreviewSectionSerializer(BaseHomeSectionSerializer):
     def get_action_button(self, obj) -> dict:
         config = obj.get('config') or {}
         return {
-            'label': self._get_lang_value(config, 'main_team_button_label') or 'Присоединиться к команде',
+            'label': (self._get_lang_value(config, 'main_team_button_label') or 'Присоединиться к команде'),
             'link': config.get('team_button_link') or '/contacts',
         }
 
@@ -173,7 +188,7 @@ class HomeProjectsPreviewSectionSerializer(BaseHomeSectionSerializer):
     def get_action_button(self, obj) -> dict:
         config = obj.get('config') or {}
         return {
-            'label': self._get_lang_value(config, 'projects_button_label') or 'Все проекты',
+            'label': (self._get_lang_value(config, 'projects_button_label') or 'Все проекты'),
             'link': config.get('projects_button_link') or '/projects',
         }
 
@@ -197,11 +212,16 @@ class HomePageRootSerializer(serializers.Serializer):
     @extend_schema_field(HomeTeamPreviewSectionSerializer)
     def get_team_preview(self, obj) -> dict:
         return HomeTeamPreviewSectionSerializer(
-            {'config': obj.get('config'), 'members': obj.get('team_members')}, context=self.context
+            {
+                'config': obj.get('config'),
+                'members': obj.get('team_members'),
+            },
+            context=self.context,
         ).data
 
     @extend_schema_field(HomeProjectsPreviewSectionSerializer)
     def get_projects_preview(self, obj) -> dict:
         return HomeProjectsPreviewSectionSerializer(
-            {'config': obj.get('config'), 'projects': obj.get('projects')}, context=self.context
+            {'config': obj.get('config'), 'projects': obj.get('projects')},
+            context=self.context,
         ).data

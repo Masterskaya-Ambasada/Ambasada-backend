@@ -1,4 +1,5 @@
 import os
+from functools import partial
 
 from core.validators import MediaFileValidator
 from django.core.exceptions import ValidationError
@@ -15,6 +16,7 @@ from home.constants import (
     DEFAULT_PROJECTS_BUTTON_LABEL,
     DEFAULT_PROJECTS_LINK,
     DEFAULT_PROJECTS_TITLE,
+    FIELD_ABOUT_IMG_HELP,
     FIELD_ABOUT_TEXT_HELP,
     FIELD_ABOUT_TITLE_HELP,
     FIELD_HERO_BTN_LABEL_HELP,
@@ -31,14 +33,20 @@ from home.constants import (
     SUBTITLE_MAX_LENGTH,
     TEXT_PREVIEW_MAX_LENGTH,
     TITLE_MAX_LENGTH,
+    UPLOAD_HOME_ABOUT,
     UPLOAD_HOME_HERO,
     VALIDATION_DELETE_ERROR,
 )
 
 
-def home_hero_path(instance: 'HomePageContent', filename: str) -> str:
-    """Генерирует чистый путь для загрузки изображений секции Hero."""
-    return os.path.join(UPLOAD_HOME_HERO, filename)
+def home_hero_path(instance, filename):
+    """Временный fallback для старой миграции 0001_initial."""
+    return f'home/{filename}'
+
+
+def get_upload_path(upload_path, instance, filename):
+    """Возвращает путь для загрузки медиа контента."""
+    return os.path.join(upload_path, filename)
 
 
 class HomePageContent(models.Model):
@@ -58,13 +66,13 @@ class HomePageContent(models.Model):
         help_text=FIELD_HERO_SUBTITLE_HELP,
     )
     image_left = models.ImageField(
-        upload_to=home_hero_path,
+        upload_to=partial(get_upload_path, UPLOAD_HOME_HERO),
         validators=[MediaFileValidator()],
         verbose_name=_('Hero: Изображение (Левое)'),
         help_text=FIELD_HERO_IMG_LEFT_HELP,
     )
     image_right = models.ImageField(
-        upload_to=home_hero_path,
+        upload_to=partial(get_upload_path, UPLOAD_HOME_HERO),
         validators=[MediaFileValidator()],
         verbose_name=_('Hero: Изображение (Правое)'),
         help_text=FIELD_HERO_IMG_RIGHT_HELP,
@@ -94,6 +102,12 @@ class HomePageContent(models.Model):
         default=DEFAULT_ABOUT_TEXT,
         verbose_name=_('О нас: Краткий текст превью'),
         help_text=FIELD_ABOUT_TEXT_HELP,
+    )
+    about_image = models.ImageField(
+        upload_to=partial(get_upload_path, UPLOAD_HOME_ABOUT),
+        validators=[MediaFileValidator()],
+        verbose_name=_('О нас: Изображение секции'),
+        help_text=FIELD_ABOUT_IMG_HELP,
     )
 
     # --- СЕКЦИЯ 3: PROJECTS PREVIEW (ПРОЕКТЫ) ---

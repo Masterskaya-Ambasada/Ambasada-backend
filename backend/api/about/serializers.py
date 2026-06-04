@@ -51,10 +51,6 @@ class AboutPageSerializer(serializers.ModelSerializer):
         members = self.context.get('members', User.objects.public())
 
         return {
-            'hero': {
-                'title': instance.hero_title,
-                'description': instance.hero_description,
-            },
             'about_section': {
                 'title': instance.about_title,
                 'paragraphs': AboutParagraphSerializer(
@@ -70,7 +66,7 @@ class AboutPageSerializer(serializers.ModelSerializer):
                 'items': ValueSerializer(values, many=True, context={'request': request}).data,
             },
             'team': {
-                'title': cached_config.get('about_team_title') or cached_config.get('team_title') or 'Наша команда',
+                'title': (cached_config.get('about_team_title') or cached_config.get('team_title') or 'Наша команда'),
                 'members': TeamMemberSerializer(members, many=True, context={'request': request}).data,
                 'action_button': {
                     'label': cached_config.get('about_team_button_label') or 'Присоединиться',
