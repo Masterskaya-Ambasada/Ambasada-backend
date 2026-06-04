@@ -327,6 +327,11 @@ LOGGING = {
         },
     },
     'loggers': {
+        # КОРНЕВОЙ ЛОГГЕР: Ловит все логи из нашего кастомного кода
+        '': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO', 
+        },
         # Django internals
         'django': {
             'handlers': ['console'],
