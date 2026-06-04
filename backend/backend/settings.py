@@ -18,6 +18,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 APP_ENV = config('APP_ENV', default='development')
 
+CSP_IMG_SRC = ("'self'", 'data:')
+
 
 if APP_ENV == 'production':
     DEBUG = False
@@ -28,7 +30,6 @@ if APP_ENV == 'production':
     CSP_DEFAULT_SRC = ("'self'",)
     CSP_SCRIPT_SRC = ("'self'",)
     CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
-    CSP_IMG_SRC = ("'self'", 'data:')
     CSP_FONT_SRC = ("'self'",)
     CSP_CONNECT_SRC = ("'self'",)
     CSP_FRAME_ANCESTORS = ("'none'",)
@@ -243,6 +244,7 @@ TIME_ZONE = 'Europe/Moscow'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']
 
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
