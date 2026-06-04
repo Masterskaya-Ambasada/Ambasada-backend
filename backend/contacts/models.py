@@ -1,45 +1,51 @@
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from contacts.constants import (
-    MAX_MESSAGE_LENGTH,
-    MAX_NAME_LENGTH,
-    MAX_REASON_LENGTH,
-    SOCIAL_TYPE_MAX_LENGTH,
-)
+from . import constants
 
 
 class ContactRequest(models.Model):
     """Модель для формы обратной связи."""
 
     name = models.CharField(
-        max_length=MAX_NAME_LENGTH,
+        max_length=constants.MAX_NAME_LENGTH,
         verbose_name=_('Имя'),
     )
-
     email = models.EmailField(
         verbose_name=_('Email'),
     )
+    message = models.TextField(
+        max_length=constants.MAX_MESSAGE_LENGTH,
+        verbose_name=_('Сообщение'),
+        help_text=constants.HELP_REQUEST_MESSAGE,
+    )
 
     message = models.TextField(
-        max_length=MAX_MESSAGE_LENGTH,
         verbose_name=_('Сообщение'),
-        help_text=_('Введите сообщение'),
+        help_text=constants.HELP_REQUEST_MESSAGE,
+        validators=[
+            MinLengthValidator(
+                limit_value=constants.MIN_MESSAGE_LENGTH,
+                message=constants.ERROR_MESSAGE_MIN_LENGTH,
+            ),
+            MaxLengthValidator(
+                limit_value=constants.MAX_MESSAGE_LENGTH,
+                message=constants.ERROR_MESSAGE_MAX_LENGTH,
+            ),
+        ],
     )
-
     reason = models.CharField(
-        max_length=MAX_REASON_LENGTH,
+        max_length=constants.MAX_REASON_LENGTH,
         verbose_name=_('Причина обращения'),
     )
-
     is_processed = models.BooleanField(
         default=False,
         verbose_name=_('Обработано'),
-        help_text=_('Показывает, обработано ли обращение.'),
+        help_text=constants.HELP_REQUEST_IS_PROCESSED,
     )
-
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Дата создания'),
@@ -51,7 +57,7 @@ class ContactRequest(models.Model):
         ordering = ('-created_at',)
 
     def __str__(self):
-        return f'{self.name} <{self.email}> - {self.reason}'
+        return f'{self.name} от <{self.email}>'
 
 
 class ContactPageContent(models.Model):
@@ -60,34 +66,27 @@ class ContactPageContent(models.Model):
     donation_text = models.TextField(
         blank=True,
         verbose_name=_('Текстовый блок для пожертвований'),
-        help_text=_('Редактируемый текст с возможностью добавить внешнюю ссылку.'),
+        help_text=constants.HELP_CONTENT_DONATION_TEXT,
     )
-
     is_active = models.BooleanField(
         default=True,
         verbose_name=_('Активно'),
-        help_text=_('Может быть активен только один блок пожертвований.'),
+        help_text=constants.HELP_CONTENT_IS_ACTIVE,
     )
-
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Дата создания'),
     )
-
     updated_at = models.DateTimeField(
         auto_now=True,
         verbose_name=_('Дата обновления'),
     )
-
-    def clean(self):
-        super().clean()
 
     def save(self, *args, **kwargs):
         """Автопереключение активного блока."""
         if self.is_active:
             with transaction.atomic():
                 ContactPageContent.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
-
         super().save(*args, **kwargs)
 
     class Meta:
@@ -99,7 +98,7 @@ class ContactPageContent(models.Model):
                 fields=['is_active'],
                 condition=Q(is_active=True),
                 name='unique_active_contact_page_content',
-                violation_error_message=_('Может быть только один активный блок пожертвований.'),
+                violation_error_message=constants.ERROR_MULTIPLE_ACTIVE_DONATIONS,
             )
         ]
 
@@ -130,30 +129,25 @@ class ContactSocialLink(models.Model):
         verbose_name=_('Настройки сайта'),
         default=get_default_site_config,
     )
-
     social_type = models.CharField(
-        max_length=SOCIAL_TYPE_MAX_LENGTH,
+        max_length=constants.SOCIAL_TYPE_MAX_LENGTH,
         choices=SocialType.choices,
         verbose_name=_('Тип соцсети / мессенджера'),
-        help_text=_('Выбор соцсети.'),
+        help_text=constants.HELP_SOCIAL_TYPE,
     )
-
     url = models.URLField(
         verbose_name=_('Ссылка'),
-        help_text=_('Например: https://t.me/example'),
+        help_text=constants.HELP_SOCIAL_URL,
     )
-
     order = models.PositiveSmallIntegerField(
-        default=0,
+        default=constants.DEFAULT_ORDER_VALUE_CONTACT_SOCIAL_LINK,
         verbose_name=_('Порядок отображения'),
     )
-
     is_active = models.BooleanField(
         default=True,
         verbose_name=_('Показывать на сайте'),
-        help_text=_('Если включено — отображается на сайте. ' 'Иначе скрывается без удаления.'),
+        help_text=constants.HELP_SOCIAL_IS_ACTIVE,
     )
-
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Дата создания'),
@@ -163,41 +157,28 @@ class ContactSocialLink(models.Model):
         verbose_name = _('Ссылка на соцсеть / мессенджер')
         verbose_name_plural = _('Ссылки на соцсети / мессенджеры')
         ordering = ('order', 'id')
-
         constraints = [
             models.UniqueConstraint(
                 fields=['site_config', 'social_type'],
                 name='unique_site_config_social_type',
-                violation_error_message=_('Для данного сайта уже добавлена ссылка этого типа соцсети.'),
+                violation_error_message=constants.ERROR_DUPLICATE_SOCIAL_TYPE,
             ),
             models.UniqueConstraint(
                 fields=['site_config', 'order'],
                 name='unique_site_config_social_order',
-                violation_error_message=_('Этот порядок отображения уже занят для данного сайта.'),
+                violation_error_message=constants.ERROR_DUPLICATE_SOCIAL_ORDER,
             ),
         ]
 
     def clean(self):
-        """Проверяет уникальность соцсети и порядка для скрытого в админке SiteConfig."""
+        """Гарантирует привязку к дефолтному конфигу, если запись создается напрямую."""
         super().clean()
-        site_config_id = self.site_config_id
-        if site_config_id is None:
+
+        if not self.site_config_id:
             site_config = get_default_site_config()
-            if site_config is not None:
-                site_config_id = site_config.pk
-                self.site_config = site_config
-        if site_config_id is None:
-            raise ValidationError({NON_FIELD_ERRORS: _('Сначала создайте настройки сайта.')})
-        errors = {}
-        links = ContactSocialLink.objects.filter(site_config_id=site_config_id)
-        if self.pk:
-            links = links.exclude(pk=self.pk)
-        if self.social_type and links.filter(social_type=self.social_type).exists():
-            errors['social_type'] = _('Для данного сайта уже добавлена ссылка этого типа соцсети.')
-        if self.order is not None and links.filter(order=self.order).exists():
-            errors['order'] = _('Этот порядок отображения уже занят для данного сайта.')
-        if errors:
-            raise ValidationError(errors)
+            if not site_config:
+                raise ValidationError({NON_FIELD_ERRORS: constants.ERROR_MISSING_SITE_CONFIG})
+            self.site_config = site_config
 
     def __str__(self):
         return f'{self.get_social_type_display()} - {self.url}'

@@ -26,50 +26,51 @@ class UserAdmin(BaseUserAdmin, BaseTranslatedAdmin):
         'email',
     )
     list_editable = (
-        'role',
+        'order',
+        'position',
         'is_active',
         'is_staff',
         'is_public',
     )
+
+    list_display_links = ('get_full_name', 'email')
     list_display = [
         'get_full_name',
-        'first_name',
-        'last_name',
         'email',
-        'role',
         'position',
+        'order',
+        'role',
         'is_active',
         'is_staff',
         'is_public',
         'avatar_thumbnail',
     ]
-    tinymce_fields = ['bio_ru', 'bio_en', 'bio_sr_latn', 'bio_sr_cyrl']
     readonly_fields = (*BaseUserAdmin.readonly_fields, 'photo_preview')
     fieldsets = (
         (None, {'fields': ('email', 'password', 'photo', 'photo_preview')}),
         (
-            _('Персональная информацияы (Русский)'),
-            {'fields': ('first_name_ru', 'last_name_ru', 'position_ru', 'bio_ru'), 'classes': ('collapse',)},
+            _('Персональная информация (Русский)'),
+            {'fields': ('first_name_ru', 'last_name_ru', 'role_ru'), 'classes': ('collapse',)},
         ),
         (
             _('Персональная информация (Английский)'),
-            {'fields': ('first_name_en', 'last_name_en', 'position_en', 'bio_en'), 'classes': ('collapse',)},
+            {'fields': ('first_name_en', 'last_name_en', 'role_en'), 'classes': ('collapse',)},
         ),
         (
             _('Персональная информация (Сербский - Латиница)'),
             {
-                'fields': ('first_name_sr_latn', 'last_name_sr_latn', 'position_sr_latn', 'bio_sr_latn'),
+                'fields': ('first_name_sr_latn', 'last_name_sr_latn', 'role_sr_latn'),
                 'classes': ('collapse',),
             },
         ),
         (
             _('Персональная информация (Сербский - Кирилица)'),
             {
-                'fields': ('first_name_sr_cyrl', 'last_name_sr_cyrl', 'position_sr_cyrl', 'bio_sr_cyrl'),
+                'fields': ('first_name_sr_cyrl', 'last_name_sr_cyrl', 'role_sr_cyrl'),
                 'classes': ('collapse',),
             },
         ),
-        (_('Разрешения'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_public', 'role')}),
+        (_('Разрешения'), {'fields': ('order', 'is_active', 'is_staff', 'is_superuser', 'is_public', 'position')}),
         (_('Активность'), {'fields': ('last_login', 'date_joined')}),
     )
 
@@ -78,7 +79,7 @@ class UserAdmin(BaseUserAdmin, BaseTranslatedAdmin):
             None,
             {
                 'classes': ('wide',),
-                'fields': ('email', 'password1', 'password2', 'photo', 'is_public'),
+                'fields': ('email', 'password1', 'password2', 'photo', 'order', 'is_public'),
             },
         ),
     )

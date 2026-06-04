@@ -10,12 +10,11 @@ from .models import SiteConfig
 
 
 class ContactSocialLinkInline(admin.TabularInline):
-    """Настройка отображения ссылок на соцсети внутри конфигурации сайта."""
+    """Отображение ссылок на соцсети из модуля contacts внутри настроек сайта."""
 
     model = ContactSocialLink
     extra = 0
     fields = ('social_type', 'url', 'order', 'is_active')
-    can_delete = False
 
 
 class SiteConfigAdminForm(forms.ModelForm):
@@ -24,15 +23,14 @@ class SiteConfigAdminForm(forms.ModelForm):
     class Meta:
         model = SiteConfig
         fields = '__all__'
+        exclude = ('site_name_ru', 'site_name_en')
 
     def __init__(self, *args, **kwargs):
-        """Инициализация формы с предзаполнением полей для новых объектов."""
+        """Инициализация формы с предзаполнением начальных значений (initial)."""
         super().__init__(*args, **kwargs)
 
         if not self.instance.pk:
-            # ==================================================================
-            # 1. РУССКИЙ ЯЗЫК (RU)
-            # ==================================================================
+            # --- РУССКИЙ ---
             if 'privacy_policy_ru' in self.fields:
                 self.fields['privacy_policy_ru'].initial = (
                     '<p>Нажимая кнопку «Отправить», вы соглашаетесь с '
@@ -45,10 +43,14 @@ class SiteConfigAdminForm(forms.ModelForm):
                 ].initial = '<p>Мы используем технические cookie для корректной работы сайта.</p>'
             if 'cookie_button_text_ru' in self.fields:
                 self.fields['cookie_button_text_ru'].initial = 'Принять'
+            if 'team_title_ru' in self.fields:
+                self.fields['team_title_ru'].initial = 'Команда'
+            if 'main_team_button_label_ru' in self.fields:
+                self.fields['main_team_button_label_ru'].initial = 'Присоединиться к команде'
+            if 'about_team_button_label_ru' in self.fields:
+                self.fields['about_team_button_label_ru'].initial = 'Присоединиться'
 
-            # ==================================================================
-            # 2. АНГЛИЙСКИЙ ЯЗЫК (EN)
-            # ==================================================================
+            # --- АНГЛИЙСКИЙ ---
             if 'privacy_policy_en' in self.fields:
                 self.fields['privacy_policy_en'].initial = (
                     '<p>By clicking "Submit", you agree to our '
@@ -61,10 +63,14 @@ class SiteConfigAdminForm(forms.ModelForm):
                 ].initial = '<p>We use technical cookies for the correct operation of the website.</p>'
             if 'cookie_button_text_en' in self.fields:
                 self.fields['cookie_button_text_en'].initial = 'Accept'
+            if 'team_title_en' in self.fields:
+                self.fields['team_title_en'].initial = 'Team'
+            if 'main_team_button_label_en' in self.fields:
+                self.fields['main_team_button_label_en'].initial = 'Join the team'
+            if 'about_team_button_label_en' in self.fields:
+                self.fields['about_team_button_label_en'].initial = 'Join'
 
-            # ==================================================================
-            # 3. СЕРБСКИЙ ЯЗЫК (ЛАТИНИЦА - SR_LATN)
-            # ==================================================================
+            # --- СЕРБСКИЙ (ЛАТИНИЦА) ---
             if 'privacy_policy_sr_latn' in self.fields:
                 self.fields['privacy_policy_sr_latn'].initial = (
                     '<p>Klikom na dugme "Pošalji", prihvatate '
@@ -77,10 +83,14 @@ class SiteConfigAdminForm(forms.ModelForm):
                 ].initial = '<p>Koristimo tehničke kolačiće za ispravan rad veb sajta.</p>'
             if 'cookie_button_text_sr_latn' in self.fields:
                 self.fields['cookie_button_text_sr_latn'].initial = 'Prihvati'
+            if 'team_title_sr_latn' in self.fields:
+                self.fields['team_title_sr_latn'].initial = 'Tim'
+            if 'main_team_button_label_sr_latn' in self.fields:
+                self.fields['main_team_button_label_sr_latn'].initial = 'Pridruži se timu'
+            if 'about_team_button_label_sr_latn' in self.fields:
+                self.fields['about_team_button_label_sr_latn'].initial = 'Pridruži se'
 
-            # ==================================================================
-            # 4. СЕРБСКИЙ ЯЗЫК (КИРИЛЛИЦА - SR_CYRL)
-            # ==================================================================
+            # --- СЕРБСКИЙ (КИРИЛЛИЦА) ---
             if 'privacy_policy_sr_cyrl' in self.fields:
                 self.fields['privacy_policy_sr_cyrl'].initial = (
                     '<p>Кликом на дугме "Пошаљи", прихватате '
@@ -90,9 +100,15 @@ class SiteConfigAdminForm(forms.ModelForm):
             if 'cookie_message_sr_cyrl' in self.fields:
                 self.fields[
                     'cookie_message_sr_cyrl'
-                ].initial = '<p>Користимо техничке колачиће за исправан рад веб сајта.</p>'
+                ].initial = '<p>Користимо техничке колачиће за један исправни рад веб сајта.</p>'
             if 'cookie_button_text_sr_cyrl' in self.fields:
                 self.fields['cookie_button_text_sr_cyrl'].initial = 'Прихвати'
+            if 'team_title_sr_cyrl' in self.fields:
+                self.fields['team_title_sr_cyrl'].initial = 'Тим'
+            if 'main_team_button_label_sr_cyrl' in self.fields:
+                self.fields['main_team_button_label_sr_cyrl'].initial = 'Придружи се тиму'
+            if 'about_team_button_label_sr_cyrl' in self.fields:
+                self.fields['about_team_button_label_sr_cyrl'].initial = 'Придружи се'
 
 
 @admin.register(SiteConfig)
@@ -106,19 +122,10 @@ class ConfigAdmin(BaseAdmin):
     list_display = [
         'site_name_sr_latn',
         'site_name_sr_cyrl',
-        'seo_description_sr_latn',
         'copyright_sr_latn',
     ]
 
     tinymce_fields = [
-        'seo_description_ru',
-        'seo_description_en',
-        'seo_description_sr_latn',
-        'seo_description_sr_cyrl',
-        'copyright_ru',
-        'copyright_en',
-        'copyright_sr_latn',
-        'copyright_sr_cyrl',
         'privacy_policy_ru',
         'privacy_policy_en',
         'privacy_policy_sr_latn',
@@ -130,76 +137,100 @@ class ConfigAdmin(BaseAdmin):
     ]
 
     fieldsets = (
-        (_('Название сайта'), {'fields': ('site_name_sr_latn', 'site_name_sr_cyrl')}),
         (
-            _('Переводы (Русский)'),
+            _('1. Основные и общие настройки'),
+            {
+                'fields': ('site_name_sr_latn', 'site_name_sr_cyrl', 'team_button_link'),
+                'description': _('Глобальные названия проекта и сквозные ссылки.'),
+            },
+        ),
+        (
+            _('2. Локализация: Русский (RU)'),
             {
                 'fields': (
-                    'seo_description_ru',
                     'copyright_ru',
-                    'privacy_policy_ru',
+                    'seo_description_ru',
                     'cookie_message_ru',
                     'cookie_button_text_ru',
+                    'privacy_policy_ru',
+                    'team_title_ru',
+                    'main_team_button_label_ru',
+                    'about_team_button_label_ru',
                 ),
                 'classes': ('collapse',),
+                'description': _('Переводы интерфейса, SEO-теги и тексты на русском.'),
             },
         ),
         (
-            _('Переводы (Английский)'),
+            _('3. Локализация: Английский (EN)'),
             {
                 'fields': (
-                    'seo_description_en',
                     'copyright_en',
-                    'privacy_policy_en',
+                    'seo_description_en',
                     'cookie_message_en',
                     'cookie_button_text_en',
+                    'privacy_policy_en',
+                    'team_title_en',
+                    'main_team_button_label_en',
+                    'about_team_button_label_en',
                 ),
                 'classes': ('collapse',),
+                'description': _('Переводы интерфейса, SEO-теги и тексты на английском.'),
             },
         ),
         (
-            _('Переводы (Сербский - Латиница)'),
+            _('4. Локализация: Сербский Латиница (SR-Latn)'),
             {
                 'fields': (
-                    'seo_description_sr_latn',
                     'copyright_sr_latn',
-                    'privacy_policy_sr_latn',
+                    'seo_description_sr_latn',
                     'cookie_message_sr_latn',
                     'cookie_button_text_sr_latn',
+                    'privacy_policy_sr_latn',
+                    'team_title_sr_latn',
+                    'main_team_button_label_sr_latn',
+                    'about_team_button_label_sr_latn',
                 ),
                 'classes': ('collapse',),
+                'description': _('Переводы интерфейса и тексты на сербской латинице.'),
             },
         ),
         (
-            _('Преводи (Сербский - Кириллица)'),
+            _('5. Локализация: Сербский Кириллица (SR-Cyrl)'),
             {
                 'fields': (
-                    'seo_description_sr_cyrl',
                     'copyright_sr_cyrl',
-                    'privacy_policy_sr_cyrl',
+                    'seo_description_sr_cyrl',
                     'cookie_message_sr_cyrl',
                     'cookie_button_text_sr_cyrl',
+                    'privacy_policy_sr_cyrl',
+                    'team_title_sr_cyrl',
+                    'main_team_button_label_sr_cyrl',
+                    'about_team_button_label_sr_cyrl',
                 ),
                 'classes': ('collapse',),
+                'description': _('Переводы интерфейса и тексты на сербской кириллице.'),
             },
         ),
     )
 
     def get_form(self, request, obj=None, **kwargs):
-        """Исключает ненужные локализации для названия сайта."""
+        """Гарантирует строгую валидацию полей названия сайта, перебивая сброс из fieldsets."""
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields.pop('site_name_ru', None)
-        form.base_fields.pop('site_name_en', None)
+        if 'site_name_sr_latn' in form.base_fields:
+            form.base_fields['site_name_sr_latn'].required = True
+        if 'site_name_sr_cyrl' in form.base_fields:
+            form.base_fields['site_name_sr_cyrl'].required = True
         return form
 
     def has_add_permission(self, request):
-        """Разрешает добавление только если конфигурация еще не создана."""
+        """Разрешение добавления записи только при её отсутствии."""
         if SiteConfig.objects.exists():
             return False
         return super().has_add_permission(request)
 
     def add_view(self, request, form_url='', extra_context=None):
-        """Редиректит на редактирование, если конфиг уже существует."""
+        """Перенаправление на редактирование существующего конфига."""
         existing_config = SiteConfig.objects.only('pk').first()
         if existing_config:
             return redirect(
@@ -211,11 +242,11 @@ class ConfigAdmin(BaseAdmin):
         return super().add_view(request, form_url, extra_context)
 
     def has_delete_permission(self, request, obj=None):
-        """Скрывает кнопку 'Удалить' и запрещает доступ к delete_view."""
+        """Запрет удаления глобальной конфигурации."""
         return False
 
     def get_actions(self, request):
-        """Удаляет возможность массового удаления из списка объектов."""
+        """Удаление экшена массового удаления объектов."""
         actions = super().get_actions(request)
         actions.pop('delete_selected', None)
         return actions
