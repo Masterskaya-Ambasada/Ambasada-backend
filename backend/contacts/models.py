@@ -1,4 +1,5 @@
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -20,6 +21,21 @@ class ContactRequest(models.Model):
         max_length=constants.MAX_MESSAGE_LENGTH,
         verbose_name=_('Сообщение'),
         help_text=constants.HELP_REQUEST_MESSAGE,
+    )
+
+    message = models.TextField(
+        verbose_name=_('Сообщение'),
+        help_text=constants.HELP_REQUEST_MESSAGE,
+        validators=[
+            MinLengthValidator(
+                limit_value=constants.MIN_MESSAGE_LENGTH,
+                message=constants.ERROR_MESSAGE_MIN_LENGTH,
+            ),
+            MaxLengthValidator(
+                limit_value=constants.MAX_MESSAGE_LENGTH,
+                message=constants.ERROR_MESSAGE_MAX_LENGTH,
+            ),
+        ],
     )
     reason = models.CharField(
         max_length=constants.MAX_REASON_LENGTH,

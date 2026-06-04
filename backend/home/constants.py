@@ -12,6 +12,7 @@ TEXT_PREVIEW_MAX_LENGTH = 1000
 
 # --- ПУТИ ЗАГРУЗКИ МЕДИАФАЙЛОВ ---
 UPLOAD_HOME_HERO = 'home/hero/'
+UPLOAD_HOME_ABOUT = 'home/about/'
 
 # --- ЗНАЧЕНИЯ ПО УМОЛЧАНИЮ (ДЕФОЛТЫ) ---
 DEFAULT_HERO_TITLE = _('Амбасада за урбанизам')
@@ -21,7 +22,6 @@ DEFAULT_HERO_BUTTON_LINK = '/projects'
 
 DEFAULT_ABOUT_TITLE = _('О сообществе')
 DEFAULT_ABOUT_TEXT = _('Краткое описание сообщества еще не заполнено. Пожалуйста, добавьте текст.')
-
 DEFAULT_PROJECTS_TITLE = _('Наши проекты')
 DEFAULT_PROJECTS_BUTTON_LABEL = _('Перейти к проектам')
 DEFAULT_PROJECTS_LINK = '/projects'
@@ -73,3 +73,4 @@ FIELD_PROJECTS_BTN_LINK_HELP = _(
     'URL-адрес для кнопки под карточками проектов. Обычно указывает на страницу '
     'каталога. Используйте относительный путь (например, "/projects").'
 )
+FIELD_ABOUT_IMG_HELP = _('Изображение для секции "О нас" на главной странице.')

@@ -7,7 +7,7 @@ MAX_NAME_LENGTH = 255
 MAX_MESSAGE_LENGTH = 500
 MAX_REASON_LENGTH = 250
 SOCIAL_TYPE_MAX_LENGTH = 32
-
+MIN_MESSAGE_LENGTH = 20
 # =====================================================================
 # ДЕФОЛТНЫЕ ЗНАЧЕНИЯ
 # =====================================================================
@@ -19,7 +19,8 @@ DEFAULT_ORDER_VALUE_CONTACT_SOCIAL_LINK = 0
 # Блок: ContactRequest
 HELP_REQUEST_MESSAGE = _('Текст сообщения')
 HELP_REQUEST_IS_PROCESSED = _('Показывает, обработано ли обращение')
-
+ERROR_MESSAGE_MIN_LENGTH = _('Сообщение слишком короткое. Оно должно содержать не менее 20 символов.')
+ERROR_MESSAGE_MAX_LENGTH = _('Сообщение слишком длинное. Оно не может превышать 600 символов.')
 # Блок: ContactPageContent
 HELP_CONTENT_DONATION_TEXT = _('Редактируемый текст с возможностью добавить внешнюю ссылку')
 HELP_CONTENT_IS_ACTIVE = _('Может быть активен только один блок пожертвований')

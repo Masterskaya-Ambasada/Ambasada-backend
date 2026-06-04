@@ -92,22 +92,24 @@ def get_full_config_cached(language=None) -> dict:
             # --- HERO BLOCK (из HomePageContent) ---
             'title': home_content.title if home_content else '',
             'subtitle': home_content.subtitle if home_content else '',
-            'image_left': home_content.image_left.url if home_content and home_content.image_left else None,
-            'image_right': home_content.image_right.url if home_content and home_content.image_right else None,
+            'image_left': (home_content.image_left.url if home_content and home_content.image_left else None),
+            'image_right': (home_content.image_right.url if home_content and home_content.image_right else None),
             'hero_button_label': home_content.hero_button_label if home_content else '',
-            'hero_button_link': (home_content.hero_button_link if home_content else '') or '/projects',
+            'hero_button_link': ((home_content.hero_button_link if home_content else '') or '/projects'),
             # --- ABOUT PREVIEW (из HomePageContent) ---
             'about_title': home_content.about_title if home_content else '',
             'about_text': home_content.about_text if home_content else '',
+            'about_image': (home_content.about_image.url if home_content and home_content.about_image else None),
             # --- TEAM PREVIEW (Из SiteConfig) ---
             'team_title': (site_config.team_title if site_config else '') or 'Команда',
-            'main_team_button_label': (site_config.main_team_button_label if site_config else '')
-            or 'Присоединиться к команде',
-            'team_button_link': (site_config.team_button_link if site_config else '') or '/contacts',
+            'main_team_button_label': (
+                (site_config.main_team_button_label if site_config else '') or 'Присоединиться к команде'
+            ),
+            'team_button_link': ((site_config.team_button_link if site_config else '') or '/contacts'),
             # --- PROJECTS PREVIEW (из HomePageContent) ---
             'projects_title': home_content.projects_title if home_content else '',
-            'projects_button_label': home_content.projects_button_label if home_content else '',
-            'projects_button_link': (home_content.projects_button_link if home_content else '') or '/projects',
+            'projects_button_label': (home_content.projects_button_label if home_content else ''),
+            'projects_button_link': ((home_content.projects_button_link if home_content else '') or '/projects'),
         }
 
     cache.set(cache_key, data, timeout=TIMEOUT_CACHE)

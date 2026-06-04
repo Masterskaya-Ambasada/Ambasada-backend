@@ -9,21 +9,6 @@ from . import constants
 class AboutPage(models.Model):
     """Сущность страницы 'О нас' (Singleton)."""
 
-    # --- HERO СЕКЦИЯ ---
-    hero_title = models.CharField(
-        max_length=constants.TITLE_MAX_LENGTH,
-        verbose_name=_('Hero: Заголовок'),
-        default=constants.DEFAULT_HERO_TITLE,
-        help_text=constants.FIELD_HERO_TITLE_HELP,
-    )
-    hero_description = models.CharField(
-        max_length=constants.DESCRIPTION_MAX_LENGTH,
-        verbose_name=_('Hero: Описание'),
-        default=constants.DEFAULT_HERO_DESCRIPTION,
-        blank=True,
-        help_text=constants.FIELD_HERO_DESC_HELP,
-    )
-
     # --- СЕКЦИЯ 'О НАС' ---
     about_title = models.CharField(
         max_length=constants.TITLE_MAX_LENGTH,

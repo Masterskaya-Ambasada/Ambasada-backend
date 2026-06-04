@@ -19,7 +19,6 @@ class AboutAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        # Делаем один чистый запрос со всеми связями
         about = AboutPage.objects.prefetch_related('paragraphs', 'values', 'gallery_images').first()
 
         if not about:

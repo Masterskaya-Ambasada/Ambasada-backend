@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 20:44+0300\n"
+"POT-Creation-Date: 2026-06-04 14:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,7 +120,7 @@ msgstr "Сачувајте страницу да бисте видели лис�
 msgid "Страница \"О нас\""
 msgstr "Страница „О нама“"
 
-#: backend/about/constants.py:19 backend/home/constants.py:22
+#: backend/about/constants.py:19 backend/home/constants.py:23
 msgid "О сообществе"
 msgstr "О заједници"
 
@@ -145,8 +145,10 @@ msgid "Максимум 100 символов."
 msgstr "Максимум 100 карактера."
 
 #: backend/about/constants.py:29
-msgid "Максимум 500 символов."
-msgstr "Максимум 500 карактера."
+#, fuzzy
+#| msgid "Максимум 100 символов."
+msgid "Максимум 600 символов."
+msgstr "Максимум 100 карактера."
 
 #: backend/about/constants.py:31
 msgid "Крупный заголовок главного вводного блока страницы. "
@@ -169,7 +171,8 @@ msgid ""
 "Ссылка, на которую перенаправит кнопка (например: /projects/ или https://"
 "external-site.com). "
 msgstr ""
-"Линк на који дугме преусмерава (на пример: /projects/ или https://external-site.com). "
+"Линк на који дугме преусмерава (на пример: /projects/ или https://external-"
+"site.com). "
 
 #: backend/about/constants.py:39
 msgid "Заголовок для секции с ценностями сообщества. "
@@ -318,7 +321,8 @@ msgstr "API интерфејс"
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 msgstr ""
-"Нетачно корисничко име или лозинка. Молимо проверите податке и покушајте поново."
+"Нетачно корисничко име или лозинка. Молимо проверите податке и покушајте "
+"поново."
 
 #: backend/api/contacts/views.py:35
 msgid "Получено"
@@ -337,7 +341,7 @@ msgid "Возвращает данные страницы \"О нас\" со в�
 msgstr "Враћа податке странице „О нама“ са свим секцијама."
 
 #: backend/api/schemas/about_schemas.py:18
-#: backend/api/schemas/home_shemas.py:103
+#: backend/api/schemas/home_shemas.py:106
 #: backend/api/schemas/init_schemas.py:42
 msgid "Успешный ответ"
 msgstr "Успешан одговор"
@@ -346,22 +350,22 @@ msgstr "Успешан одговор"
 msgid "Страница не найдена"
 msgstr "Страница није пронађена"
 
-#: backend/api/schemas/auth_schemas.py:9
+#: backend/api/schemas/auth_schemas.py:10
 msgid "Вход в систему (JWT + User info)"
 msgstr "Пријава на систем (JWT + User info)"
 
-#: backend/api/schemas/auth_schemas.py:10
+#: backend/api/schemas/auth_schemas.py:11
 msgid ""
 "Принимает email и пароль, возвращает access/refresh токены и данные "
 "пользователя."
 msgstr ""
 "Прихвата имејл и лозинку, враћа access/refresh токене и податке корисника."
 
-#: backend/api/schemas/auth_schemas.py:27
+#: backend/api/schemas/auth_schemas.py:28
 msgid "Обновление access токена"
 msgstr "Освежавање access токена"
 
-#: backend/api/schemas/auth_schemas.py:28
+#: backend/api/schemas/auth_schemas.py:29
 msgid "Принимает валидный refresh токен и возвращает новый access токен."
 msgstr "Прихвата валидан refresh токен и враћа нови access токен."
 
@@ -375,7 +379,9 @@ msgid ""
 "техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается "
 "спамом и игнорируется."
 msgstr ""
-"Прихвата податке из форме и чува их. Поље `contact_preference` је техничко антиспам поље (honeypot). Ако је ово поље попуњено, захтев се сматра спамом и игнорише се."
+"Прихвата податке из форме и чува их. Поље `contact_preference` је техничко "
+"антиспам поље (honeypot). Ако је ово поље попуњено, захтев се сматра спамом "
+"и игнорише се."
 
 #: backend/api/schemas/contact_schemas.py:21
 msgid "Получение контента блока контактов"
@@ -398,11 +404,16 @@ msgid "Инициализация сайта"
 msgstr "Иницијализација сајта"
 
 #: backend/api/schemas/init_schemas.py:8
+#, fuzzy
+#| msgid ""
+#| "Возвращает globalьные настройки строго по интерфейсу InitResponse: "
+#| "название, SEO, языки, копирайт, юридические тексты и соцсети."
 msgid ""
-"Возвращает globalьные настройки строго по интерфейсу InitResponse: название, "
+"Возвращает глобальные настройки строго по интерфейсу InitResponse: название, "
 "SEO, языки, копирайт, юридические тексты и соцсети."
 msgstr ""
-"Враћа глобална подешавања стриктно према InitResponse интерфејсу: назив, SEO, језике, ауторска права, правне текстове и друштвене мреже."
+"Враћа глобална подешавања стриктно према InitResponse интерфејсу: назив, "
+"SEO, језике, ауторска права, правне текстове и друштвене мреже."
 
 #: backend/api/schemas/init_schemas.py:25
 msgid "Дополнительные юридические ссылки (Record<string, string>)"
@@ -437,7 +448,8 @@ msgid ""
 "Возвращает список опубликованных проектов с пагинацией, поиском по названию "
 "и фильтрацией по типу проекта и тегам."
 msgstr ""
-"Враћа листу објављених пројеката са пагинацијом, претрагом по називу и филтрирањем по типу пројекта и ознакама."
+"Враћа листу објављених пројеката са пагинацијом, претрагом по називу и "
+"филтрирањем по типу пројекта и ознакама."
 
 #: backend/api/schemas/project_schemas.py:68
 msgid "Идентификатор типа проекта для фильтрации."
@@ -448,7 +460,8 @@ msgid ""
 "Тег для фильтрации. Поддерживаются повторяющиеся query params (`?"
 "tag=urban&tag=belgrade`) и CSV-формат (`?tag=urban,belgrade`)."
 msgstr ""
-"Ознака за филтрирање. Подржани су понављајући query params (`?tag=urban&tag=belgrade`) и CSV формат (`?tag=urban,belgrade`)."
+"Ознака за филтрирање. Подржани су понављајући query params (`?"
+"tag=urban&tag=belgrade`) и CSV формат (`?tag=urban,belgrade`)."
 
 #: backend/api/schemas/project_schemas.py:85
 msgid "Строка поиска по названию проекта."
@@ -506,8 +519,7 @@ msgstr "Листа чланова тима"
 msgid ""
 "Возвращает список публичных профилей пользователей для отображения на "
 "фронтенде."
-msgstr ""
-"Враћа листу јавних профила корисника за приказ на фронтенду."
+msgstr "Враћа листу јавних профила корисника за приказ на фронтенду."
 
 #: backend/backend/settings.py:219
 msgid "Russian"
@@ -542,7 +554,8 @@ msgid ""
 "Вы не можете активировать несколько блоков одновременно через список. "
 "Выберите только один."
 msgstr ""
-"Не можете активирати више блокова истовремено путем листе. Изаберите само један."
+"Не можете активирати више блокова истовремено путем листе. Изаберите само "
+"један."
 
 #: backend/contacts/admin.py:90
 msgid "Текстовый блок для пожертвований (Русский)"
@@ -572,137 +585,150 @@ msgstr "Текст поруке"
 msgid "Показывает, обработано ли обращение"
 msgstr "Показује да ли је захтев обрађен"
 
-#: backend/contacts/constants.py:24
+#: backend/contacts/constants.py:23
+msgid "Сообщение слишком короткое. Оно должно содержать не менее 20 символов."
+msgstr "Порука је прекратка. Мора садржати најмање 20 карактера."
+
+#: backend/contacts/constants.py:26
+#, fuzzy
+#| msgid ""
+#| "Длина каждого элемента списка не должна превышать %(max_length)s символов."
+msgid "Сообщение слишком длинное. Оно не может превышать 600 символов."
+msgstr ""
+"Дужина сваког елемента листе не сме премашити 600 карактера."
+
+#: backend/contacts/constants.py:29
 msgid "Редактируемый текст с возможностью добавить внешнюю ссылку"
 msgstr "Текст који се може уређивати са могућношћу додавања спољног линка"
 
-#: backend/contacts/constants.py:25
+#: backend/contacts/constants.py:30
 msgid "Может быть активен только один блок пожертвований"
 msgstr "Може бити активан само један блок за донације"
 
-#: backend/contacts/constants.py:28
+#: backend/contacts/constants.py:33
 msgid "Выбор соцсети."
 msgstr "Избор друштвене мреже."
 
-#: backend/contacts/constants.py:29
+#: backend/contacts/constants.py:34
 msgid "Например: https://t.me/example"
 msgstr "На пример: https://t.me/example"
 
-#: backend/contacts/constants.py:30
-msgid "Если включено — отображается на сайте. Иначе скрывается без удаления"
-msgstr "Ако је укључено — приказује се на сајту. У супротном се скрива без брисања"
-
 #: backend/contacts/constants.py:35
+msgid "Если включено — отображается на сайте. Иначе скрывается без удаления"
+msgstr ""
+"Ако је укључено — приказује се на сајту. У супротном се скрива без брисања"
+
+#: backend/contacts/constants.py:40
 msgid "Может быть только один активный блок пожертвований"
 msgstr "Може постојати само један активан блок за донације"
 
-#: backend/contacts/constants.py:36
+#: backend/contacts/constants.py:41
 msgid "Для данного сайта уже добавлена ссылка этого типа соцсети"
 msgstr "За овај сајт је већ додат линк овог типа друштвене мреже"
 
-#: backend/contacts/constants.py:37
+#: backend/contacts/constants.py:42
 msgid "Этот порядок отображения уже занят для данного сайта"
 msgstr "Овај редослед приказа је већ заузет за овај сајт"
 
-#: backend/contacts/constants.py:38
+#: backend/contacts/constants.py:43
 msgid "Сначала создайте настройки сайта"
 msgstr "Прво креирајте подешавања сајта"
 
-#: backend/contacts/models.py:14 backend/users/models.py:98
+#: backend/contacts/models.py:15 backend/users/models.py:116
 msgid "Имя"
 msgstr "Име"
 
-#: backend/contacts/models.py:17
+#: backend/contacts/models.py:18
 msgid "Email"
 msgstr "Имејл"
 
-#: backend/contacts/models.py:21
+#: backend/contacts/models.py:22 backend/contacts/models.py:27
 msgid "Сообщение"
 msgstr "Порука"
 
-#: backend/contacts/models.py:26
+#: backend/contacts/models.py:42
 msgid "Причина обращения"
 msgstr "Разлог обраћања"
 
-#: backend/contacts/models.py:30
+#: backend/contacts/models.py:46
 msgid "Обработано"
 msgstr "Обрађено"
 
-#: backend/contacts/models.py:35 backend/contacts/models.py:62
-#: backend/contacts/models.py:137
+#: backend/contacts/models.py:51 backend/contacts/models.py:78
+#: backend/contacts/models.py:153
 msgid "Дата создания"
 msgstr "Датум креирања"
 
-#: backend/contacts/models.py:39
+#: backend/contacts/models.py:55
 msgid "Запрос обратной связи"
 msgstr "Захтев за повратну информацију"
 
-#: backend/contacts/models.py:40
+#: backend/contacts/models.py:56
 msgid "Запросы обратной связи"
 msgstr "Захтеви за повратну информацију"
 
-#: backend/contacts/models.py:52
+#: backend/contacts/models.py:68
 msgid "Текстовый блок для пожертвований"
 msgstr "Текстуални блок за донације"
 
-#: backend/contacts/models.py:57
+#: backend/contacts/models.py:73
 msgid "Активно"
 msgstr "Активно"
 
-#: backend/contacts/models.py:66
+#: backend/contacts/models.py:82
 msgid "Дата обновления"
 msgstr "Датум ажурирања"
 
-#: backend/contacts/models.py:77
+#: backend/contacts/models.py:93
 msgid "Редактируемая ссылка на пожертвования"
 msgstr "Линк за донације који се може уређивати"
 
-#: backend/contacts/models.py:78
+#: backend/contacts/models.py:94
 msgid "Редактируемые ссылки на пожертвования"
 msgstr "Линкови за донације који се могу уређивати"
 
-#: backend/contacts/models.py:104
+#: backend/contacts/models.py:120
 msgid "Telegram"
 msgstr "Telegram"
 
-#: backend/contacts/models.py:105
+#: backend/contacts/models.py:121
 msgid "Instagram"
 msgstr "Instagram"
 
-#: backend/contacts/models.py:106
+#: backend/contacts/models.py:122
 msgid "Facebook"
 msgstr "Facebook"
 
-#: backend/contacts/models.py:107
+#: backend/contacts/models.py:123
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: backend/contacts/models.py:113 backend/site_config/models.py:101
+#: backend/contacts/models.py:129 backend/site_config/models.py:101
 #: backend/site_config/models.py:102
 msgid "Настройки сайта"
 msgstr "Подешавања сајта"
 
-#: backend/contacts/models.py:119
+#: backend/contacts/models.py:135
 msgid "Тип соцсети / мессенджера"
 msgstr "Тип друштвене мреже / месинџера"
 
-#: backend/contacts/models.py:123 backend/projects/admin.py:302
+#: backend/contacts/models.py:139 backend/projects/admin.py:302
 msgid "Ссылка"
 msgstr "Линк"
 
-#: backend/contacts/models.py:128 backend/users/models.py:156
+#: backend/contacts/models.py:144 backend/users/models.py:167
 msgid "Порядок отображения"
 msgstr "Редослед приказа"
 
-#: backend/contacts/models.py:132
+#: backend/contacts/models.py:148
 msgid "Показывать на сайте"
 msgstr "Прикажи на сајту"
 
-#: backend/contacts/models.py:141
+#: backend/contacts/models.py:157
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr "Линк до друштвене мреже / месинџера"
 
-#: backend/contacts/models.py:142
+#: backend/contacts/models.py:158
 msgid "Ссылки на соцсети / мессенджеры"
 msgstr "Линкови до друштвених мрежа / месинџера"
 
@@ -732,75 +758,90 @@ msgstr "Величина датотеке (%(size).1f МБ) премашује �
 msgid "Файл типа \"%(mime)s\" запрещен. Допустимые: %(allowed)s."
 msgstr "Датотека типа „%(mime)s“ је забрањена. Дозвољени: %(allowed)s."
 
-#: backend/home/admin.py:110
+#: backend/home/admin.py:134
 msgid "1. Общие медиафайлы и ссылки"
 msgstr "1. Заједничке медијске датотеке и линкови"
 
-#: backend/home/admin.py:120
-msgid "Изображения и целевые ссылки, общие для всех языковых версий."
+#: backend/home/admin.py:147
+#, fuzzy
+#| msgid "Изображения и целевые ссылки, общие для всех языковых версий."
+msgid "Изображения и целевые ссылки, общие для всех версий."
 msgstr "Слике и циљни линкови, заједнички за све језичке верзије."
 
-#: backend/home/admin.py:124 backend/site_config/admin.py:148
+#: backend/home/admin.py:152 backend/site_config/admin.py:148
 msgid "2. Локализация: Русский (RU)"
 msgstr "2. Локализација: руски (RU)"
 
-#: backend/home/admin.py:136
-msgid "Контент и заголовки главного экрана на русском языке."
+#: backend/home/admin.py:164
+#, fuzzy
+#| msgid "Контент и заголовки главного экрана на русском языке."
+msgid "Контент экрана на русском языке."
 msgstr "Садржај и наслови главног екрана на руском језику."
 
-#: backend/home/admin.py:140 backend/site_config/admin.py:165
+#: backend/home/admin.py:168 backend/site_config/admin.py:165
 msgid "3. Локализация: Английский (EN)"
 msgstr "3. Локализација: енглески (EN)"
 
-#: backend/home/admin.py:152
-msgid "Контент и заголовки главного экрана на английском языке."
+#: backend/home/admin.py:180
+#, fuzzy
+#| msgid "Контент и заголовки главного экрана на английском языке."
+msgid "Контент экрана на английском языке."
 msgstr "Садржај и наслови главног екрана на енглеском језику."
 
-#: backend/home/admin.py:156 backend/site_config/admin.py:182
+#: backend/home/admin.py:184 backend/site_config/admin.py:182
 msgid "4. Локализация: Сербский Латиница (SR-Latn)"
 msgstr "4. Локализација: српска латиница (SR-Latn)"
 
-#: backend/home/admin.py:168
-msgid "Контент и заголовки главного экрана на сербской латинице."
+#: backend/home/admin.py:196
+#, fuzzy
+#| msgid "Контент и заголовки главного экрана на сербской латинице."
+msgid "Контент экрана на сербской латинице."
 msgstr "Садржај и наслови главног екрана на српској латиници."
 
-#: backend/home/admin.py:172 backend/site_config/admin.py:199
+#: backend/home/admin.py:200 backend/site_config/admin.py:199
 msgid "5. Локализация: Сербский Кириллица (SR-Cyrl)"
 msgstr "5. Локализација: српска ћирилица (SR-Cyrl)"
 
-#: backend/home/admin.py:184
-msgid "Контент и заголовки главного экрана на сербской кириллице."
+#: backend/home/admin.py:212
+#, fuzzy
+#| msgid "Контент и заголовки главного экрана на сербской кириллице."
+msgid "Контент экрана на сербской кириллице."
 msgstr "Садржај и наслови главног екрана на српској ћирилици."
 
-#: backend/home/admin.py:194 backend/projects/admin.py:208
+#: backend/home/admin.py:222 backend/projects/admin.py:208
 msgid "Превью левого изображения"
 msgstr "Преглед леве слике"
 
-#: backend/home/admin.py:199
+#: backend/home/admin.py:229
 msgid "Превью правого изображения"
 msgstr "Преглед десне слике"
+
+#: backend/home/admin.py:236
+#, fuzzy
+#| msgid "Превью изображения"
+msgid "Превью изображения секции О Нас"
+msgstr "Преглед слике"
 
 #: backend/home/apps.py:7
 msgid "Главная страница"
 msgstr "Главна страница"
 
-#: backend/home/constants.py:17
+#: backend/home/constants.py:18
 msgid "Амбасада за урбанизам"
 msgstr "Амбасада за урбанизам"
 
-#: backend/home/constants.py:18
+#: backend/home/constants.py:19
 msgid "Исследуем, проектируем и меняем городскую среду Белграда"
 msgstr "Истражујемо, пројектујемо и мењамо урбану средину Београда"
 
-#: backend/home/constants.py:19
+#: backend/home/constants.py:20
 msgid "Узнать больше"
 msgstr "Сазнај више"
 
-#: backend/home/constants.py:23
+#: backend/home/constants.py:24
 msgid ""
 "Краткое описание сообщества еще не заполнено. Пожалуйста, добавьте текст."
-msgstr ""
-"Кратак опис заједнице још увек није попуњен. Молимо додајте текст."
+msgstr "Кратак опис заједнице још увек није попуњен. Молимо додајте текст."
 
 #: backend/home/constants.py:25
 msgid "Наши проекты"
@@ -811,7 +852,8 @@ msgid ""
 "Удаление единственной записи контента главной страницы запрещено "
 "архитектурой сайта."
 msgstr ""
-"Брисање јединог записа садржаја главне странице је забрањено архитектуром сајта."
+"Брисање јединог записа садржаја главне странице је забрањено архитектуром "
+"сајта."
 
 #: backend/home/constants.py:33
 msgid ""
@@ -826,8 +868,8 @@ msgid ""
 "Текст под главным заголовком на первом экране. Раскрывает миссию организации "
 "или краткую суть деятельности. Рекомендуется 1-2 предложения."
 msgstr ""
-"Текст испод главног наслова на првом екрану. Открива мисију организације "
-"или кратку суштину делатности. Препоручује се 1-2 реченице."
+"Текст испод главног наслова на првом екрану. Открива мисију организације или "
+"кратку суштину делатности. Препоручује се 1-2 реченице."
 
 #: backend/home/constants.py:41
 msgid ""
@@ -842,32 +884,32 @@ msgid ""
 "Правая фотография для коллажа на главном экране. Требования аналогичны: "
 "формат WebP, JPG или PNG, оптимизированный вес файла."
 msgstr ""
-"Десна фотографија за колаж на главном екрану. Захтеви су исти: "
-"WebP, JPG или PNG формат, оптимизована величина датотеке."
+"Десна фотографија за колаж на главном екрану. Захтеви су исти: WebP, JPG или "
+"PNG формат, оптимизована величина датотеке."
 
 #: backend/home/constants.py:49
 msgid ""
 "Короткий призыв к действию (CTA) внутри оранжевой кнопки на первом экране "
 "(например: \"Узнать больше\", \"Смотреть проекты\"). До 50 символов."
 msgstr ""
-"Кратак позив на акцију (CTA) унутар наранџастог дугмета на првом екрану "
-"(на пример: „Сазнај више“, „Погледај пројекте“). До 50 карактера."
+"Кратак позив на акцију (CTA) унутар наранџастог дугмета на првом екрану (на "
+"пример: „Сазнај више“, „Погледај пројекте“). До 50 карактера."
 
 #: backend/home/constants.py:53
 msgid ""
 "Куда ведет клик. Для внутренних страниц используйте относительный путь "
 "(например: \"/projects\"). Для внешних сайтов — ссылку с \"https://\"."
 msgstr ""
-"Куда води клик. За унутрашње странице користите релативну путању "
-"(на пример: „/projects“). За спољне сајтове — линк са „https://“."
+"Куда води клик. За унутрашње странице користите релативну путању (на пример: "
+"„/projects“). За спољне сајтове — линк са „https://“."
 
 #: backend/home/constants.py:57
 msgid ""
 "Заголовок для текстового блока-превью \"О сообществе\" на главной странице. "
 "Например: \"О сообществе\" или \"Кто мы такие?\"."
 msgstr ""
-"Наслов за текстуални блок прегледа „О заједници“ на главној страници. "
-"На пример: „О заједници“ или „Ко смо ми?“."
+"Наслов за текстуални блок прегледа „О заједници“ на главној страници. На "
+"пример: „О заједници“ или „Ко смо ми?“."
 
 #: backend/home/constants.py:61
 msgid ""
@@ -882,8 +924,8 @@ msgid ""
 "Главный заголовок перед сеткой с карточками последних городских проектов "
 "(например: \"Городские проекты Белграда\" или \"Наши проекты\")."
 msgstr ""
-"Главни наслов испред мреже са картицама најновијих урбаних пројеката "
-"(на пример: „Урбани пројекти Београда“ или „Наши пројекти“)."
+"Главни наслов испред мреже са картицама најновијих урбаних пројеката (на "
+"пример: „Урбани пројекти Београда“ или „Наши пројекти“)."
 
 #: backend/home/constants.py:69
 msgid ""
@@ -901,51 +943,63 @@ msgstr ""
 "URL адреса за дугме испод картица пројеката. Обично води на страницу "
 "каталога. Користите релативну путању (на пример, „/projects“)."
 
-#: backend/home/models.py:51
+#: backend/home/constants.py:76
+#, fuzzy
+#| msgid "Надпись на кнопке в блоке команды на Главной странице."
+msgid "Изображение для секции \"О нас\" на главной странице."
+msgstr "Текст на дугмету у блоку тима на главној страници."
+
+#: backend/home/models.py:54
 msgid "Hero: Главный заголовок"
 msgstr "Hero: Главни наслов"
 
-#: backend/home/models.py:57
+#: backend/home/models.py:60
 msgid "Hero: Подзаголовок (Описание)"
 msgstr "Hero: Поднаслов (Опис)"
 
-#: backend/home/models.py:63
+#: backend/home/models.py:66
 msgid "Hero: Изображение (Левое)"
 msgstr "Hero: Слика (лева)"
 
-#: backend/home/models.py:69
+#: backend/home/models.py:72
 msgid "Hero: Изображение (Правое)"
 msgstr "Hero: Слика (десна)"
 
-#: backend/home/models.py:75
+#: backend/home/models.py:78
 msgid "Hero: Текст на кнопке"
 msgstr "Hero: Текст на дугмету"
 
-#: backend/home/models.py:81
+#: backend/home/models.py:84
 msgid "Hero: Ссылка с кнопки"
 msgstr "Hero: Линк са дугмета"
 
-#: backend/home/models.py:89
+#: backend/home/models.py:92
 msgid "О нас: Заголовок секции"
 msgstr "О нама: Наслов секције"
 
-#: backend/home/models.py:95
+#: backend/home/models.py:98
 msgid "О нас: Краткий текст превью"
 msgstr "О нама: Кратак текст прегледа"
 
-#: backend/home/models.py:103
+#: backend/home/models.py:104
+#, fuzzy
+#| msgid "О нас: Заголовок секции"
+msgid "О нас: Изображение секции"
+msgstr "О нама: Наслов секције"
+
+#: backend/home/models.py:112
 msgid "Проекты: Заголовок секции"
 msgstr "Пројекти: Наслов секције"
 
-#: backend/home/models.py:109
+#: backend/home/models.py:118
 msgid "Проекты: Текст на кнопке"
 msgstr "Пројекти: Текст на дугмету"
 
-#: backend/home/models.py:115
+#: backend/home/models.py:124
 msgid "Проекты: Ссылка с кнопки"
 msgstr "Пројекти: Линк са дугмета"
 
-#: backend/home/models.py:120 backend/home/models.py:121
+#: backend/home/models.py:129 backend/home/models.py:130
 msgid "Контент главной страницы"
 msgstr "Садржај главне странице"
 
@@ -979,7 +1033,9 @@ msgid "Некорректный путь к медиа-папке проекта
 msgstr "Неисправна путања до медијске фасцикле пројекта."
 
 #: backend/projects/models.py:289
-msgid "Контентные blocks одного проекта не должны иметь одинаковый порядок."
+#, fuzzy
+#| msgid "Контентные blocks одного проекта не должны иметь одинаковый порядок."
+msgid "Контентные блоки одного проекта не должны иметь одинаковый порядок."
 msgstr "Блокови садржаја једног пројекта не смеју имати исти редослед."
 
 #: backend/projects/models.py:296 backend/projects/models.py:627
@@ -1146,14 +1202,16 @@ msgid ""
 "Слева вводите тезисы, а справа отображается технический JSON-код для "
 "системы. Его можно не трогать."
 msgstr ""
-"Лево уносите тезе, а десно се приказује технички JSON код за систем. Не морате га дирати."
+"Лево уносите тезе, а десно се приказује технички JSON код за систем. Не "
+"морате га дирати."
 
 #: backend/projects/models.py:582
 msgid ""
 "Основной текст блока. Обязателен для всех вариантов, поддерживает HTML через "
 "редактор."
 msgstr ""
-"Главни текст блока. Обавезан је за све варијанте, подржава HTML кроз уређивач."
+"Главни текст блока. Обавезан је за све варијанте, подржава HTML кроз "
+"уређивач."
 
 #: backend/projects/models.py:585
 msgid "Акцентный текст"
@@ -1164,7 +1222,8 @@ msgid ""
 "Дополнительный выделенный текст или подпись. Используйте, если в макете "
 "нужен акцентный текст; иначе поле можно оставить пустым."
 msgstr ""
-"Додатни истакнути текст или потпис. Користите ако је у изгледу потребан наглашен текст; у супротном, поље се може оставити празно."
+"Додатни истакнути текст или потпис. Користите ако је у изгледу потребан "
+"наглашен текст; у супротном, поље се може оставити празно."
 
 #: backend/projects/models.py:594
 msgid "Контентный блок проекта"
@@ -1187,7 +1246,9 @@ msgid "Добавьте хотя бы один тезис для вариант�
 msgstr "Додајте барем једну тезу за варијанту „Слика и листа“."
 
 #: backend/projects/models.py:641
-msgid "Добавьте второе изображение для variantа \"Два изображения\"."
+#, fuzzy
+#| msgid "Добавьте второе изображение для variantа \"Два изображения\"."
+msgid "Добавьте второе изображение для варианта \"Два изображения\"."
 msgstr "Додајте другу слику за варијанту „Две слике“."
 
 #: backend/projects/models.py:658
@@ -1312,7 +1373,8 @@ msgstr "Брисање системских подешавања сајта је
 
 #: backend/site_config/constants.py:33
 msgid "Выводится во вкладке браузера и заголовках писем. До 100 симв."
-msgstr "Приказује се у картици веб прегледача и насловима имејлова. До 100 карактера."
+msgstr ""
+"Приказује се у картици веб прегледача и насловима имејлова. До 100 карактера."
 
 #: backend/site_config/constants.py:34
 msgid ""
@@ -1331,7 +1393,8 @@ msgstr "Текст искачућег обавештења о коришћењу
 
 #: backend/site_config/constants.py:37
 msgid "Текст на кнопке согласия Cookie (например: \"OK\" или \"Принять\")."
-msgstr "Текст на дугмету за прихватање колачића (на пример: „OK“ или „Прихвати“)."
+msgstr ""
+"Текст на дугмету за прихватање колачића (на пример: „OK“ или „Прихвати“)."
 
 #: backend/site_config/constants.py:38
 msgid "Текст в самом низу страницы (футере). До 150 симв."
@@ -1354,7 +1417,8 @@ msgid ""
 "Ссылка для обеих кнопок команды. Например: /contacts или ссылка на якорный "
 "блок."
 msgstr ""
-"Линк за оба дугмета тима. На пример: /contacts или линк до сидреног (anchor) блока."
+"Линк за оба дугмета тима. На пример: /contacts или линк до сидреног (anchor) "
+"блока."
 
 #: backend/site_config/models.py:41
 msgid "Название сайта"
@@ -1432,120 +1496,128 @@ msgstr "Преглед фотографије"
 msgid "Управление пользователями"
 msgstr "Управљање корисницима"
 
-#: backend/users/models.py:40
-msgid "Электронная почта обязательна"
-msgstr "Електронска пошта је обавезна"
-
-#: backend/users/models.py:65
-msgid "Суперпользователь должен иметь is_staff=True"
-msgstr "Суперкорисник мора имати is_staff=True"
-
-#: backend/users/models.py:67
-msgid "Суперпользователь должен иметь is_superuser=True"
-msgstr "Суперкорисник мора имати is_superuser=True"
-
-#: backend/users/models.py:76
-msgid "Участник команды"
-msgstr "Члан тима"
-
-#: backend/users/models.py:77
-msgid "Контент-редактор"
-msgstr "Уредник садржаја"
-
-#: backend/users/models.py:78
-msgid "Администратор"
-msgstr "Администратор"
-
-#: backend/users/models.py:83
-msgid "Адрес электронной почты"
-msgstr "Адреса електронске поште"
-
-#: backend/users/models.py:86
+#: backend/users/constants.py:17
 msgid "Используется для входа в систему. Должен быть уникальным."
 msgstr "Користи се за пријаву на систем. Мора бити јединствен."
 
-#: backend/users/models.py:90
-msgid "Уникальный идентификатор"
-msgstr "Јединствени идентификатор"
-
-#: backend/users/models.py:94
+#: backend/users/constants.py:18
 msgid "Системный номер. Генерируется автоматически и не подлежит изменению."
 msgstr "Системски број. Генерише се аутоматски и не може се мењати."
 
-#: backend/users/models.py:100
+#: backend/users/constants.py:19
 msgid "Укажите имя участника. Оно будет отображаться на сайте в блоке команды."
 msgstr "Унесите име члана. Оно ће бити приказано на сајту у блоку тима."
 
-#: backend/users/models.py:103
-msgid "Фамилия"
-msgstr "Презиме"
-
-#: backend/users/models.py:105
+#: backend/users/constants.py:20
 msgid ""
 "Укажите фамилию. Вместе с именем она формирует полное имя участника на сайте."
 msgstr ""
 "Унесите презиме. Заједно са именом оно формира пуно име члана на сајту."
 
-#: backend/users/models.py:109
-msgid "Роль"
-msgstr "Улога"
-
-#: backend/users/models.py:115
-msgid ""
-"Определяет уровень доступа к панели управления админки: Участник команды — "
-"нет доступа, Редактор — управление контентом, Администратор — полный доступ."
-msgstr ""
-"Одређује ниво приступа административном панелу: Члан тима — нема приступ, Уредник — управљање садржајем, Администратор — потпун приступ."
-
-#: backend/users/models.py:122
-msgid "Должность"
-msgstr "Позиција"
-
-#: backend/users/models.py:126
-msgid ""
-"Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
-"в карточке сотрудника на сайте."
-msgstr ""
-"Унесите професионалну улогу (на пример: „Водећи архитекта“). Приказује се на картици запосленог на сајту."
-
-#: backend/users/models.py:132
-msgid "Фотография"
-msgstr "Фотографија"
-
-#: backend/users/models.py:137
-msgid ""
-"Загрузите портретное фото участника. Формат: JPG, PNG или WEBP, размер до 20 "
-"МБ."
-msgstr ""
-"Отпремите портретну фотографију члана. Формат: JPG, PNG или WEBP, величина до 20 МБ."
-
-#: backend/users/models.py:141
-msgid "Биография"
-msgstr "Биографија"
-
-#: backend/users/models.py:145
+#: backend/users/constants.py:21
 msgid "Расскажите об опыте и ключевых компетенциях. Максимум 500 символов."
-msgstr "Реците нешто о искуству и кључним компетенцијама. Максимум 500 карактера."
+msgstr ""
+"Реците нешто о искуству и кључним компетенцијама. Максимум 500 карактера."
 
-#: backend/users/models.py:149
-msgid "Публичный статус"
-msgstr "Јавни статус"
-
-#: backend/users/models.py:152
+#: backend/users/constants.py:22
 msgid "Если галочка стоит, пользователь будет виден в списке команды на сайте."
 msgstr "Ако је штиклирано, корисник ће бити видљив на листи тима на сајту."
 
-#: backend/users/models.py:159
+#: backend/users/constants.py:23
 msgid ""
 "Определяет порядок сортировки. Меньшее значение выводит пользователя выше в "
 "списке."
 msgstr ""
-"Одређује редослед сортирања. Мања вредност позиционира корисника више на листи."
+"Одређује редослед сортирања. Мања вредност позиционира корисника више на "
+"листи."
 
-#: backend/users/models.py:168
+#: backend/users/constants.py:26
+msgid ""
+"Определяет уровень доступа к панели управления админки: Участник команды — "
+"нет доступа, Редактор — управление контентом, Администратор — полный доступ."
+msgstr ""
+"Одређује ниво приступа административном панелу: Члан тима — нема приступ, "
+"Уредник — управљање садржајем, Администратор — потпун приступ."
+
+#: backend/users/constants.py:32
+msgid ""
+"Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
+"в карточке сотрудника на сайте."
+msgstr ""
+"Унесите професионалну улогу (на пример: „Водећи архитекта“). Приказује се на "
+"картици запосленог на сајту."
+
+#: backend/users/constants.py:35
+msgid ""
+"Загрузите портретное фото участника. Формат: JPG, PNG или WEBP, размер до 20 "
+"МБ."
+msgstr ""
+"Отпремите портретну фотографију члана. Формат: JPG, PNG или WEBP, величина "
+"до 20 МБ."
+
+#: backend/users/models.py:58
+msgid "Электронная почта обязательна"
+msgstr "Електронска пошта је обавезна"
+
+#: backend/users/models.py:83
+msgid "Суперпользователь должен иметь is_staff=True"
+msgstr "Суперкорисник мора имати is_staff=True"
+
+#: backend/users/models.py:85
+msgid "Суперпользователь должен иметь is_superuser=True"
+msgstr "Суперкорисник мора имати is_superuser=True"
+
+#: backend/users/models.py:94
+msgid "Участник команды"
+msgstr "Члан тима"
+
+#: backend/users/models.py:95
+msgid "Контент-редактор"
+msgstr "Уредник садржаја"
+
+#: backend/users/models.py:96
+msgid "Администратор"
+msgstr "Администратор"
+
+#: backend/users/models.py:101
+msgid "Адрес электронной почты"
+msgstr "Адреса електронске поште"
+
+#: backend/users/models.py:108
+msgid "Уникальный идентификатор"
+msgstr "Јединствени идентификатор"
+
+#: backend/users/models.py:121
+msgid "Фамилия"
+msgstr "Презиме"
+
+#: backend/users/models.py:127
+msgid "Роль"
+msgstr "Улога"
+
+#: backend/users/models.py:136
+msgid "Должность"
+msgstr "Позиција"
+
+#: backend/users/models.py:143
+msgid "Фотография"
+msgstr "Фотографија"
+
+#: backend/users/models.py:152
+msgid "Биография"
+msgstr "Биографија"
+
+#: backend/users/models.py:160
+msgid "Публичный статус"
+msgstr "Јавни статус"
+
+#: backend/users/models.py:179
 msgid "Пользователь"
 msgstr "Корисник"
 
-#: backend/users/models.py:169
+#: backend/users/models.py:180
 msgid "Пользователи и команда"
 msgstr "Корисници и тим"
+
+#~ msgid "Максимум 500 символов."
+#~ msgstr "Максимум 500 карактера."

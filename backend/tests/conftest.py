@@ -368,21 +368,41 @@ def about_full_setup(about_page, values, gallery_images, team_members):
 
 
 # =========================================================
-# CONTACTS
+# Contacts
 # =========================================================
-
-@pytest.fixture
-def contact_url():
-    """URL Contact API."""
-    return reverse('api:contact-create')
-
-
 @pytest.fixture
 def contact_payload():
     """Данные формы обратной связи."""
     return {
         'name': 'Иван',
         'email': 'ivan@example.com',
-        'message': 'Тестовое сообщение',
-        'reason': 'Вопрос',
+        'message': 'Здравствуйте! Я пишу вам по поводу проекта Ambasada.',
+        'reason': 'question',
     }
+# =========================================================
+# HOME PAGE CONTENT
+# =========================================================
+
+
+@pytest.fixture
+def home_page_content(db):
+    """Создает синглтон контента главной страницы с локализацией."""
+    from home.models import HomePageContent
+
+    return HomePageContent.objects.create(
+        title_ru='Амбасада за урбанизам',
+        subtitle_ru='Исследуем, проектируем и меняем городскую среду Белграда',
+        hero_button_label_ru='Смотреть проекты',
+        hero_button_link='/projects',
+        about_title_ru='О сообществе',
+        about_text_ru='Мы объединяем урбанистов, архитекторов и жителей.',
+        about_image='home/about.webp',
+        projects_title_ru='Наши проекты',
+        projects_button_label_ru='Все проекты',
+        projects_button_link='/projects',
+        title_en='Ambasada za Urbanizam',
+        subtitle_en='Exploring, designing and changing the urban environment',
+        hero_button_label_en='View Projects',
+        about_title_en='About community',
+        about_text_en='We bring together urbanists and architects.',
+    )
