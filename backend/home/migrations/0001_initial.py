@@ -4,6 +4,11 @@ import core.validators
 from django.db import migrations, models
 
 
+def home_hero_path(instance, filename):
+    """Временная заглушка для старой миграции 0001."""
+    return f'home/{filename}'
+
+
 class Migration(migrations.Migration):
     initial = True
 
@@ -124,7 +129,7 @@ class Migration(migrations.Migration):
                     'image_left',
                     models.ImageField(
                         help_text='Левая фотография для коллажа на главном экране. Оптимизируйте размер перед загрузкой (WebP/JPG, до 1200px по ширине, вес до 300 Кб).',
-                        upload_to='home/hero/',
+                        upload_to=home_hero_path,
                         validators=[
                             core.validators.MediaFileValidator(
                                 allowed_types=['image/jpeg', 'image/png', 'image/webp'],
@@ -138,7 +143,7 @@ class Migration(migrations.Migration):
                     'image_right',
                     models.ImageField(
                         help_text='Правая фотография для коллажа на главном экране. Требования аналогичны: формат WebP, JPG или PNG, оптимизированный вес файла.',
-                        upload_to='home/hero/',
+                        upload_to=home_hero_path,
                         validators=[
                             core.validators.MediaFileValidator(
                                 allowed_types=['image/jpeg', 'image/png', 'image/webp'],
