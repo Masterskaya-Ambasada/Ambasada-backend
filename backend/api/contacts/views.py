@@ -77,7 +77,6 @@ class ContactView(APIView):
 
     def get(self, request, *args, **kwargs):
         """Возвращает текст пожертвований."""
-        logger.info(f"GET запрос контактной информации от {request.META.get('REMOTE_ADDR')}")
         try:
             logger.debug("Поиск активного контента контактной страницы")
             content = ContactPageContent.objects.filter(is_active=True).first()
