@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms.models import inlineformset_factory
 from django.test import override_settings
-from projects.admin import ProjectAdmin
+from projects.admin import ProjectAdmin, ProjectAdminForm
 from projects.admin_forms import ProjectContentBlockInlineFormSet
 from projects.models import Project, ProjectContentBlock
 
@@ -183,6 +183,13 @@ def test_project_admin_prepopulates_slug_from_russian_title_only_on_create(publi
 
     assert project_admin.get_prepopulated_fields(request=None, obj=None) == {'slug': ('title_ru',)}
     assert project_admin.get_prepopulated_fields(request=None, obj=published_project) == {}
+
+
+def test_project_admin_uses_filter_horizontal_for_tags():
+    """Проверяет, что теги выбираются через удобный many-to-many виджет."""
+    project_admin = ProjectAdmin(Project, admin.site)
+
+    assert project_admin.filter_horizontal == ('tags',)
 
 
 @pytest.mark.django_db
