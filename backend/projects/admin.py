@@ -85,6 +85,8 @@ class ProjectAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if 'slug' in self.fields:
             self.fields['slug'].required = False
+        if 'tags' in self.fields:
+            self.fields['tags'].help_text = ''
 
     def clean(self):
         """Заполняет пустой slug после валидации всех полей формы."""
@@ -228,6 +230,7 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
     list_filter = ['project_type', 'year', 'is_published']
     ordering = ('-is_published', '-year')
     readonly_fields = ('cover_image_preview',)
+    filter_horizontal = ('tags',)
 
     inlines = [ProjectGalleryImageInline, ProjectContentBlockInline]
 
