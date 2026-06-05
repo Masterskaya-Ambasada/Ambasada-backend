@@ -24,14 +24,8 @@ class HomeAPIView(APIView):
     authentication_classes = []
 
     def get(self, request, *args, **kwargs):
-        logger.info(f'Получен запрос к HomeAPIView от {request.META.get("REMOTE_ADDR", "unknown")}')
         lang = request.query_params.get('lang') or get_language()
-        try:
-            config_data = get_full_config_cached(language=lang)
-            logger.info(f'!!! Конфигурации из кэша: {config_data}')
-        except Exception:
-            logger.error(f'Не удалось получить конфигурацию из кеша для языка {lang}', exc_info=True)
-            raise
+        config_data = get_full_config_cached(language=lang)
         if not config_data:
             logger.warning(f'Данные конфигурации отсутствуют для языка {lang}')
             return Response(
@@ -42,24 +36,15 @@ class HomeAPIView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-        try:
-            team_members = User.objects.public()[:6]
-            logger.info(f'Получено {team_members.count() if team_members else 0} членов команды')
-        except Exception:
-            logger.error('Ошибка получения членов команды из базы данных', exc_info=True)
-            raise
-        try:
-            projects = (
-                Project.objects.filter(is_published=True)
-                .select_related('project_type')
-                .prefetch_related('tags')
-                .order_by('-year', '-id')[:4]
-            )
-            logger.info(f'Получено {projects.count() if projects else 0} опубликованных проектов')
-        except Exception:
-            logger.error('Ошибка получения проектов из базы данных', exc_info=True)
-            raise
-
+        team_members = User.objects.public()[:6]
+        logger.info(f'Получено {team_members.count() if team_members else 0} членов команды')
+        projects = (
+            Project.objects.filter(is_published=True)
+            .select_related('project_type')
+            .prefetch_related('tags')
+            .order_by('-year', '-id')[:4]
+        )
+        logger.info(f'Получено {projects.count() if projects else 0} опубликованных проектов')
         first_project_id = projects[0].id if projects.exists() else None
 
         page_data = {
@@ -69,9 +54,5 @@ class HomeAPIView(APIView):
         }
 
         context = {'request': request, 'first_project_id': first_project_id}
-        try:
-            serializer = HomePageRootSerializer(page_data, context=context)
-        except Exception:
-            logger.error('Ошибка сериализации данных для главной страницы', exc_info=True)
-            raise
+        serializer = HomePageRootSerializer(page_data, context=context)
         return Response(serializer.data, status=status.HTTP_200_OK)

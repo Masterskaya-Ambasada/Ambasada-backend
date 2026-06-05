@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 
 from django.db.models import Prefetch, Q
 from projects.models import (
@@ -34,6 +35,8 @@ from api.schemas.project_schemas import (
     PROJECT_TAGS_SCHEMA,
     PROJECT_TYPES_SCHEMA,
 )
+
+logger = logging.getLogger(__name__)
 
 
 @PROJECT_LIST_SCHEMA
@@ -121,6 +124,8 @@ class ProjectTagListView(APIView):
         """Возвращает локализованный список тегов опубликованных проектов."""
         queryset = Tag.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
         tags = [tag.label for tag in queryset]
+        if not tags:
+            logger.warning('Для опубликованных проектов не найдено тегов.')
         return Response(tags)
 
 
@@ -134,4 +139,6 @@ class ProjectTypeListView(APIView):
         """Возвращает локализованный список типов опубликованных проектов."""
         queryset = ProjectType.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
         serializer = ProjectTypeSerializer(queryset, many=True)
+        if not queryset.exists():
+            logger.warning('Для опубликованных проектов не найдены типы.')
         return Response({PROJECT_TYPES_RESPONSE_KEY: serializer.data})

@@ -1,3 +1,4 @@
+import logging
 from about.models import AboutPage
 from api.schemas.about_schemas import about_page_schema_decorator
 from django.contrib.auth import get_user_model
@@ -8,6 +9,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .serializers import AboutPageSerializer
+
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -20,8 +24,8 @@ class AboutAPIView(APIView):
 
     def get(self, request):
         about = AboutPage.objects.prefetch_related('paragraphs', 'values', 'gallery_images').first()
-
         if not about:
+            logger.warning('Данные AboutPage не найдены в БД. Статус 404')
             return Response(
                 {
                     'status': status.HTTP_404_NOT_FOUND,
@@ -30,7 +34,6 @@ class AboutAPIView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-
         members = User.objects.public()
         serializer = AboutPageSerializer(
             about,
@@ -39,4 +42,5 @@ class AboutAPIView(APIView):
                 'members': members,
             },
         )
+        logger.info('Данные для страницы О нас получены.')
         return Response(serializer.data, status=status.HTTP_200_OK)

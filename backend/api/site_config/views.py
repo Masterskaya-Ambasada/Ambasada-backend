@@ -1,3 +1,4 @@
+import logging
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -7,6 +8,8 @@ from site_config.cache import get_site_config_cached
 from api.schemas.init_schemas import INIT_VIEW_SCHEMA
 
 from .constants import ERROR_RESPONSE_NOT_FOUND
+
+logger = logging.getLogger(__name__)
 
 
 @INIT_VIEW_SCHEMA
@@ -20,5 +23,5 @@ class InitView(APIView):
 
         if data is not None:
             return Response(data, status=status.HTTP_200_OK)
-
+        logger.warning('Конфигурация сайта не найдена в кеше/БД.')
         return Response(ERROR_RESPONSE_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
