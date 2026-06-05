@@ -1,11 +1,9 @@
+from django.conf import settings
 from django.core.cache import cache
-
+from django.db import IntegrityError, transaction
 from django.urls import reverse
 from rest_framework.test import APITestCase
-from django.db import IntegrityError, transaction
-
 from site_config.models import SiteConfig
-
 
 
 class InitViewTests(APITestCase):
@@ -19,11 +17,7 @@ class InitViewTests(APITestCase):
 
     def test_init_success(self):
         """Проверка успешного получения существующего конфига."""
-        SiteConfig.objects.create(
-            site_name='Test Site', 
-            seo_description='SEO text', 
-            copyright='2026'
-        )
+        SiteConfig.objects.create(site_name='Test Site', seo_description='SEO text', copyright='2026')
 
         response = self.client.get(self.url)
 
@@ -52,20 +46,23 @@ class InitViewTests(APITestCase):
         self.assertIn('copyright', response.data)
 
     def test_empty_relations(self):
-        """Проверка корректного возврата пустых списков для связей."""
+        """Проверка корректного возврата данных при отсутствии связанных записей в БД."""
         SiteConfig.objects.create(site_name='Test')
 
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['languages'], [])
+        self.assertEqual(len(response.data['languages']), len(settings.LANGUAGES))
+        self.assertEqual(
+            [language['code'] for language in response.data['languages']], ['ru', 'en', 'sr-Latn', 'sr-Cyrl']
+        )
         self.assertEqual(response.data['socials'], [])
-
+        self.assertEqual(response.data['languages'][0]['code'], 'ru')
 
     def test_only_one_site_config_allowed(self):
         """Проверка валидации на создание единственного экземпляра настроек."""
         SiteConfig.objects.create(site_name='First')
-        
+
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 SiteConfig.objects.create(site_name='Second')

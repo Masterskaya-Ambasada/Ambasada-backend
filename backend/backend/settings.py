@@ -1,5 +1,3 @@
-"""Base settings."""
-
 import sys
 from datetime import timedelta
 from pathlib import Path
@@ -41,7 +39,7 @@ if APP_ENV == 'production':
 
 SESSION_COOKIE_NAME = 'ambasada_sessionid'
 CSRF_COOKIE_NAME = 'ambasada_csrftoken'
-
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
@@ -55,6 +53,8 @@ CORS_ALLOWED_ORIGINS = config(
     cast=lambda v: [s.strip() for s in v.split(',')],
     default='http://localhost:3000',
 )
+
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000').rstrip('/')
 
 CORS_ALLOW_CREDENTIALS = False
 
@@ -95,14 +95,16 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'import_export',
     'tinymce',
+    'nested_admin',
     'django_jsonform',
     # local
     'projects',
     'users',
     'about',
     'api',
-    'site_config',
+    'site_config.apps.SiteConfigConfig',
     'contacts',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -230,6 +232,7 @@ MODELTRANSLATION_FALLBACK_VALUES = None
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
+MODELTRANSLATION_CLEAN_FIELDS = True
 
 LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
 
@@ -240,10 +243,6 @@ TIME_ZONE = 'Europe/Moscow'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static',
-# ]
 
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
@@ -368,12 +367,33 @@ SPECTACULAR_SETTINGS = {
 
 
 TINYMCE_DEFAULT_CONFIG = {
-    'height': 200,
+    'license_key': 'gpl',
+    'height': 300,
     'menubar': False,
     'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
     'searchreplace,visualblocks,fullscreen,insertdatetime,media,table,'
     'code,help,wordcount',
-    'toolbar': 'undo redo | formatselect | bold italic backcolor | '
+    'toolbar': 'undo redo | formatselect fontfamily fontsize | '
+    'bold italic forecolor backcolor | removeformat | '
     'alignleft aligncenter alignright alignjustify | '
-    'bullist numlist outdent indent | removeformat | help',
+    'bullist numlist outdent indent | link unlink | code fullscreen help',
+    # Отключаем внешние таргеты
+    'link_assume_external_targets': False,
+    'relative_urls': False,  # Запрещает TinyMCE превращать пути в относительные
+    'remove_script_host': True,  # Не добавляет протокол и домен (оставляет чистый /path)
+    'convert_urls': False,  # Запрещает редактору вообще как-либо менять ссылки
+    'link_list': [
+        {'title': 'Home Page', 'value': '/'},
+        {'title': 'Projects (List)', 'value': '/projects'},
+        {'title': 'About Us', 'value': '/about'},
+        {'title': 'Contacts', 'value': '/contacts'},
+        {'title': 'Privacy Policy', 'value': '/policy'},
+    ],
+    'font_formats': 'System Font=-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;'
+    'Inter=Inter,sans-serif;'
+    'Roboto=Roboto,sans-serif;'
+    'Open Sans=Open Sans,sans-serif;'
+    'Georgia=Georgia,serif;'
+    'Monospace=monospace',
+    'fontsize_formats': '12px 14px 16px 18px 20px 24px 28px 36px',
 }

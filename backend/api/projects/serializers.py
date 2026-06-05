@@ -1,8 +1,7 @@
-"""Сериализаторы для API проектов."""
-
 from __future__ import annotations
 
-from django.utils.translation import gettext as _
+from django.utils.encoding import force_str
+from drf_spectacular.utils import extend_schema_field
 from projects.constants import CONTENT_BLOCK_INDEX_WIDTH
 from projects.models import (
     Project,
@@ -11,6 +10,11 @@ from projects.models import (
     ProjectType,
 )
 from rest_framework import serializers
+
+from api.projects.constants import (
+    PROJECT_ACTION_BUTTON_LABEL,
+    PROJECT_ACTION_BUTTON_LINK_TEMPLATE,
+)
 
 
 class ProjectTypeSerializer(serializers.ModelSerializer):
@@ -21,6 +25,13 @@ class ProjectTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectType
         fields = ('id', 'label')
+
+
+class ProjectActionButtonSerializer(serializers.Serializer):
+    """Схема кнопки перехода к проекту для OpenAPI и ответов API."""
+
+    label = serializers.CharField()
+    link = serializers.CharField()
 
 
 class ProjectCardSerializer(serializers.ModelSerializer):
@@ -50,11 +61,12 @@ class ProjectCardSerializer(serializers.ModelSerializer):
         """Возвращает год строкой в формате, ожидаемом фронтендом."""
         return str(obj.year)
 
+    @extend_schema_field(ProjectActionButtonSerializer)
     def get_action_button(self, obj: Project) -> dict[str, str]:
         """Возвращает кнопку перехода к детальной странице проекта."""
         return {
-            'label': _('Перейти к проекту'),
-            'link': f'/projects/{obj.slug}',
+            'label': force_str(PROJECT_ACTION_BUTTON_LABEL),
+            'link': PROJECT_ACTION_BUTTON_LINK_TEMPLATE.format(slug=obj.slug),
         }
 
 
