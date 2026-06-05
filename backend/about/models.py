@@ -1,3 +1,4 @@
+from core.validators import MediaFileValidator
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db import models
@@ -131,6 +132,7 @@ class GalleryImage(models.Model):
     image = models.ImageField(
         upload_to=constants.UPLOAD_GALLERY,
         verbose_name=_('Изображение'),
+        validators=[MediaFileValidator()],
         help_text=constants.FIELD_IMAGE_HELP,
     )
     alt = models.CharField(
