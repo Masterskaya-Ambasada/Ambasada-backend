@@ -230,11 +230,7 @@ MODELTRANSLATION_FALLBACK_VALUES = None
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
 
-LOCALE_PATHS = [
-    config('PRODUCTION_LOCALE_PATH', default='/var/www/django/locale')
-    if APP_ENV == 'production'
-    else str(BASE_DIR / 'locale')
-]
+LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -249,7 +245,7 @@ _COLLECTSTATIC_DRYRUN = config(
     cast=bool,
     default=False,
 )
-STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else config('PRODUCTION_STATIC_ROOT', default='/var/www/django/static')
+STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'
