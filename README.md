@@ -1047,7 +1047,6 @@ docker compose up -d --force-recreate
 
 ## 📝 Дополнительная документация
 
-- **CLAUDE.md** — Инструкции для разработчиков и инструментов
 - **docker/django/** — Docker конфигурация и скрипты
 - **.github/workflows/** — CI/CD процессы
 - **backend/api/schemas/** — OpenAPI схемы эндпоинтов
