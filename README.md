@@ -5,22 +5,23 @@
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue)
 ![CI](https://github.com/Masterskaya-Ambasada/Ambasada-backend/actions/workflows/codecheck.yaml/badge.svg)
 ![License](https://img.shields.io/badge/License-Private-red)
-![Coverage](https://img.shields.io/badge/coverage-in%20progress-yellow)
 
-**Backend система на Django DRF для веб-сайта Ambasada za urbanizam**
+**Backend система на Django REST Framework для веб-сайта Ambasada za urbanizam — комплексной платформы для управления проектами в сфере урбанистики**
 
-## 📋 Общее описание проекта
+## 📋 Общее описание
 
-Ambasada za urbanizam — это комплексная веб-платформа для управления проектами в сфере урбанистики. Backend система обеспечивает REST API для работы с проектами, командой, контактами и контентом сайта.
+Backend обеспечивает REST API для работы с проектами, командой, контактами и контентом сайта. Система поддерживает 4 языка, реализует кэширование через Redis и обеспечивает безопасность через JWT авторизацию, rate limiting и CSP защиту.
 
 ### 🎯 Ключевые возможности
 
 - **Управление проектами**: Полный CRUD для проектов с категоризациями, тегами и публикацией
 - **Мультиязычность**: Поддержка 4 языков (русский, английский, сербский латиница/кириллица)
-- **API документация**: Автоматическая генерация OpenAPI/Swagger документации
+- **API документация**: Явно прописанные OpenAPI схемы для всех эндпоинтов
+- **Кэширование**: Redis-кэширование для высоконагруженных эндпоинтов с автоматической инвалидацией
 - **Безопасность**: JWT авторизация, rate limiting, CSP защита
-- **Контент-менеджмент**: Динамические страницы (О нас, Контакты) с админ-панелью
+- **Контент-менеджмент**: Динамические страницы с админ-панелью
 - **Медиа-ресурсы**: Управление изображениями и файлами с валидацией
+- **Логирование**: Сквозное логирование бизнес-логики с выводом в терминал/файл
 
 ---
 
@@ -37,26 +38,34 @@ Ambasada za urbanizam — это комплексная веб-платформ�
 │    Caddy    │────→│   Django     │
 │  (Reverse   │     │   (Gunicorn) │
 │   Proxy)    │     └──────┬───────┘
-└─────────────┘            │
+└──────┬──────┘            │
+       │                   │
+       ↓                   ↓
+┌─────────────┐     ┌────────────┐
+│  Media/CDN  │     │  PostgreSQL│
+└─────────────┘     └──────┬──────┘
                            │
-              ┌────────────┼────────────┐
-              ↓            ↓            ↓
-        ┌──────────┐  ┌──────────┐  ┌──────────┐
-        │PostgreSQL│  │  Redis   │  │  Media   │
-        │          │  │          │  │  Files   │
-        └──────────┘  └──────────┘  └──────────┘
+                  ┌────────┴────────┐
+                  ↓                 ↓
+            ┌──────────┐      ┌──────────┐
+            │  Redis   │      │   Files  │
+            │  Cache   │      │  Static  │
+            └──────────┘      └──────────┘
 ```
 
 ### Компоненты системы
-- **Caddy**: Reverse proxy, HTTPS termination, rate limiting
+- **Caddy**: Reverse proxy, HTTPS termination, rate limiting, static files serving
 - **Django/Gunicorn**: Application server, business logic
 - **PostgreSQL**: Primary database storage
-- **Redis**: Caching, sessions
-- **Media files**: User uploaded content (images, documents)
+- **Redis**: Кэширование данных эндпоинтов init/home с автоматической инвалидацией через сигналы
+- **Media/CDN**: Static files and user uploaded content
 
 ---
 
 ## 🛠️ Стек технологий
+
+<details>
+<summary><b>🔧 Подробный стек технологий</b></summary>
 
 ### Backend Core
 - **Django 6.0** — основной веб-фреймворк
@@ -66,7 +75,8 @@ Ambasada za urbanizam — это комплексная веб-платформ�
 - **PostgreSQL 17** — основная БД (опционально SQLite для разработки)
 
 ### API & Документация
-- **drf-spectacular** — OpenAPI 3.0 схема
+- **drf-spectacular** — OpenAPI 3.0 схема с явными описаниями
+- **явные OpenAPI схемы** — явно прописанные схемы в `backend/api/schemas/`
 - **django-filter** — фильтрация и поиск
 - **django-cors-headers** — CORS поддержка
 - **django-csp** — Content Security Policy
@@ -88,11 +98,11 @@ Ambasada za urbanizam — это комплексная веб-платформ�
 - **Caddy** — reverse proxy + HTTPS
 - **Redis** — кэширование и сессии
 
+</details>
+
 ---
 
 ## 🌿 Git Workflow
-
-### Ветки и деплой
 
 ```
 main     → production (ручной деплой)
@@ -101,16 +111,113 @@ feature/* → PR в develop
 ```
 
 ### CI/CD процесс
-
-1. **PR в `main` или `develop`** → запускаются проверки:
-   - Линтинг и форматирование (ruff)
-   - Тесты (pytest)
-   - Django checks
-   - Проверка миграций (не модифицированы)
-
+1. **PR в `main` или `develop`** → lint, tests, checks
 2. **Merge в `develop`** → автоматический деплой на dev-сервер
-
 3. **Merge в `main`** → production деплой (вручную)
+
+---
+
+## 🚀 Быстрый старт
+
+### Требования
+- Docker 20.10+ и Docker Compose 2.0+
+- Git для клонирования репозитория
+- Порт 8000 должен быть свободен
+
+### Установка и запуск
+
+```bash
+# 1. Клонирование репозитория
+git clone https://github.com/Masterskaya-Ambasada/Ambasada-backend.git
+cd Ambasada-backend
+
+# 2. Настройка переменных окружения
+cp .env.example .env
+# Отредактируйте .env согласно вашим требованиям
+
+# 3. Запуск контейнеров
+docker compose up -d
+
+# 4. Инициализация проекта
+docker compose exec -it web python backend/manage.py migrate
+docker compose exec -it web python backend/manage.py createsuperuser
+
+# 5. Проверка работы
+docker compose logs web
+# API документация: http://localhost:8000/api/docs/
+# Админ-панель:    http://localhost:8000/admin/
+```
+
+### Полная документация по установке
+
+<details>
+<summary><b>📖 Подробная инструкция по установке и деплою</b></summary>
+
+#### Разработка (Development)
+
+```bash
+# Запуск с hot-reload
+docker compose up
+
+# Или в фоновом режиме
+docker compose up -d
+
+# Просмотр логов
+docker compose logs -f web
+
+# Запуск тестов
+docker compose run --rm web pytest
+
+# С coverage отчётом
+docker compose run --rm web pytest --cov=backend --cov-report=html
+```
+
+#### Production Деплой
+
+**Pre-requisites для production деплоя:**
+- SSH доступ к production серверу
+- Настроенные secrets в GitHub Actions (SSH_KEY, etc.)
+- Доменное имя и SSL сертификаты (через Caddy)
+- Production database credentials
+
+**Деплой через скрипт:**
+```bash
+# На сервере
+cd ~/backend
+bash docker/deploy_dev_server.sh
+```
+
+**Деплой вручную:**
+```bash
+# Сборка production образа
+docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml build web
+
+# Запуск production контейнеров
+docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml up -d
+
+# Применение миграций
+docker compose exec web python backend/manage.py migrate
+
+# Создание суперпользователя
+docker compose exec web python backend/manage.py createsuperuser
+
+# Сборка статических файлов
+docker compose exec web python backend/manage.py collectstatic --no-input
+```
+
+**Мониторинг деплоя:**
+```bash
+# Проверка статуса контейнеров
+docker compose ps
+
+# Просмотр логов
+docker compose logs -f web
+
+# Проверка здоровья сервиса
+curl https://yourdomain.com/api/v1/init/
+```
+
+</details>
 
 ---
 
@@ -127,6 +234,7 @@ ambasada-backend/
 │   │   ├── about/             # Эндпоинты страницы "О нас"
 │   │   ├── auth/              # JWT авторизация
 │   │   ├── contacts/          # Форма обратной связи
+│   │   ├── home/              # Эндпоинты главной страницы
 │   │   ├── projects/          # CRUD проектов
 │   │   ├── schemas/           # OpenAPI схемы
 │   │   ├── site_config/       # Инициализация API
@@ -144,6 +252,10 @@ ambasada-backend/
 │   ├── core/                  # Общие утилиты проекта
 │   │   ├── middleware.py      # Кастомный middleware (throttle)
 │   │   └── validators.py      # Валидаторы файлов, текста
+│   ├── home/                  # Приложение главной страницы
+│   │   ├── models.py          # Модели: HomePageContent
+│   │   ├── admin.py           # Админ-панель
+│   │   └── signals.py         # Сигналы для инвалидации кэша
 │   ├── locale/                # Файлы переводов (i18n)
 │   │   ├── ru/LC_MESSAGES/    # Русский
 │   │   ├── en/LC_MESSAGES/    # Английский
@@ -155,9 +267,13 @@ ambasada-backend/
 │   │   └── admin.py           # Кастомная админка
 │   ├── site_config/           # Конфигурация сайта
 │   │   ├── models.py          # Модели: SiteConfig
-│   │   └── views.py           # Init endpoint
+│   │   ├── cache.py           # Функции кэширования init/home
+│   │   └── signals.py         # Сигналы для инвалидации кэша
 │   ├── tests/                 # Тесты проекта
 │   │   ├── api/               # API тесты
+│   │   ├── about/             # Тесты about
+│   │   ├── contacts/          # Тесты контактов
+│   │   ├── home/              # Тесты home
 │   │   ├── projects/          # Тесты проектов
 │   │   ├── users/             # Тесты пользователей
 │   │   └── conftest.py        # Pytest конфигурация
@@ -193,205 +309,83 @@ ambasada-backend/
 | Модуль | Назначение | Ключевые функции |
 |--------|------------|-----------------|
 | **about** | Страница "О нас" | Галерея, контент, SEO |
-| **api** | REST API слой | Эндпоинты, сериализаторы, схемы |
+| **api** | REST API слой | Эндпоинты, сериализаторы, явные OpenAPI схемы |
 | **contacts** | Обратная связь | Форма контактов, социальные ссылки |
+| **home** | Главная страница | Контент, кэширование, сигналы |
 | **projects** | Управление проектами | CRUD, категории, публикация |
 | **users** | Пользователи | Профили, команда проекта |
-| **site_config** | Настройки сайта | Инициализация, конфигурация |
+| **site_config** | Настройки сайта | Init endpoint, Redis-кэширование |
 | **core** | Общие утилиты | Middleware, валидаторы |
 | **backend** | Django конфигурация | Settings, URLs, WSGI |
 
 ---
 
-## 🚀 Инструкция по установке и развёртыванию
+## 🌍 Переменные окружения
 
-### Требования
-
-- **Docker** 20.10+ и **Docker Compose** 2.0+
-- **Git** для клонирования репозитория
-- **Порт** 8000 (Django) должен быть свободен
-
-### 1. Клонирование и базовая настройка
-
-```bash
-# Клонирование репозитория
-git clone https://github.com/Masterskaya-Ambasada/Ambasada-backend.git
-cd Ambasada-backend
-
-# Копирование примера переменных окружения
-cp .env.example .env
-```
-
-### 2. Настройка переменных окружения
-
-Отредактируйте файл `.env` согласно вашим требованиям. Минимальные изменения:
-
-```bash
-# Редактирование основных настроек
-nano .env  # или используйте ваш редактор
-```
-
-**Обязательные переменные для локальной разработки:**
+### Ключевые переменные
 
 ```env
 # Основные настройки
 DEBUG=True
 APP_ENV=development
-SECRET_KEY=your-local-development-secret-key
+SECRET_KEY=your-secret-key-here
 DJANGO_SETTINGS_MODULE=backend.settings
 
-# База данных (опционально, по умолчанию SQLite)
+# База данных
 ENABLE_POSTGRES_DB=True  # False для SQLite
 POSTGRES_DB=db
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_HOST=db
-POSTGRES_PORT=5432
 
 # CORS (разрешите ваш фронтенд)
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+CORS_ALLOWED_ORIGINS=http://localhost:3000
 ```
 
-### 3. Запуск контейнеров
+### Полный список переменных
 
-```bash
-# Сборка и запуск всех сервисов
-docker compose up -d
+📖 **Полный список всех переменных окружения с комментариями находится в `.env.example`**
 
-# Проверка статуса
-docker compose ps
-```
-
-**При первом запуске** подождите 1-2 минуты пока:
-- PostgreSQL инициализируется
-- Redis запустится
-- Django применит миграции
-
-### 4. Инициализация проекта
-
-```bash
-# Применение миграций базы данных
-docker compose exec -it web python backend/manage.py migrate
-
-# Создание суперпользователя для админ-панели
-docker compose exec -it web python backend/manage.py createsuperuser
-
-# (Опционально) Загрузка начальных данных
-docker compose exec -it web python backend/manage.py loaddata initial_data
-```
-
-### 5. Проверка работы
-
-```bash
-# Проверка логов
-docker compose logs web
-
-# Доступ к приложению
-# API документация: http://localhost:8000/api/docs/
-# Админ-панель:    http://localhost:8000/admin/
-# API schema:       http://localhost:8000/api/schema/
-```
-
----
-
-## 🌍 Переменные окружения
-
-### Структура `.env` файла
-
-```env
-# ====================
-# DJANGO CORE SETTINGS
-# ====================
-DEBUG=True                              # Режим отладки (True/False)
-APP_ENV=development                     # Окружение (development/production)
-SECRET_KEY=your-secret-key-here         # Секретный ключ Django
-DJANGO_SETTINGS_MODULE=backend.settings # Модуль настроек
-
-# Хосты и CORS
-ALLOWED_HOSTS=localhost,127.0.0.1      # Разрешённые хосты
-CSRF_TRUSTED_ORIGINS=http://localhost:8000  # Trusted origins для CSRF
-CORS_ALLOWED_ORIGINS=http://localhost:3000   # CORS для фронтенда
-
-# ====================
-# DATABASE
-# ====================
-ENABLE_POSTGRES_DB=True                 # Использовать PostgreSQL (True/False)
-POSTGRES_DB=db                         # Имя БД
-POSTGRES_USER=postgres                 # Пользователь БД
-POSTGRES_PASSWORD=postgres              # Пароль БД
-POSTGRES_HOST=db                       # Хост БД (в docker: 'db')
-POSTGRES_PORT=5432                     # Порт БД
-
-# ====================
-# REDIS & CACHE
-# ====================
-REDIS_URL=redis://redis:6379/0          # URL для подключения к Redis
-CACHE_LOCATION=redis://redis:6379/      # Локация кэша
-
-# ====================
-# SECURITY SETTINGS
-# ====================
-# JWT токены
-JWT_ACCESS_TOKEN_MINUTES=60            # Время жизни access токена (минуты)
-JWT_REFRESH_TOKEN_DAYS=1                # Время жизни refresh токена (дни)
-
-# ====================
-# THROTTLING RATES
-# ====================
-# Лимиты API (формат: число/период)
-THROTTLE_RATE_ANON=120/hour            # Анонимные пользователи
-THROTTLE_RATE_USER=600/hour            # Авторизованные пользователи
-THROTTLE_RATE_CONTACT=5/hour          # Форма контактов (anti-spam)
-THROTTLE_RATE_AUTH=10/minute          # Вход в админку (anti-brute-force)
-
-# ====================
-# GUNICORN SETTINGS
-# ====================
-GUNICORN_MAX_REQUESTS=2000             # Макс. запросов перед рестартом worker
-GUNICORN_MAX_REQUESTS_JITTER=400       # Рандомизация рестарта
-
-# ====================
-# ADMIN LOGIN THROTTLE
-# ====================
-ADMIN_LOGIN_MAX_ATTEMPTS=10            # Макс. попыток входа
-ADMIN_LOGIN_WINDOW_SECONDS=60         # Окно наблюдения (секунды)
-ADMIN_LOGIN_BLOCK_SECONDS=300          # Время блокировки (секунды)
-
-# ====================
-# COOKIE NAMES
-# ====================
-SESSION_COOKIE_NAME=ambasada_sessionid  # Имя сессионной куки
-CSRF_COOKIE_NAME=ambasada_csrftoken    # Имя CSRF куки
-```
-
-### Продукционные переменные
+<details>
+<summary><b>📋 Дополнительные переменные для production</b></summary>
 
 Для production окружения дополнительно required:
 
 ```env
-# ====================
-# PRODUCTION SETTINGS
-# ====================
+# Production settings
 DEBUG=False
 APP_ENV=production
-SECRET_KEY=<generate-strong-secret-key>
+SECRET_KEY=<strong-secret-key>
 
-# CORS (только продакшн домены)
+# Production hosts
+ALLOWED_HOSTS=ambasada.rs,www.ambasada.rs
+CSRF_TRUSTED_ORIGINS=https://ambasada.rs,https://www.ambasada.rs
 CORS_ALLOWED_ORIGINS=https://ambasada.rs,https://www.ambasada.rs
+
+# Production logging
+LOG_LEVEL=WARNING
+LOG_OUTPUT=file
+LOG_FILE_PATH=/code/logs/django.log
+
+# Production cache
+REDIS_URL=redis://redis:6379/0
+CACHE_LOCATION=redis://redis:6379/1
 ```
+
+</details>
 
 ---
 
 ## 💾 Работа с базой данных
 
-### Применение миграций
+<details>
+<summary><b>🗄️ Миграции и резервное копирование</b></summary>
+
+### Миграции
 
 ```bash
 # Создание новых миграций (после изменений моделей)
 docker compose exec -it web python backend/manage.py makemigrations
-
-# Просмотр SQL для миграции (без применения)
-docker compose exec -it web python backend/manage.py sqlmigrate <app_name> <migration_number>
 
 # Применение миграций
 docker compose exec -it web python backend/manage.py migrate
@@ -400,105 +394,20 @@ docker compose exec -it web python backend/manage.py migrate
 docker compose exec -it web python backend/manage.py showmigrations
 ```
 
-### Управление данными
-
-Запуск Django shell:
-
-```bash
-docker compose exec -it web python backend/manage.py shell
-```
-
-Примеры операций в Django shell:
-
-```python
-from projects.models import Project
-from users.models import User
-
-# Создание проекта
-project = Project.objects.create(
-    title_ru="Новый проект",
-    title_en="New Project",
-    is_published=True
-)
-
-# Создание пользователя
-user = User.objects.create_user(
-    email='user@example.com',
-    password='secure_password',
-    first_name='Иван',
-    last_name='Иванов'
-)
-```
-
 ### Резервное копирование
 
 ```bash
-# Резервное копирование PostgreSQL
+# PostgreSQL backup
 docker compose exec db pg_dump -U postgres db > backup.sql
 
-# Восстановление из резервной копии
+# PostgreSQL restore
 docker compose exec -T db psql -U postgres db < backup.sql
 
-# Резервное копирование SQLite (dev окружение)
-# Только для development с SQLite
-docker compose cp web:/code/db.sqlite3 ./backup.sqlite3
+# Django shell для работы с данными
+docker compose exec -it web python backend/manage.py shell
 ```
 
----
-
-## ▶️ Запуск проекта
-
-### Режимы запуска
-
-#### 1. Локальная разработка (Development)
-
-```bash
-# Запуск с hot-reload (django server)
-docker compose up
-
-# Или в фоновом режиме
-docker compose up -d
-
-# Просмотр логов в реальном времени
-docker compose logs -f web
-```
-
-#### 2. Production режим
-
-```bash
-# Использование production конфигурации
-docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml up -d
-
-# Или через скрипт деплоя
-bash docker/deploy_dev_server.sh
-```
-
-#### 3. Тестовый режим
-
-```bash
-# Запуск тестов
-docker compose run --rm web pytest
-
-# С coverage отчётом
-docker compose run --rm web pytest --cov=backend --cov-report=html
-```
-
-### Управление контейнерами
-
-```bash
-# Остановка всех сервисов
-docker compose down
-
-# Остановка с удалением volumes (включая БД!)
-docker compose down -v
-
-# Перезапуск конкретного сервиса
-docker compose restart web
-
-# Ресборка контейнера (после изменений зависимостей)
-docker compose build web
-docker compose up -d
-```
+</details>
 
 ---
 
@@ -514,117 +423,46 @@ docker compose up -d
 
 ### Основные эндпоинты API
 
-#### Авторизация `/api/v1/auth/`
+<details>
+<summary><b>🔗 Список доступных эндпоинтов</b></summary>
 
-```bash
-# Получение токенов
-POST /api/v1/auth/login/
-Content-Type: application/json
+#### Инициализация и главные страницы
+- `GET /api/v1/init/` — Инициализация фронтенда (кэшируется в Redis)
+- `GET /api/v1/home/` — Главная страница (кэшируется в Redis)
 
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
+#### Контент
+- `GET /api/v1/about/` — Страница "О нас"
+- `POST /api/v1/contact/` — Форма обратной связи (anti-spam защита)
 
-# Ответ
-{
-  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-}
+#### Проекты
+- `GET /api/v1/projects/` — Список проектов
+- `GET /api/v1/projects/{slug}/` — Детали проекта
+- `GET /api/v1/projects/tags/` — Теги проектов
+- `GET /api/v1/projects/types/` — Типы проектов
 
-# Обновление access токена
-POST /api/v1/auth/token/refresh/
-Content-Type: application/json
+#### Пользователи
+- `GET /api/v1/users/team/` — Список команды
 
-{
-  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-}
-```
+#### Авторизация (JWT)
+- `POST /api/v1/auth/login/` — Получение токенов
+- `POST /api/v1/auth/token/refresh/` — Обновление access токена
 
-#### Проекты `/api/v1/projects/`
+### Явные OpenAPI схемы
 
-```bash
-# Список проектов
-GET /api/v1/projects/
+Для всех эндпоинтов явно прописаны схемы в `backend/api/schemas/`:
+- `init_schemas.py`, `home_shemas.py` (опечатка в имени файла - legacy), `about_schemas.py`
+- `contact_schemas.py`, `project_schemas.py`
+- `auth_schemas.py`, `users_schemas.py`
 
-# Детали проекта
-GET /api/v1/projects/{slug}/
+### Кэширование API
 
-# Теги проектов
-GET /api/v1/projects/tags/
+**Redis-кэширование** реализовано для высоконагруженных эндпоинтов:
+- **`/api/v1/init/`** — все данные для инициализации фронтенда
+- **`/api/v1/home/`** — данные главной страницы
 
-# Типы проектов
-GET /api/v1/projects/types/
-```
+**Инвалидация кэша** происходит автоматически через Django signals при изменении данных в админ-панели.
 
-#### Пользователи `/api/v1/users/`
-
-```bash
-# Список команды
-GET /api/v1/users/team/
-```
-
-#### Контакты `/api/v1/contact/`
-
-```bash
-# Создание контакта (anti-spam защита)
-POST /api/v1/contact/
-Content-Type: application/json
-
-{
-  "name": "Иван Петров",
-  "email": "ivan@example.com",
-  "message": "Здравствуйте, хочу задать вопрос..."
-}
-```
-
-#### О нас `/api/v1/about/`
-
-```bash
-# Получение данных страницы "О нас"
-GET /api/v1/about/
-```
-
-### Использование API с мультиязычностью
-
-```bash
-# Запрос с определённым языком
-GET /api/v1/projects/
-Accept-Language: ru
-
-# Ответ будет на русском языке
-
-# Смена языка
-Accept-Language: en  # Ответ на английском
-Accept-Language: sr-latn  # Сербский (латиница)
-```
-
----
-
-## 🛡️ Авторизация
-
-### Статус авторизации
-
-**Авторизация реализована, но НЕ подключена к эндпоинтам.**
-
-Текущее состояние:
-- ✅ JWT токены реализованы через `SimpleJWT`
-- ✅ Эндпоинты авторизации работают (`/api/v1/auth/login/`)
-- ✅ Модель пользователя `User` расширяет `AbstractUser`
-- ❌ Защита эндпоинтов через `IsAuthenticated` НЕ применена
-
-### JWT авторизация
-
-```bash
-# Получение токена
-curl -X POST http://localhost:8000/api/v1/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@example.com","password":"password"}'
-
-# Использование токена для запросов
-curl -X GET http://localhost:8000/api/v1/projects/ \
-  -H "Authorization: Bearer <access_token>"
-```
+</details>
 
 ---
 
@@ -634,8 +472,10 @@ curl -X GET http://localhost:8000/api/v1/projects/ \
 
 - 🇷🇺 **Русский** (`ru`) — основной язык
 - 🇬🇧 **Английский** (`en`) — международный
-- 🇷🇸 **Сербский (латиница)** (`sr-latn`) — для Сербии
-- 🇷🇸 **Сербский (кириллица)** (`sr-cyrl`) — альтернативная форма
+- 🇷🇸 **Сербский (латиница)** (`sr-latn` backend → `sr-Latn` frontend) — для Сербии
+- 🇷🇸 **Сербский (кириллица)** (`sr-cyrl` backend → `sr-Cyrl` frontend) — альтернативная форма
+
+**Важно**: Бэкенд использует коды `sr-latn` и `sr-cyrl`, а фронтенд получает `sr-Latn` и `sr-Cyrl`.
 
 ### Fallback цепочка
 
@@ -643,69 +483,7 @@ curl -X GET http://localhost:8000/api/v1/projects/ \
 sr-latn → sr-cyrl → ru → en
 ```
 
-Если перевод отсутствует на запрошенном языке, система использует следующий в цепочке.
-
-### Работа с переводами
-
-#### 1. Переводы интерфейса (gettext)
-
-Все строки, видимые пользователю, должны быть обёрнуты в `_()`:
-
-```python
-from django.utils.translation import gettext_lazy as _
-
-class Project(models.Model):
-    title = models.CharField(
-        max_length=255,
-        verbose_name=_('Название'),
-        help_text=_('Введите название проекта')
-    )
-```
-
-#### 2. Переводы данных в БД (modeltranslation)
-
-Для полей, требующих перевода:
-
-```python
-# models.py
-class Project(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-
-# translation.py
-from modeltranslation.translator import register, TranslationOptions
-from .models import Project
-
-@register(Project)
-class ProjectTranslationOptions(TranslationOptions):
-    fields = ('title', 'description')
-    required_languages = ('ru', 'en', 'sr-latn')
-```
-
-После этого автоматически создаются поля: `title_ru`, `title_en`, `title_sr_latn`, `title_sr_cyrl`.
-
-#### 3. Обновление переводов
-
-```bash
-# Сбор новых строк для перевода
-docker compose exec web python backend/manage.py makemessages -a
-
-# Редактирование переводов
-# backend/locale/<lang>/LC_MESSAGES/django.po
-
-# Компиляция переводов
-docker compose exec web python backend/manage.py compilemessages
-```
-
-#### 4. Использование в API
-
-```python
-# serializers.py - используем только базовые поля
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ('id', 'title', 'description')  # НЕ title_en!
-```
+### Использование в API
 
 Язык ответа определяется заголовком `Accept-Language`:
 
@@ -716,212 +494,156 @@ Accept-Language: en
 # Ответ будет на английском
 ```
 
+<details>
+<summary><b>🔧 Работа с переводами (для разработчиков)</b></summary>
+
+#### Переводы интерфейса (gettext)
+
+```python
+from django.utils.translation import gettext_lazy as _
+
+class Project(models.Model):
+    title = models.CharField(
+        max_length=255,
+        verbose_name=_('Название'),
+    )
+```
+
+#### Переводы данных в БД (modeltranslation)
+
+```python
+# translation.py
+from modeltranslation.translator import register, TranslationOptions
+from .models import Project
+
+@register(Project)
+class ProjectTranslationOptions(TranslationOptions):
+    fields = ('title', 'description')
+    required_languages = ('ru', 'en', 'sr-latn')
+```
+
+#### Обновление переводов
+
+```bash
+# Сбор новых строк
+docker compose exec web python backend/manage.py makemessages -a
+
+# Компиляция
+docker compose exec web python backend/manage.py compilemessages
+```
+
+</details>
+
 ---
 
 ## 🧪 Тестирование
 
-### Покрытие тестами
-
-| Модуль | Покрытие | Типы тестов | Статус |
-|--------|----------|-------------|---------|
-| **projects** | ✅ Частично | Unit, Integration | Базовые CRUD |
-| **users** | ✅ Частично | Unit | Модели User |
-| **site_config** | ✅ Частично | Unit | Инициализация |
-| **api** | ✅ Частично | Integration | Эндпоинты |
-| **about** | ❌ Нет | — | Отсутствует |
-| **contacts** | ❌ Нет | — | Отсутствует |
-| **auth** | ✅ Частично | Unit | JWT авторизация |
-
 ### Запуск тестов
 
-#### Все тесты
-
 ```bash
-# Запуск всех тестов
+# Все тесты
 docker compose exec web pytest
 
-# С подробным выводом
-docker compose exec web pytest -v
-
 # С coverage отчётом
-docker compose exec web pytest --cov=backend --cov-report=html --cov-report=term
-```
+docker compose exec web pytest --cov=backend --cov-report=html
 
-#### По модулям
-
-```bash
-# Тесты проектов
+# По модулям
 docker compose exec web pytest backend/tests/projects/
-
-# Тесты API
 docker compose exec web pytest backend/tests/api/
 
-# Тесты авторизации
-docker compose exec web pytest backend/tests/api/test_auth.py
-```
-
-#### Отдельный тест
-
-```bash
-# Запуск конкретного теста
+# Отдельный тест
 docker compose exec web pytest backend/tests/projects/test_models.py::test_project_slug_generation
-
-# С Marker (если используется)
-docker compose exec web pytest -m "not slow"
 ```
 
-### Структура тестов
+### Покрытие тестами
+
+<details>
+<summary><b>📊 Структура и покрытие тестов</b></summary>
 
 ```
 backend/tests/
-├── conftest.py                # Общие pytest fixtures
-├── api/
-│   ├── test_auth.py          # Тесты JWT авторизации
-│   ├── test_projects_list.py # Тесты списка проектов
-│   ├── test_projects_detail.py # Тесты деталей проектов
-│   ├── test_projects_meta.py # Тесты метаданных проектов
-│   └── test_team_list.py     # Тесты команды
-├── projects/
-│   ├── test_models.py        # Тесты моделей проектов
-│   └── test_validators.py    # Тесты валидаторов
-├── users/
-│   └── test_models.py        # Тесты моделей пользователей
-├── site_config/
-│   └── test_init.py          # Тесты инициализации
-└── test_admin_login_throttle.py # Тесты throttle middleware
+├── api/              # Тесты эндпоинтов
+├── about/            # Тесты админки about
+├── contacts/         # Тесты админки contacts
+├── home/             # Тесты моделей home
+├── projects/         # Тесты проектов и админки
+├── users/            # Тесты пользователей
+├── site_config/      # Тесты кэширования и инициализации
+└── conftest.py       # Pytest конфигурация
 ```
 
-### Покрытие кода
+Основные модули, покрытые тестами: projects, users, api, site_config, about, contacts, home.
 
-Текущее покрытие кода находится в процессе развития. Основные модули, покрытые тестами:
-- **projects**: базовые CRUD операции
-- **users**: модели и валидация
-- **api**: эндпоинты и сериализаторы
-- **site_config**: инициализация
-
-Для получения актуальных показателей coverage запустите:
+Для получения актуальных показателей coverage:
 ```bash
 docker compose exec web pytest --cov=backend --cov-report=term
 ```
+
+</details>
 
 ---
 
 ## 🚨 Troubleshooting
 
-### Частые ошибки и решения
+<details>
+<summary><b>🔧 Решение частых проблем</b></summary>
 
-#### 1. Проблемы с Docker
+### Docker проблемы
 
-**Ошибка**: `Cannot connect to the Docker daemon`
-
-**Решение**:
+**Cannot connect to the Docker daemon**:
 ```bash
-# Проверка статуса Docker
 docker info
-
-# Запуск Docker Desktop (Windows/Mac)
-# или службы Docker (Linux)
-sudo systemctl start docker
+sudo systemctl start docker  # Linux
 ```
 
-#### 2. Проблемы с портом 8000
+### Порт занят
 
-**Ошибка**: `port is already allocated`
-
-**Решение**:
+**port is already allocated**:
 ```bash
-# Поиск процесса на порту 8000
 netstat -ano | findstr :8000  # Windows
 lsof -i :8000                  # Linux/Mac
-
-# Изменение порта в docker-compose.override.yml
-services:
-  web:
-    ports:
-      - "8001:8000"  # Используйте 8001
 ```
 
-#### 3. Проблемы с БД
+### Проблемы с БД
 
-**Ошибка**: `FATAL: database "db" does not exist`
-
-**Решение**:
+**FATAL: database "db" does not exist**:
 ```bash
-# Пересоздание volumes (удаляет БД!)
 docker compose down -v
 docker compose up -d
-
-# Применение миграций
 docker compose exec web python backend/manage.py migrate
 ```
 
-#### 4. Проблемы с миграциями
+### Проблемы с миграциями
 
-**Ошибка**: `AttributeError: module 'backend.projects.models' has no attribute 'ModelName'`
-
-**Решение**:
+**AttributeError: module has no attribute**:
 ```bash
-# Проверка миграций
 docker compose exec web python backend/manage.py showmigrations
-
-# Откат проблемной миграции
 docker compose exec web python backend/manage.py migrate <app_name> <previous_migration>
-
-# Пересоздание миграции
-docker compose exec web python backend/manage.py makemigrations <app_name> --empty
 ```
 
-#### 5. Проблемы с переводами
+### Проблемы с переводами
 
-**Ошибка**: Переводы не применяются
-
-**Решение**:
+**Переводы не применяются**:
 ```bash
-# Проверка .po файлов на fuzzy строки
 grep "#, fuzzy" backend/locale/*/LC_MESSAGES/django.po
-
-# Удалить строку "#, fuzzy" вручную в .po файле
-
-# Перекомпиляция
+# Удалить "#, fuzzy" вручную
 docker compose exec web python backend/manage.py compilemessages
 ```
 
-#### 6. Проблемы с памятью
+### CORS/CSRF проблемы
 
-**Ошибка**: `Cannot allocate memory`
-
-**Решение**:
+**CSRF token missing или CORS blocked**:
 ```bash
-# Очистка Docker ресурсов
-docker system prune -a
-
-# Увеличение памяти в Docker Desktop
-# Settings → Resources → Memory
+# Проверка .env
+CORS_ALLOWED_ORIGINS=http://localhost:3000
+CSRF_TRUSTED_ORIGINS=http://localhost:8000
 ```
 
-#### 7. Проблемы с доступом к API
-
-**Ошибка**: `CSRF token missing` или `CORS blocked`
-
-**Решение**:
-```bash
-# Проверка настроек CORS в .env
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-
-# Проверка CSRF_TRUSTED_ORIGINS
-CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
-
-# Для API запросов используйте правильные заголовки
-curl -X POST http://localhost:8000/api/v1/contact/ \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Test","email":"test@example.com","message":"Test"}'
-```
+</details>
 
 ---
 
-## 🚀 Процесс деплоя
-
-### Деплой на Production сервер
+## 🚀 Деплой на Production сервер
 
 #### 1. Подготовка сервера
 
@@ -997,7 +719,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to server
-        # ... скрипт деплоя
+        # Деплой настроен через SSH-action
+        # Подробнее: .github/workflows/deploy_develop.yaml
 ```
 
 ### Мониторинг деплоя
@@ -1030,18 +753,59 @@ docker compose up -d --force-recreate
 
 ---
 
-## 📞 Поддержка и контакты
+## ✅ Чеклист перед коммитом
 
-### Разработка
+Перед созданием коммита убедитесь, что:
 
-- **GitHub**: https://github.com/Masterskaya-Ambasada/Ambasada-backend
-- **Issues**: https://github.com/Masterskaya-Ambasada/Ambasada-backend/issues
+- [ ] **Код проходит линтинг**: `docker compose run --rm web ruff check`
+- [ ] **Код отформатирован**: `docker compose run --rm web ruff format --check`
+- [ ] **Тесты проходят**: `docker compose run --rm web pytest`
+- [ ] **Миграции не модифицированы** (CI проверит это автоматически)
+- [ ] **Сообщение коммита понятное** (описывает WHAT и WHY)
+
+---
+
+## 👥 Команда проекта
+
+<details>
+<summary><b>👥 Нажмите для просмотра команды</b></summary>
+
+### Project Management
+
+- **Юлия Воложина** — Project Manager (@Yulia_Volozhina) — GitHub: https://github.com/YuliyaVo
+
+### Backend команда
+
+- **Дмитрий Радюк** — Team Lead (@DzzmitryR) — GitHub: https://github.com/Dzmitry-Radziuk
+- **Валерия Луговина** — Backend Developer (@rjts4) — GitHub: https://github.com/Va-agh
+- **Андрей Головушкин** — Backend Developer (@Frenky_19) — GitHub: https://github.com/Frenky19
+- **Марат Ахметов** — Backend Developer (@makhmetcat) — GitHub: https://github.com/MaratAkhmetov
+- **Людмила Баукова** — Backend Developer (@pupilPy) — GitHub: https://github.com/bauklu
+- **Игорь Могилин** — Backend Developer (@UltraBack) — GitHub: https://github.com/IgorMogilin
+- **Игорь Моисеев** — Backend Developer (@Igormaximich) — GitHub: https://github.com/MoiseevIgorPython
+- **Сергей Липатов** — Backend Developer (@serg231178) — GitHub: https://github.com/SergLipatov
+
+### DevOps команда
+
+- **Александр Рассоха** — DevOps Engineer (@rassoalex) — GitHub: https://github.com/proboard
+
+### QA команда
+
+- **Денис Костомаркин** — QA Engineer (@DenisK_qa) — GitHub: https://github.com/Denis-Kostomarkin
+- **Владислав Бердников** — QA Engineer (@BugReaper) — GitHub: https://github.com/vlad-berd
+- **Елизавета Макарова** — QA Engineer (@cradlesound) — GitHub: https://github.com/elizavetamakarovavn-netizen
+- **Артем Корниец** — QA Engineer (@chuchunj) — GitHub: https://github.com/artemkorniets
+- **Юлия Дивенко** — QA Engineer (@Julie_Schattlich) — GitHub: https://github.com/JulieSchattlich
+- **Дмитрий Кузьмичев** — QA Engineer (@Dima_nch) — GitHub: https://github.com/DimkaKy
+
+</details>
 
 ### Контакты команды
 
 Для вопросов по разработке и интеграции:
-- **Email**: develop@ambasada.rs (пример)
-- **Telegram**: @ambasada_dev (пример)
+- **GitHub**: https://github.com/Masterskaya-Ambasada/Ambasada-backend
+- **Issues**: https://github.com/Masterskaya-Ambasada/Ambasada-backend/issues
+
 
 ---
 
@@ -1057,4 +821,5 @@ docker compose up -d --force-recreate
 **Последнее обновление**: 2026-06-05  
 **Python**: 3.12+  
 **Django**: 6.0+  
-**License**: Private
+**License**: Private  
+**Команда**: Masterskaya Ambasada
