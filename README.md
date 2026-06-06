@@ -10,7 +10,7 @@
 
 ## 📋 Общее описание
 
-Backend обеспечивает REST API для работы с проектами, командой, контактами и контентом сайта. Система поддерживает 4 языка, реализует кэширование через Redis и обеспечивает безопасность через JWT авторизацию, rate limiting и CSP защиту.
+Backend обеспечивает REST API для работы с проектами, командой, контактами и контентом сайта. Система поддерживает 3 языка, реализует кэширование через Redis и обеспечивает безопасность через JWT авторизацию, rate limiting и CSP защиту.
 
 ### 🎯 Ключевые возможности
 
@@ -122,7 +122,8 @@ feature/* → PR в develop
 ### Требования
 - Docker 20.10+ и Docker Compose 2.0+
 - Git для клонирования репозитория
-- Порт 8000 должен быть свободен
+- **Development**: порт 8000 должен быть свободен
+- **Production**: порты 80 и 443 должны быть свободны (для Caddy reverse proxy)
 
 ### Установка и запуск
 
@@ -153,26 +154,18 @@ docker compose logs web
 <details>
 <summary><b>📖 Подробная инструкция по установке и деплою</b></summary>
 
+#### Используемые порты
+
+**Development:**
+- **8000** - Django development server (пробрасывается на хост)
+
+**Production:**
+- **80** - HTTP (через Caddy reverse proxy)
+- **443** - HTTPS (через Caddy reverse proxy с автоматическим SSL)
+- **8000** - Django внутри Docker сети (не пробрасывается наружу, доступ через Caddy)
+- **8080** - Dozzle (Docker container viewer, доступ внутри сети на `/dozzle/*`)
+
 #### Разработка (Development)
-
-```bash
-# Запуск с hot-reload
-docker compose up
-
-# Или в фоновом режиме
-docker compose up -d
-
-# Просмотр логов
-docker compose logs -f web
-
-# Запуск тестов
-docker compose run --rm web pytest
-
-# С coverage отчётом
-docker compose run --rm web pytest --cov=backend --cov-report=html
-```
-
-#### Production Деплой
 
 **Pre-requisites для production деплоя:**
 - SSH доступ к production серверу
@@ -415,11 +408,11 @@ docker compose exec -it web python backend/manage.py shell
 
 ### Доступ к документации
 
-| Документация | URL | Описание |
-|--------------|-----|----------|
-| **Swagger UI** | `http://localhost:8000/api/docs/` | Интерактивная документация |
-| **ReDoc** | `http://localhost:8000/api/redoc/` | Статическая документация |
-| **OpenAPI Schema** | `http://localhost:8000/api/schema/` | RAW JSON схема |
+| Документация | URL | Описание             |
+|--------------|-----|----------------------|
+| **Swagger UI** | `http://localhost:8000/api/docs/` | Swagger документация |
+| **ReDoc** | `http://localhost:8000/api/redoc/` | ReDoc документация   |
+| **OpenAPI Schema** | `http://localhost:8000/api/schema/` | RAW JSON схема       |
 
 ### Основные эндпоинты API
 
@@ -772,10 +765,16 @@ docker compose up -d --force-recreate
 
 ### Project Management
 
+- **Оксана Шубина** — Менеджер Мастерской ЯП (@oksshubina)
 - **Юлия Воложина** — Project Manager (@Yulia_Volozhina) — GitHub: https://github.com/YuliyaVo
+
+### DevOps команда
+
+- **Александр Рассоха** — DevOps Engineer (@rassoalex) — GitHub: https://github.com/proboard
 
 ### Backend команда
 
+- **Валерий Щепак** — Наставник Python (@kmvpw)	— GitHub: https://github.com/kmvpw
 - **Дмитрий Радюк** — Team Lead (@DzzmitryR) — GitHub: https://github.com/Dzmitry-Radziuk
 - **Валерия Луговина** — Backend Developer (@rjts4) — GitHub: https://github.com/Va-agh
 - **Андрей Головушкин** — Backend Developer (@Frenky_19) — GitHub: https://github.com/Frenky19
@@ -785,12 +784,20 @@ docker compose up -d --force-recreate
 - **Игорь Моисеев** — Backend Developer (@Igormaximich) — GitHub: https://github.com/MoiseevIgorPython
 - **Сергей Липатов** — Backend Developer (@serg231178) — GitHub: https://github.com/SergLipatov
 
-### DevOps команда
+### Frontend команда
 
-- **Александр Рассоха** — DevOps Engineer (@rassoalex) — GitHub: https://github.com/proboard
+- **Татьяна Шадрина** — Наставник Web (@ta_nett) — GitHub: https://github.com/tanett
+- **Дмитрий Лошаков** — Team Lead (@rost_bear) — GitHub: https://github.com/Rostbear61
+- **Лидия Липкина** — Frontend Developer (@Lidylip) — GitHub: https://github.com/LidiaLil
+- **Александр Леонтьев** — Frontend Developer (@leo14hulk) — GitHub: https://github.com/Alex14hulk
+- **Максим Котюков** — Frontend Developer (@maksim_k_ak) — GitHub: https://github.com/maksim533
+- **Егор Пузырев** — Frontend Developer (@egorpuzyr) — GitHub: https://github.com/egorpuz
+- **Александр Зиньков** — Frontend Developer (@zinkov_27) — GitHub: https://github.com/h3L1x1
+- **Елена Ишмухаметова** — Frontend Developer (@renbiw) — GitHub: https://github.com/renbiw
 
 ### QA команда
 
+- **Василий Беляков** — Наставник QA (@burzumba)
 - **Денис Костомаркин** — QA Engineer (@DenisK_qa) — GitHub: https://github.com/Denis-Kostomarkin
 - **Владислав Бердников** — QA Engineer (@BugReaper) — GitHub: https://github.com/vlad-berd
 - **Елизавета Макарова** — QA Engineer (@cradlesound) — GitHub: https://github.com/elizavetamakarovavn-netizen
