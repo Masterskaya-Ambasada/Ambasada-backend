@@ -1,7 +1,7 @@
 from contacts.models import ContactSocialLink
-from home.models import HomePageContent
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
+from home.models import HomePageContent
 
 from site_config.cache import clear_config_cache
 from site_config.models import SiteConfig

@@ -7,4 +7,4 @@ class ContactsConfig(AppConfig):
     verbose_name = _('Обратная связь и соцсети')
 
     def ready(self):
-        import contacts.signals  # noqa
+        pass
