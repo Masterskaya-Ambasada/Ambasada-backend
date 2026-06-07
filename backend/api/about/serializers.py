@@ -43,7 +43,13 @@ class AboutPageSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
 
-        lang = request.query_params.get('lang', 'ru') if request else 'ru'
+        from django.utils.translation import get_language_from_request
+
+        lang = 'ru'
+        if request:
+            lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        lang = lang.lower()
+
         cached_config = get_site_config_cached(language=lang) or {}
 
         values = self.context.get('values', instance.values.all())[:4]

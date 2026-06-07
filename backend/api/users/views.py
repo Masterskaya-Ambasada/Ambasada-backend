@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.utils import translation
+from django.utils.translation import get_language_from_request
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 
@@ -16,3 +18,9 @@ class TeamListView(ListAPIView):
     queryset = User.objects.public().order_by('id')
     serializer_class = TeamMemberSerializer
     permission_classes = [AllowAny]
+
+    def dispatch(self, request, *args, **kwargs):
+        lang = request.GET.get('lang') or get_language_from_request(request)
+
+        with translation.override(lang):
+            return super().dispatch(request, *args, **kwargs)

@@ -1,4 +1,6 @@
 from contacts.models import ContactPageContent
+from django.utils import translation  # Импортируем модуль translation
+from django.utils.translation import get_language_from_request  # Импортируем утилиту для заголовков
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -28,18 +30,24 @@ class ContactView(APIView):
 
     def post(self, request, *args, **kwargs):
         """Создаёт запрос обратной связи со встроенной валидацией антиспама."""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        lang = request.query_params.get('lang') or get_language_from_request(request)
 
-        return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
+        with translation.override(lang):
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+            return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
         """Возвращает текст пожертвований."""
-        content = ContactPageContent.objects.filter(is_active=True).first()
+        lang = request.query_params.get('lang') or get_language_from_request(request)
 
-        return Response(
-            {
-                'donation_text': (ContactPageContentSerializer(content).data['donation_text'] if content else ''),
-            }
-        )
+        with translation.override(lang):
+            content = ContactPageContent.objects.filter(is_active=True).first()
+
+            return Response(
+                {
+                    'donation_text': (ContactPageContentSerializer(content).data['donation_text'] if content else ''),
+                }
+            )
