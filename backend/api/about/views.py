@@ -1,6 +1,8 @@
 from about.models import AboutPage
 from api.schemas.about_schemas import about_page_schema_decorator
 from django.contrib.auth import get_user_model
+from django.utils import translation
+from django.utils.translation import get_language_from_request
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -19,24 +21,27 @@ class AboutAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        about = AboutPage.objects.prefetch_related('paragraphs', 'values', 'gallery_images').first()
+        lang = request.query_params.get('lang') or get_language_from_request(request)
 
-        if not about:
-            return Response(
-                {
-                    'status': status.HTTP_404_NOT_FOUND,
-                    'code': 'NOT_FOUND',
-                    'message': _('Информация о сообществе не найдена'),
+        with translation.override(lang):
+            about = AboutPage.objects.prefetch_related('paragraphs', 'values', 'gallery_images').first()
+
+            if not about:
+                return Response(
+                    {
+                        'status': status.HTTP_404_NOT_FOUND,
+                        'code': 'NOT_FOUND',
+                        'message': _('Информация о сообществе не найдена'),
+                    },
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            members = User.objects.public()
+            serializer = AboutPageSerializer(
+                about,
+                context={
+                    'request': request,
+                    'members': members,
                 },
-                status=status.HTTP_404_NOT_FOUND,
             )
-
-        members = User.objects.public()
-        serializer = AboutPageSerializer(
-            about,
-            context={
-                'request': request,
-                'members': members,
-            },
-        )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)

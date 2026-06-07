@@ -25,7 +25,6 @@ class ContactRequestSerializer(serializers.ModelSerializer):
         """Проверка хонейпота перед сохранением."""
         honeypot = attrs.get('contact_preference')
 
-        # Если в поле пришел непустой текст — помечаем как спам
         if honeypot is not None and honeypot.strip() != '':
             attrs['is_spam'] = True
         else:
