@@ -243,7 +243,7 @@ TIME_ZONE = 'Europe/Moscow'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']
 
 _COLLECTSTATIC_DRYRUN = config(
@@ -251,10 +251,16 @@ _COLLECTSTATIC_DRYRUN = config(
     cast=bool,
     default=False,
 )
-STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
+
+if _COLLECTSTATIC_DRYRUN:
+    STATIC_ROOT = str(BASE_DIR / '.static')
+elif APP_ENV == 'production':
+    STATIC_ROOT = '/var/www/django/static'
+else:
+    STATIC_ROOT = str(BASE_DIR / 'staticfiles')
 
 # Media files (User uploaded content)
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DIR / 'media')
 
 
