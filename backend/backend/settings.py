@@ -18,6 +18,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 APP_ENV = config('APP_ENV', default='development')
 
+CSP_IMG_SRC = ("'self'", 'data:')
+
 
 if APP_ENV == 'production':
     DEBUG = False
@@ -28,7 +30,6 @@ if APP_ENV == 'production':
     CSP_DEFAULT_SRC = ("'self'",)
     CSP_SCRIPT_SRC = ("'self'",)
     CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
-    CSP_IMG_SRC = ("'self'", 'data:')
     CSP_FONT_SRC = ("'self'",)
     CSP_CONNECT_SRC = ("'self'",)
     CSP_FRAME_ANCESTORS = ("'none'",)
@@ -104,6 +105,7 @@ INSTALLED_APPS = [
     'api',
     'site_config.apps.SiteConfigConfig',
     'contacts',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -112,6 +114,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'core.middleware.AdminLoginThrottleMiddleware',
+    'core.middleware.FrontendLocaleNormalizeMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -231,6 +234,7 @@ MODELTRANSLATION_FALLBACK_VALUES = None
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
+MODELTRANSLATION_CLEAN_FIELDS = True
 
 LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
 
@@ -240,17 +244,24 @@ TIME_ZONE = 'Europe/Moscow'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']
 
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
     cast=bool,
     default=False,
 )
-STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
+
+if _COLLECTSTATIC_DRYRUN:
+    STATIC_ROOT = str(BASE_DIR / '.static')
+elif APP_ENV == 'production':
+    STATIC_ROOT = '/var/www/django/static'
+else:
+    STATIC_ROOT = str(BASE_DIR / 'staticfiles')
 
 # Media files (User uploaded content)
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DIR / 'media')
 
 

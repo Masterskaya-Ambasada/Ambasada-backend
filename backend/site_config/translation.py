@@ -14,4 +14,7 @@ class SiteConfigTranslationOptions(TranslationOptions):
         'privacy_policy',
         'cookie_message',
         'cookie_button_text',
+        'team_title',
+        'main_team_button_label',
+        'about_team_button_label',
     )

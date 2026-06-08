@@ -39,12 +39,12 @@ class TeamMemberSerializer(serializers.ModelSerializer):
     """Для публичных блоков команды на сайте."""
 
     name = serializers.CharField(source='full_name', read_only=True)
-    position = serializers.CharField(read_only=True)
+    role = serializers.CharField(read_only=True)
     photo = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'position', 'photo')
+        fields = ('id', 'name', 'role', 'photo')
 
     def get_photo(self, obj):
         if not obj.photo:

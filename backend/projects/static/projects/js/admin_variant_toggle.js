@@ -166,6 +166,54 @@ document.addEventListener('DOMContentLoaded', () => {
             padding: 12px 20px !important;
             border-bottom: 1px solid #cbd5e1 !important;
         }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
+            background: #1e1e1e !important;
+            border-color: #2d2d2d !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
+            background: #252526 !important;
+            color: #cbd5e1 !important;
+            border-bottom-color: #2d2d2d !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module {
+            background: #1e1e1e !important;
+            border-color: #2d2d2d !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 {
+            background: #2d2d2d !important;
+            color: #e2e8f0 !important;
+            border-bottom-color: #2d2d2d !important;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
+                background: #1e1e1e !important;
+                border-color: #2d2d2d !important;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
+                background: #252526 !important;
+                color: #cbd5e1 !important;
+                border-bottom-color: #2d2d2d !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module {
+                background: #1e1e1e !important;
+                border-color: #2d2d2d !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 {
+                background: #2d2d2d !important;
+                color: #e2e8f0 !important;
+                border-bottom-color: #2d2d2d !important;
+            }
+        }
     `;
     document.head.appendChild(style);
 })();

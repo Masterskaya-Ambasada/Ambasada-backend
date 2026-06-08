@@ -21,8 +21,24 @@ class ContactRequestSerializer(serializers.ModelSerializer):
             'contact_preference',
         ]
 
+    def validate(self, attrs):
+        """Проверка хонейпота перед сохранением."""
+        honeypot = attrs.get('contact_preference')
+
+        if honeypot is not None and honeypot.strip() != '':
+            attrs['is_spam'] = True
+        else:
+            attrs['is_spam'] = False
+
+        attrs.pop('contact_preference', None)
+        return attrs
+
     def create(self, validated_data):
-        validated_data.pop('contact_preference', None)
+        is_spam = validated_data.pop('is_spam', False)
+
+        if is_spam:
+            return ContactRequest(**validated_data)
+
         return super().create(validated_data)
 
 
