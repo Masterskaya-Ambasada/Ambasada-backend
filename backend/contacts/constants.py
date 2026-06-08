@@ -8,7 +8,6 @@ MAX_MESSAGE_LENGTH = 500
 MAX_REASON_LENGTH = 250
 SOCIAL_TYPE_MAX_LENGTH = 32
 MIN_MESSAGE_LENGTH = 20
-DEFAULT_SOCIAL_ORDER = 0
 DONATION_TEXT_PREVIEW_LENGTH = 50
 # =====================================================================
 # ДЕФОЛТНЫЕ ЗНАЧЕНИЯ
