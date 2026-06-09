@@ -1,5 +1,5 @@
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.core.validators import EmailValidator, MaxLengthValidator, MinLengthValidator, URLValidator
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -125,6 +125,7 @@ class ContactSocialLink(models.Model):
         INSTAGRAM = 'instagram', _('Instagram')
         FACEBOOK = 'facebook', _('Facebook')
         LINKEDIN = 'linkedin', _('LinkedIn')
+        EMAIL = 'email', 'Email'
 
     site_config = models.ForeignKey(
         'site_config.SiteConfig',
@@ -139,7 +140,8 @@ class ContactSocialLink(models.Model):
         verbose_name=_('Тип соцсети / мессенджера'),
         help_text=constants.HELP_SOCIAL_TYPE,
     )
-    url = models.URLField(
+    url = models.CharField(
+        max_length=constants.SOCIAL_URL_MAX_LENGTH,
         verbose_name=_('Ссылка'),
         help_text=constants.HELP_SOCIAL_URL,
     )
@@ -175,7 +177,7 @@ class ContactSocialLink(models.Model):
         ]
 
     def clean(self):
-        """Гарантирует привязку к дефолтному конфигу, если запись создается напрямую."""
+        """Проверяет привязку к настройкам сайта и формат ссылки."""
         super().clean()
 
         if not self.site_config_id:
@@ -183,6 +185,22 @@ class ContactSocialLink(models.Model):
             if not site_config:
                 raise ValidationError({NON_FIELD_ERRORS: constants.ERROR_MISSING_SITE_CONFIG})
             self.site_config = site_config
+        self.url = self.url.strip()
+        if self.social_type == self.SocialType.EMAIL:
+            try:
+                self._validate_email_url(self.url)
+            except ValidationError as error:
+                raise ValidationError({'url': error.messages}) from error
+            return
+        try:
+            URLValidator()(self.url)
+        except ValidationError as error:
+            raise ValidationError({'url': error.messages}) from error
+
+    @staticmethod
+    def _validate_email_url(value: str) -> None:
+        """Проверяет email-адрес."""
+        EmailValidator()(value)
 
     def __str__(self):
         return f'{self.get_social_type_display()} - {self.url}'
