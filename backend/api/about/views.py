@@ -42,5 +42,4 @@ class AboutAPIView(APIView):
                 'members': members,
             },
         )
-        logger.info('Данные для страницы О нас получены.')
         return Response(serializer.data, status=status.HTTP_200_OK)

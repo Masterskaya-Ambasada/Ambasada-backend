@@ -32,20 +32,28 @@ class ContactView(APIView):
 
     def post(self, request, *args, **kwargs):
         """Создаёт запрос обратной связи со встроенной валидацией антиспама."""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            logger.info('Пользователь успешно отправил запрос обратной связи.')
+            return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
+        except Exception as exc:
+            logger.error(f"Ошибка {exc} при запросе")
+            raise
 
     def get(self, request, *args, **kwargs):
         """Возвращает текст пожертвований."""
-        content = ContactPageContent.objects.filter(is_active=True).first()
-        if not content:
-            logger.warning('Объект ContactPageContent не найден.')
+        try:
+            content = ContactPageContent.objects.filter(is_active=True).first()
+            if not content:
+                logger.warning('Объект ContactPageContent не найден.')
 
-        return Response(
-            {
-                'donation_text': (ContactPageContentSerializer(content).data['donation_text'] if content else ''),
-            }
-        )
+            return Response(
+                {
+                    'donation_text': (ContactPageContentSerializer(content).data['donation_text'] if content else ''),
+                }
+            )
+        except Exception as exc:
+            logger.exception(f"Ошибка {exc} при запросе")
+            raise

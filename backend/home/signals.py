@@ -1,7 +1,10 @@
+import logging
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 from .models import HomePageContent
+
+logger = logging.getLogger(__name__)
 
 
 @receiver(pre_save, sender=HomePageContent)
@@ -13,6 +16,7 @@ def delete_old_hero_images_on_change(sender, instance, **kwargs):
     try:
         old_instance = HomePageContent.objects.get(pk=instance.pk)
     except HomePageContent.DoesNotExist:
+        logger.warning(f"HomePageContent с ID {instance.pk} не найден при обновлении.")
         return
 
     image_fields = ['image_left', 'image_right']
@@ -24,3 +28,6 @@ def delete_old_hero_images_on_change(sender, instance, **kwargs):
         if old_image and old_image.name != new_image.name:
             if old_image.storage.exists(old_image.name):
                 old_image.storage.delete(old_image.name)
+                logger.info(f"Файл удален: {old_image.name}")
+            else:
+                logger.warning(f"Файл не найден: {old_image.name}")

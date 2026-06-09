@@ -23,5 +23,5 @@ class InitView(APIView):
 
         if data is not None:
             return Response(data, status=status.HTTP_200_OK)
-        logger.warning('Конфигурация сайта не найдена в кеше/БД.')
+        logger.warning('Конфигурация сайта не найдена в кэше/БД.')
         return Response(ERROR_RESPONSE_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)

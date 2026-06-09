@@ -117,6 +117,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'site_config.middleware.CurrentUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -325,8 +326,8 @@ LOGGING = {
         'file': {
             'class': 'logging.FileHandler',
             'formatter': 'console',
-            'filters': ['require_debug_false'],
-            'level': 'WARNING',
+            # 'filters': ['require_debug_false'],
+            'level': 'INFO',
             'filename': 'debug.log',
         },
     },
@@ -334,7 +335,7 @@ LOGGING = {
         # КОРНЕВОЙ ЛОГГЕР: Ловит все логи из нашего кастомного кода
         '': {
             'handlers': ['console', 'file'],
-            'level': 'INFO', 
+            'level': 'INFO',
         },
         # Django internals
         'django': {
