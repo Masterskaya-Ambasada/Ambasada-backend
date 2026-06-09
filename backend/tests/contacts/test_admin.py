@@ -42,7 +42,7 @@ def test_contact_social_link_admin_add_shows_order_error(client, admin_user, sit
                 '_save': 'Сохранить',
             },
         )
-    
+
     assert "unique_site_config_social_order" in str(exc_info.value)
     assert ContactSocialLink.objects.count() == 1
 
