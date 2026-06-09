@@ -7,7 +7,6 @@ MAX_NAME_LENGTH = 255
 MAX_MESSAGE_LENGTH = 500
 MAX_REASON_LENGTH = 250
 SOCIAL_TYPE_MAX_LENGTH = 32
-SOCIAL_URL_MAX_LENGTH = 128
 MIN_MESSAGE_LENGTH = 20
 DONATION_TEXT_PREVIEW_LENGTH = 50
 # =====================================================================
@@ -29,7 +28,7 @@ HELP_CONTENT_IS_ACTIVE = _('Может быть активен только од
 
 # Блок: ContactSocialLink
 HELP_SOCIAL_TYPE = _('Выбор соцсети.')
-HELP_SOCIAL_URL = _('Например: https://t.me/example или email@example.com')
+HELP_SOCIAL_URL = _('Например: https://t.me/example')
 HELP_SOCIAL_IS_ACTIVE = _('Если включено — отображается на сайте. Иначе скрывается без удаления')
 
 # =====================================================================
