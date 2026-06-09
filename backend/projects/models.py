@@ -40,6 +40,7 @@ from projects.constants import (
     PROJECT_MEDIA_DIRECTORY,
     PROJECT_SLUG_MAX_LENGTH,
     REFERENCE_SLUG_MAX_LENGTH,
+    STRING_LIST_HELP,
     TITLE_MAX_LENGTH,
     URL_MAX_LENGTH,
 )
@@ -576,9 +577,7 @@ class ProjectContentBlock(models.Model):
         schema=LIST_SCHEMA,
         default=list,
         blank=True,
-        help_text=_(
-            'Слева вводите тезисы, а справа отображается технический JSON-код для системы. Его можно не трогать.'
-        ),
+        help_text=_(STRING_LIST_HELP),
     )
     text = models.TextField(
         _('Текст'),

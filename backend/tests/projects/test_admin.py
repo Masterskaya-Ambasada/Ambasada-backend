@@ -1,11 +1,13 @@
 from base64 import b64decode
+from pathlib import Path
 
 import pytest
 from django.contrib import admin
+from django.contrib.staticfiles import finders
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms.models import inlineformset_factory
 from django.test import override_settings
-from projects.admin import ProjectAdmin, ProjectAdminForm
+from projects.admin import ProjectAdmin
 from projects.admin_forms import ProjectContentBlockInlineFormSet
 from projects.models import Project, ProjectContentBlock
 
@@ -190,6 +192,15 @@ def test_project_admin_uses_filter_horizontal_for_tags():
     project_admin = ProjectAdmin(Project, admin.site)
 
     assert project_admin.filter_horizontal == ('tags',)
+
+
+def test_project_admin_hides_jsonform_source_textarea():
+    """Проверяет, что техническое textarea django-jsonform скрыто от редактора."""
+    css_path = finders.find('projects/css/admin_custom.css')
+    css = Path(css_path).read_text(encoding='utf-8')
+
+    assert 'textarea[data-django-jsonform]' in css
+    assert 'display: none !important' in css
 
 
 @pytest.mark.django_db

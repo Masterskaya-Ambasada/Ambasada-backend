@@ -21,6 +21,7 @@ STRING_LIST_MAX_ITEMS = 20
 STRING_LIST_ITEM_MAX_LENGTH = 200
 BUTTON_TYPE_DOWNLOAD = 'download'
 BUTTON_TYPE_REDIRECT = 'redirect'
+STRING_LIST_HELP = 'Добавляйте тезисы отдельными пунктами через Add item.'
 
 PROJECT_COVER_IMAGE_HELP = 'Загрузите обложку проекта. Формат: JPG, PNG или WEBP, размер до 20 МБ.'
 PROJECT_GALLERY_IMAGE_HELP = 'Загрузите изображение карусели проекта. Формат: JPG, PNG или WEBP, размер до 20 МБ.'
