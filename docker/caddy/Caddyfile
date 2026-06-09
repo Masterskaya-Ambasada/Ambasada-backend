@@ -1,3 +1,4 @@
+
 # production instance of reverse_proxy
 # this caddy works in docker network with production
 # database and backend instances.
@@ -26,8 +27,8 @@
 				path /static/* /media/*
 			}
 			key {remote_host}
-			events 500
-			window 10s
+			events {$CADDY_RATE_STATIC_EVENTS:500}
+			window {$CADDY_RATE_STATIC_WINDOW:10s}
 		}
 
 		zone dynamic {
@@ -35,8 +36,8 @@
 				not path /static/* /media/*
 			}
 			key {remote_host}
-			events 300
-			window 3s
+			events {$CADDY_RATE_DYNAMIC_EVENTS:300}
+			window {$CADDY_RATE_DYNAMIC_WINDOW:3s}
 		}
 
 		log_key

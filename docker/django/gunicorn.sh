@@ -26,7 +26,13 @@ python /code/backend/manage.py collectstatic --noinput --clear
 python /code/backend/manage.py compilemessages
 
 # create superuser
-python /code/backend/manage.py createsuperuser --no-input --full_name Admin || true
+python /code/backend/manage.py createsuperuser \
+    --no-input \
+    --email "$DJANGO_SUPERUSER_EMAIL" \
+    --username "$DJANGO_SUPERUSER_EMAIL" \
+    --first_name "$DJANGO_SUPERUSER_FIRST_NAME" \
+    --last_name "$DJANGO_SUPERUSER_LAST_NAME" \
+|| true
 
 
 # Precompress static files with brotli and gzip.

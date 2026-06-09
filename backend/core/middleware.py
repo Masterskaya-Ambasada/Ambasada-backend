@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.utils.deprecation import MiddlewareMixin
@@ -15,9 +16,9 @@ class AdminLoginThrottleMiddleware:
     Блокирует IP на 5 минут после 10 неудачных попыток в минуту.
     """
 
-    MAX_ATTEMPTS = 10
-    WINDOW_SECONDS = 60
-    BLOCK_SECONDS = 300
+    MAX_ATTEMPTS = int(getattr(settings, 'ADMIN_LOGIN_MAX_ATTEMPTS', 10))
+    WINDOW_SECONDS = int(getattr(settings, 'ADMIN_LOGIN_WINDOW_SECONDS', 60))  # attempt counting window
+    BLOCK_SECONDS = int(getattr(settings, 'ADMIN_LOGIN_BLOCK_SECONDS', 300))  # blocking time after exceeding
 
     def __init__(self, get_response):
         """Инициализация middleware."""
