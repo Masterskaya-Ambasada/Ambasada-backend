@@ -121,11 +121,11 @@ class ContactSocialLink(models.Model):
     """Ссылки на соцсети и мессенджеры проекта."""
 
     class SocialType(models.TextChoices):
-        TELEGRAM = 'telegram', _('Telegram')
-        INSTAGRAM = 'instagram', _('Instagram')
-        FACEBOOK = 'facebook', _('Facebook')
-        LINKEDIN = 'linkedin', _('LinkedIn')
-        EMAIL = 'email', _('Email')
+        TELEGRAM = 'telegram', 'Telegram'
+        INSTAGRAM = 'instagram', 'Instagram'
+        FACEBOOK = 'facebook', 'Facebook'
+        LINKEDIN = 'linkedin', 'LinkedIn'
+        EMAIL = 'email', 'Email'
 
     site_config = models.ForeignKey(
         'site_config.SiteConfig',
