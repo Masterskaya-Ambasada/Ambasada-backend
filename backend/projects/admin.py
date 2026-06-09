@@ -147,7 +147,7 @@ class ProjectBlockButtonInline(NestedTabularInline):
     model = ProjectBlockButton
     extra = 0
     fk_name = 'block'
-    fields = ('order', 'label', 'type', 'url')
+    fields = ('order', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl', 'type', 'url')
 
 
 class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):

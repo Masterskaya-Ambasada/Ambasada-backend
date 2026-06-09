@@ -7,7 +7,7 @@ from django.contrib.staticfiles import finders
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms.models import inlineformset_factory
 from django.test import override_settings
-from projects.admin import ProjectAdmin
+from projects.admin import ProjectAdmin, ProjectBlockButtonInline
 from projects.admin_forms import ProjectContentBlockInlineFormSet
 from projects.models import Project, ProjectContentBlock
 
@@ -201,6 +201,20 @@ def test_project_admin_hides_jsonform_source_textarea():
 
     assert 'textarea[data-django-jsonform]' in css
     assert 'display: none !important' in css
+
+
+def test_project_block_button_inline_uses_translated_label_fields():
+    """Проверяет, что подписи кнопок контентного блока редактируются на всех языках."""
+    assert ProjectBlockButtonInline.fields == (
+        'order',
+        'label_ru',
+        'label_en',
+        'label_sr_latn',
+        'label_sr_cyrl',
+        'type',
+        'url',
+    )
+    assert 'label' not in ProjectBlockButtonInline.fields
 
 
 @pytest.mark.django_db

@@ -131,3 +131,24 @@ def test_project_detail_returns_buttons_in_expected_order(
     buttons = response.json()['content_blocks'][2]['buttons']
     assert [button['label'] for button in buttons] == ['Download PDF', 'Visit page']
     assert [button['type'] for button in buttons] == ['download', 'redirect']
+
+
+@pytest.mark.django_db
+def test_project_detail_returns_translated_block_button_label(
+    api_client,
+    published_project,
+    list_block,
+    two_images_block,
+    buttons_block,
+):
+    """Проверяет, что подпись кнопки контентного блока переводится в детальной ручке проекта."""
+    first_button = buttons_block.buttons.order_by('order').first()
+    first_button.label_sr_latn = 'Preuzmi PDF'
+    first_button.save(update_fields=['label_sr_latn'])
+
+    url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
+    response = api_client.get(f'{url}?lang=sr-latn')
+
+    assert response.status_code == 200
+    buttons = response.json()['content_blocks'][2]['buttons']
+    assert buttons[0]['label'] == 'Preuzmi PDF'
