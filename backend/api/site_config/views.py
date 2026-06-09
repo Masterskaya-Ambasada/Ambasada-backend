@@ -1,4 +1,4 @@
-from django.utils.translation import get_language_from_request  # Импортируем утилиту
+from django.utils.translation import get_language_from_request
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
