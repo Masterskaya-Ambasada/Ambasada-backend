@@ -1,6 +1,6 @@
 from contacts.models import ContactPageContent
-from django.utils import translation  # Импортируем модуль translation
-from django.utils.translation import get_language_from_request  # Импортируем утилиту для заголовков
+from django.utils import translation
+from django.utils.translation import get_language_from_request
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.permissions import AllowAny
