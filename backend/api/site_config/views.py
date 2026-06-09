@@ -1,3 +1,4 @@
+from django.utils.translation import get_language_from_request  # Импортируем утилиту
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -16,7 +17,9 @@ class InitView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        data = get_site_config_cached()
+        lang = request.query_params.get('lang') or get_language_from_request(request)
+
+        data = get_site_config_cached(language=lang)
 
         if data is not None:
             return Response(data, status=status.HTTP_200_OK)

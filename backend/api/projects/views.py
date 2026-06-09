@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from django.db.models import Prefetch, Q
+from django.utils import translation
+from django.utils.translation import get_language_from_request
 from projects.models import (
     Project,
     ProjectBlockButton,
@@ -15,7 +17,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.projects.constants import (
-    PATH_PARAM_PROJECT_ID,
+    PATH_PARAM_PROJECT_SLUG,
     PROJECT_TYPES_RESPONSE_KEY,
     QUERY_PARAM_PROJECT_TYPE,
     QUERY_PARAM_SEARCH,
@@ -44,14 +46,12 @@ class ProjectListView(ListAPIView):
     serializer_class = ProjectCardSerializer
     pagination_class = ProjectLimitOffsetPagination
 
-    def _normalize_tag_filters(self) -> list[str]:
-        """
-        Возвращает список значений tag из query params.
+    def dispatch(self, request, *args, **kwargs):
+        lang = request.GET.get('lang') or get_language_from_request(request)
+        with translation.override(lang):
+            return super().dispatch(request, *args, **kwargs)
 
-        Поддерживает оба формата:
-        - повторяемый параметр: ?tag=urban&tag=belgrade
-        - CSV в одном параметре: ?tag=urban,belgrade
-        """
+    def _normalize_tag_filters(self) -> list[str]:
         tags: list[str] = []
         for raw_tag in self.request.query_params.getlist(QUERY_PARAM_TAG):
             for tag in raw_tag.split(TAG_QUERY_VALUE_SEPARATOR):
@@ -61,7 +61,6 @@ class ProjectListView(ListAPIView):
         return tags
 
     def get_queryset(self):
-        """Собирает queryset опубликованных проектов с применением фильтров списка."""
         tag_queryset = Tag.objects.order_by('label', 'pk')
         queryset = (
             Project.objects.filter(is_published=True)
@@ -90,10 +89,14 @@ class ProjectDetailView(RetrieveAPIView):
     permission_classes = (AllowAny,)
     serializer_class = ProjectDetailSerializer
     lookup_field = 'slug'
-    lookup_url_kwarg = PATH_PARAM_PROJECT_ID
+    lookup_url_kwarg = PATH_PARAM_PROJECT_SLUG
+
+    def dispatch(self, request, *args, **kwargs):
+        lang = request.GET.get('lang') or get_language_from_request(request)
+        with translation.override(lang):
+            return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        """Собирает queryset опубликованных проектов для детального просмотра."""
         tag_queryset = Tag.objects.order_by('label', 'pk')
         button_queryset = ProjectBlockButton.objects.order_by('order', 'pk')
         gallery_queryset = ProjectGalleryImage.objects.order_by('order', 'pk')
@@ -119,9 +122,12 @@ class ProjectTagListView(APIView):
 
     def get(self, request, *args, **kwargs):
         """Возвращает локализованный список тегов опубликованных проектов."""
-        queryset = Tag.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
-        tags = [tag.label for tag in queryset]
-        return Response(tags)
+        lang = request.query_params.get('lang') or get_language_from_request(request)
+
+        with translation.override(lang):
+            queryset = Tag.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
+            tags = [tag.label for tag in queryset]
+            return Response(tags)
 
 
 @PROJECT_TYPES_SCHEMA
@@ -132,6 +138,9 @@ class ProjectTypeListView(APIView):
 
     def get(self, request, *args, **kwargs):
         """Возвращает локализованный список типов опубликованных проектов."""
-        queryset = ProjectType.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
-        serializer = ProjectTypeSerializer(queryset, many=True)
-        return Response({PROJECT_TYPES_RESPONSE_KEY: serializer.data})
+        lang = request.query_params.get('lang') or get_language_from_request(request)
+
+        with translation.override(lang):
+            queryset = ProjectType.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
+            serializer = ProjectTypeSerializer(queryset, many=True)
+            return Response({PROJECT_TYPES_RESPONSE_KEY: serializer.data})

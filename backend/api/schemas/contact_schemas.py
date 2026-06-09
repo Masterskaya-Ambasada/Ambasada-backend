@@ -1,6 +1,13 @@
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, extend_schema_view, inline_serializer
+from drf_spectacular.utils import (
+    OpenApiResponse,
+    extend_schema,
+    extend_schema_view,
+    inline_serializer,
+)
 from rest_framework import serializers
+
+from api.contacts.serializers import ContactRequestSerializer
 
 contact_view_schemas = extend_schema_view(
     post=extend_schema(
@@ -10,11 +17,13 @@ contact_view_schemas = extend_schema_view(
             'Поле `contact_preference` — техническое антиспам-поле (honeypot). '
             'Если поле заполнено, запрос считается спамом и игнорируется.'
         ),
+        request=ContactRequestSerializer,
         responses={
             201: inline_serializer(
                 name='ContactCreateResponse',
                 fields={'detail': serializers.CharField()},
             ),
+            400: OpenApiResponse(description=_('Ошибка валидации формы')),
         },
     ),
     get=extend_schema(

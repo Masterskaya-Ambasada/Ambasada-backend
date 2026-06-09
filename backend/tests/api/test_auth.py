@@ -31,7 +31,7 @@ class TestAuthApi:
         user_data = response.data['user']
         assert user_data['email'] == email
         assert user_data['name'] == f'{first_name} {last_name}'
-        assert 'role' in user_data
+        assert 'position' in user_data
         assert 'is_staff' in user_data
 
     def test_login_error_message_is_localized(self, api_client, user_factory):

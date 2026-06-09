@@ -1,10 +1,18 @@
 from __future__ import annotations
 
+import shutil
 from collections import defaultdict
+from collections.abc import Iterable
+from pathlib import Path
 
+from core.validators import MediaFileValidator
+from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db import models
-from django.db.models import Max
+from django.db import models, transaction
+from django.db.models import Max, Q
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django_jsonform.models.fields import JSONField
 
@@ -22,9 +30,13 @@ from projects.constants import (
     LABEL_MAX_LENGTH,
     ORDER_STEP,
     PROJECT_BLOCK_FALLBACK_SLUG,
+    PROJECT_BLOCK_IMAGE_HELP,
+    PROJECT_BLOCK_LEFT_IMAGE_HELP,
     PROJECT_BLOCKS_DIRECTORY,
     PROJECT_COVER_DIRECTORY,
+    PROJECT_COVER_IMAGE_HELP,
     PROJECT_GALLERY_DIRECTORY,
+    PROJECT_GALLERY_IMAGE_HELP,
     PROJECT_MEDIA_DIRECTORY,
     PROJECT_SLUG_MAX_LENGTH,
     REFERENCE_SLUG_MAX_LENGTH,
@@ -33,6 +45,143 @@ from projects.constants import (
 )
 
 from .validators import validate_string_list
+
+
+def _is_missing_order(order: int | None) -> bool:
+    """Проверяет, что order не задан и должен быть назначен автоматически."""
+    return order is None or order == DEFAULT_ORDER
+
+
+def _get_current_translation_field_name(field_name: str) -> str:
+    """Возвращает имя переводного поля для текущего языка modeltranslation."""
+    language = (get_language() or settings.MODELTRANSLATION_DEFAULT_LANGUAGE).replace('-', '_')
+    return f'{field_name}_{language}'
+
+
+def _get_max_orders(
+    queryset: models.QuerySet,
+    related_field_name: str,
+    related_ids: Iterable[int],
+) -> dict[int, int]:
+    """Возвращает максимальные order для набора связанных объектов одним запросом."""
+    related_ids = set(related_ids)
+    if not related_ids:
+        return {}
+    related_id_field = f'{related_field_name}_id'
+    rows = (
+        queryset.filter(**{f'{related_id_field}__in': related_ids})
+        .values(related_id_field)
+        .annotate(max_order=Max('order'))
+    )
+    return {row[related_id_field]: row['max_order'] for row in rows if row['max_order'] is not None}
+
+
+def _get_max_order(queryset: models.QuerySet, related_field_name: str, related_id: int) -> int:
+    """Возвращает максимальный order в пределах связанного объекта."""
+    return _get_max_orders(queryset, related_field_name, [related_id]).get(related_id, DEFAULT_ORDER)
+
+
+def _lock_related_rows(
+    model: type[models.Model],
+    related_field_name: str,
+    related_ids: Iterable[int],
+) -> None:
+    """Блокирует связанные объекты, чтобы параллельное автоназначение order не получило одинаковое значение."""
+    related_ids = sorted(set(related_ids))
+    if not related_ids:
+        return
+    related_model = model._meta.get_field(related_field_name).remote_field.model
+    list(related_model._default_manager.select_for_update().filter(pk__in=related_ids).order_by('pk'))
+
+
+def _assign_next_order(instance: models.Model, queryset: models.QuerySet, related_field_name: str) -> None:
+    """Назначает следующий order, если он не задан явно."""
+    if not _is_missing_order(instance.order):
+        return
+    related_id = getattr(instance, f'{related_field_name}_id')
+    if related_id is None:
+        return
+    instance.order = _get_max_order(queryset, related_field_name, related_id) + ORDER_STEP
+
+
+def _save_with_auto_order_lock(
+    instance: models.Model,
+    queryset: models.QuerySet,
+    related_field_name: str,
+    save_callback,
+    *args,
+    **kwargs,
+) -> None:
+    """Сохраняет объект, блокируя родителя на время автоназначения order."""
+    if not _is_missing_order(instance.order):
+        save_callback(*args, **kwargs)
+        return
+    related_id = getattr(instance, f'{related_field_name}_id')
+    with transaction.atomic():
+        if related_id is not None:
+            _lock_related_rows(queryset.model, related_field_name, [related_id])
+        _assign_next_order(instance, queryset, related_field_name)
+        save_callback(*args, **kwargs)
+
+
+def _project_media_path(slug: str) -> Path:
+    """Возвращает безопасный путь к медиа-папке проекта."""
+    media_root = Path(settings.MEDIA_ROOT).resolve()
+    project_dir = (media_root / PROJECT_MEDIA_DIRECTORY / slug).resolve()
+    if not project_dir.is_relative_to(media_root):
+        raise ValidationError(_('Некорректный путь к медиа-папке проекта.'))
+    return project_dir
+
+
+def _delete_project_media_directory(slug: str) -> None:
+    """Удаляет папку проекта из MEDIA_ROOT."""
+    project_dir = _project_media_path(slug)
+    if project_dir.exists():
+        shutil.rmtree(project_dir)
+
+
+def _merge_directories(source: Path, destination: Path) -> None:
+    """Перемещает содержимое source в destination, сохраняя уже существующие новые файлы."""
+    destination.mkdir(parents=True, exist_ok=True)
+    for child in source.iterdir():
+        target = destination / child.name
+        if child.is_dir() and target.is_dir():
+            _merge_directories(child, target)
+            child.rmdir()
+            continue
+        if target.exists():
+            if child.is_dir():
+                shutil.rmtree(child)
+            else:
+                child.unlink()
+            continue
+        shutil.move(str(child), str(target))
+    source.rmdir()
+
+
+def _move_project_media_directory(old_slug: str, new_slug: str) -> None:
+    """Переименовывает медиа папку проекта при изменении slug."""
+    old_dir = _project_media_path(old_slug)
+    if not old_dir.exists():
+        return
+    new_dir = _project_media_path(new_slug)
+    if old_dir == new_dir:
+        return
+    if new_dir.exists():
+        _merge_directories(old_dir, new_dir)
+        return
+    new_dir.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(old_dir), str(new_dir))
+
+
+def _replace_project_media_slug(file_name: str | None, old_slug: str, new_slug: str) -> str | None:
+    """Обновляет slug в сохраненном пути файла проекта."""
+    if not file_name:
+        return file_name
+    old_prefix = f'{PROJECT_MEDIA_DIRECTORY}/{old_slug}/'
+    if not file_name.startswith(old_prefix):
+        return file_name
+    return f'{PROJECT_MEDIA_DIRECTORY}/{new_slug}/{file_name[len(old_prefix):]}'
 
 
 def project_cover_image_path(instance: 'Project', filename: str) -> str:
@@ -56,28 +205,48 @@ class OrderedValidationQuerySet(models.QuerySet):
 
     related_field_name: str | None = None
 
+    def _get_missing_order_related_ids(self, objs: list[models.Model]) -> set[int]:
+        """Возвращает связанные объекты, для которых нужно автоматически назначить order."""
+        if not self.related_field_name:
+            return set()
+        related_id_field = f'{self.related_field_name}_id'
+        return {
+            related_id
+            for obj in objs
+            if _is_missing_order(obj.order) and (related_id := getattr(obj, related_id_field)) is not None
+        }
+
+    def _lock_related_objects(self, related_ids: Iterable[int]) -> None:
+        """Блокирует родительские объекты перед расчетом следующего order."""
+        if not self.related_field_name:
+            return
+        _lock_related_rows(self.model, self.related_field_name, related_ids)
+
     def _set_missing_orders(self, objs: list[models.Model]) -> None:
         """Заполняет пропущенные порядковые номера в пределах связанного объекта."""
         if not self.related_field_name:
             return
         pending_orders: defaultdict[int, int] = defaultdict(int)
-        max_orders: dict[int, int] = {}
         related_field_name = self.related_field_name
+        related_id_field = f'{related_field_name}_id'
+        related_ids = self._get_missing_order_related_ids(objs)
+        max_orders = _get_max_orders(self, related_field_name, related_ids)
         for obj in objs:
-            if obj.order:
+            if not _is_missing_order(obj.order):
                 continue
-            related_id = getattr(obj, f'{related_field_name}_id')
+            related_id = getattr(obj, related_id_field)
             if related_id is None:
                 continue
-            if related_id not in max_orders:
-                max_orders[related_id] = (
-                    self.filter(**{f'{related_field_name}_id': related_id})
-                    .aggregate(max_order=Max('order'))
-                    .get('max_order')
-                    or DEFAULT_ORDER
-                )
             pending_orders[related_id] += ORDER_STEP
-            obj.order = max_orders[related_id] + pending_orders[related_id]
+            obj.order = max_orders.get(related_id, DEFAULT_ORDER) + pending_orders[related_id]
+
+    def _validate_prepared_objects(self, objs: list[models.Model]) -> None:
+        """Выполняет дополнительные проверки после автозаполнения order."""
+
+    def _validate_objects(self, objs: list[models.Model]) -> None:
+        """Выполняет полную валидацию объектов перед bulk_create."""
+        for obj in objs:
+            obj.full_clean()
 
     def bulk_create(
         self,
@@ -90,23 +259,54 @@ class OrderedValidationQuerySet(models.QuerySet):
     ):
         """Проверяет и подготавливает объекты перед массовым созданием."""
         objs = list(objs)
-        self._set_missing_orders(objs)
-        for obj in objs:
-            obj.full_clean()
-        return super().bulk_create(
-            objs,
-            batch_size=batch_size,
-            ignore_conflicts=ignore_conflicts,
-            update_conflicts=update_conflicts,
-            update_fields=update_fields,
-            unique_fields=unique_fields,
-        )
+        with transaction.atomic():
+            self._lock_related_objects(self._get_missing_order_related_ids(objs))
+            self._set_missing_orders(objs)
+            self._validate_prepared_objects(objs)
+            self._validate_objects(objs)
+            return super().bulk_create(
+                objs,
+                batch_size=batch_size,
+                ignore_conflicts=ignore_conflicts,
+                update_conflicts=update_conflicts,
+                update_fields=update_fields,
+                unique_fields=unique_fields,
+            )
 
 
 class ProjectContentBlockQuerySet(OrderedValidationQuerySet):
     """QuerySet для контентных блоков проекта."""
 
     related_field_name = 'project'
+
+    def _validate_prepared_objects(self, objs: list[models.Model]) -> None:
+        super()._validate_prepared_objects(objs)
+        seen_orders = set()
+        order_filters = Q()
+        order_keys_by_project: defaultdict[int, set[int]] = defaultdict(set)
+        for obj in objs:
+            if obj.project_id is None or _is_missing_order(obj.order):
+                continue
+            order_key = (obj.project_id, obj.order)
+            if order_key in seen_orders:
+                raise ValidationError(
+                    {'order': _('Контентные блоки одного проекта не должны иметь одинаковый порядок.')}
+                )
+            seen_orders.add(order_key)
+            order_keys_by_project[obj.project_id].add(obj.order)
+        for project_id, orders in order_keys_by_project.items():
+            order_filters |= Q(project_id=project_id, order__in=orders)
+        if order_filters and self.filter(order_filters).exists():
+            raise ValidationError({'order': _('Контентный блок с таким порядком уже существует в этом проекте.')})
+
+    def _validate_objects(self, objs: list[models.Model]) -> None:
+        """Валидирует блоки без повторных запросов на UniqueConstraint для каждой записи."""
+        for obj in objs:
+            obj._skip_order_duplicate_validation = True
+            try:
+                obj.full_clean(validate_constraints=False)
+            finally:
+                del obj._skip_order_duplicate_validation
 
 
 class ProjectBlockButtonQuerySet(OrderedValidationQuerySet):
@@ -194,7 +394,8 @@ class Project(models.Model):
         _('Обложка'),
         upload_to=project_cover_image_path,
         max_length=URL_MAX_LENGTH,
-        help_text=_('URL главного изображения проекта.'),
+        validators=[MediaFileValidator()],
+        help_text=_(PROJECT_COVER_IMAGE_HELP),
     )
     project_type = models.ForeignKey(
         ProjectType,
@@ -233,6 +434,46 @@ class Project(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    def _get_persisted_slug(self) -> str | None:
+        """Возвращает slug проекта из БД до текущего сохранения."""
+        if self._state.adding or not self.pk:
+            return None
+        return Project.objects.filter(pk=self.pk).values_list('slug', flat=True).first()
+
+    def _sync_media_paths_after_slug_change(self, old_slug: str) -> None:
+        """Обновляет сохраненные пути файлов при переименовании slug проекта."""
+        if old_slug == self.slug:
+            return
+        new_cover_image_name = _replace_project_media_slug(self.cover_image.name, old_slug, self.slug)
+        if new_cover_image_name != self.cover_image.name:
+            self.cover_image.name = new_cover_image_name
+            Project.objects.filter(pk=self.pk).update(cover_image=new_cover_image_name)
+        for gallery_image in self.gallery_images.all():
+            new_image_name = _replace_project_media_slug(gallery_image.image.name, old_slug, self.slug)
+            if new_image_name != gallery_image.image.name:
+                gallery_image.image.name = new_image_name
+                ProjectGalleryImage.objects.filter(pk=gallery_image.pk).update(image=new_image_name)
+        for content_block in self.content_blocks.all():
+            update_fields = {}
+            new_image_name = _replace_project_media_slug(content_block.image.name, old_slug, self.slug)
+            if new_image_name != content_block.image.name:
+                content_block.image.name = new_image_name
+                update_fields['image'] = new_image_name
+            new_left_image_name = _replace_project_media_slug(content_block.left_image.name, old_slug, self.slug)
+            if new_left_image_name != content_block.left_image.name:
+                content_block.left_image.name = new_left_image_name
+                update_fields['left_image'] = new_left_image_name
+            if update_fields:
+                ProjectContentBlock.objects.filter(pk=content_block.pk).update(**update_fields)
+
+    def save(self, *args, **kwargs):
+        """Синхронизирует медиа пути при изменении slug проекта."""
+        old_slug = self._get_persisted_slug()
+        super().save(*args, **kwargs)
+        if old_slug and old_slug != self.slug:
+            self._sync_media_paths_after_slug_change(old_slug)
+            transaction.on_commit(lambda: _move_project_media_directory(old_slug, self.slug))
+
 
 class ProjectGalleryImage(models.Model):
     """Изображение для карусели в верхнем блоке детальной страницы проекта."""
@@ -247,7 +488,8 @@ class ProjectGalleryImage(models.Model):
         _('Изображение'),
         upload_to=project_gallery_image_path,
         max_length=URL_MAX_LENGTH,
-        help_text=_('Изображение для карусели проекта.'),
+        validators=[MediaFileValidator()],
+        help_text=_(PROJECT_GALLERY_IMAGE_HELP),
     )
     order = models.PositiveIntegerField(
         _('Порядок'),
@@ -267,16 +509,7 @@ class ProjectGalleryImage(models.Model):
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок изображения в пределах проекта."""
-        if not self.order:
-            max_order = (
-                ProjectGalleryImage.objects.filter(project=self.project)
-                .aggregate(max_order=Max('order'))
-                .get('max_order')
-                or DEFAULT_ORDER
-            )
-            self.order = max_order + ORDER_STEP
-        self.full_clean()
-        super().save(*args, **kwargs)
+        _save_with_auto_order_lock(self, ProjectGalleryImage.objects, 'project', super().save, *args, **kwargs)
 
 
 class ProjectContentBlock(models.Model):
@@ -326,15 +559,17 @@ class ProjectContentBlock(models.Model):
         _('Основное изображение'),
         upload_to=project_block_image_path,
         max_length=URL_MAX_LENGTH,
+        validators=[MediaFileValidator()],
         blank=True,  # добавил из-за проблем с импортом
-        help_text=_('Основное изображение блока.'),
+        help_text=_(PROJECT_BLOCK_IMAGE_HELP),
     )
     left_image = models.ImageField(
         _('Дополнительное изображение'),
         upload_to=project_block_image_path,
         max_length=URL_MAX_LENGTH,
+        validators=[MediaFileValidator()],
         blank=True,
-        help_text=_('Второе изображение для варианта с двумя картинками.'),
+        help_text=_(PROJECT_BLOCK_LEFT_IMAGE_HELP),
     )
     string_list = JSONField(
         _('Список тезисов'),
@@ -348,20 +583,26 @@ class ProjectContentBlock(models.Model):
     text = models.TextField(
         _('Текст'),
         blank=True,
-        help_text=_('Основной HTML-текст блока.'),
+        help_text=_('Основной текст блока. Обязателен для всех вариантов, поддерживает HTML через редактор.'),
     )
     accented_text = models.TextField(
         _('Акцентный текст'),
         blank=True,
-        help_text=_('Дополнительный акцентный HTML-текст блока.'),
+        help_text=_(
+            'Дополнительный выделенный текст или подпись. Используйте, если в макете нужен акцентный текст; '
+            'иначе поле можно оставить пустым.'
+        ),
     )
 
     class Meta:
         verbose_name = _('Контентный блок проекта')
         verbose_name_plural = _('Контентные блоки проектов')
         ordering = ('order', 'pk')
-        indexes = [
-            models.Index(fields=('project', 'order')),
+        constraints = [
+            models.UniqueConstraint(
+                fields=('project', 'order'),
+                name='unique_project_content_block_order',
+            ),
         ]
 
     def __str__(self) -> str:
@@ -370,23 +611,44 @@ class ProjectContentBlock(models.Model):
     def clean(self) -> None:
         """Проверяет согласованность полей для выбранного варианта блока."""
         super().clean()
+        string_list_field_name = _get_current_translation_field_name('string_list')
         try:
             validate_string_list(self.string_list)
         except ValidationError as error:
-            raise ValidationError({'string_list': error.messages}) from error
+            raise ValidationError({string_list_field_name: error.messages}) from error
+        self._validate_variant_required_fields()
+        if (
+            self.project_id is not None
+            and not _is_missing_order(self.order)
+            and not getattr(self, '_skip_order_duplicate_validation', False)
+        ):
+            duplicate_order_exists = (
+                ProjectContentBlock.objects.filter(project_id=self.project_id, order=self.order)
+                .exclude(pk=self.pk)
+                .exists()
+            )
+            if duplicate_order_exists:
+                raise ValidationError({'order': _('Контентный блок с таким порядком уже существует в этом проекте.')})
+
+    def _validate_variant_required_fields(self) -> None:
+        """Проверяет обязательные поля для выбранного варианта блока."""
+        errors = {}
+        text_field_name = _get_current_translation_field_name('text')
+        string_list_field_name = _get_current_translation_field_name('string_list')
+        if not self.image:
+            errors['image'] = _('Добавьте основное изображение для выбранного варианта блока.')
+        if not self.text:
+            errors[text_field_name] = _('Заполните основной текст для выбранного варианта блока.')
+        if self.variant == self.Variant.IMAGE_WITH_LIST and not self.string_list:
+            errors[string_list_field_name] = _('Добавьте хотя бы один тезис для варианта "Изображение и список".')
+        if self.variant == self.Variant.TWO_IMAGES and not self.left_image:
+            errors['left_image'] = _('Добавьте второе изображение для варианта "Два изображения".')
+        if errors:
+            raise ValidationError(errors)
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок блока в пределах проекта."""
-        if not self.order:
-            max_order = (
-                ProjectContentBlock.objects.filter(project=self.project)
-                .aggregate(max_order=Max('order'))
-                .get('max_order')
-                or DEFAULT_ORDER
-            )
-            self.order = max_order + ORDER_STEP
-        self.full_clean()
-        super().save(*args, **kwargs)
+        _save_with_auto_order_lock(self, ProjectContentBlock.objects, 'project', super().save, *args, **kwargs)
 
 
 class ProjectBlockButton(models.Model):
@@ -440,11 +702,10 @@ class ProjectBlockButton(models.Model):
 
     def save(self, *args, **kwargs):
         """Автоматически назначает порядок кнопки в пределах блока."""
-        if not self.order:
-            max_order = (
-                ProjectBlockButton.objects.filter(block=self.block).aggregate(max_order=Max('order')).get('max_order')
-                or DEFAULT_ORDER
-            )
-            self.order = max_order + ORDER_STEP
-        self.full_clean()
-        super().save(*args, **kwargs)
+        _save_with_auto_order_lock(self, ProjectBlockButton.objects, 'block', super().save, *args, **kwargs)
+
+
+@receiver(post_delete, sender=Project)
+def delete_project_media_directory_on_project_delete(sender, instance: Project, **kwargs) -> None:
+    """Удаляет медиа папку проекта после удаления объекта Project."""
+    transaction.on_commit(lambda: _delete_project_media_directory(instance.slug))

@@ -2,6 +2,7 @@ from about.models import AboutPage, AboutParagraph, GalleryImage, Value
 from api.users.serializers import TeamMemberSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from site_config.cache import get_site_config_cached
 
 User = get_user_model()
 
@@ -33,7 +34,7 @@ class GalleryImageSerializer(serializers.ModelSerializer):
 
 
 class AboutPageSerializer(serializers.ModelSerializer):
-    """Сериализация страницы 'О сообществе'."""
+    """Сериализация страницы 'О сообществе' под строгий JSON-контракт."""
 
     class Meta:
         model = AboutPage
@@ -42,16 +43,20 @@ class AboutPageSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
 
-        values = self.context.get('values', instance.values.all())
+        from django.utils.translation import get_language_from_request
+
+        lang = 'ru'
+        if request:
+            lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        lang = lang.lower()
+
+        cached_config = get_site_config_cached(language=lang) or {}
+
+        values = self.context.get('values', instance.values.all())[:4]
         images = self.context.get('images', instance.gallery_images.all())
         members = self.context.get('members', User.objects.public())
 
         return {
-            'hero': {
-                'title': instance.hero_title,
-                'description': instance.hero_description,
-                # Убрали image_left и image_right отсюда
-            },
             'about_section': {
                 'title': instance.about_title,
                 'paragraphs': AboutParagraphSerializer(
@@ -67,19 +72,15 @@ class AboutPageSerializer(serializers.ModelSerializer):
                 'items': ValueSerializer(values, many=True, context={'request': request}).data,
             },
             'team': {
-                'title': instance.team_title,
+                'title': (cached_config.get('about_team_title') or cached_config.get('team_title') or 'Наша команда'),
                 'members': TeamMemberSerializer(members, many=True, context={'request': request}).data,
                 'action_button': {
-                    'label': instance.team_button_label,
-                    'link': instance.team_button_link,
+                    'label': cached_config.get('about_team_button_label') or 'Присоединиться',
+                    'link': cached_config.get('team_button_link') or '/contacts',
                 },
             },
             'gallery_carousel': {
                 'title': instance.gallery_title,
                 'images': GalleryImageSerializer(images, many=True, context={'request': request}).data,
-            },
-            'contacts': {
-                'email': instance.email,
-                'link': instance.contact_link,
             },
         }

@@ -2,6 +2,7 @@ import re
 
 import magic
 from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import UploadedFile
 from django.utils.translation import gettext_lazy as _
 
 IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
@@ -37,7 +38,7 @@ class MediaFileValidator:
     def __init__(
         self,
         allowed_types: list[str] | None = None,
-        max_size_mb: int = 10,
+        max_size_mb: int = 20,
     ) -> None:
         """Инициализация: разрешенные типы (MIME) и макс. размер в МБ."""
         self.allowed_types = allowed_types or IMAGE_TYPES
@@ -45,8 +46,23 @@ class MediaFileValidator:
         self._max_size_bytes = max_size_mb * 1024 * 1024
 
     def __call__(self, file) -> None:
-        self._validate_size(file)
-        self._validate_mime(file)
+        uploaded_file = self._get_uploaded_file(file)
+        if uploaded_file is None:
+            return
+
+        self._validate_size(uploaded_file)
+        self._validate_mime(uploaded_file)
+
+    def _get_uploaded_file(self, file) -> UploadedFile | None:
+        """Возвращает загружаемый файл и пропускает уже сохраненные пути."""
+        if isinstance(file, UploadedFile):
+            return file
+
+        wrapped_file = getattr(file, '_file', None)
+        if isinstance(wrapped_file, UploadedFile):
+            return wrapped_file
+
+        return None
 
     def _validate_size(self, file) -> None:
         if file.size > self._max_size_bytes:

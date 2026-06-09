@@ -12,6 +12,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from api.about.views import AboutAPIView
 from api.auth.views import AmbasadaTokenObtainPairView
 from api.contacts.views import ContactView
+from api.home.views import HomeAPIView
 from api.projects.views import (
     ProjectDetailView,
     ProjectListView,
@@ -63,8 +64,8 @@ user_urlpatterns = [
 project_urlpatterns = [
     path('', ProjectListView.as_view(), name='projects-list'),
     path('tags/', ProjectTagListView.as_view(), name='projects-tags'),
-    path('types/', ProjectTypeListView.as_view(), name='projects-types'),
-    path('<slug:project_id>/', ProjectDetailView.as_view(), name='projects-detail'),
+    path('categories/', ProjectTypeListView.as_view(), name='projects-types'),
+    path('<slug:project_slug>/', ProjectDetailView.as_view(), name='projects-detail'),
 ]
 
 # Эндпоинты страницы "О нас"
@@ -79,6 +80,7 @@ contact_urlpatterns = [
 
 # Объединение всех эндпоинтов версии v1
 v1_urlpatterns = [
+    path('home/', HomeAPIView.as_view(), name='home'),
     path('init/', InitView.as_view(), name='init'),
     path('auth/', include(auth_urlpatterns)),
     path('users/', include(user_urlpatterns)),

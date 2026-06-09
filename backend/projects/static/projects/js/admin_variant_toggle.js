@@ -1,4 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
+    function hasErrors(element) {
+        return Boolean(
+            element && (
+                element.classList.contains('errors') ||
+                element.querySelector('.errorlist, .errors')
+            )
+        );
+    }
+
+    function expandParentFieldset(element) {
+        const fieldset = element.closest('fieldset');
+        if (fieldset) {
+            fieldset.classList.remove('collapsed');
+            fieldset.style.display = '';
+        }
+    }
+
+    function setElementDisplay(element, displayValue) {
+        if (!element) return;
+
+        if (hasErrors(element)) {
+            element.style.display = '';
+            expandParentFieldset(element);
+            return;
+        }
+
+        element.style.display = displayValue;
+    }
+
+    function setRowsDisplay(rows, displayValue) {
+        rows.forEach(row => setElementDisplay(row, displayValue));
+    }
+
+    function findButtonsGroup(blockSuite) {
+        const managementInput = blockSuite.querySelector('input[name$="-buttons-TOTAL_FORMS"]');
+        if (managementInput) {
+            return managementInput.closest('.djn-group');
+        }
+
+        return blockSuite.querySelector(
+            '.djn-group[id*="-buttons-group"], ' +
+            '.djn-group[id*="-projectblockbutton-"], ' +
+            '.djn-group[id*="-button-"], ' +
+            '.djn-group[class*="-buttons"], ' +
+            '.djn-group[class*="-button"], ' +
+            '.djn-group[class*="-projectblockbutton"]'
+        );
+    }
+
+    function revealErrors(blockSuite) {
+        blockSuite.querySelectorAll('.errorlist, .errors').forEach(errorNode => {
+            const row = errorNode.closest('.form-row');
+            const group = errorNode.closest('.djn-group');
+
+            if (row) row.style.display = '';
+            if (group) group.style.display = '';
+            expandParentFieldset(errorNode);
+        });
+    }
+
     // Функция скрытия/показа полей внутри конкретного блока
     function toggleFields(blockSuite) {
         // Находим селектор поля variant
@@ -19,47 +79,42 @@ document.addEventListener('DOMContentLoaded', () => {
         const rowsAccentedText = blockSuite.querySelectorAll('.form-row[class*="field-accented_text_"]');
         const allTextRows = [...rowsText, ...rowsAccentedText];
 
-        // УЛУЧШЕННЫЙ ПОИСК ДЛЯ nested-admin:
-        // Ищем группу кнопок по классу djn-group, у которой id или класс содержит упоминание кнопочной модели
-        const buttonsGroup = blockSuite.querySelector(
-            '.djn-group[id*="-projectblockbutton-"], ' +
-            '.djn-group[id*="-button-"], ' +
-            '.djn-group[class*="-button"], ' +
-            '.djn-group[class*="-projectblockbutton"]'
-        );
+        const buttonsGroup = findButtonsGroup(blockSuite);
 
         // Вариант 1: Изображение и список (BLOCK_VARIANT_IMAGE_WITH_LIST)
         if (variant === '1') {
-            if (rowImage) rowImage.style.display = '';
-            if (rowLeftImage) rowLeftImage.style.display = 'none';
-            rowsStringList.forEach(r => r.style.display = '');
-            allTextRows.forEach(r => r.style.display = 'none');
-            if (buttonsGroup) buttonsGroup.style.display = 'none';
+            setElementDisplay(rowImage, '');
+            setElementDisplay(rowLeftImage, 'none');
+            setRowsDisplay(rowsStringList, '');
+            setRowsDisplay(allTextRows, '');
+            setElementDisplay(buttonsGroup, 'none');
         } 
         // Вариант 2: Два изображения (BLOCK_VARIANT_TWO_IMAGES)
         else if (variant === '2') {
-            if (rowImage) rowImage.style.display = '';
-            if (rowLeftImage) rowLeftImage.style.display = '';
-            rowsStringList.forEach(r => r.style.display = 'none');
-            allTextRows.forEach(r => r.style.display = 'none');
-            if (buttonsGroup) buttonsGroup.style.display = 'none';
+            setElementDisplay(rowImage, '');
+            setElementDisplay(rowLeftImage, '');
+            setRowsDisplay(rowsStringList, 'none');
+            setRowsDisplay(allTextRows, '');
+            setElementDisplay(buttonsGroup, 'none');
         } 
         // Вариант 3: Изображение и кнопки (BLOCK_VARIANT_IMAGE_WITH_BUTTONS)
         else if (variant === '3') {
-            if (rowImage) rowImage.style.display = '';
-            if (rowLeftImage) rowLeftImage.style.display = 'none';
-            rowsStringList.forEach(r => r.style.display = 'none');
-            allTextRows.forEach(r => r.style.display = ''); 
-            if (buttonsGroup) buttonsGroup.style.display = ''; // Показываем группу кнопок
+            setElementDisplay(rowImage, '');
+            setElementDisplay(rowLeftImage, 'none');
+            setRowsDisplay(rowsStringList, 'none');
+            setRowsDisplay(allTextRows, ''); 
+            setElementDisplay(buttonsGroup, ''); // Показываем группу кнопок
         } 
         // Если вариант не выбран (значение "---------")
         else {
-            if (rowImage) rowImage.style.display = '';
-            if (rowLeftImage) rowLeftImage.style.display = '';
-            rowsStringList.forEach(r => r.style.display = '');
-            allTextRows.forEach(r => r.style.display = '');
-            if (buttonsGroup) buttonsGroup.style.display = '';
+            setElementDisplay(rowImage, '');
+            setElementDisplay(rowLeftImage, '');
+            setRowsDisplay(rowsStringList, '');
+            setRowsDisplay(allTextRows, '');
+            setElementDisplay(buttonsGroup, '');
         }
+
+        revealErrors(blockSuite);
     }
 
     // Ловим переключения "Варианта" пользователем во всей админке
@@ -70,6 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    revealErrors(document);
+
     // Инициализация интерфейса при загрузке страницы для уже сохраненных блоков
     setTimeout(() => {
         document.querySelectorAll('.djn-inline-form').forEach(blockSuite => {
@@ -78,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleFields(blockSuite);
             }
         });
+        revealErrors(document);
     }, 800); // Немного увеличили таймаут для тяжелых страниц с TinyMCE
 });
 
@@ -85,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const style = document.createElement('style');
     style.textContent = `
         /* Гарантированный отступ между контентными блоками (старыми и вновь созданными) */
-        .djn-inline-form {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
             margin-bottom: 35px !important;
             border: 1px solid #cbd5e1 !important; /* Четкая серая граница вокруг каждого блока */
             background: #ffffff !important;
@@ -96,17 +154,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /* Дополнительный отступ для внутренних групп (например, кнопок внутри блока) */
-        .djn-inline-form .djn-group {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form .djn-group {
             margin-top: 20px !important;
             margin-bottom: 10px !important;
         }
 
         /* Делаем красивую заплатку, чтобы шапка блока отделялась от полей */
-        .djn-inline-form > h3 {
+        #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
             background: #f1f5f9 !important;
             margin: -20px -20px 20px -20px !important;
             padding: 12px 20px !important;
             border-bottom: 1px solid #cbd5e1 !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
+            background: #1e1e1e !important;
+            border-color: #2d2d2d !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
+            background: #252526 !important;
+            color: #cbd5e1 !important;
+            border-bottom-color: #2d2d2d !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module {
+            background: #1e1e1e !important;
+            border-color: #2d2d2d !important;
+        }
+
+        [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 {
+            background: #2d2d2d !important;
+            color: #e2e8f0 !important;
+            border-bottom-color: #2d2d2d !important;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form {
+                background: #1e1e1e !important;
+                border-color: #2d2d2d !important;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 {
+                background: #252526 !important;
+                color: #cbd5e1 !important;
+                border-bottom-color: #2d2d2d !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module {
+                background: #1e1e1e !important;
+                border-color: #2d2d2d !important;
+            }
+
+            :root:not([data-theme="light"]) #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 {
+                background: #2d2d2d !important;
+                color: #e2e8f0 !important;
+                border-bottom-color: #2d2d2d !important;
+            }
         }
     `;
     document.head.appendChild(style);

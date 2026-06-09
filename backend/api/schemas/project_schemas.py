@@ -11,7 +11,7 @@ from drf_spectacular.utils import (
 
 from api.projects.constants import (
     ACCEPT_LANGUAGE_HEADER,
-    PATH_PARAM_PROJECT_ID,
+    PATH_PARAM_PROJECT_SLUG,
     PROJECT_TYPES_RESPONSE_KEY,
     QUERY_PARAM_PROJECT_TYPE,
     QUERY_PARAM_SEARCH,
@@ -30,7 +30,7 @@ PROJECT_LANGUAGE_PARAMETER = OpenApiParameter(
 )
 
 PROJECT_DETAIL_PATH_PARAMETER = OpenApiParameter(
-    name=PATH_PARAM_PROJECT_ID,
+    name=PATH_PARAM_PROJECT_SLUG,
     type=OpenApiTypes.STR,
     location=OpenApiParameter.PATH,
     required=True,

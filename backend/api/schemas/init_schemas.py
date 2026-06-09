@@ -4,10 +4,12 @@ from rest_framework import serializers
 
 INIT_VIEW_SCHEMA = extend_schema(
     summary=_('Инициализация сайта'),
-    description=_('Возвращает глобальные настройки: название, SEO, языки и соцсети.'),
+    description=_(
+        'Возвращает глобальные настройки строго по интерфейсу InitResponse: '
+        'название, SEO, языки, копирайт, юридические тексты и соцсети.'
+    ),
     responses={
         200: OpenApiResponse(
-            # Описываем структуру успешного ответа инлайново
             response=inline_serializer(
                 name='SiteConfigResponse',
                 fields={
@@ -17,6 +19,11 @@ INIT_VIEW_SCHEMA = extend_schema(
                     'cookie_message': serializers.CharField(),
                     'cookie_button_text': serializers.CharField(),
                     'copyright': serializers.CharField(),
+                    'team_button_link': serializers.CharField(),
+                    'legal_links': serializers.DictField(
+                        child=serializers.CharField(),
+                        help_text=_('Дополнительные юридические ссылки (Record<string, string>)'),
+                    ),
                     'languages': serializers.ListField(
                         child=serializers.DictField(), help_text=_('Список доступных языков')
                     ),
@@ -37,26 +44,29 @@ INIT_VIEW_SCHEMA = extend_schema(
                 OpenApiExample(
                     'Успешный ответ',
                     value={
-                        'site_name': 'My Site',
+                        'site_name': 'Ambasada',
                         'seo_description': 'Best site',
-                        'privacy_policy': 'Политика конфиденциальности',
-                        'cookie_message': 'We use cookies',
-                        'cookie_button_text': 'OK',
+                        'privacy_policy': '<p>Политика конфиденциальности...</p>',
+                        'cookie_message': '<p>Мы используем технические cookie...</p>',
+                        'cookie_button_text': 'Принять',
+                        'copyright': '© 2026 Ambasada za Urbanizam',
+                        'team_button_link': '/contacts',
+                        'legal_links': {},
                         'languages': [
                             {'code': 'ru', 'label': 'Russian'},
-                            {'code': 'sr-latn', 'label': 'Serbian (Latin)'},
+                            {'code': 'en', 'label': 'English'},
+                            {'code': 'sr-Latn', 'label': 'Serbian (Latin)'},
+                            {'code': 'sr-Cyrl', 'label': 'Serbian (Cyrillic)'},
                         ],
                         'socials': [
                             {'social_type': 'Telegram', 'url': 'https://t.me/test'},
                             {'social_type': 'Instagram', 'url': 'https://inst.com/test'},
                         ],
-                        'copyright': '© 2026',
                     },
                 )
             ],
         ),
         404: OpenApiResponse(
-            # Описываем структуру ошибки инлайново
             response=inline_serializer(
                 name='ConfigErrorResponse',
                 fields={

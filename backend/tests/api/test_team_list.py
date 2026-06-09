@@ -27,10 +27,10 @@ class TestTeamApi:
         member = results[0]
         
         assert member['name'] == f'{first_name} {last_name}'
-        assert 'position' in member
+        assert 'role' in member
         assert 'photo' in member
         assert 'email' not in member
-        assert 'role' not in member
+        assert 'position' not in member
 
     def test_team_list_ordering(self, api_client, user_factory):
         """Проверка сортировки по id."""

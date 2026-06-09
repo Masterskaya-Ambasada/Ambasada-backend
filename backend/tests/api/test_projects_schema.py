@@ -44,9 +44,9 @@ def test_projects_schema_documents_meta_endpoints(api_client):
     """Проверяет, что схема описывает endpoints тегов, типов и деталки проекта."""
     schema = _load_openapi_schema(api_client)
     project_tags_operation = schema['paths']['/api/v1/projects/tags/']['get']
-    project_types_operation = schema['paths']['/api/v1/projects/types/']['get']
-    project_detail_operation = schema['paths']['/api/v1/projects/{project_id}/']['get']
+    project_types_operation = schema['paths']['/api/v1/projects/categories/']['get']
+    project_detail_operation = schema['paths']['/api/v1/projects/{project_slug}/']['get']
     assert project_tags_operation['summary'] == 'Список тегов проектов'
     assert project_types_operation['summary'] == 'Список типов проектов'
     assert project_detail_operation['summary'] == 'Детальная страница проекта'
-    assert any(parameter['name'] == 'project_id' for parameter in project_detail_operation['parameters'])
+    assert any(parameter['name'] == 'project_slug' for parameter in project_detail_operation['parameters'])

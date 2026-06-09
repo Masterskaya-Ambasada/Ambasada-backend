@@ -22,6 +22,15 @@ STRING_LIST_ITEM_MAX_LENGTH = 200
 BUTTON_TYPE_DOWNLOAD = 'download'
 BUTTON_TYPE_REDIRECT = 'redirect'
 
+PROJECT_COVER_IMAGE_HELP = 'Загрузите обложку проекта. Формат: JPG, PNG или WEBP, размер до 20 МБ.'
+PROJECT_GALLERY_IMAGE_HELP = 'Загрузите изображение карусели проекта. Формат: JPG, PNG или WEBP, размер до 20 МБ.'
+PROJECT_BLOCK_IMAGE_HELP = (
+    'Загрузите основное изображение контентного блока. Формат: JPG, PNG или WEBP, размер до 20 МБ.'
+)
+PROJECT_BLOCK_LEFT_IMAGE_HELP = (
+    'Загрузите дополнительное изображение контентного блока. Формат: JPG, PNG или WEBP, размер до 20 МБ.'
+)
+
 PROJECT_MEDIA_DIRECTORY = 'projects'
 PROJECT_COVER_DIRECTORY = 'cover'
 PROJECT_GALLERY_DIRECTORY = 'gallery'
