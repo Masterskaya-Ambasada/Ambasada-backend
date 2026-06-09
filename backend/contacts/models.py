@@ -1,12 +1,11 @@
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.core.validators import MaxLengthValidator, MinLengthValidator, URLValidator
+from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from . import constants
-
-custom_url_validator = URLValidator(schemes=['http', 'https', 'mailto', 'tel'])
+from .validators import custom_url_validator
 
 
 class ContactRequest(models.Model):

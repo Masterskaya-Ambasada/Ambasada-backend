@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-09 20:26+0300\n"
+"POT-Creation-Date: 2026-06-09 21:52+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -309,7 +309,7 @@ msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 msgstr ""
 
-#: backend/api/contacts/views.py:39
+#: backend/api/contacts/views.py:40
 msgid "Получено"
 msgstr ""
 
@@ -544,154 +544,143 @@ msgstr ""
 msgid "Обратная связь и соцсети"
 msgstr ""
 
-#: backend/contacts/constants.py:21
+#: backend/contacts/constants.py:22
 msgid "Текст сообщения"
 msgstr ""
 
-#: backend/contacts/constants.py:22
+#: backend/contacts/constants.py:23
 msgid "Показывает, обработано ли обращение"
 msgstr ""
 
-#: backend/contacts/constants.py:23
+#: backend/contacts/constants.py:24
 msgid "Сообщение слишком короткое. Оно должно содержать не менее 20 символов."
 msgstr ""
 
-#: backend/contacts/constants.py:24
+#: backend/contacts/constants.py:25
 msgid "Сообщение слишком длинное. Оно не может превышать 600 символов."
 msgstr ""
 
-#: backend/contacts/constants.py:26
+#: backend/contacts/constants.py:27
 msgid "Редактируемый текст с возможностью добавить внешнюю ссылку"
 msgstr ""
 
-#: backend/contacts/constants.py:27
+#: backend/contacts/constants.py:28
 msgid "Может быть активен только один блок пожертвований"
 msgstr ""
 
-#: backend/contacts/constants.py:30
+#: backend/contacts/constants.py:31
 msgid "Выбор соцсети."
 msgstr ""
 
-#: backend/contacts/constants.py:31
+#: backend/contacts/constants.py:32
 msgid "Например: https://t.me/example"
 msgstr ""
 
-#: backend/contacts/constants.py:32
+#: backend/contacts/constants.py:33
 msgid "Если включено — отображается на сайте. Иначе скрывается без удаления"
 msgstr ""
 
-#: backend/contacts/constants.py:37
+#: backend/contacts/constants.py:38
 msgid "Может быть только один активный блок пожертвований"
 msgstr ""
 
-#: backend/contacts/constants.py:38
+#: backend/contacts/constants.py:39
 msgid "Для данного сайта уже добавлена ссылка этого типа соцсети"
 msgstr ""
 
-#: backend/contacts/constants.py:39
+#: backend/contacts/constants.py:40
 msgid "Этот порядок отображения уже занят для данного сайта"
 msgstr ""
 
-#: backend/contacts/constants.py:40
+#: backend/contacts/constants.py:41
 msgid "Сначала создайте настройки сайта"
 msgstr ""
 
-#: backend/contacts/models.py:15 backend/users/models.py:116
+#: backend/contacts/models.py:16 backend/users/models.py:116
 msgid "Имя"
 msgstr ""
 
-#: backend/contacts/models.py:18 backend/contacts/models.py:128
+#: backend/contacts/models.py:19
 msgid "Email"
 msgstr ""
 
-#: backend/contacts/models.py:22 backend/contacts/models.py:27
+#: backend/contacts/models.py:23
 msgid "Сообщение"
 msgstr ""
 
-#: backend/contacts/models.py:42
+#: backend/contacts/models.py:38
 msgid "Причина обращения"
 msgstr ""
 
-#: backend/contacts/models.py:46
+#: backend/contacts/models.py:42
 msgid "Обработано"
 msgstr ""
 
-#: backend/contacts/models.py:51 backend/contacts/models.py:78
-#: backend/contacts/models.py:158
+#: backend/contacts/models.py:47 backend/contacts/models.py:74
+#: backend/contacts/models.py:156
 msgid "Дата создания"
 msgstr ""
 
-#: backend/contacts/models.py:55
+#: backend/contacts/models.py:51
 msgid "Запрос обратной связи"
 msgstr ""
 
-#: backend/contacts/models.py:56
+#: backend/contacts/models.py:52
 msgid "Запросы обратной связи"
 msgstr ""
 
-#: backend/contacts/models.py:68
+#: backend/contacts/models.py:64
 msgid "Текстовый блок для пожертвований"
 msgstr ""
 
-#: backend/contacts/models.py:73
+#: backend/contacts/models.py:69
 msgid "Активно"
 msgstr ""
 
-#: backend/contacts/models.py:82
+#: backend/contacts/models.py:78
 msgid "Дата обновления"
 msgstr ""
 
-#: backend/contacts/models.py:93
+#: backend/contacts/models.py:89
 msgid "Редактируемая ссылка на пожертвования"
 msgstr ""
 
-#: backend/contacts/models.py:94
+#: backend/contacts/models.py:90
 msgid "Редактируемые ссылки на пожертвования"
 msgstr ""
 
-#: backend/contacts/models.py:124
-msgid "Telegram"
-msgstr ""
-
-#: backend/contacts/models.py:125
-msgid "Instagram"
-msgstr ""
-
-#: backend/contacts/models.py:126
-msgid "Facebook"
-msgstr ""
-
-#: backend/contacts/models.py:127
-msgid "LinkedIn"
-msgstr ""
-
-#: backend/contacts/models.py:134 backend/site_config/models.py:101
+#: backend/contacts/models.py:130 backend/site_config/models.py:101
 #: backend/site_config/models.py:102
 msgid "Настройки сайта"
 msgstr ""
 
-#: backend/contacts/models.py:140
+#: backend/contacts/models.py:136
 msgid "Тип соцсети / мессенджера"
 msgstr ""
 
-#: backend/contacts/models.py:144 backend/projects/admin.py:305
+#: backend/contacts/models.py:140 backend/projects/admin.py:305
+#: backend/site_config/admin.py:20
 msgid "Ссылка"
 msgstr ""
 
-#: backend/contacts/models.py:149 backend/users/models.py:167
+#: backend/contacts/models.py:147 backend/users/models.py:167
 msgid "Порядок отображения"
 msgstr ""
 
-#: backend/contacts/models.py:153
+#: backend/contacts/models.py:151
 msgid "Показывать на сайте"
 msgstr ""
 
-#: backend/contacts/models.py:162
+#: backend/contacts/models.py:160
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr ""
 
-#: backend/contacts/models.py:163
+#: backend/contacts/models.py:161
 msgid "Ссылки на соцсети / мессенджеры"
+msgstr ""
+
+#: backend/contacts/validators.py:5
+msgid "Введите правильный URL-адрес, mailto: или tel:"
 msgstr ""
 
 #: backend/core/base_admin.py:114
@@ -728,7 +717,7 @@ msgstr ""
 msgid "Изображения и целевые ссылки, общие для всех версий."
 msgstr ""
 
-#: backend/home/admin.py:141 backend/site_config/admin.py:148
+#: backend/home/admin.py:141 backend/site_config/admin.py:169
 msgid "2. Локализация: Русский (RU)"
 msgstr ""
 
@@ -736,7 +725,7 @@ msgstr ""
 msgid "Контент экрана на русском языке."
 msgstr ""
 
-#: backend/home/admin.py:157 backend/site_config/admin.py:165
+#: backend/home/admin.py:157 backend/site_config/admin.py:186
 msgid "3. Локализация: Английский (EN)"
 msgstr ""
 
@@ -744,7 +733,7 @@ msgstr ""
 msgid "Контент экрана на английском языке."
 msgstr ""
 
-#: backend/home/admin.py:173 backend/site_config/admin.py:182
+#: backend/home/admin.py:173 backend/site_config/admin.py:203
 msgid "4. Локализация: Сербский Латиница (SR-Latn)"
 msgstr ""
 
@@ -752,7 +741,7 @@ msgstr ""
 msgid "Контент экрана на сербской латинице."
 msgstr ""
 
-#: backend/home/admin.py:189 backend/site_config/admin.py:199
+#: backend/home/admin.py:189 backend/site_config/admin.py:220
 msgid "5. Локализация: Сербский Кириллица (SR-Cyrl)"
 msgstr ""
 
@@ -1218,27 +1207,31 @@ msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
 msgstr ""
 
-#: backend/site_config/admin.py:141
+#: backend/site_config/admin.py:26
+msgid "Введите правильную ссылку (http://, https://, mailto: или tel:)"
+msgstr ""
+
+#: backend/site_config/admin.py:162
 msgid "1. Основные и общие настройки"
 msgstr ""
 
-#: backend/site_config/admin.py:144
+#: backend/site_config/admin.py:165
 msgid "Глобальные названия проекта и сквозные ссылки."
 msgstr ""
 
-#: backend/site_config/admin.py:161
+#: backend/site_config/admin.py:182
 msgid "Переводы интерфейса, SEO-теги и тексты на русском."
 msgstr ""
 
-#: backend/site_config/admin.py:178
+#: backend/site_config/admin.py:199
 msgid "Переводы интерфейса, SEO-теги и тексты на английском."
 msgstr ""
 
-#: backend/site_config/admin.py:195
+#: backend/site_config/admin.py:216
 msgid "Переводы интерфейса и тексты на сербской латинице."
 msgstr ""
 
-#: backend/site_config/admin.py:212
+#: backend/site_config/admin.py:233
 msgid "Переводы интерфейса и тексты на сербской кириллице."
 msgstr ""
 
