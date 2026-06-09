@@ -125,6 +125,7 @@ class ContactSocialLink(models.Model):
         INSTAGRAM = 'instagram', _('Instagram')
         FACEBOOK = 'facebook', _('Facebook')
         LINKEDIN = 'linkedin', _('LinkedIn')
+        EMAIL = 'email', _('Email')
 
     site_config = models.ForeignKey(
         'site_config.SiteConfig',

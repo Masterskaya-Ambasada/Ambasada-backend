@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 14:57+0300\n"
+"POT-Creation-Date: 2026-06-09 20:26+0300\n"
 "PO-Revision-Date: 2026-06-07 14:58+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Serbian (Latin) <sr@li.org>\n"
@@ -15,7 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: backend/about/admin.py:42
 msgid "Параграф с таким порядковым номером уже добавлен."
@@ -165,8 +166,8 @@ msgid ""
 "Ссылка, на которую перенаправит кнопка (например: /projects/ или https://"
 "external-site.com). "
 msgstr ""
-"Link na koji dugme preusmerava (na primer: /projects/ ili https://"
-"external-site.com). "
+"Link na koji dugme preusmerava (na primer: /projects/ ili https://external-"
+"site.com). "
 
 #: backend/about/constants.py:39
 msgid "Заголовок для секции с ценностями сообщества. "
@@ -198,7 +199,9 @@ msgstr "Detaljan opis suštine ove vrednosti. "
 
 #: backend/about/constants.py:49
 msgid "Загрузите фото для галереи. Формат: JPG, PNG или WEBP, размер до 20 МБ."
-msgstr "Otpremite fotografiju za galeriju. Format: JPG, PNG ili WEBP, veličina do 20 MB."
+msgstr ""
+"Otpremite fotografiju za galeriju. Format: JPG, PNG ili WEBP, veličina do 20 "
+"MB."
 
 #: backend/about/constants.py:50
 msgid "Описание фото для поисковых роботов (SEO) и экранных дикторов."
@@ -307,19 +310,38 @@ msgstr "API interfejs"
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 msgstr ""
-"Netačno korisničko ime ili lozinka. Molimo proverite podatke i pokušajte ponovo."
+"Netačno korisničko ime ili lozinka. Molimo proverite podatke i pokušajte "
+"ponovo."
 
-#: backend/api/contacts/views.py:40
+#: backend/api/contacts/views.py:39
 msgid "Получено"
 msgstr "Primljeno"
+
+#: backend/api/home/serializers.py:13
+#, fuzzy
+#| msgid "Hero: Текст на кнопке"
+msgid "Текст на кнопке"
+msgstr "Hero: Tekst na dugmetu"
+
+#: backend/api/home/serializers.py:14
+#, fuzzy
+#| msgid "Ссылка для скачивания или перехода."
+msgid "Ссылка перехода"
+msgstr "Link za preuzimanje ili prelazak na stranicu."
+
+#: backend/api/home/serializers.py:20
+#, fuzzy
+#| msgid "Уникальный идентификатор проекта для URL."
+msgid "Уникальный строковый идентификатор проекта"
+msgstr "Jedinstveni identifikator projekta za URL."
+
+#: backend/api/home/serializers.py:70 backend/api/projects/constants.py:19
+msgid "Перейти к проекту"
+msgstr "Pređi na projekat"
 
 #: backend/api/home/views.py:37
 msgid "Контент главной страницы не сконфигурирован."
 msgstr "Sadržaj glavne stranice nije konfigurisan."
-
-#: backend/api/projects/constants.py:19
-msgid "Перейти к проекту"
-msgstr "Pređi na projekat"
 
 #: backend/api/schemas/about_schemas.py:14
 msgid "Получение страницы \"О сообществе\""
@@ -358,25 +380,29 @@ msgstr "Osvežavanje access tokena"
 msgid "Принимает валидный refresh токен и возвращает новый access токен."
 msgstr "Prihvata validan refresh token i vraća novi access token."
 
-#: backend/api/schemas/contact_schemas.py:7
+#: backend/api/schemas/contact_schemas.py:14
 msgid "Создание запроса обратной связи"
 msgstr "Kreiranje zahteva za povratnu informaciju"
 
-#: backend/api/schemas/contact_schemas.py:9
+#: backend/api/schemas/contact_schemas.py:16
 msgid ""
 "Принимает данные формы и сохраняет их. Поле `contact_preference` — "
 "техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается "
 "спамом и игнорируется."
 msgstr ""
-"Prihvata podatke iz forme i čuva ih. Polje `contact_preference` je "
-"tehničko polje protiv spama (honeypot). Ako je polje popunjeno, zahtev se smatra "
+"Prihvata podatke iz forme i čuva ih. Polje `contact_preference` je tehničko "
+"polje protiv spama (honeypot). Ako je polje popunjeno, zahtev se smatra "
 "spamom i ignoriše se."
 
-#: backend/api/schemas/contact_schemas.py:21
+#: backend/api/schemas/contact_schemas.py:26
+msgid "Ошибка валидации формы"
+msgstr ""
+
+#: backend/api/schemas/contact_schemas.py:30
 msgid "Получение контента блока контактов"
 msgstr "Preuzimanje sadržaja bloka kontakata"
 
-#: backend/api/schemas/contact_schemas.py:22
+#: backend/api/schemas/contact_schemas.py:31
 msgid "Возвращает активный текстовый блок для пожертвований."
 msgstr "Vraća aktivni tekstualni blok za donacije."
 
@@ -433,8 +459,8 @@ msgid ""
 "Возвращает список опубликованных проектов с пагинацией, поиском по названию "
 "и фильтрацией по типу проекта и тегам."
 msgstr ""
-"Vraća listu objavljenih projekata sa paginacijom, pretragom po nazivu "
-"i filtriranjem po tipu projekta i tagovima."
+"Vraća listu objavljenih projekata sa paginacijom, pretragom po nazivu i "
+"filtriranjem po tipu projekta i tagovima."
 
 #: backend/api/schemas/project_schemas.py:68
 msgid "Идентификатор типа проекта для фильтрации."
@@ -504,8 +530,7 @@ msgstr "Lista članova tima"
 msgid ""
 "Возвращает список публичных профилей пользователей для отображения на "
 "фронтенде."
-msgstr ""
-"Vraća listu javnih profila korisnika za prikazivanje na frontend-u."
+msgstr "Vraća listu javnih profila korisnika za prikazivanje na frontend-u."
 
 #: backend/backend/settings.py:221
 msgid "Russian"
@@ -539,55 +564,56 @@ msgstr "Skriveni sa sajta"
 msgid "Обратная связь и соцсети"
 msgstr "Povratne informacije i društvene mreže"
 
-#: backend/contacts/constants.py:20
+#: backend/contacts/constants.py:21
 msgid "Текст сообщения"
 msgstr "Tekst poruke"
 
-#: backend/contacts/constants.py:21
+#: backend/contacts/constants.py:22
 msgid "Показывает, обработано ли обращение"
 msgstr "Pokazuje da li je zahtev obrađen"
 
-#: backend/contacts/constants.py:22
+#: backend/contacts/constants.py:23
 msgid "Сообщение слишком короткое. Оно должно содержать не менее 20 символов."
 msgstr "Poruka je isuviše kratka. Mora sadržati najmanje 20 simbola."
 
-#: backend/contacts/constants.py:23
+#: backend/contacts/constants.py:24
 msgid "Сообщение слишком длинное. Оно не может превышать 600 символов."
 msgstr "Poruka je isuviše dugačka. Ne može prelaziti 600 simbola."
 
-#: backend/contacts/constants.py:25
+#: backend/contacts/constants.py:26
 msgid "Редактируемый текст с возможностью добавить внешнюю ссылку"
 msgstr "Tekst koji se može uređivati sa mogućnošću dodavanja spoljnog linka"
 
-#: backend/contacts/constants.py:26
+#: backend/contacts/constants.py:27
 msgid "Может быть активен только один блок пожертвований"
 msgstr "Može biti aktivan samo jedan blok donacija"
 
-#: backend/contacts/constants.py:29
+#: backend/contacts/constants.py:30
 msgid "Выбор соцсети."
 msgstr "Izbor društvene mreže."
 
-#: backend/contacts/constants.py:30
+#: backend/contacts/constants.py:31
 msgid "Например: https://t.me/example"
 msgstr "Na primer: https://t.me/example"
 
-#: backend/contacts/constants.py:31
+#: backend/contacts/constants.py:32
 msgid "Если включено — отображается на сайте. Иначе скрывается без удаления"
-msgstr "Ako je uključeno — prikazuje se na sajtu. U suprotnom se skriva bez brisanja"
+msgstr ""
+"Ako je uključeno — prikazuje se na sajtu. U suprotnom se skriva bez brisanja"
 
-#: backend/contacts/constants.py:36
+#: backend/contacts/constants.py:37
 msgid "Может быть только один активный блок пожертвований"
 msgstr "Može postojati samo jedan aktivni blok donacija"
 
-#: backend/contacts/constants.py:37
+#: backend/contacts/constants.py:38
 msgid "Для данного сайта уже добавлена ссылка этого типа соцсети"
 msgstr "Za ovaj sajt je već dodat link ovog tipa društvene mreže"
 
-#: backend/contacts/constants.py:38
+#: backend/contacts/constants.py:39
 msgid "Этот порядок отображения уже занят для данного сайта"
 msgstr "Ovaj redosled prikaza je već zauzet za ovaj sajt"
 
-#: backend/contacts/constants.py:39
+#: backend/contacts/constants.py:40
 msgid "Сначала создайте настройки сайта"
 msgstr "Prvo kreirajte podešavanja sajta"
 
@@ -595,7 +621,7 @@ msgstr "Prvo kreirajte podešavanja sajta"
 msgid "Имя"
 msgstr "Ime"
 
-#: backend/contacts/models.py:18
+#: backend/contacts/models.py:18 backend/contacts/models.py:128
 msgid "Email"
 msgstr "Email"
 
@@ -612,7 +638,7 @@ msgid "Обработано"
 msgstr "Obrađeno"
 
 #: backend/contacts/models.py:51 backend/contacts/models.py:78
-#: backend/contacts/models.py:153
+#: backend/contacts/models.py:158
 msgid "Дата создания"
 msgstr "Datum kreiranja"
 
@@ -644,48 +670,48 @@ msgstr "Link za donacije koji se može uređivati"
 msgid "Редактируемые ссылки на пожертвования"
 msgstr "Linkovi za donacije koji se mogu uređivati"
 
-#: backend/contacts/models.py:120
+#: backend/contacts/models.py:124
 msgid "Telegram"
 msgstr "Telegram"
 
-#: backend/contacts/models.py:121
+#: backend/contacts/models.py:125
 msgid "Instagram"
 msgstr "Instagram"
 
-#: backend/contacts/models.py:122
+#: backend/contacts/models.py:126
 msgid "Facebook"
 msgstr "Facebook"
 
-#: backend/contacts/models.py:123
+#: backend/contacts/models.py:127
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: backend/contacts/models.py:129 backend/site_config/models.py:101
+#: backend/contacts/models.py:134 backend/site_config/models.py:101
 #: backend/site_config/models.py:102
 msgid "Настройки сайта"
 msgstr "Podešavanja sajta"
 
-#: backend/contacts/models.py:135
+#: backend/contacts/models.py:140
 msgid "Тип соцсети / мессенджера"
 msgstr "Tip društvene mreže / mesindžera"
 
-#: backend/contacts/models.py:139 backend/projects/admin.py:305
+#: backend/contacts/models.py:144 backend/projects/admin.py:305
 msgid "Ссылка"
 msgstr "Link"
 
-#: backend/contacts/models.py:144 backend/users/models.py:167
+#: backend/contacts/models.py:149 backend/users/models.py:167
 msgid "Порядок отображения"
 msgstr "Redosled prikaza"
 
-#: backend/contacts/models.py:148
+#: backend/contacts/models.py:153
 msgid "Показывать на сайте"
 msgstr "Prikazuj na sajtu"
 
-#: backend/contacts/models.py:157
+#: backend/contacts/models.py:162
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr "Link do društvene mreže / mesindžera"
 
-#: backend/contacts/models.py:158
+#: backend/contacts/models.py:163
 msgid "Ссылки на соцсети / мессенджеры"
 msgstr "Linkovi do društvenih mreža / mesindžera"
 
@@ -693,7 +719,7 @@ msgstr "Linkovi do društvenih mreža / mesindžera"
 msgid "Нет файла"
 msgstr "Nema datoteke"
 
-#: backend/core/middleware.py:34
+#: backend/core/middleware.py:36
 msgid "Слишком много попыток входа. Попробуйте позже."
 msgstr "Previše pokušaja prijave. Pokušajte ponovo kasnije."
 
@@ -713,7 +739,8 @@ msgstr "Veličina datoteke (%(size).1f MB) prelazi limit od %(max)d MB."
 #: backend/core/validators.py:84
 #, python-format
 msgid "Файл типа \"%(mime)s\" запрещен. Допустимые: %(allowed)s."
-msgstr "Datoteka tipa \"%(mime)s\" je zabranjena. Dozvoljeni formati: %(allowed)s."
+msgstr ""
+"Datoteka tipa \"%(mime)s\" je zabranjena. Dozvoljeni formati: %(allowed)s."
 
 #: backend/home/admin.py:125
 msgid "1. Общие медиафайлы и ссылки"
@@ -786,8 +813,7 @@ msgstr "Saznaj više"
 #: backend/home/constants.py:24
 msgid ""
 "Краткое описание сообщества еще не заполнено. Пожалуйста, добавьте текст."
-msgstr ""
-"Kratak opis zajednice još uvek nije popunjen. Molimo dodajte tekst."
+msgstr "Kratak opis zajednice još uvek nije popunjen. Molimo dodajte tekst."
 
 #: backend/home/constants.py:25
 msgid "Наши проекты"
@@ -821,38 +847,40 @@ msgstr ""
 msgid ""
 "Загрузите левое изображение Hero. Формат: JPG, PNG или WEBP, размер до 20 МБ."
 msgstr ""
-"Otpremite levu sliku za Hero sekciju. Format: JPG, PNG ili WEBP, veličina do 20 MB."
+"Otpremite levu sliku za Hero sekciju. Format: JPG, PNG ili WEBP, veličina do "
+"20 MB."
 
 #: backend/home/constants.py:41
 msgid ""
 "Загрузите правое изображение Hero. Формат: JPG, PNG или WEBP, размер до 20 "
 "МБ."
 msgstr ""
-"Otpremite desnu sliku za Hero sekciju. Format: JPG, PNG ili WEBP, veličina do 20 MB."
+"Otpremite desnu sliku za Hero sekciju. Format: JPG, PNG ili WEBP, veličina "
+"do 20 MB."
 
 #: backend/home/constants.py:43
 msgid ""
 "Короткий призыв к действию (CTA) внутри оранжевой кнопки на первом экране "
 "(например: \"Узнать больше\", \"Смотреть проекты\"). До 50 символов."
 msgstr ""
-"Kratak poziv na akciju (CTA) unutar narandžastog dugmeta na prvom ekranu "
-"(na primer: \"Saznaj više\", \"Pogledaj projekte\"). Do 50 simbola."
+"Kratak poziv na akciju (CTA) unutar narandžastog dugmeta na prvom ekranu (na "
+"primer: \"Saznaj više\", \"Pogledaj projekte\"). Do 50 simbola."
 
 #: backend/home/constants.py:47
 msgid ""
 "Куда ведет клик. Для внутренних страниц используйте относительный путь "
 "(например: \"/projects\"). Для внешних сайтов — ссылку с \"https://\"."
 msgstr ""
-"Gde vodi klik. Za unutrašnje stranice koristite relativnu putanju "
-"(na primer: \"/projects\"). Za spoljne sajtove — link sa \"https://\"."
+"Gde vodi klik. Za unutrašnje stranice koristite relativnu putanju (na "
+"primer: \"/projects\"). Za spoljne sajtove — link sa \"https://\"."
 
 #: backend/home/constants.py:51
 msgid ""
 "Заголовок для текстового блока-превью \"О сообществе\" на главной странице. "
 "Например: \"О сообществе\" или \"Кто мы такие?\"."
 msgstr ""
-"Naslov za tekstualni blok-pregled \"O zajednici\" na glavnoj stranici. "
-"Na primer: \"O zajednici\" ili \"Ko smo mi?\"."
+"Naslov za tekstualni blok-pregled \"O zajednici\" na glavnoj stranici. Na "
+"primer: \"O zajednici\" ili \"Ko smo mi?\"."
 
 #: backend/home/constants.py:55
 msgid ""
@@ -867,8 +895,8 @@ msgid ""
 "Главный заголовок перед сеткой с карточками последних городских проектов "
 "(например: \"Городские проекты Белграда\" или \"Наши проекты\")."
 msgstr ""
-"Glavni naslov ispred mreže sa karticama najnovijih urbanih projekata "
-"(na primer: \"Urbani projekti Beograda\" ili \"Naši projekti\")."
+"Glavni naslov ispred mreže sa karticama najnovijih urbanih projekata (na "
+"primer: \"Urbani projekti Beograda\" ili \"Naši projekti\")."
 
 #: backend/home/constants.py:63
 msgid ""
@@ -891,7 +919,8 @@ msgid ""
 "Загрузите изображение секции \"О нас\". Формат: JPG, PNG или WEBP, размер до "
 "20 МБ."
 msgstr ""
-"Otpremite sliku za sekciju \"O nama\". Format: JPG, PNG ili WEBP, veličina do 20 MB."
+"Otpremite sliku za sekciju \"O nama\". Format: JPG, PNG ili WEBP, veličina "
+"do 20 MB."
 
 #: backend/home/models.py:59
 msgid "Hero: Главный заголовок"
@@ -964,7 +993,8 @@ msgstr "Pregled naslovne strane"
 
 #: backend/projects/admin_forms.py:21
 msgid "Порядок контентных блоков внутри одного проекта не должен повторяться."
-msgstr "Redosled blokova sadržaja unutar jednog projekta ne sme da se ponavlja."
+msgstr ""
+"Redosled blokova sadržaja unutar jednog projekta ne sme da se ponavlja."
 
 #: backend/projects/apps.py:9
 msgid "Урбанистические проекты"
@@ -975,7 +1005,9 @@ msgid "Некорректный путь к медиа-папке проекта
 msgstr "Neispravna putanja do medijske fascikle projekta."
 
 #: backend/projects/models.py:293
-msgid "Контентные blocks одного проекта не должны иметь одинаковый порядок."
+#, fuzzy
+#| msgid "Контентные blocks одного проекта не должны иметь одинаковый порядок."
+msgid "Контентные блоки одного проекта не должны иметь одинаковый порядок."
 msgstr "Blokovi sadržaja jednog projekta ne smeju imati isti redosled."
 
 #: backend/projects/models.py:300 backend/projects/models.py:631
@@ -1099,7 +1131,8 @@ msgstr "Varijanta rasporeda (layout-a) koju koristi frontend."
 msgid ""
 "Порядок блока внутри проекта. Используется для сортировки и генерации index."
 msgstr ""
-"Redosled bloka unutar projekta. Koristi se za sortiranje i generisanje indeksa."
+"Redosled bloka unutar projekta. Koristi se za sortiranje i generisanje "
+"indeksa."
 
 #: backend/projects/models.py:554
 msgid "Заголовок"
@@ -1126,14 +1159,16 @@ msgid ""
 "Слева вводите тезисы, а справа отображается технический JSON-код для "
 "системы. Его можно не трогать."
 msgstr ""
-"Levo unosite teze, a desno se prikazuje tehnički JSON kod za sistem. Možete ga ostaviti nepromenjenog."
+"Levo unosite teze, a desno se prikazuje tehnički JSON kod za sistem. Možete "
+"ga ostaviti nepromenjenog."
 
 #: backend/projects/models.py:586
 msgid ""
 "Основной текст блока. Обязателен для всех вариантов, поддерживает HTML через "
 "редактор."
 msgstr ""
-"Glavni tekst bloka. Obavezan je za sve varijante, podržava HTML kroz uređivač."
+"Glavni tekst bloka. Obavezan je za sve varijante, podržava HTML kroz "
+"uređivač."
 
 #: backend/projects/models.py:589
 msgid "Акцентный текст"
@@ -1144,7 +1179,8 @@ msgid ""
 "Дополнительный выделенный текст или подпись. Используйте, если в макете "
 "нужен акцентный текст; иначе поле можно оставить пустым."
 msgstr ""
-"Dodatni istaknuti tekst ili potpis. Koristite ako je u dizajnu potreban naglašeni tekst; u suprotnom polje možete ostaviti prazno."
+"Dodatni istaknuti tekst ili potpis. Koristite ako je u dizajnu potreban "
+"naglašeni tekst; u suprotnom polje možete ostaviti prazno."
 
 #: backend/projects/models.py:598
 msgid "Контентный блок проекта"
@@ -1239,8 +1275,7 @@ msgstr "Svaki element liste mora biti niska (string)."
 #, python-format
 msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
-msgstr ""
-"Dužina svakog elementa liste ne sme prelaziti %(max_length)s simbola."
+msgstr "Dužina svakog elementa liste ne sme prelaziti %(max_length)s simbola."
 
 #: backend/site_config/admin.py:141
 msgid "1. Основные и общие настройки"
@@ -1270,21 +1305,22 @@ msgstr "Prevodi interfejsa i tekstovi na srpskoj ćirilici."
 msgid "Конфигурация настроек сайта"
 msgstr "Konfiguracija podešavanja sajta"
 
-#: backend/site_config/cache.py:54 backend/site_config/cache.py:105
+#: backend/site_config/cache.py:53 backend/site_config/cache.py:104
 #: backend/site_config/constants.py:25
 msgid "Команда"
 msgstr "Tim"
 
-#: backend/site_config/cache.py:55 backend/site_config/cache.py:107
+#: backend/site_config/cache.py:54 backend/site_config/cache.py:106
 #: backend/site_config/constants.py:26
 msgid "Присоединиться к команде"
 msgstr "Pridruži se timu"
 
-#: backend/site_config/cache.py:56 backend/site_config/constants.py:27
+#: backend/site_config/cache.py:55 backend/site_config/cache.py:109
+#: backend/site_config/constants.py:27
 msgid "Присоединиться"
 msgstr "Pridruži se"
 
-#: backend/site_config/cache.py:92
+#: backend/site_config/cache.py:91
 msgid "Ambasada"
 msgstr "Ambasada"
 
@@ -1298,7 +1334,8 @@ msgstr "Brisanje sistemskih podešavanja sajta je zabranjeno."
 
 #: backend/site_config/constants.py:33
 msgid "Выводится во вкладке браузера и заголовках писем. До 100 симв."
-msgstr "Prikazuje se u kartici veb pregledača i zaglavljima imejlova. Do 100 simbola."
+msgstr ""
+"Prikazuje se u kartici veb pregledača i zaglavljima imejlova. Do 100 simbola."
 
 #: backend/site_config/constants.py:34
 msgid ""
@@ -1317,7 +1354,9 @@ msgstr "Tekst iskačućeg obaveštenja o korišćenju kolačića (Cookie)."
 
 #: backend/site_config/constants.py:37
 msgid "Текст на кнопке согласия Cookie (например: \"OK\" или \"Принять\")."
-msgstr "Tekst na dugmetu za prihvatanje kolačića (na primer: \"OK\" ili \"Prihvati\")."
+msgstr ""
+"Tekst na dugmetu za prihvatanje kolačića (na primer: \"OK\" ili "
+"\"Prihvati\")."
 
 #: backend/site_config/constants.py:38
 msgid "Текст в самом низу страницы (футере). До 150 симв."
@@ -1340,7 +1379,8 @@ msgid ""
 "Ссылка для обеих кнопок команды. Например: /contacts или ссылка на якорный "
 "блок."
 msgstr ""
-"Link za oba dugmeta tima. Na primer: /contacts ili link do sidrenog (anchor) bloka."
+"Link za oba dugmeta tima. Na primer: /contacts ili link do sidrenog (anchor) "
+"bloka."
 
 #: backend/site_config/models.py:41
 msgid "Название сайта"
@@ -1449,28 +1489,32 @@ msgid ""
 "Определяет порядок сортировки. Меньшее значение выводит пользователя выше в "
 "списке."
 msgstr ""
-"Određuje redosled sortiranja. Manja vrednost postavlja korisnika više na listi."
+"Određuje redosled sortiranja. Manja vrednost postavlja korisnika više na "
+"listi."
 
 #: backend/users/constants.py:26
 msgid ""
 "Определяет уровень доступа к панели управления админки: Участник команды — "
 "нет доступа, Редактор — управление контентом, Администратор — полный доступ."
 msgstr ""
-"Određuje nivo pristupa administrativnom panelu: Član tima — nema pristup, Urednik — upravljanje sadržajem, Administrator — potpuni pristup."
+"Određuje nivo pristupa administrativnom panelu: Član tima — nema pristup, "
+"Urednik — upravljanje sadržajem, Administrator — potpuni pristup."
 
 #: backend/users/constants.py:32
 msgid ""
 "Укажите профессиональную роль (например: «Ведущий архитектор»). Отображается "
 "в карточке сотрудника на сайте."
 msgstr ""
-"Navedite profesionalnu ulogu (na primer: „Vodeći arhitekta“). Prikazuje se na kartici člana tima na sajtu."
+"Navedite profesionalnu ulogu (na primer: „Vodeći arhitekta“). Prikazuje se "
+"na kartici člana tima na sajtu."
 
 #: backend/users/constants.py:35
 msgid ""
 "Загрузите портретное фото участника. Формат: JPG, PNG или WEBP, размер до 20 "
 "МБ."
 msgstr ""
-"Otpremite portretnu fotografiju člana tima. Format: JPG, PNG ili WEBP, veličina do 20 MB."
+"Otpremite portretnu fotografiju člana tima. Format: JPG, PNG ili WEBP, "
+"veličina do 20 MB."
 
 #: backend/users/models.py:58
 msgid "Электронная почта обязательна"
