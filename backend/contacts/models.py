@@ -1,10 +1,12 @@
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.core.validators import MaxLengthValidator, MinLengthValidator, URLValidator
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from . import constants
+
+custom_url_validator = URLValidator(schemes=['http', 'https', 'mailto', 'tel'])
 
 
 class ContactRequest(models.Model):
@@ -16,11 +18,6 @@ class ContactRequest(models.Model):
     )
     email = models.EmailField(
         verbose_name=_('Email'),
-    )
-    message = models.TextField(
-        max_length=constants.MAX_MESSAGE_LENGTH,
-        verbose_name=_('Сообщение'),
-        help_text=constants.HELP_REQUEST_MESSAGE,
     )
 
     message = models.TextField(
@@ -140,8 +137,10 @@ class ContactSocialLink(models.Model):
         verbose_name=_('Тип соцсети / мессенджера'),
         help_text=constants.HELP_SOCIAL_TYPE,
     )
-    url = models.URLField(
+    url = models.CharField(
         verbose_name=_('Ссылка'),
+        max_length=constants.CONTACT_SOCIAL_LINK_MAX_LENGTH_URL,
+        validators=[custom_url_validator],
         help_text=constants.HELP_SOCIAL_URL,
     )
     order = models.PositiveSmallIntegerField(
