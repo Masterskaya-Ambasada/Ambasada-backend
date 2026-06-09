@@ -7,6 +7,8 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import HomePageContent
 
+HOME_IMAGE_PREVIEW_FIELDS = ('image_left', 'image_right', 'about_image')
+
 
 class HomePageContentAdminForm(forms.ModelForm):
     """Кастомная форма для предзаполнения языковых полей контента."""
@@ -18,6 +20,13 @@ class HomePageContentAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         """Инициализация полей формы дефолтными значениями."""
         super().__init__(*args, **kwargs)
+
+        for field_name in HOME_IMAGE_PREVIEW_FIELDS:
+            if field_name in self.fields:
+                widget_classes = self.fields[field_name].widget.attrs.get('class', '').split()
+                if BaseAdmin.image_preview_input_class not in widget_classes:
+                    widget_classes.append(BaseAdmin.image_preview_input_class)
+                self.fields[field_name].widget.attrs['class'] = ' '.join(widget_classes)
 
         if not self.instance.pk:
             # === 1. РУССКИЙ ЯЗЫК (RU) ===

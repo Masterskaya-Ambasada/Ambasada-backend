@@ -3,18 +3,10 @@ from __future__ import annotations
 from django.utils.encoding import force_str
 from drf_spectacular.utils import extend_schema_field
 from projects.constants import CONTENT_BLOCK_INDEX_WIDTH
-from projects.models import (
-    Project,
-    ProjectBlockButton,
-    ProjectContentBlock,
-    ProjectType,
-)
+from projects.models import Project, ProjectBlockButton, ProjectContentBlock, ProjectType
 from rest_framework import serializers
 
-from api.projects.constants import (
-    PROJECT_ACTION_BUTTON_LABEL,
-    PROJECT_ACTION_BUTTON_LINK_TEMPLATE,
-)
+from api.projects.constants import PROJECT_ACTION_BUTTON_LABEL, PROJECT_ACTION_BUTTON_LINK_TEMPLATE
 
 
 class ProjectTypeSerializer(serializers.ModelSerializer):

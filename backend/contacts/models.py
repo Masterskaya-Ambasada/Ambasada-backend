@@ -103,7 +103,11 @@ class ContactPageContent(models.Model):
         ]
 
     def __str__(self):
-        return self.donation_text[:50] if self.donation_text else str(self._meta.verbose_name)
+        return (
+            self.donation_text[: constants.DONATION_TEXT_PREVIEW_LENGTH]
+            if self.donation_text
+            else str(self._meta.verbose_name)
+        )
 
 
 def get_default_site_config():

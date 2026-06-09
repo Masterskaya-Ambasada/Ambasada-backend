@@ -18,6 +18,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 APP_ENV = config('APP_ENV', default='development')
 
+CSP_IMG_SRC = ("'self'", 'data:')
+
 
 if APP_ENV == 'production':
     DEBUG = False
@@ -28,7 +30,6 @@ if APP_ENV == 'production':
     CSP_DEFAULT_SRC = ("'self'",)
     CSP_SCRIPT_SRC = ("'self'",)
     CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
-    CSP_IMG_SRC = ("'self'", 'data:')
     CSP_FONT_SRC = ("'self'",)
     CSP_CONNECT_SRC = ("'self'",)
     CSP_FRAME_ANCESTORS = ("'none'",)
@@ -102,7 +103,7 @@ INSTALLED_APPS = [
     'users',
     'about',
     'api',
-    'site_config.apps.SiteConfigConfig',
+    'site_config',
     'contacts',
     'home',
 ]
@@ -113,6 +114,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'core.middleware.AdminLoginThrottleMiddleware',
+    'core.middleware.FrontendLocaleNormalizeMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -243,19 +245,29 @@ TIME_ZONE = 'Europe/Moscow'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']
 
 _COLLECTSTATIC_DRYRUN = config(
     'DJANGO_COLLECTSTATIC_DRYRUN',
     cast=bool,
     default=False,
 )
-STATIC_ROOT = '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
+
+if _COLLECTSTATIC_DRYRUN:
+    STATIC_ROOT = str(BASE_DIR / '.static')
+elif APP_ENV == 'production':
+    STATIC_ROOT = '/var/www/django/static'
+else:
+    STATIC_ROOT = str(BASE_DIR / 'staticfiles')
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'
-MEDIA_ROOT = '/var/www/django/media' if APP_ENV == 'production' else str(BASE_DIR / 'media')
-
+MEDIA_ROOT = (
+    config('PRODUCTION_MEDIA_ROOT', default='/var/www/django/media')
+    if APP_ENV == 'production'
+    else str(BASE_DIR / 'media')
+)
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -282,10 +294,10 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '120/hour',
-        'user': '600/hour',
-        'contact': '5/hour',  # форма обратной связи
-        'auth': '10/minute',  # вход в Admin — защита от brute-force
+        'anon': config('THROTTLE_RATE_ANON', default='120/hour'),
+        'user': config('THROTTLE_RATE_USER', default='600/hour'),
+        'contact': config('THROTTLE_RATE_CONTACT', default='5/hour'),  # форма обратной связи
+        'auth': config('THROTTLE_RATE_AUTH', default='10/minute'),  # вход в Admin — защита от brute-force
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
@@ -293,8 +305,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=config('JWT_ACCESS_TOKEN_MINUTES', default=60, cast=int)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=config('JWT_REFRESH_TOKEN_DAYS', default=1, cast=int)),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -327,8 +339,8 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'formatter': 'console',
             # 'filters': ['require_debug_false'],
-            'level': 'INFO',
-            'filename': 'debug.log',
+            'level': 'INFO',  # 'WARNING',
+            'filename': config('LOG_FILE_PATH', default='debug.log'),
         },
     },
     'loggers': {

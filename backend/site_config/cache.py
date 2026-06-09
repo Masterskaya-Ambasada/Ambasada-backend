@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.utils import translation
 from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 from home.constants import HOME_PAGE_SINGLETON_PK
 from home.models import HomePageContent
 
@@ -38,11 +39,10 @@ def get_site_config_cached(language=None) -> dict | None:
     if cached is not None:
         return cached
 
-    config = SiteConfig.objects.prefetch_related('socials').filter(pk=SITE_CONFIG_SINGLETON_PK).first()
-    if not config:
-        return None
-
     with translation.override(lang):
+        config = SiteConfig.objects.prefetch_related('socials').filter(pk=SITE_CONFIG_SINGLETON_PK).first()
+        if not config:
+            return None
         data = {
             'site_name': config.site_name or '',
             'seo_description': config.seo_description or '',
@@ -50,9 +50,9 @@ def get_site_config_cached(language=None) -> dict | None:
             'cookie_message': config.cookie_message or '',
             'cookie_button_text': config.cookie_button_text or '',
             'copyright': config.copyright or '',
-            'team_title': config.team_title or 'Команда',
-            'main_team_button_label': config.main_team_button_label or 'Присоединиться к команде',
-            'about_team_button_label': config.about_team_button_label or 'Присоединиться',
+            'team_title': config.team_title or _('Команда'),
+            'main_team_button_label': config.main_team_button_label or _('Присоединиться к команде'),
+            'about_team_button_label': config.about_team_button_label or _('Присоединиться'),
             'legal_links': {},
             'socials': [
                 {
@@ -80,15 +80,15 @@ def get_full_config_cached(language=None) -> dict:
     if cached is not None:
         return cached
 
-    site_config = SiteConfig.objects.filter(pk=SITE_CONFIG_SINGLETON_PK).first()
-    home_content = HomePageContent.objects.filter(pk=HOME_PAGE_SINGLETON_PK).first()
-
-    if not home_content and not site_config:
-        return {}
-
     with translation.override(lang):
+        site_config = SiteConfig.objects.filter(pk=SITE_CONFIG_SINGLETON_PK).first()
+        home_content = HomePageContent.objects.filter(pk=HOME_PAGE_SINGLETON_PK).first()
+
+        if not home_content and not site_config:
+            return {}
+
         data = {
-            'site_name': (site_config.site_name if site_config else '') or 'Ambasada',
+            'site_name': (site_config.site_name if site_config else '') or _('Ambasada'),
             # --- HERO BLOCK (из HomePageContent) ---
             'title': home_content.title if home_content else '',
             'subtitle': home_content.subtitle if home_content else '',
@@ -101,9 +101,12 @@ def get_full_config_cached(language=None) -> dict:
             'about_text': home_content.about_text if home_content else '',
             'about_image': (home_content.about_image.url if home_content and home_content.about_image else None),
             # --- TEAM PREVIEW (Из SiteConfig) ---
-            'team_title': (site_config.team_title if site_config else '') or 'Команда',
+            'team_title': (site_config.team_title if site_config else '') or _('Команда'),
             'main_team_button_label': (
-                (site_config.main_team_button_label if site_config else '') or 'Присоединиться к команде'
+                (site_config.main_team_button_label if site_config else '') or _('Присоединиться к команде')
+            ),
+            'about_team_button_label': (
+                (site_config.about_team_button_label if site_config else '') or _('Присоединиться')
             ),
             'team_button_link': ((site_config.team_button_link if site_config else '') or '/contacts'),
             # --- PROJECTS PREVIEW (из HomePageContent) ---
@@ -118,7 +121,7 @@ def get_full_config_cached(language=None) -> dict:
 
 def clear_config_cache():
     """Сброс кэша конфигурации (как базовой, так и полной) для всех языков."""
-    for lang, _ in settings.LANGUAGES:
-        lang_lower = lang.lower()
+    for lang_code, label in settings.LANGUAGES:
+        lang_lower = lang_code.lower()
         cache.delete(f'{CACHE_KEY_SITE_CONFIG}:{lang_lower}')
         cache.delete(f'{CACHE_KEY_FULL_CONFIG}:{lang_lower}')

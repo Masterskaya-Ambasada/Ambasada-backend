@@ -30,9 +30,13 @@ from projects.constants import (
     LABEL_MAX_LENGTH,
     ORDER_STEP,
     PROJECT_BLOCK_FALLBACK_SLUG,
+    PROJECT_BLOCK_IMAGE_HELP,
+    PROJECT_BLOCK_LEFT_IMAGE_HELP,
     PROJECT_BLOCKS_DIRECTORY,
     PROJECT_COVER_DIRECTORY,
+    PROJECT_COVER_IMAGE_HELP,
     PROJECT_GALLERY_DIRECTORY,
+    PROJECT_GALLERY_IMAGE_HELP,
     PROJECT_MEDIA_DIRECTORY,
     PROJECT_SLUG_MAX_LENGTH,
     REFERENCE_SLUG_MAX_LENGTH,
@@ -391,7 +395,7 @@ class Project(models.Model):
         upload_to=project_cover_image_path,
         max_length=URL_MAX_LENGTH,
         validators=[MediaFileValidator()],
-        help_text=_('URL главного изображения проекта.'),
+        help_text=_(PROJECT_COVER_IMAGE_HELP),
     )
     project_type = models.ForeignKey(
         ProjectType,
@@ -485,7 +489,7 @@ class ProjectGalleryImage(models.Model):
         upload_to=project_gallery_image_path,
         max_length=URL_MAX_LENGTH,
         validators=[MediaFileValidator()],
-        help_text=_('Изображение для карусели проекта.'),
+        help_text=_(PROJECT_GALLERY_IMAGE_HELP),
     )
     order = models.PositiveIntegerField(
         _('Порядок'),
@@ -557,7 +561,7 @@ class ProjectContentBlock(models.Model):
         max_length=URL_MAX_LENGTH,
         validators=[MediaFileValidator()],
         blank=True,  # добавил из-за проблем с импортом
-        help_text=_('Основное изображение блока.'),
+        help_text=_(PROJECT_BLOCK_IMAGE_HELP),
     )
     left_image = models.ImageField(
         _('Дополнительное изображение'),
@@ -565,7 +569,7 @@ class ProjectContentBlock(models.Model):
         max_length=URL_MAX_LENGTH,
         validators=[MediaFileValidator()],
         blank=True,
-        help_text=_('Второе изображение для варианта с двумя картинками.'),
+        help_text=_(PROJECT_BLOCK_LEFT_IMAGE_HELP),
     )
     string_list = JSONField(
         _('Список тезисов'),
