@@ -27,7 +27,6 @@ class HomeAPIView(APIView):
 
         with translation.override(lang):
             config_data = get_full_config_cached(language=lang)
-            print('!!! CONFIG DATA FROM CACHE:', config_data)
 
             if not config_data:
                 return Response(
