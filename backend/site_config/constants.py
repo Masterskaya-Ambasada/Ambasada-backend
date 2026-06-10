@@ -2,8 +2,8 @@ from django.utils.translation import gettext_lazy as _
 
 # --- СИСТЕМНЫЕ НАСТРОЙКИ И КЭШИРОВАНИЕ ---
 SITE_CONFIG_SINGLETON_PK = 1
-CACHE_KEY_SITE_CONFIG = 'site_config:v1'
-CACHE_KEY_FULL_CONFIG = 'site_config:v1_full'
+CACHE_KEY_SITE_CONFIG = 'site_config:v1.1'
+CACHE_KEY_FULL_CONFIG = 'site_config:v1.1_full'
 TIMEOUT_CACHE = 86400
 
 # --- МАКСИМАЛЬНЫЕ ДЛИНЫ ПОЛЕЙ ---

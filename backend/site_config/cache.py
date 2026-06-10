@@ -25,14 +25,14 @@ def format_locale_code_for_frontend(code: str) -> str:
 
 def get_config_cache_key(language=None) -> str:
     """Генерирует ключ кэша для Init запроса с учетом языка."""
-    lang = language or get_language() or settings.LANGUAGE_CODE
-    return f'{CACHE_KEY_SITE_CONFIG}:{lang.lower()}'
+    lang = (language or get_language() or settings.LANGUAGE_CODE).lower()
+    return f'{CACHE_KEY_SITE_CONFIG}:{lang}'
 
 
 def get_site_config_cached(language=None) -> dict | None:
-    """Получает настройки сайта для Init запроса. Использует встроенные фолбеки modeltranslation."""
-    lang = language or get_language() or settings.LANGUAGE_CODE
-    cache_key = f'{CACHE_KEY_SITE_CONFIG}:{lang.lower()}'
+    """Получает настройки сайта для Init запроса."""
+    lang = (language or get_language() or settings.LANGUAGE_CODE).lower()
+    cache_key = f'{CACHE_KEY_SITE_CONFIG}:{lang}'
 
     cached = cache.get(cache_key)
     if cached is not None:
@@ -72,8 +72,8 @@ def get_site_config_cached(language=None) -> dict | None:
 
 def get_full_config_cached(language=None) -> dict:
     """Возвращает полный локализованный словарь полей для Главной страницы."""
-    lang = language or get_language() or settings.LANGUAGE_CODE
-    cache_key = f'{CACHE_KEY_FULL_CONFIG}:{lang.lower()}'
+    lang = (language or get_language() or settings.LANGUAGE_CODE).lower()
+    cache_key = f'{CACHE_KEY_FULL_CONFIG}:{lang}'
 
     cached = cache.get(cache_key)
     if cached is not None:
@@ -88,23 +88,23 @@ def get_full_config_cached(language=None) -> dict:
 
         data = {
             'site_name': (site_config.site_name if site_config else '') or 'Ambasada',
-            # --- HERO BLOCK (из HomePageContent) ---
+            # --- HERO BLOCK ---
             'title': home_content.title if home_content else '',
             'subtitle': home_content.subtitle if home_content else '',
             'image_left': (home_content.image_left.url if home_content and home_content.image_left else None),
             'image_right': (home_content.image_right.url if home_content and home_content.image_right else None),
             'hero_button_label': home_content.hero_button_label if home_content else '',
             'hero_button_link': ((home_content.hero_button_link if home_content else '') or '/projects'),
-            # --- ABOUT PREVIEW (из HomePageContent) ---
+            # --- ABOUT PREVIEW ---
             'about_title': home_content.about_title if home_content else '',
             'about_text': home_content.about_text if home_content else '',
             'about_image': (home_content.about_image.url if home_content and home_content.about_image else None),
-            # --- TEAM PREVIEW (Из SiteConfig) ---
+            # --- TEAM PREVIEW ---
             'team_title': (site_config.team_title if site_config else '') or '',
             'main_team_button_label': ((site_config.main_team_button_label if site_config else '') or ''),
             'about_team_button_label': ((site_config.about_team_button_label if site_config else '') or ''),
             'team_button_link': ((site_config.team_button_link if site_config else '') or '/contacts'),
-            # --- PROJECTS PREVIEW (из HomePageContent) ---
+            # --- PROJECTS PREVIEW ---
             'projects_title': home_content.projects_title if home_content else '',
             'projects_button_label': (home_content.projects_button_label if home_content else ''),
             'projects_button_link': ((home_content.projects_button_link if home_content else '') or '/projects'),
@@ -115,8 +115,14 @@ def get_full_config_cached(language=None) -> dict:
 
 
 def clear_config_cache():
-    """Сброс кэша конфигурации (как базовой, так и полной) для всех языков."""
-    for lang_code, label in settings.LANGUAGES:
-        lang_lower = lang_code.lower()
+    """Cброс кэша конфигурации для всех активных языков."""
+    languages_to_clear = [lang_code.lower() for lang_code, _ in settings.LANGUAGES]
+
+    guaranteed_langs = ['sr-latn', 'sr-cyrl', 'en', 'ru']
+    for lang in guaranteed_langs:
+        if lang not in languages_to_clear:
+            languages_to_clear.append(lang)
+
+    for lang_lower in languages_to_clear:
         cache.delete(f'{CACHE_KEY_SITE_CONFIG}:{lang_lower}')
         cache.delete(f'{CACHE_KEY_FULL_CONFIG}:{lang_lower}')
