@@ -15,6 +15,7 @@ from .constants import (
     ADMIN_EMPTY_VALUE,
     DEFAULT_FRONTEND_URL,
     FRONTEND_PROJECT_PATH_TEMPLATE,
+    REFERENCE_TRANSLATED_FIELDS,
 )
 from .models import (
     Project,
@@ -101,13 +102,8 @@ class TagAdmin(BaseTranslatedAdmin, ImportExportMixin):
     """Класс администрирования Тегов."""
 
     resource_classes = [TagResource]
-    list_display = [
-        'slug',
-        'label_ru',
-        'label_en',
-        'label_sr_latn',
-        'label_sr_cyrl',
-    ]
+    fields = REFERENCE_TRANSLATED_FIELDS
+    list_display = REFERENCE_TRANSLATED_FIELDS
     search_fields = ['slug']
 
 
@@ -116,13 +112,8 @@ class ProjectTypeAdmin(BaseTranslatedAdmin, ImportExportMixin):
     """Класс администрирования типов проектов."""
 
     resource_classes = [ProjectTypeResource]
-    list_display = [
-        'slug',
-        'label_ru',
-        'label_en',
-        'label_sr_latn',
-        'label_sr_cyrl',
-    ]
+    fields = REFERENCE_TRANSLATED_FIELDS
+    list_display = REFERENCE_TRANSLATED_FIELDS
     search_fields = ['slug']
 
 

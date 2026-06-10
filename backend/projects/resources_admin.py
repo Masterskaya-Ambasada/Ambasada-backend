@@ -1,6 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from import_export import resources
 
+from .constants import REFERENCE_TRANSLATED_FIELDS
 from .models import ProjectType, Tag
 
 
@@ -26,7 +27,7 @@ class TagResource(BaseResource):
     class Meta(BaseResource.Meta):
         model = Tag
         import_id_fields = ['slug']
-        fields = ['slug', 'label_ru', 'label_en', 'label_sr_latn']
+        fields = REFERENCE_TRANSLATED_FIELDS
 
 
 class ProjectTypeResource(TagResource):

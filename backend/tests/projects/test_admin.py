@@ -7,9 +7,11 @@ from django.contrib.staticfiles import finders
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms.models import inlineformset_factory
 from django.test import override_settings
-from projects.admin import ProjectAdmin, ProjectBlockButtonInline
+from projects.admin import ProjectAdmin, ProjectBlockButtonInline, ProjectTypeAdmin, TagAdmin
 from projects.admin_forms import ProjectContentBlockInlineFormSet
-from projects.models import Project, ProjectContentBlock
+from projects.constants import REFERENCE_TRANSLATED_FIELDS
+from projects.models import Project, ProjectContentBlock, ProjectType, Tag
+from projects.resources_admin import ProjectTypeResource, TagResource
 
 TINY_PNG = b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4//8/AAX+Av4N70a4AAAAAElFTkSuQmCC')
 
@@ -215,6 +217,18 @@ def test_project_block_button_inline_uses_translated_label_fields():
         'url',
     )
     assert 'label' not in ProjectBlockButtonInline.fields
+
+
+def test_project_reference_admins_use_translated_label_fields():
+    """Проверяет, что теги и типы проектов редактируются на всех языках."""
+    assert TagAdmin(Tag, admin.site).fields == REFERENCE_TRANSLATED_FIELDS
+    assert ProjectTypeAdmin(ProjectType, admin.site).fields == REFERENCE_TRANSLATED_FIELDS
+
+
+def test_project_reference_resources_include_all_translated_label_fields():
+    """Проверяет, что импорт и экспорт справочников поддерживает все языки."""
+    assert TagResource.Meta.fields == REFERENCE_TRANSLATED_FIELDS
+    assert ProjectTypeResource.Meta.fields == REFERENCE_TRANSLATED_FIELDS
 
 
 @pytest.mark.django_db
