@@ -164,7 +164,7 @@ class HomeTeamPreviewSectionSerializer(BaseHomeSectionSerializer):
     @extend_schema_field(serializers.CharField())
     def get_title(self, obj) -> str:
         config = obj.get('config') or {}
-        return self._get_lang_value(config, 'team_title') or ''
+        return config.get('team_title') or ''
 
     @extend_schema_field(TeamMemberSerializer(many=True))
     def get_members(self, obj) -> list:
@@ -178,7 +178,7 @@ class HomeTeamPreviewSectionSerializer(BaseHomeSectionSerializer):
     def get_action_button(self, obj) -> dict:
         config = obj.get('config') or {}
         return {
-            'label': (self._get_lang_value(config, 'main_team_button_label') or ''),
+            'label': config.get('main_team_button_label') or '',
             'link': config.get('team_button_link') or '/contacts',
         }
 

@@ -51,8 +51,8 @@ def get_site_config_cached(language=None) -> dict | None:
             'cookie_button_text': config.cookie_button_text or '',
             'copyright': config.copyright or '',
             'team_title': config.team_title or _('Команда'),
-            'main_team_button_label': config.main_team_button_label or _('Присоединиться к команде'),
-            'about_team_button_label': config.about_team_button_label or _('Присоединиться'),
+            'main_team_button_label': config.main_team_button_label or '',
+            'about_team_button_label': config.about_team_button_label or '',
             'legal_links': {},
             'socials': [
                 {
