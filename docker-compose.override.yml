@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: ./docker/django/Dockerfile
       args:
-        - DJANGO_ENV=develop
+        - DJANGO_ENV=development
         # Needed for fixing permissions of files created by Docker
         - UID=${UID:-1000}
         - GID=${GID:-1000}
