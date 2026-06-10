@@ -46,10 +46,11 @@ class ProjectListView(ListAPIView):
     serializer_class = ProjectCardSerializer
     pagination_class = ProjectLimitOffsetPagination
 
-    def dispatch(self, request, *args, **kwargs):
-        lang = request.GET.get('lang') or get_language_from_request(request)
-        with translation.override(lang):
-            return super().dispatch(request, *args, **kwargs)
+    def initial(self, request, *args, **kwargs):
+        """Переключает локаль для всего цикла запроса-ответа DRF."""
+        lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        translation.activate(lang.lower())
+        super().initial(request, *args, **kwargs)
 
     def _normalize_tag_filters(self) -> list[str]:
         tags: list[str] = []
@@ -67,18 +68,22 @@ class ProjectListView(ListAPIView):
             .select_related('project_type')
             .prefetch_related(Prefetch('tags', queryset=tag_queryset))
         )
+
         project_type = (self.request.query_params.get(QUERY_PARAM_PROJECT_TYPE) or '').strip()
         if project_type:
             queryset = queryset.filter(Q(project_type__slug=project_type) | Q(project_type__label__iexact=project_type))
+
         tags = self._normalize_tag_filters()
         if tags:
             tag_filter = Q()
             for tag in tags:
                 tag_filter |= Q(tags__slug=tag) | Q(tags__label__iexact=tag)
             queryset = queryset.filter(tag_filter)
+
         search = (self.request.query_params.get(QUERY_PARAM_SEARCH) or '').strip()
         if search:
             queryset = queryset.filter(title__icontains=search)
+
         return queryset.distinct()
 
 
@@ -91,10 +96,11 @@ class ProjectDetailView(RetrieveAPIView):
     lookup_field = 'slug'
     lookup_url_kwarg = PATH_PARAM_PROJECT_SLUG
 
-    def dispatch(self, request, *args, **kwargs):
-        lang = request.GET.get('lang') or get_language_from_request(request)
-        with translation.override(lang):
-            return super().dispatch(request, *args, **kwargs)
+    def initial(self, request, *args, **kwargs):
+        """Переключает локаль для всего цикла запроса-ответа DRF."""
+        lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        translation.activate(lang.lower())
+        super().initial(request, *args, **kwargs)
 
     def get_queryset(self):
         tag_queryset = Tag.objects.order_by('label', 'pk')
@@ -103,6 +109,7 @@ class ProjectDetailView(RetrieveAPIView):
         block_queryset = ProjectContentBlock.objects.prefetch_related(
             Prefetch('buttons', queryset=button_queryset)
         ).order_by('order', 'pk')
+
         return (
             Project.objects.filter(is_published=True)
             .select_related('project_type')
@@ -121,10 +128,9 @@ class ProjectTagListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
-        """Возвращает локализованный список тегов опубликованных проектов."""
-        lang = request.query_params.get('lang') or get_language_from_request(request)
+        lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
 
-        with translation.override(lang):
+        with translation.override(lang.lower()):
             queryset = Tag.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
             tags = [tag.label for tag in queryset]
             return Response(tags)
@@ -137,10 +143,9 @@ class ProjectTypeListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
-        """Возвращает локализованный список типов опубликованных проектов."""
-        lang = request.query_params.get('lang') or get_language_from_request(request)
+        lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
 
-        with translation.override(lang):
+        with translation.override(lang.lower()):
             queryset = ProjectType.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
             serializer = ProjectTypeSerializer(queryset, many=True)
             return Response({PROJECT_TYPES_RESPONSE_KEY: serializer.data})

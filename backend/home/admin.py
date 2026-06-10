@@ -11,14 +11,14 @@ HOME_IMAGE_PREVIEW_FIELDS = ('image_left', 'image_right', 'about_image')
 
 
 class HomePageContentAdminForm(forms.ModelForm):
-    """Кастомная форма для предзаполнения языковых полей контента."""
+    """Кастомная форма для гарантированного предзаполнения языковых полей контента."""
 
     class Meta:
         model = HomePageContent
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        """Инициализация полей формы дефолтными значениями."""
+        """Инициализация полей формы дефолтными значениями, если они пусты."""
         super().__init__(*args, **kwargs)
 
         for field_name in HOME_IMAGE_PREVIEW_FIELDS:
@@ -28,87 +28,51 @@ class HomePageContentAdminForm(forms.ModelForm):
                     widget_classes.append(BaseAdmin.image_preview_input_class)
                 self.fields[field_name].widget.attrs['class'] = ' '.join(widget_classes)
 
-        if not self.instance.pk:
+        defaults = {
             # === 1. РУССКИЙ ЯЗЫК (RU) ===
-            if 'title_ru' in self.fields:
-                self.fields['title_ru'].initial = 'Амбасада за урбанизам'
-            if 'subtitle_ru' in self.fields:
-                self.fields['subtitle_ru'].initial = 'Исследуем, проектируем и меняем городскую среду Белграда'
-            if 'hero_button_label_ru' in self.fields:
-                self.fields['hero_button_label_ru'].initial = 'Смотреть проекты'
-            if 'about_title_ru' in self.fields:
-                self.fields['about_title_ru'].initial = 'О сообществе'
-            if 'about_text_ru' in self.fields:
-                self.fields['about_text_ru'].initial = (
-                    'Мы объединяем урбанистов, архитекторов и жителей для ' 'создания комфортного города.'
-                )
-            if 'projects_title_ru' in self.fields:
-                self.fields['projects_title_ru'].initial = 'Наши проекты'
-            if 'projects_button_label_ru' in self.fields:
-                self.fields['projects_button_label_ru'].initial = 'Все проекты'
-
+            'title_ru': 'Амбасада за урбанизам',
+            'subtitle_ru': 'Исследуем, проектируем и меняем городскую среду Белграда',
+            'hero_button_label_ru': 'Смотреть проекты',
+            'about_title_ru': 'О сообществе',
+            'about_text_ru': 'Мы объединяем урбанистов, архитекторов и жителей для создания комфортного города.',
+            'projects_title_ru': 'Наши проекты',
+            'projects_button_label_ru': 'Все проекты',
             # === 2. АНГЛИЙСКИЙ ЯЗЫК (EN) ===
-            if 'title_en' in self.fields:
-                self.fields['title_en'].initial = 'Ambasada za Urbanizam'
-            if 'subtitle_en' in self.fields:
-                self.fields['subtitle_en'].initial = (
-                    'Exploring, designing and changing the urban environment ' 'of Belgrade'
-                )
-            if 'hero_button_label_en' in self.fields:
-                self.fields['hero_button_label_en'].initial = 'View Projects'
-            if 'about_title_en' in self.fields:
-                self.fields['about_title_en'].initial = 'About community'
-            if 'about_text_en' in self.fields:
-                self.fields['about_text_en'].initial = (
-                    'We bring together urbanists, architects, and citizens ' 'to create a liveable city.'
-                )
-            if 'projects_title_en' in self.fields:
-                self.fields['projects_title_en'].initial = 'Our Projects'
-            if 'projects_button_label_en' in self.fields:
-                self.fields['projects_button_label_en'].initial = 'All projects'
-
+            'title_en': 'Ambasada za Urbanizam',
+            'subtitle_en': 'Exploring, designing and changing the urban environment of Belgrade',
+            'hero_button_label_en': 'View Projects',
+            'about_title_en': 'About community',
+            'about_text_en': 'We bring together urbanists, architects, and citizens to create a liveable city.',
+            'projects_title_en': 'Our Projects',
+            'projects_button_label_en': 'All projects',
             # === 3. СЕРБСКИЙ (ЛАТИНИЦА - SR_LATN) ===
-            if 'title_sr_latn' in self.fields:
-                self.fields['title_sr_latn'].initial = 'Ambasada za urbanizam'
-            if 'subtitle_sr_latn' in self.fields:
-                self.fields['subtitle_sr_latn'].initial = (
-                    'Istražujemo, projektujemo i menjamo urbanu sredinu ' 'Beograda'
-                )
-            if 'hero_button_label_sr_latn' in self.fields:
-                self.fields['hero_button_label_sr_latn'].initial = 'Pogledaj projekte'
-            if 'about_title_sr_latn' in self.fields:
-                self.fields['about_title_sr_latn'].initial = 'O zajednici'
-            if 'about_text_sr_latn' in self.fields:
-                self.fields['about_text_sr_latn'].initial = (
-                    'Spajamo urbaniste, arhitekte i građane radi stvaranja ' 'udobnog grada.'
-                )
-            if 'projects_title_sr_latn' in self.fields:
-                self.fields['projects_title_sr_latn'].initial = 'Naši projekti'
-            if 'projects_button_label_sr_latn' in self.fields:
-                self.fields['projects_button_label_sr_latn'].initial = 'Svi projekti'
-
+            'title_sr_latn': 'Ambasada za urbanizam',
+            'subtitle_sr_latn': 'Istražujemo, projektujemo i menjamo urbanu sredinu Beograda',
+            'hero_button_label_sr_latn': 'Pogledaj projekte',
+            'about_title_sr_latn': 'O zajednici',
+            'about_text_sr_latn': 'Spajamo urbaniste, arhitekte i građane radi stvaranja udobnog grada.',
+            'projects_title_sr_latn': 'Naši projekti',
+            'projects_button_label_sr_latn': 'Svi projekti',
             # === 4. СЕРБСКИЙ (КИРИЛЛИЦА - SR_CYRL) ===
-            if 'title_sr_cyrl' in self.fields:
-                self.fields['title_sr_cyrl'].initial = 'Амбасада за урбанизам'
-            if 'subtitle_sr_cyrl' in self.fields:
-                self.fields['subtitle_sr_cyrl'].initial = 'Истражујемо, пројектујемо и мењамо урбану среду Београда'
-            if 'hero_button_label_sr_cyrl' in self.fields:
-                self.fields['hero_button_label_sr_cyrl'].initial = 'Погледај пројекте'
-            if 'about_title_sr_cyrl' in self.fields:
-                self.fields['about_title_sr_cyrl'].initial = 'О заједници'
-            if 'about_text_sr_cyrl' in self.fields:
-                self.fields['about_text_sr_cyrl'].initial = (
-                    'Спајамо урбанисте, архитекте и грађане ради стварања ' 'удобног града.'
-                )
-            if 'projects_title_sr_cyrl' in self.fields:
-                self.fields['projects_title_sr_cyrl'].initial = 'Наши пројекти'
-            if 'projects_button_label_sr_cyrl' in self.fields:
-                self.fields['projects_button_label_sr_cyrl'].initial = 'Сви пројекти'
+            'title_sr_cyrl': 'Амбасада за урбанизам',
+            'subtitle_sr_cyrl': 'Истражујемо, пројектујемо и мењамо урбану среду Београда',
+            'hero_button_label_sr_cyrl': 'Погледај пројекте',
+            'about_title_sr_cyrl': 'О заједници',
+            'about_text_sr_cyrl': 'Спајамо урбанисте, архитекте и грађане ради стварања удобног града.',
+            'projects_title_sr_cyrl': 'Наши пројекти',
+            'projects_button_label_sr_cyrl': 'Сви пројекти',
+        }
+
+        for field_name, default_value in defaults.items():
+            if field_name in self.fields:
+                is_empty = not self.instance.pk or not getattr(self.instance, field_name, None)
+                if is_empty:
+                    self.fields[field_name].initial = default_value
 
 
 @admin.register(HomePageContent)
 class HomePageContentAdmin(BaseAdmin):
-    """Адменистрирование контента главной страницы (Singleton)."""
+    """Администрирование контента главной страницы (Singleton)."""
 
     form = HomePageContentAdminForm
     ordering = ('id',)

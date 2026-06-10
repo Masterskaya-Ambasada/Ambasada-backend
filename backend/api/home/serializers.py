@@ -1,5 +1,4 @@
-from django.utils.translation import get_language_from_request, override
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema_field
 from projects.models import Project
 from rest_framework import serializers
@@ -60,31 +59,12 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
     def get_action_button(self, obj) -> dict:
         """Кнопка перехода к детальной странице проекта с системным переводом."""
         slug = getattr(obj, 'slug', '')
-        request = self.context.get('request')
-
-        lang = 'ru'
-        if request:
-            lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
-
-        with override(lang.lower()):
-            translated_label = _('Перейти к проекту')
-
-        return {'label': translated_label, 'link': f'/projects/{slug}'}
+        translated_label = _('Перейти к проекту')
+        return {'label': str(translated_label), 'link': f'/projects/{slug}'}
 
 
 class BaseHomeSectionSerializer(serializers.Serializer):
-    """Базовый класс секций с хелперами для мультиязычного кэша и путей."""
-
-    def _get_lang_value(self, obj, base_key, default='') -> str:
-        if not obj:
-            return default
-        request = self.context.get('request')
-        lang = 'ru'
-        if request:
-            lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
-        lang = lang.lower()
-
-        return obj.get(f'{base_key}_{lang}') or obj.get(base_key) or default
+    """Базовый класс секций с хелперами для путей."""
 
     def _get_absolute_url(self, url_path: str | None) -> str | None:
         if not url_path:
@@ -98,19 +78,11 @@ class BaseHomeSectionSerializer(serializers.Serializer):
 class HomeHeroSectionSerializer(BaseHomeSectionSerializer):
     """Промо-блок (Hero) главной страницы."""
 
-    title = serializers.SerializerMethodField()
-    subtitle = serializers.SerializerMethodField()
+    title = serializers.CharField(default='')
+    subtitle = serializers.CharField(default='')
     image_left = serializers.SerializerMethodField()
     image_right = serializers.SerializerMethodField()
     action_button = serializers.SerializerMethodField()
-
-    @extend_schema_field(serializers.CharField())
-    def get_title(self, obj) -> str:
-        return self._get_lang_value(obj, 'title')
-
-    @extend_schema_field(serializers.CharField())
-    def get_subtitle(self, obj) -> str:
-        return self._get_lang_value(obj, 'subtitle')
 
     @extend_schema_field(serializers.CharField(allow_null=True))
     def get_image_left(self, obj) -> str | None:
@@ -123,7 +95,7 @@ class HomeHeroSectionSerializer(BaseHomeSectionSerializer):
     @extend_schema_field(ActionButtonSerializer)
     def get_action_button(self, obj) -> dict:
         return {
-            'label': (self._get_lang_value(obj, 'hero_button_label') or ''),
+            'label': obj.get('hero_button_label') or '',
             'link': obj.get('hero_button_link') or '/projects',
         }
 
@@ -131,18 +103,10 @@ class HomeHeroSectionSerializer(BaseHomeSectionSerializer):
 class HomeAboutPreviewSectionSerializer(BaseHomeSectionSerializer):
     """Блок краткой информации о сообществе."""
 
-    title = serializers.SerializerMethodField()
-    text = serializers.SerializerMethodField()
+    title = serializers.CharField(source='about_title', default='')
+    text = serializers.CharField(source='about_text', default='')
     image = serializers.SerializerMethodField()
     action_button = serializers.SerializerMethodField()
-
-    @extend_schema_field(serializers.CharField())
-    def get_title(self, obj) -> str:
-        return self._get_lang_value(obj, 'about_title')
-
-    @extend_schema_field(serializers.CharField())
-    def get_text(self, obj) -> str:
-        return self._get_lang_value(obj, 'about_text')
 
     @extend_schema_field(serializers.CharField(allow_null=True))
     def get_image(self, obj) -> str | None:
@@ -150,8 +114,10 @@ class HomeAboutPreviewSectionSerializer(BaseHomeSectionSerializer):
 
     @extend_schema_field(ActionButtonSerializer)
     def get_action_button(self, obj) -> dict:
-        label_text = self._get_lang_value(obj, 'about_team_button_label') or 'Узнать больше'
-        return {'label': label_text, 'link': '/about'}
+        return {
+            'label': obj.get('about_team_button_label') or obj.get('about_button_label') or _('Подробнее'),
+            'link': '/about',
+        }
 
 
 class HomeTeamPreviewSectionSerializer(BaseHomeSectionSerializer):
@@ -164,7 +130,7 @@ class HomeTeamPreviewSectionSerializer(BaseHomeSectionSerializer):
     @extend_schema_field(serializers.CharField())
     def get_title(self, obj) -> str:
         config = obj.get('config') or {}
-        return config.get('team_title') or ''
+        return config.get('team_title') or _('Наша команда')
 
     @extend_schema_field(TeamMemberSerializer(many=True))
     def get_members(self, obj) -> list:
@@ -178,7 +144,9 @@ class HomeTeamPreviewSectionSerializer(BaseHomeSectionSerializer):
     def get_action_button(self, obj) -> dict:
         config = obj.get('config') or {}
         return {
-            'label': config.get('main_team_button_label') or '',
+            'label': config.get('main_team_button_label')
+            or config.get('team_button_label')
+            or _('Присоединиться к команде'),
             'link': config.get('team_button_link') or '/contacts',
         }
 
@@ -193,7 +161,7 @@ class HomeProjectsPreviewSectionSerializer(BaseHomeSectionSerializer):
     @extend_schema_field(serializers.CharField())
     def get_title(self, obj) -> str:
         config = obj.get('config') or {}
-        return self._get_lang_value(config, 'projects_title') or ''
+        return config.get('projects_title') or _('Наши проекты')
 
     @extend_schema_field(HomeProjectItemSerializer(many=True))
     def get_items(self, obj) -> list:
@@ -204,7 +172,7 @@ class HomeProjectsPreviewSectionSerializer(BaseHomeSectionSerializer):
     def get_action_button(self, obj) -> dict:
         config = obj.get('config') or {}
         return {
-            'label': (self._get_lang_value(config, 'projects_button_label') or ''),
+            'label': config.get('projects_button_label') or _('Все проекты'),
             'link': config.get('projects_button_link') or '/projects',
         }
 

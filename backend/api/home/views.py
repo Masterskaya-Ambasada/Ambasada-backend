@@ -23,11 +23,10 @@ class HomeAPIView(APIView):
     authentication_classes = []
 
     def get(self, request, *args, **kwargs):
-        lang = request.query_params.get('lang') or get_language_from_request(request)
+        lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
 
         with translation.override(lang):
             config_data = get_full_config_cached(language=lang)
-            print('!!! CONFIG DATA FROM CACHE:', config_data)
 
             if not config_data:
                 return Response(
@@ -59,4 +58,6 @@ class HomeAPIView(APIView):
             context = {'request': request, 'first_project_id': first_project_id}
 
             serializer = HomePageRootSerializer(page_data, context=context)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            response_data = serializer.data
+
+        return Response(response_data, status=status.HTTP_200_OK)

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from django.utils.encoding import force_str
 from drf_spectacular.utils import extend_schema_field
 from projects.constants import CONTENT_BLOCK_INDEX_WIDTH
 from projects.models import (
@@ -40,7 +39,7 @@ class ProjectCardSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source='slug', read_only=True)
     project_type = serializers.CharField(source='project_type.label', read_only=True)
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='label')
-    year = serializers.SerializerMethodField()
+    year = serializers.CharField(read_only=True)
     image = serializers.ImageField(source='cover_image', read_only=True)
     action_button = serializers.SerializerMethodField()
 
@@ -57,15 +56,11 @@ class ProjectCardSerializer(serializers.ModelSerializer):
             'action_button',
         )
 
-    def get_year(self, obj: Project) -> str:
-        """Возвращает год строкой в формате, ожидаемом фронтендом."""
-        return str(obj.year)
-
     @extend_schema_field(ProjectActionButtonSerializer)
     def get_action_button(self, obj: Project) -> dict[str, str]:
-        """Возвращает кнопку перехода к детальной странице проекта."""
+        """Возвращает кнопку перехода к детальной странице проекта с учетом текущей локали."""
         return {
-            'label': force_str(PROJECT_ACTION_BUTTON_LABEL),
+            'label': str(PROJECT_ACTION_BUTTON_LABEL),
             'link': PROJECT_ACTION_BUTTON_LINK_TEMPLATE.format(slug=obj.slug),
         }
 
@@ -97,6 +92,7 @@ class ProjectDetailInfoSerializer(ProjectCardSerializer):
             return request.build_absolute_uri(image_url)
         return image_url
 
+    @extend_schema_field(serializers.ListField(child=serializers.CharField()))
     def get_image(self, obj: Project) -> list[str]:
         """
         Возвращает массив изображений для карусели детальной страницы.
@@ -146,6 +142,7 @@ class ProjectContentBlockSerializer(serializers.ModelSerializer):
             'buttons',
         )
 
+    @extend_schema_field(serializers.CharField())
     def get_index(self, obj: ProjectContentBlock) -> str:
         """Форматирует индекс секции в строку фиксированной ширины."""
         return f'{obj.order:0{CONTENT_BLOCK_INDEX_WIDTH}d}'

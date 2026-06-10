@@ -2,7 +2,6 @@ from django.conf import settings
 from django.core.cache import cache
 from django.utils import translation
 from django.utils.translation import get_language
-from django.utils.translation import gettext_lazy as _
 from home.constants import HOME_PAGE_SINGLETON_PK
 from home.models import HomePageContent
 
@@ -50,7 +49,7 @@ def get_site_config_cached(language=None) -> dict | None:
             'cookie_message': config.cookie_message or '',
             'cookie_button_text': config.cookie_button_text or '',
             'copyright': config.copyright or '',
-            'team_title': config.team_title or _('Команда'),
+            'team_title': config.team_title or '',
             'main_team_button_label': config.main_team_button_label or '',
             'about_team_button_label': config.about_team_button_label or '',
             'legal_links': {},
@@ -88,7 +87,7 @@ def get_full_config_cached(language=None) -> dict:
             return {}
 
         data = {
-            'site_name': (site_config.site_name if site_config else '') or _('Ambasada'),
+            'site_name': (site_config.site_name if site_config else '') or 'Ambasada',
             # --- HERO BLOCK (из HomePageContent) ---
             'title': home_content.title if home_content else '',
             'subtitle': home_content.subtitle if home_content else '',
@@ -101,13 +100,9 @@ def get_full_config_cached(language=None) -> dict:
             'about_text': home_content.about_text if home_content else '',
             'about_image': (home_content.about_image.url if home_content and home_content.about_image else None),
             # --- TEAM PREVIEW (Из SiteConfig) ---
-            'team_title': (site_config.team_title if site_config else '') or _('Команда'),
-            'main_team_button_label': (
-                (site_config.main_team_button_label if site_config else '') or _('Присоединиться к команде')
-            ),
-            'about_team_button_label': (
-                (site_config.about_team_button_label if site_config else '') or _('Присоединиться')
-            ),
+            'team_title': (site_config.team_title if site_config else '') or '',
+            'main_team_button_label': ((site_config.main_team_button_label if site_config else '') or ''),
+            'about_team_button_label': ((site_config.about_team_button_label if site_config else '') or ''),
             'team_button_link': ((site_config.team_button_link if site_config else '') or '/contacts'),
             # --- PROJECTS PREVIEW (из HomePageContent) ---
             'projects_title': home_content.projects_title if home_content else '',
