@@ -1,6 +1,7 @@
 from about.models import AboutPage, AboutParagraph, GalleryImage, Value
 from api.users.serializers import TeamMemberSerializer
 from django.contrib.auth import get_user_model
+from django.utils.translation import get_language_from_request
 from rest_framework import serializers
 from site_config.cache import get_site_config_cached
 
@@ -43,8 +44,6 @@ class AboutPageSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
 
-        from django.utils.translation import get_language_from_request
-
         lang = 'ru'
         if request:
             lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
@@ -52,7 +51,7 @@ class AboutPageSerializer(serializers.ModelSerializer):
 
         cached_config = get_site_config_cached(language=lang) or {}
 
-        values = self.context.get('values', instance.values.all())[:4]
+        values = self.context.get('values', list(instance.values.all()))[:4]
         images = self.context.get('images', instance.gallery_images.all())
         members = self.context.get('members', User.objects.public())
 
@@ -72,7 +71,7 @@ class AboutPageSerializer(serializers.ModelSerializer):
                 'items': ValueSerializer(values, many=True, context={'request': request}).data,
             },
             'team': {
-                'title': (cached_config.get('about_team_title') or cached_config.get('team_title') or 'Наша команда'),
+                'title': cached_config.get('team_title') or 'Наша команда',
                 'members': TeamMemberSerializer(members, many=True, context={'request': request}).data,
                 'action_button': {
                     'label': cached_config.get('about_team_button_label') or 'Присоединиться',

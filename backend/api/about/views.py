@@ -21,7 +21,8 @@ class AboutAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        lang = request.query_params.get('lang') or get_language_from_request(request)
+        raw_lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        lang = raw_lang.lower()
 
         with translation.override(lang):
             about = AboutPage.objects.prefetch_related('paragraphs', 'values', 'gallery_images').first()
@@ -37,6 +38,7 @@ class AboutAPIView(APIView):
                 )
 
             members = User.objects.public()
+
             serializer = AboutPageSerializer(
                 about,
                 context={

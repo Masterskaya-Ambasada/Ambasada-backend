@@ -1,9 +1,11 @@
+import random
+
 from contacts.models import ContactPageContent, ContactRequest
 from rest_framework import serializers
 
 
 class ContactRequestSerializer(serializers.ModelSerializer):
-    """Сериалайзер для формы обратной связи со встроенным антиспамом."""
+    """Сериализатор для формы обратной связи со встроенным антиспамом (Honeypot)."""
 
     contact_preference = serializers.CharField(
         required=False,
@@ -22,28 +24,31 @@ class ContactRequestSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        """Проверка хонейпота перед сохранением."""
-        honeypot = attrs.get('contact_preference')
+        """Проверяет хонейпот и маркирует внутреннее состояние."""
+        honeypot = attrs.pop('contact_preference', None)
 
-        if honeypot is not None and honeypot.strip() != '':
-            attrs['is_spam'] = True
+        if honeypot and honeypot.strip():
+            attrs['_is_spam'] = True
         else:
-            attrs['is_spam'] = False
+            attrs['_is_spam'] = False
 
-        attrs.pop('contact_preference', None)
         return attrs
 
     def create(self, validated_data):
-        is_spam = validated_data.pop('is_spam', False)
+        """Создает запись в БД только для людей. Для ботов эмулирует успешный ответ."""
+        is_spam = validated_data.pop('_is_spam', False)
 
         if is_spam:
-            return ContactRequest(**validated_data)
+            fake_instance = ContactRequest(**validated_data)
+            fake_instance.pk = random.randint(10000, 99999)
+
+            return fake_instance
 
         return super().create(validated_data)
 
 
 class ContactPageContentSerializer(serializers.ModelSerializer):
-    """Сериалайзер для редактируемой ссылки на пожертвования."""
+    """Сериализатор для редактируемой ссылки на пожертвования."""
 
     class Meta:
         model = ContactPageContent

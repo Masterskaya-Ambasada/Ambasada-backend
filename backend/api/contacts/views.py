@@ -30,18 +30,24 @@ class ContactView(APIView):
 
     def post(self, request, *args, **kwargs):
         """Создаёт запрос обратной связи со встроенной валидацией антиспама."""
-        lang = request.query_params.get('lang') or get_language_from_request(request)
+        raw_lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        lang = raw_lang.lower()
 
         with translation.override(lang):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
 
+            # Если фронтенд ОЖИДАЕТ поля созданного объекта (id, name, email...), пишем:
+            # return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Если фронтенд ОЖИДАЕТ строго только текст "Получено", оставляем так:
+            # Подкорректируем под фронт позже, если потребуется
             return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
         """Возвращает текст пожертвований."""
-        lang = request.query_params.get('lang') or get_language_from_request(request)
+        raw_lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        lang = raw_lang.lower()
 
         with translation.override(lang):
             content = ContactPageContent.objects.filter(is_active=True).first()

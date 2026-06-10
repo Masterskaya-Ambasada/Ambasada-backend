@@ -10,6 +10,7 @@ class UserLoginResponseSerializer(serializers.ModelSerializer):
     """Схема данных пользователя для логина и документации."""
 
     name = serializers.CharField(source='full_name', read_only=True)
+    photo = serializers.ImageField(read_only=True)
 
     class Meta:
         model = User
@@ -28,8 +29,8 @@ class AmbasadaTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         data = super().validate(attrs)
-        user_serializer = UserLoginResponseSerializer(self.user, context=self.context)
 
+        user_serializer = UserLoginResponseSerializer(self.user, context=self.context)
         data['user'] = user_serializer.data
 
         return data
@@ -40,16 +41,9 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(source='full_name', read_only=True)
     role = serializers.CharField(read_only=True)
-    photo = serializers.SerializerMethodField()
+
+    photo = serializers.ImageField(read_only=True)
 
     class Meta:
         model = User
         fields = ('id', 'name', 'role', 'photo')
-
-    def get_photo(self, obj):
-        if not obj.photo:
-            return None
-        request = self.context.get('request')
-        if request:
-            return request.build_absolute_uri(obj.photo.url)
-        return obj.photo.url
