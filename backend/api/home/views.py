@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import translation
-from django.utils.translation import get_language_from_request
+from django.utils.translation import get_language, get_language_from_request, gettext
 from django.utils.translation import gettext_lazy as _
 from projects.models import Project
 from rest_framework import status
@@ -25,8 +26,22 @@ class HomeAPIView(APIView):
     def get(self, request, *args, **kwargs):
         lang = request.query_params.get('lang') or get_language_from_request(request)
 
+        print('\n' + '=' * 80)
+        print('HOME API REQUEST')
+        print('REQUEST LANG:', repr(lang))
+        print('ACTIVE BEFORE OVERRIDE:', get_language())
+        print('LANGUAGE_CODE:', settings.LANGUAGE_CODE)
+        print('LANGUAGES:', settings.LANGUAGES)
+        print('LOCALE_PATHS:', settings.LOCALE_PATHS)
+        print('=' * 80)
+
         with translation.override(lang):
+            print('ACTIVE INSIDE OVERRIDE:', get_language())
+            print('TEST GETTEXT:', repr(gettext('Перейти к проекту')))
+
             config_data = get_full_config_cached(language=lang)
+
+            print('CONFIG EXISTS:', bool(config_data))
 
             if not config_data:
                 return Response(
@@ -47,6 +62,8 @@ class HomeAPIView(APIView):
                 .order_by('-year', '-id')[:4]
             )
 
+            print('PROJECTS COUNT:', projects.count())
+
             first_project_id = projects[0].id if projects.exists() else None
 
             page_data = {
@@ -55,7 +72,16 @@ class HomeAPIView(APIView):
                 'projects': projects,
             }
 
-            context = {'request': request, 'first_project_id': first_project_id}
+            context = {
+                'request': request,
+                'first_project_id': first_project_id,
+            }
 
             serializer = HomePageRootSerializer(page_data, context=context)
+
+            print('\nFINAL SERIALIZER DATA:')
+            print(serializer.data)
+
+            print('=' * 80 + '\n')
+
             return Response(serializer.data, status=status.HTTP_200_OK)
