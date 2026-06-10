@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 import shutil
 
@@ -7,6 +9,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.text import slugify
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
@@ -81,7 +84,7 @@ class ProjectAdminForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        """Разрешает оставить slug пустым, чтобы форма сгенерировала его из title_ru."""
+        """Инициализирует форму, снимая обязательность со slug и очищая help_text у тегов."""
         super().__init__(*args, **kwargs)
         if 'slug' in self.fields:
             self.fields['slug'].required = False
@@ -89,7 +92,7 @@ class ProjectAdminForm(forms.ModelForm):
             self.fields['tags'].help_text = ''
 
     def clean(self):
-        """Заполняет пустой slug после валидации всех полей формы."""
+        """Валидирует данные формы и автоматически генерирует slug, если он не заполнен."""
         cleaned_data = super().clean()
         if not cleaned_data.get('slug'):
             cleaned_data['slug'] = make_slug_from_russian_title(cleaned_data.get('title_ru', ''))
@@ -101,13 +104,7 @@ class TagAdmin(BaseTranslatedAdmin, ImportExportMixin):
     """Класс администрирования Тегов."""
 
     resource_classes = [TagResource]
-    list_display = [
-        'slug',
-        'label_ru',
-        'label_en',
-        'label_sr_latn',
-        'label_sr_cyrl',
-    ]
+    list_display = ['slug', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl']
     search_fields = ['slug']
 
 
@@ -116,13 +113,7 @@ class ProjectTypeAdmin(BaseTranslatedAdmin, ImportExportMixin):
     """Класс администрирования типов проектов."""
 
     resource_classes = [ProjectTypeResource]
-    list_display = [
-        'slug',
-        'label_ru',
-        'label_en',
-        'label_sr_latn',
-        'label_sr_cyrl',
-    ]
+    list_display = ['slug', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl']
     search_fields = ['slug']
 
 
@@ -138,6 +129,7 @@ class ProjectGalleryImageInline(BaseAdminMixin, NestedTabularInline):
 
     @admin.display(description=_('Превью'))
     def image_preview(self, obj):
+        """Возвращает HTML-тег предпросмотра изображения для галереи проекта."""
         return self.get_admin_image_preview(obj, 'image', width=220, height=140)
 
 
@@ -159,8 +151,6 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
     inlines = [ProjectBlockButtonInline]
     formset = ProjectContentBlockInlineFormSet
     readonly_fields = ('image_preview', 'left_image_preview')
-
-    # Перебиваем дефолтный ordering='slug' из BaseAdminMixin, чтобы не было ошибок
     ordering = ('order',)
 
     tinymce_fields = [
@@ -205,10 +195,12 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
 
     @admin.display(description=_('Превью изображения'))
     def image_preview(self, obj):
+        """Возвращает HTML-тег предпросмотра основного изображения контентного блока."""
         return self.get_admin_image_preview(obj, 'image', width=240, height=160)
 
     @admin.display(description=_('Превью левого изображения'))
     def left_image_preview(self, obj):
+        """Возвращает HTML-тег предпросмотра дополнительного (левого) изображения блока."""
         return self.get_admin_image_preview(obj, 'left_image', width=240, height=160)
 
 
@@ -263,6 +255,7 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
     )
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
+        """Кастомизирует отображение текстовых полей описания, задавая им высоту и стили."""
         formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name.startswith('description'):
             attrs = formfield.widget.attrs.copy()
@@ -277,21 +270,30 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
         return formfield
 
     def get_queryset(self, request):
+        """Оптимизирует запрос к БД, подтягивая связанные типы проектов через select_related."""
         return super().get_queryset(request).select_related('project_type')
 
     def get_readonly_fields(self, request, obj=None):
+        """Делает поле slug доступным только для чтения при редактировании существующего проекта."""
         return list(self.readonly_fields) + ['slug'] if obj else self.readonly_fields
 
     def get_prepopulated_fields(self, request, obj=None):
+        """Включает автоматическое заполнение slug на основе title_ru только для новых проектов."""
         return {} if obj else {'slug': ('title_ru',)}
 
     def get_project_type(self, obj):
-        return obj.project_type.label if obj.project_type else ADMIN_EMPTY_VALUE
+        """Безопасно извлекает название типа проекта с учётом текущего языка админки."""
+        if not obj.project_type:
+            return ADMIN_EMPTY_VALUE
+
+        lang = (get_language() or 'ru').lower().replace('-', '_')
+        return getattr(obj.project_type, f'label_{lang}', '') or obj.project_type.label or ADMIN_EMPTY_VALUE
 
     get_project_type.short_description = _('Тип проекта')
-    get_project_type.admin_order_field = 'project_type__label'
+    get_project_type.admin_order_field = 'project_type__label_ru'
 
     def get_view_on_site(self, obj):
+        """Генерирует HTML-ссылку для быстрого перехода из админки на страницу проекта на фронтенде."""
         if obj.slug:
             frontend_url = getattr(settings, 'FRONTEND_URL', DEFAULT_FRONTEND_URL).rstrip('/')
             absolute_url = FRONTEND_PROJECT_PATH_TEMPLATE.format(frontend_url=frontend_url, slug=obj.slug)
@@ -305,7 +307,7 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
     get_view_on_site.short_description = _('Ссылка')
 
     def delete_queryset(self, request, queryset):
-        """Безопасное удаление объектов с защитой файловой системы."""
+        """Безопасное массовое удаление проектов с защитой и очисткой соответствующих папок в MEDIA_ROOT."""
         base_path = os.path.join(settings.MEDIA_ROOT, 'projects')
         for project in queryset:
             if project.slug and len(project.slug) > 2:
@@ -315,12 +317,14 @@ class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
         queryset.delete()
 
     def cover_image_thumbnail(self, obj):
+        """Возвращает миниатюру обложки проекта для списка объектов (list_display)."""
         return self.get_image_thumbnail(obj, 'cover_image')
 
     cover_image_thumbnail.short_description = Project._meta.get_field('cover_image').verbose_name
 
     @admin.display(description=_('Превью обложки'))
     def cover_image_preview(self, obj):
+        """Возвращает HTML-тег полноценного превью обложки проекта для формы редактирования."""
         return self.get_admin_image_preview(obj, 'cover_image', width=260, height=170)
 
     class Media:

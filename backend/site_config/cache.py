@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.core.cache import cache
-from django.utils import translation
 from django.utils.translation import get_language
 from home.constants import HOME_PAGE_SINGLETON_PK
 from home.models import HomePageContent
@@ -38,33 +37,42 @@ def get_site_config_cached(language=None) -> dict | None:
     if cached is not None:
         return cached
 
-    with translation.override(lang):
-        config = SiteConfig.objects.prefetch_related('socials').filter(pk=SITE_CONFIG_SINGLETON_PK).first()
-        if not config:
-            return None
-        data = {
-            'site_name': config.site_name or '',
-            'seo_description': config.seo_description or '',
-            'privacy_policy': config.privacy_policy or '',
-            'cookie_message': config.cookie_message or '',
-            'cookie_button_text': config.cookie_button_text or '',
-            'copyright': config.copyright or '',
-            'team_title': config.team_title or '',
-            'main_team_button_label': config.main_team_button_label or '',
-            'about_team_button_label': config.about_team_button_label or '',
-            'legal_links': {},
-            'socials': [
-                {
-                    'social_type': s.get_social_type_display(),
-                    'url': s.url,
-                }
-                for s in config.socials.all()
-                if getattr(s, 'is_active', True)
-            ],
-            'languages': [
-                {'code': format_locale_code_for_frontend(code), 'label': label} for code, label in settings.LANGUAGES
-            ],
-        }
+    # Формируем суффикс поля для базы данных (например, 'sr-latn' -> 'sr_latn')
+    lang_suffix = lang.replace('-', '_')
+
+    config = SiteConfig.objects.prefetch_related('socials').filter(pk=SITE_CONFIG_SINGLETON_PK).first()
+    if not config:
+        return None
+
+    data = {
+        'site_name': getattr(config, f'site_name_{lang_suffix}', '') or config.site_name or '',
+        'seo_description': getattr(config, f'seo_description_{lang_suffix}', '') or config.seo_description or '',
+        'privacy_policy': getattr(config, f'privacy_policy_{lang_suffix}', '') or config.privacy_policy or '',
+        'cookie_message': getattr(config, f'cookie_message_{lang_suffix}', '') or config.cookie_message or '',
+        'cookie_button_text': getattr(config, f'cookie_button_text_{lang_suffix}', '')
+        or config.cookie_button_text
+        or '',
+        'copyright': getattr(config, f'copyright_{lang_suffix}', '') or config.copyright or '',
+        'team_title': getattr(config, f'team_title_{lang_suffix}', '') or config.team_title or '',
+        'main_team_button_label': getattr(config, f'main_team_button_label_{lang_suffix}', '')
+        or config.main_team_button_label
+        or '',
+        'about_team_button_label': getattr(config, f'about_team_button_label_{lang_suffix}', '')
+        or config.about_team_button_label
+        or '',
+        'legal_links': {},
+        'socials': [
+            {
+                'social_type': s.get_social_type_display(),
+                'url': s.url,
+            }
+            for s in config.socials.all()
+            if getattr(s, 'is_active', True)
+        ],
+        'languages': [
+            {'code': format_locale_code_for_frontend(code), 'label': label} for code, label in settings.LANGUAGES
+        ],
+    }
 
     cache.set(cache_key, data, timeout=TIMEOUT_CACHE)
     return data
@@ -79,43 +87,61 @@ def get_full_config_cached(language=None) -> dict:
     if cached is not None:
         return cached
 
-    with translation.override(lang):
-        site_config = SiteConfig.objects.filter(pk=SITE_CONFIG_SINGLETON_PK).first()
-        home_content = HomePageContent.objects.filter(pk=HOME_PAGE_SINGLETON_PK).first()
+    # Формируем точный суффикс поля для базы данных (например, 'sr_latn' или 'sr_cyrl')
+    lang_suffix = lang.replace('-', '_')
 
-        if not home_content and not site_config:
-            return {}
+    site_config = SiteConfig.objects.filter(pk=SITE_CONFIG_SINGLETON_PK).first()
+    home_content = HomePageContent.objects.filter(pk=HOME_PAGE_SINGLETON_PK).first()
 
-        data = {
-            'site_name': (site_config.site_name if site_config else '') or 'Ambasada',
-            # --- HERO BLOCK ---
-            'title': home_content.title if home_content else '',
-            'subtitle': home_content.subtitle if home_content else '',
-            'image_left': (home_content.image_left.url if home_content and home_content.image_left else None),
-            'image_right': (home_content.image_right.url if home_content and home_content.image_right else None),
-            'hero_button_label': home_content.hero_button_label if home_content else '',
-            'hero_button_link': ((home_content.hero_button_link if home_content else '') or '/projects'),
-            # --- ABOUT PREVIEW ---
-            'about_title': home_content.about_title if home_content else '',
-            'about_text': home_content.about_text if home_content else '',
-            'about_image': (home_content.about_image.url if home_content and home_content.about_image else None),
-            # --- TEAM PREVIEW ---
-            'team_title': (site_config.team_title if site_config else '') or '',
-            'main_team_button_label': ((site_config.main_team_button_label if site_config else '') or ''),
-            'about_team_button_label': ((site_config.about_team_button_label if site_config else '') or ''),
-            'team_button_link': ((site_config.team_button_link if site_config else '') or '/contacts'),
-            # --- PROJECTS PREVIEW ---
-            'projects_title': home_content.projects_title if home_content else '',
-            'projects_button_label': (home_content.projects_button_label if home_content else ''),
-            'projects_button_link': ((home_content.projects_button_link if home_content else '') or '/projects'),
-        }
+    if not home_content and not site_config:
+        return {}
+
+    data = {
+        'site_name': (
+            getattr(site_config, f'site_name_{lang_suffix}', '') or (site_config.site_name if site_config else '')
+        )
+        or 'Ambasada',
+        # --- HERO BLOCK ---
+        'title': getattr(home_content, f'title_{lang_suffix}', '') if home_content else '',
+        'subtitle': getattr(home_content, f'subtitle_{lang_suffix}', '') if home_content else '',
+        'image_left': (home_content.image_left.url if home_content and home_content.image_left else None),
+        'image_right': (home_content.image_right.url if home_content and home_content.image_right else None),
+        'hero_button_label': getattr(home_content, f'hero_button_label_{lang_suffix}', '') if home_content else '',
+        'hero_button_link': ((home_content.hero_button_link if home_content else '') or '/projects'),
+        # --- ABOUT PREVIEW ---
+        'about_title': getattr(home_content, f'about_title_{lang_suffix}', '') if home_content else '',
+        'about_text': getattr(home_content, f'about_text_{lang_suffix}', '') if home_content else '',
+        'about_image': (home_content.about_image.url if home_content and home_content.about_image else None),
+        # --- TEAM PREVIEW ---
+        'team_title': (
+            getattr(site_config, f'team_title_{lang_suffix}', '') or (site_config.team_title if site_config else '')
+        )
+        or '',
+        'main_team_button_label': (
+            getattr(site_config, f'main_team_button_label_{lang_suffix}', '')
+            or (site_config.main_team_button_label if site_config else '')
+        )
+        or '',
+        'about_team_button_label': (
+            getattr(site_config, f'about_team_button_label_{lang_suffix}', '')
+            or (site_config.about_team_button_label if site_config else '')
+        )
+        or '',
+        'team_button_link': ((site_config.team_button_link if site_config else '') or '/contacts'),
+        # --- PROJECTS PREVIEW ---
+        'projects_title': getattr(home_content, f'projects_title_{lang_suffix}', '') if home_content else '',
+        'projects_button_label': getattr(home_content, f'projects_button_label_{lang_suffix}', '')
+        if home_content
+        else '',
+        'projects_button_link': ((home_content.projects_button_link if home_content else '') or '/projects'),
+    }
 
     cache.set(cache_key, data, timeout=TIMEOUT_CACHE)
     return data
 
 
 def clear_config_cache():
-    """Cброс кэша конфигурации для всех активных языков."""
+    """Сброс кэша конфигурации для всех активных языков."""
     languages_to_clear = [lang_code.lower() for lang_code, _ in settings.LANGUAGES]
 
     guaranteed_langs = ['sr-latn', 'sr-cyrl', 'en', 'ru']

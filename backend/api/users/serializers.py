@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import get_language_from_request
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -39,11 +40,36 @@ class AmbasadaTokenObtainPairSerializer(TokenObtainPairSerializer):
 class TeamMemberSerializer(serializers.ModelSerializer):
     """Для публичных блоков команды на сайте."""
 
-    name = serializers.CharField(source='full_name', read_only=True)
-    role = serializers.CharField(read_only=True)
-
+    name = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
     photo = serializers.ImageField(read_only=True)
 
     class Meta:
         model = User
         fields = ('id', 'name', 'role', 'photo')
+
+    def _get_suffix(self) -> str:
+        """Определяем суффикс языка без изменения глобального состояния."""
+        suffix = self.context.get('lang_suffix')
+        if not suffix:
+            request = self.context.get('request')
+            lang = 'ru'
+            if request:
+                lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+            suffix = lang.lower().replace('-', '_')
+        return suffix
+
+    def get_name(self, obj) -> str:
+        suffix = self._get_suffix()
+        return getattr(obj, f'full_name_{suffix}', '') or obj.full_name or ''
+
+    def get_role(self, obj) -> str:
+        suffix = self._get_suffix()
+
+        if hasattr(obj, f'role_{suffix}'):
+            return getattr(obj, f'role_{suffix}', '') or obj.role or ''
+
+        if hasattr(obj, 'get_role_display'):
+            return _(obj.get_role_display())
+
+        return obj.role or ''

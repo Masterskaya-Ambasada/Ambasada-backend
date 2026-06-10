@@ -56,10 +56,13 @@ class AdminLoginThrottleMiddleware:
 
 
 class FrontendLocaleNormalizeMiddleware(MiddlewareMixin):
-    """Мидлварь для нормализации CamelCase в заголовке Accept-Language."""
+    """Мидлварь для нормализации CamelCase кодов сербского языка в Accept-Language."""
 
     def process_request(self, request):
         accept_lang = request.META.get('HTTP_ACCEPT_LANGUAGE')
 
         if accept_lang:
-            request.META['HTTP_ACCEPT_LANGUAGE'] = accept_lang.lower()
+            normalized = accept_lang.replace('sr-Latn', 'sr-latn').replace('sr-Cyrl', 'sr-cyrl')
+            normalized = normalized.replace('sr_latn', 'sr-latn').replace('sr_cyrl', 'sr-cyrl')
+
+            request.META['HTTP_ACCEPT_LANGUAGE'] = normalized

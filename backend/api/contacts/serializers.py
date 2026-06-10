@@ -1,6 +1,7 @@
 import random
 
 from contacts.models import ContactPageContent, ContactRequest
+from django.utils.translation import get_language_from_request
 from rest_framework import serializers
 
 
@@ -48,8 +49,22 @@ class ContactRequestSerializer(serializers.ModelSerializer):
 
 
 class ContactPageContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для редактируемой ссылки на пожертвования."""
+    """Сериализатор для страницы контактов с безопасной локализацией."""
+
+    donation_text = serializers.SerializerMethodField()
 
     class Meta:
         model = ContactPageContent
         fields = ('donation_text',)
+
+    def get_donation_text(self, obj):
+        suffix = self.context.get('lang_suffix')
+
+        if not suffix:
+            request = self.context.get('request')
+            lang = 'ru'
+            if request:
+                lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+            suffix = lang.lower().replace('-', '_')
+
+        return getattr(obj, f'donation_text_{suffix}', '') or obj.donation_text or ''
