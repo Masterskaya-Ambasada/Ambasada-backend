@@ -1,4 +1,4 @@
-from django.utils.translation import get_language, get_language_from_request, gettext, override
+from django.utils.translation import get_language_from_request, override
 from django.utils.translation import gettext as _
 from drf_spectacular.utils import extend_schema_field
 from projects.models import Project
@@ -58,6 +58,7 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(ActionButtonSerializer)
     def get_action_button(self, obj) -> dict:
+        """Кнопка перехода к детальной странице проекта с системным переводом."""
         slug = getattr(obj, 'slug', '')
         request = self.context.get('request')
 
@@ -66,23 +67,9 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
             lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
 
         with override(lang.lower()):
-            print('\n--- TRANSLATION DEBUG ---')
-            print('LANG:', lang)
-            print('ACTIVE:', get_language())
-            print('RAW MSGID:', repr('Перейти к проекту'))
+            translated_label = _('Перейти к проекту')
 
-            translated_via_gettext = gettext('Перейти к проекту')
-            translated_via_alias = _('Перейти к проекту')
-
-            print('gettext():', repr(translated_via_gettext))
-            print('_():', repr(translated_via_alias))
-            print('-------------------------\n')
-            translated_label = translated_via_alias
-        result = {
-            'label': translated_label,
-            'link': f'/projects/{slug}',
-        }
-        return result
+        return {'label': translated_label, 'link': f'/projects/{slug}'}
 
 
 class BaseHomeSectionSerializer(serializers.Serializer):

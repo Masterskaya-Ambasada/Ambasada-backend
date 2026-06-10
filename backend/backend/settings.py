@@ -236,7 +236,7 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
 MODELTRANSLATION_CLEAN_FIELDS = True
 
-LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
+LOCALE_PATHS = [str(BASE_DIR / 'locale')]
 
 TIME_ZONE = 'Europe/Moscow'
 
