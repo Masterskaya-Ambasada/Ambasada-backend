@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.utils import translation
 from django.utils.encoding import force_str
 from django.utils.translation import get_language_from_request
 from drf_spectacular.utils import extend_schema_field
@@ -101,9 +102,15 @@ class ProjectCardSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(ProjectActionButtonSerializer)
     def get_action_button(self, obj: Project) -> dict[str, str]:
-        """Возвращает кнопку перехода к детальной странице проекта."""
+        """Возвращает кнопку перехода к детальной странице проекта с принудительной локализацией."""
+        suffix = get_lang_suffix(self.context)
+        lang_code = suffix.replace('_', '-')
+
+        with translation.override(lang_code):
+            localized_label = force_str(PROJECT_ACTION_BUTTON_LABEL)
+
         return {
-            'label': force_str(PROJECT_ACTION_BUTTON_LABEL),
+            'label': localized_label,
             'link': PROJECT_ACTION_BUTTON_LINK_TEMPLATE.format(slug=obj.slug),
         }
 
@@ -174,7 +181,7 @@ class ProjectContentBlockSerializer(serializers.ModelSerializer):
 
     index = serializers.SerializerMethodField()
     string_list = serializers.ListField(child=serializers.CharField(), read_only=True)
-    buttons = ProjectBlockButtonSerializer(many=True, read_only=True)
+    buttons = serializers.SerializerMethodField()
 
     class Meta:
         """Метаданные сериализатора контентного блока."""
@@ -209,6 +216,12 @@ class ProjectContentBlockSerializer(serializers.ModelSerializer):
     def get_index(self, obj: ProjectContentBlock) -> str:
         """Форматирует индекс секции в строку фиксированной ширины."""
         return f'{obj.order:0{CONTENT_BLOCK_INDEX_WIDTH}d}'
+
+    @extend_schema_field(ProjectBlockButtonSerializer(many=True))
+    def get_buttons(self, obj: ProjectContentBlock) -> list:
+        """Возвращает список кнопок блока с гарантированным пробросом контекста локализации."""
+        buttons_queryset = obj.buttons.all()
+        return ProjectBlockButtonSerializer(buttons_queryset, many=True, context=self.context).data
 
     def to_representation(self, instance: ProjectContentBlock) -> dict:
         """Удаляет из ответа поля, не относящиеся к выбранному варианту контент-блока."""

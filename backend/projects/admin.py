@@ -133,13 +133,13 @@ class ProjectGalleryImageInline(BaseAdminMixin, NestedTabularInline):
         return self.get_admin_image_preview(obj, 'image', width=220, height=140)
 
 
-class ProjectBlockButtonInline(NestedTabularInline):
+class ProjectBlockButtonInline(NestedStackedInline):
     """Инлайн для кнопок внутри контентного блока (самый нижний уровень)."""
 
     model = ProjectBlockButton
     extra = 0
     fk_name = 'block'
-    fields = ('order', 'label', 'type', 'url')
+    fields = ('order', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl', 'type', 'url')
 
 
 class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):

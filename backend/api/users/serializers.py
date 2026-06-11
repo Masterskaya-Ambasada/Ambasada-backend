@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils import translation
 from django.utils.translation import get_language_from_request
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
@@ -14,6 +15,8 @@ class UserLoginResponseSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(read_only=True)
 
     class Meta:
+        """Метаданные сериализатора ответа пользователя."""
+
         model = User
         fields = ('id', 'email', 'name', 'role', 'photo', 'is_staff')
         read_only_fields = fields
@@ -29,6 +32,7 @@ class AmbasadaTokenObtainPairSerializer(TokenObtainPairSerializer):
     }
 
     def validate(self, attrs):
+        """Валидирует учетные данные и дополняет ответ информацией о пользователе."""
         data = super().validate(attrs)
 
         user_serializer = UserLoginResponseSerializer(self.user, context=self.context)
@@ -38,18 +42,20 @@ class AmbasadaTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):
-    """Для публичных блоков команды на сайте."""
+    """Сериализатор для публичных блоков команды на сайте с динамической локализацией."""
 
     name = serializers.SerializerMethodField()
     role = serializers.SerializerMethodField()
     photo = serializers.ImageField(read_only=True)
 
     class Meta:
+        """Метаданные сериализатора участника команды."""
+
         model = User
         fields = ('id', 'name', 'role', 'photo')
 
     def _get_suffix(self) -> str:
-        """Определяем суффикс языка без изменения глобального состояния."""
+        """Определяет языковой суффикс без изменения глобального состояния локали."""
         suffix = self.context.get('lang_suffix')
         if not suffix:
             request = self.context.get('request')
@@ -60,16 +66,26 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         return suffix
 
     def get_name(self, obj) -> str:
+        """Собирает локализованное имя и фамилию из переведенных базовых полей."""
         suffix = self._get_suffix()
-        return getattr(obj, f'full_name_{suffix}', '') or obj.full_name or ''
+
+        first_name = getattr(obj, f'first_name_{suffix}', None) or getattr(obj, 'first_name', '')
+        last_name = getattr(obj, f'last_name_{suffix}', None) or getattr(obj, 'last_name', '')
+
+        full_name = f'{first_name} {last_name}'.strip()
+
+        return full_name or obj.full_name or obj.username
 
     def get_role(self, obj) -> str:
+        """Возвращает локализованную строку роли участника команды."""
         suffix = self._get_suffix()
 
         if hasattr(obj, f'role_{suffix}'):
             return getattr(obj, f'role_{suffix}', '') or obj.role or ''
 
         if hasattr(obj, 'get_role_display'):
-            return _(obj.get_role_display())
+            lang_code = suffix.replace('_', '-')
+            with translation.override(lang_code):
+                return translation.gettext(obj.get_role_display())
 
         return obj.role or ''
