@@ -107,6 +107,7 @@ INSTALLED_APPS = [
     'site_config',
     'contacts',
     'home',
+    'security',
 ]
 
 MIDDLEWARE = [

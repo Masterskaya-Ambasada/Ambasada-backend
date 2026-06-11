@@ -47,7 +47,7 @@ class SiteConfig(models.Model):
         help_text=HELP_SEO_DESCRIPTION,
     )
     privacy_policy = models.TextField(
-        verbose_name=_('Политика конфиденциальности'),
+        verbose_name=_('Согласие на обработку персональных данных'),
         default='',
         help_text=HELP_PRIVACY_POLICY,
     )

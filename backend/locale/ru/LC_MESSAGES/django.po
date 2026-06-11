@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-09 21:52+0300\n"
+"POT-Creation-Date: 2026-06-11 19:48+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,31 +33,31 @@ msgid "📋 Параграфы секции \"О нас\""
 msgstr ""
 
 #: backend/about/admin.py:61 backend/about/admin.py:135
-#: backend/projects/admin.py:179 backend/projects/admin.py:239
+#: backend/projects/admin.py:169 backend/projects/admin.py:231
 msgid "Основная информация"
 msgstr ""
 
 #: backend/about/admin.py:63 backend/about/admin.py:99
 #: backend/about/admin.py:136 backend/about/admin.py:183
-#: backend/projects/admin.py:183 backend/projects/admin.py:253
+#: backend/projects/admin.py:173 backend/projects/admin.py:245
 msgid "Переводы (Русский)"
 msgstr ""
 
 #: backend/about/admin.py:67 backend/about/admin.py:103
 #: backend/about/admin.py:137 backend/about/admin.py:194
-#: backend/projects/admin.py:187 backend/projects/admin.py:254
+#: backend/projects/admin.py:177 backend/projects/admin.py:246
 msgid "Переводы (Английский)"
 msgstr ""
 
 #: backend/about/admin.py:71 backend/about/admin.py:107
 #: backend/about/admin.py:139 backend/about/admin.py:206
-#: backend/projects/admin.py:191 backend/projects/admin.py:256
+#: backend/projects/admin.py:181 backend/projects/admin.py:248
 msgid "Переводы (Сербский - Латиница)"
 msgstr ""
 
 #: backend/about/admin.py:78 backend/about/admin.py:114
 #: backend/about/admin.py:143 backend/about/admin.py:218
-#: backend/projects/admin.py:198 backend/projects/admin.py:260
+#: backend/projects/admin.py:188 backend/projects/admin.py:252
 msgid "Переводы (Сербский - Кириллица)"
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 msgid "🖼️ Фотогалерея"
 msgstr ""
 
-#: backend/about/admin.py:148 backend/projects/admin.py:139
+#: backend/about/admin.py:148 backend/projects/admin.py:130
 msgid "Превью"
 msgstr ""
 
@@ -296,7 +296,7 @@ msgstr ""
 msgid "Без описания"
 msgstr ""
 
-#: backend/api/about/views.py:34
+#: backend/api/about/views.py:33
 msgid "Информация о сообществе не найдена"
 msgstr ""
 
@@ -304,32 +304,52 @@ msgstr ""
 msgid "Интерфейс API"
 msgstr ""
 
-#: backend/api/auth/serializers.py:26 backend/api/users/serializers.py:26
+#: backend/api/auth/serializers.py:49 backend/api/users/serializers.py:31
 msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 msgstr ""
 
-#: backend/api/contacts/views.py:40
+#: backend/api/contacts/views.py:36
 msgid "Получено"
 msgstr ""
 
-#: backend/api/home/serializers.py:13
+#: backend/api/home/serializers.py:27
 msgid "Текст на кнопке"
 msgstr ""
 
-#: backend/api/home/serializers.py:14
+#: backend/api/home/serializers.py:28
 msgid "Ссылка перехода"
 msgstr ""
 
-#: backend/api/home/serializers.py:20
+#: backend/api/home/serializers.py:34
 msgid "Уникальный строковый идентификатор проекта"
 msgstr ""
 
-#: backend/api/home/serializers.py:70 backend/api/projects/constants.py:19
+#: backend/api/home/serializers.py:106 backend/api/projects/constants.py:19
 msgid "Перейти к проекту"
 msgstr ""
 
-#: backend/api/home/views.py:37
+#: backend/api/home/serializers.py:172
+msgid "Подробнее"
+msgstr ""
+
+#: backend/api/home/serializers.py:195
+msgid "Наша команда"
+msgstr ""
+
+#: backend/api/home/serializers.py:216 backend/site_config/constants.py:26
+msgid "Присоединиться к команде"
+msgstr ""
+
+#: backend/api/home/serializers.py:239 backend/home/constants.py:25
+msgid "Наши проекты"
+msgstr ""
+
+#: backend/api/home/serializers.py:257
+msgid "Все проекты"
+msgstr ""
+
+#: backend/api/home/views.py:35
 msgid "Контент главной страницы не сконфигурирован."
 msgstr ""
 
@@ -502,6 +522,20 @@ msgstr ""
 msgid "Список типов опубликованных проектов."
 msgstr ""
 
+#: backend/api/schemas/security_schemas.py:8
+msgid "Получение текста политики конфиденциальности"
+msgstr ""
+
+#: backend/api/schemas/security_schemas.py:10
+msgid ""
+"Возвращает локализованный текст политики конфиденциальности в формате HTML. "
+"Локализация зависит от переданного заголовка `Accept-Language`."
+msgstr ""
+
+#: backend/api/schemas/security_schemas.py:16
+msgid "Политика конфиденциальности не найдена"
+msgstr ""
+
 #: backend/api/schemas/users_schemas.py:8
 msgid "Список участников команды"
 msgstr ""
@@ -512,19 +546,19 @@ msgid ""
 "фронтенде."
 msgstr ""
 
-#: backend/backend/settings.py:221
+#: backend/backend/settings.py:223
 msgid "Russian"
 msgstr ""
 
-#: backend/backend/settings.py:222
+#: backend/backend/settings.py:224
 msgid "English"
 msgstr ""
 
-#: backend/backend/settings.py:223
+#: backend/backend/settings.py:225
 msgid "Serbian (Latin)"
 msgstr ""
 
-#: backend/backend/settings.py:224
+#: backend/backend/settings.py:226
 msgid "Serbian (Cyrillic)"
 msgstr ""
 
@@ -658,8 +692,7 @@ msgstr ""
 msgid "Тип соцсети / мессенджера"
 msgstr ""
 
-#: backend/contacts/models.py:140 backend/projects/admin.py:305
-#: backend/site_config/admin.py:20
+#: backend/contacts/models.py:140 backend/projects/admin.py:307
 msgid "Ссылка"
 msgstr ""
 
@@ -709,55 +742,55 @@ msgstr ""
 msgid "Файл типа \"%(mime)s\" запрещен. Допустимые: %(allowed)s."
 msgstr ""
 
-#: backend/home/admin.py:125
+#: backend/home/admin.py:89
 msgid "1. Общие медиафайлы и ссылки"
 msgstr ""
 
-#: backend/home/admin.py:137
+#: backend/home/admin.py:101
 msgid "Изображения и целевые ссылки, общие для всех версий."
 msgstr ""
 
-#: backend/home/admin.py:141 backend/site_config/admin.py:169
+#: backend/home/admin.py:105 backend/site_config/admin.py:148
 msgid "2. Локализация: Русский (RU)"
 msgstr ""
 
-#: backend/home/admin.py:153
+#: backend/home/admin.py:117
 msgid "Контент экрана на русском языке."
 msgstr ""
 
-#: backend/home/admin.py:157 backend/site_config/admin.py:186
+#: backend/home/admin.py:121 backend/site_config/admin.py:165
 msgid "3. Локализация: Английский (EN)"
 msgstr ""
 
-#: backend/home/admin.py:169
+#: backend/home/admin.py:133
 msgid "Контент экрана на английском языке."
 msgstr ""
 
-#: backend/home/admin.py:173 backend/site_config/admin.py:203
+#: backend/home/admin.py:137 backend/site_config/admin.py:182
 msgid "4. Локализация: Сербский Латиница (SR-Latn)"
 msgstr ""
 
-#: backend/home/admin.py:185
+#: backend/home/admin.py:149
 msgid "Контент экрана на сербской латинице."
 msgstr ""
 
-#: backend/home/admin.py:189 backend/site_config/admin.py:220
+#: backend/home/admin.py:153 backend/site_config/admin.py:199
 msgid "5. Локализация: Сербский Кириллица (SR-Cyrl)"
 msgstr ""
 
-#: backend/home/admin.py:201
+#: backend/home/admin.py:165
 msgid "Контент экрана на сербской кириллице."
 msgstr ""
 
-#: backend/home/admin.py:211 backend/projects/admin.py:210
+#: backend/home/admin.py:175 backend/projects/admin.py:201
 msgid "Превью левого изображения"
 msgstr ""
 
-#: backend/home/admin.py:216
+#: backend/home/admin.py:180
 msgid "Превью правого изображения"
 msgstr ""
 
-#: backend/home/admin.py:221
+#: backend/home/admin.py:185
 msgid "Превью изображения секции О Нас"
 msgstr ""
 
@@ -780,10 +813,6 @@ msgstr ""
 #: backend/home/constants.py:24
 msgid ""
 "Краткое описание сообщества еще не заполнено. Пожалуйста, добавьте текст."
-msgstr ""
-
-#: backend/home/constants.py:25
-msgid "Наши проекты"
 msgstr ""
 
 #: backend/home/constants.py:30
@@ -915,20 +944,20 @@ msgstr ""
 msgid "Контент главной страницы"
 msgstr ""
 
-#: backend/projects/admin.py:206
+#: backend/projects/admin.py:196
 msgid "Превью изображения"
 msgstr ""
 
-#: backend/projects/admin.py:291 backend/projects/models.py:334
+#: backend/projects/admin.py:292 backend/projects/models.py:334
 #: backend/projects/models.py:404
 msgid "Тип проекта"
 msgstr ""
 
-#: backend/projects/admin.py:301
+#: backend/projects/admin.py:303
 msgid "Просмотр на сайте"
 msgstr ""
 
-#: backend/projects/admin.py:322
+#: backend/projects/admin.py:325
 msgid "Превью обложки"
 msgstr ""
 
@@ -1207,31 +1236,59 @@ msgid ""
 "Длина каждого элемента списка не должна превышать %(max_length)s символов."
 msgstr ""
 
-#: backend/site_config/admin.py:26
-msgid "Введите правильную ссылку (http://, https://, mailto: или tel:)"
+#: backend/security/admin.py:34 backend/security/models.py:9
+msgid "Текст политики"
 msgstr ""
 
-#: backend/site_config/admin.py:162
+#: backend/security/apps.py:9
+msgid "Полтика конфиденциальности"
+msgstr ""
+
+#: backend/security/constants.py:3
+msgid "Основной текст документа (поддерживает HTML)"
+msgstr ""
+
+#: backend/security/models.py:10
+msgid "Дата последнего обновления"
+msgstr ""
+
+#: backend/security/models.py:13
+msgid "Политика конфиденциальности"
+msgstr ""
+
+#: backend/security/models.py:14
+msgid "Политики конфиденциальности"
+msgstr ""
+
+#: backend/security/models.py:22
+msgid "Может существовать только одна запись политики конфиденциальности."
+msgstr ""
+
+#: backend/security/models.py:35
+msgid "Текст политики..."
+msgstr ""
+
+#: backend/site_config/admin.py:141
 msgid "1. Основные и общие настройки"
 msgstr ""
 
-#: backend/site_config/admin.py:165
+#: backend/site_config/admin.py:144
 msgid "Глобальные названия проекта и сквозные ссылки."
 msgstr ""
 
-#: backend/site_config/admin.py:182
+#: backend/site_config/admin.py:161
 msgid "Переводы интерфейса, SEO-теги и тексты на русском."
 msgstr ""
 
-#: backend/site_config/admin.py:199
+#: backend/site_config/admin.py:178
 msgid "Переводы интерфейса, SEO-теги и тексты на английском."
 msgstr ""
 
-#: backend/site_config/admin.py:216
+#: backend/site_config/admin.py:195
 msgid "Переводы интерфейса и тексты на сербской латинице."
 msgstr ""
 
-#: backend/site_config/admin.py:233
+#: backend/site_config/admin.py:212
 msgid "Переводы интерфейса и тексты на сербской кириллице."
 msgstr ""
 
@@ -1239,27 +1296,16 @@ msgstr ""
 msgid "Конфигурация настроек сайта"
 msgstr ""
 
-#: backend/site_config/cache.py:53 backend/site_config/cache.py:104
+#: backend/site_config/constants.py:21
+msgid "Мы используем технические cookie для корректной работы сайта."
+msgstr ""
+
 #: backend/site_config/constants.py:25
 msgid "Команда"
 msgstr ""
 
-#: backend/site_config/cache.py:54 backend/site_config/cache.py:106
-#: backend/site_config/constants.py:26
-msgid "Присоединиться к команде"
-msgstr ""
-
-#: backend/site_config/cache.py:55 backend/site_config/cache.py:109
 #: backend/site_config/constants.py:27
 msgid "Присоединиться"
-msgstr ""
-
-#: backend/site_config/cache.py:91
-msgid "Ambasada"
-msgstr ""
-
-#: backend/site_config/constants.py:21
-msgid "Мы используем технические cookie для корректной работы сайта."
 msgstr ""
 
 #: backend/site_config/constants.py:31
@@ -1276,35 +1322,38 @@ msgid ""
 "SEO!"
 msgstr ""
 
-#: backend/site_config/constants.py:35
-msgid "Полный текст политики для генерации отдельной страницы."
-msgstr ""
-
-#: backend/site_config/constants.py:36
-msgid "Текст всплывающего уведомления об использовании файлов Cookie."
-msgstr ""
-
 #: backend/site_config/constants.py:37
-msgid "Текст на кнопке согласия Cookie (например: \"OK\" или \"Принять\")."
-msgstr ""
-
-#: backend/site_config/constants.py:38
-msgid "Текст в самом низу страницы (футере). До 150 симв."
-msgstr ""
-
-#: backend/site_config/constants.py:39
-msgid "Заголовок блока со списком команды на странице \"О нас\"."
-msgstr ""
-
-#: backend/site_config/constants.py:40
-msgid "Надпись на кнопке в блоке команды на Главной странице."
-msgstr ""
-
-#: backend/site_config/constants.py:41
-msgid "Надпись на кнопке в блоке команды на странице \"О нас\"."
+msgid ""
+"Краткий текст для форм обратной связи (рядом с кнопкой отправки). "
+"Обязательно выделите слова \"Политикой конфиденциальности\" и вставьте на "
+"них ссылку на саму страницу политики через редактор TinyMCE."
 msgstr ""
 
 #: backend/site_config/constants.py:42
+msgid "Текст всплывающего уведомления об использовании файлов Cookie."
+msgstr ""
+
+#: backend/site_config/constants.py:43
+msgid "Текст на кнопке согласия Cookie (например: \"OK\" или \"Принять\")."
+msgstr ""
+
+#: backend/site_config/constants.py:44
+msgid "Текст в самом низу страницы (футере). До 150 симв."
+msgstr ""
+
+#: backend/site_config/constants.py:45
+msgid "Заголовок блока со списком команды на странице \"О нас\"."
+msgstr ""
+
+#: backend/site_config/constants.py:46
+msgid "Надпись на кнопке в блоке команды на Главной странице."
+msgstr ""
+
+#: backend/site_config/constants.py:47
+msgid "Надпись на кнопке в блоке команды на странице \"О нас\"."
+msgstr ""
+
+#: backend/site_config/constants.py:48
 msgid ""
 "Ссылка для обеих кнопок команды. Например: /contacts или ссылка на якорный "
 "блок."
@@ -1319,7 +1368,7 @@ msgid "SEO описание"
 msgstr ""
 
 #: backend/site_config/models.py:50
-msgid "Политика конфиденциальности"
+msgid "Согласие на обработку персональных данных"
 msgstr ""
 
 #: backend/site_config/models.py:57

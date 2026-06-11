@@ -3,8 +3,6 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
-from django.test import override_settings
-from django.urls import reverse
 from projects.models import (
     Project,
     ProjectBlockButton,
@@ -13,6 +11,9 @@ from projects.models import (
     Tag,
 )
 from rest_framework.test import APIClient
+from security.models import SecurityPolicy
+
+
 
 User = get_user_model()
 
@@ -406,3 +407,31 @@ def home_page_content(db):
         about_title_en='About community',
         about_text_en='We bring together urbanists and architects.',
     )
+
+
+# =========================================================
+# SECURITY
+# =========================================================
+
+@pytest.fixture
+def api_client():
+    """Фикстура для REST Framework клиента."""
+    return APIClient()
+
+
+@pytest.fixture
+def privacy_policy_data():
+    """Фикстура дефолтных мультиязычных данных для политики.
+    Подставь точные имена полей, сгенерированные django-modeltranslation.
+    """
+    return {
+        "text_ru": "Текст на русском с <b>HTML</b>",
+        "text_en": "Text in English with <b>HTML</b>",
+        "text_sr_latn": "Tekst na srpskoj latinici sa <b>HTML</b>",
+    }
+
+
+@pytest.fixture
+def sample_policy(privacy_policy_data):
+    """Фикстура уже созданной в БД записи политики конфиденциальности."""
+    return SecurityPolicy.objects.create(**privacy_policy_data)
