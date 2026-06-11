@@ -7,10 +7,16 @@ from django.contrib.staticfiles import finders
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms.models import inlineformset_factory
 from django.test import override_settings
-from projects.admin import ProjectAdmin, ProjectBlockButtonInline, ProjectTypeAdmin, TagAdmin
+from projects.admin import (
+    ProjectAdmin,
+    ProjectBlockButtonInline,
+    ProjectContentBlockInline,
+    ProjectTypeAdmin,
+    TagAdmin,
+)
 from projects.admin_forms import ProjectContentBlockInlineFormSet
 from projects.constants import REFERENCE_TRANSLATED_FIELDS
-from projects.models import Project, ProjectContentBlock, ProjectType, Tag
+from projects.models import Project, ProjectBlockButton, ProjectContentBlock, ProjectType, Tag
 from projects.resources_admin import ProjectTypeResource, TagResource
 
 TINY_PNG = b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4//8/AAX+Av4N70a4AAAAAElFTkSuQmCC')
@@ -64,7 +70,7 @@ def test_project_content_block_inline_rejects_duplicate_order(published_project)
     }
     formset = formset_class(data=form_data, instance=published_project, prefix='content_blocks')
     assert not formset.is_valid()
-    assert 'Порядок контентных блоков' in str(formset.non_form_errors())
+    assert 'order' in str(formset.non_form_errors())
 
 
 @pytest.mark.django_db
@@ -229,6 +235,30 @@ def test_project_reference_resources_include_all_translated_label_fields():
     """Проверяет, что импорт и экспорт справочников поддерживает все языки."""
     assert TagResource.Meta.fields == REFERENCE_TRANSLATED_FIELDS
     assert ProjectTypeResource.Meta.fields == REFERENCE_TRANSLATED_FIELDS
+
+
+def test_project_admin_shows_detailed_manager_help_texts():
+    """Проверяет, что в админке есть подробные подсказки с ограничениями для менеджера."""
+    project_admin = ProjectAdmin(Project, admin.site)
+    tag_admin = TagAdmin(Tag, admin.site)
+    content_block_inline = ProjectContentBlockInline(Project, admin.site)
+    button_inline = ProjectBlockButtonInline(ProjectContentBlock, admin.site)
+
+    project_slug_help = project_admin.formfield_for_dbfield(Project._meta.get_field('slug'), request=None).help_text
+    tag_label_help = tag_admin.formfield_for_dbfield(Tag._meta.get_field('label_sr_latn'), request=None).help_text
+    block_image_help = content_block_inline.formfield_for_dbfield(
+        ProjectContentBlock._meta.get_field('image'),
+        request=None,
+    ).help_text
+    button_url_help = button_inline.formfield_for_dbfield(
+        ProjectBlockButton._meta.get_field('url'),
+        request=None,
+    ).help_text
+
+    assert 'сгенерируется из русского названия' in project_slug_help
+    assert 'fallback' in tag_label_help
+    assert 'Необязательное основное изображение' in block_image_help
+    assert 'Google Drive' in button_url_help
 
 
 @pytest.mark.django_db

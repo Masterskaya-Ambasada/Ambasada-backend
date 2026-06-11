@@ -365,22 +365,20 @@ def test_content_block_non_list_variant_allows_string_list(published_project):
 
 
 @pytest.mark.django_db
-def test_two_images_variant_requires_left_image(published_project):
-    """Проверяет, что вариант TWO_IMAGES требует второе изображение."""
+def test_two_images_variant_allows_missing_images(published_project):
+    """Проверяет, что изображения в варианте TWO_IMAGES можно не прикреплять."""
     block = ProjectContentBlock(
         project=published_project,
         variant=ProjectContentBlock.Variant.TWO_IMAGES,
         order=1,
-        title='Invalid missing left image',
-        image='https://example.com/main.jpg',
+        title='Two images block without images',
+        image='',
         left_image='',
         string_list=[],
         text='<p>Two images text</p>',
         accented_text='',
     )
-    with pytest.raises(ValidationError) as exc_info:
-        block.full_clean()
-    assert 'left_image' in exc_info.value.message_dict
+    block.full_clean()
 
 
 @pytest.mark.django_db
@@ -402,7 +400,7 @@ def test_non_two_images_variant_allows_left_image(published_project):
 
 @pytest.mark.django_db
 def test_content_block_requires_common_image_and_text(published_project):
-    """Проверяет, что для любого варианта нужны основное изображение и текст."""
+    """Проверяет, что для любого варианта нужен основной текст."""
     block = ProjectContentBlock(
         project=published_project,
         variant=ProjectContentBlock.Variant.IMAGE_WITH_BUTTONS,
@@ -416,7 +414,7 @@ def test_content_block_requires_common_image_and_text(published_project):
     )
     with pytest.raises(ValidationError) as exc_info:
         block.full_clean()
-    assert {'image', 'text_ru'} <= set(exc_info.value.message_dict)
+    assert set(exc_info.value.message_dict) == {'text_ru'}
 
 
 def test_project_image_fields_use_media_file_validator():
