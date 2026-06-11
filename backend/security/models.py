@@ -11,7 +11,7 @@ class SecurityPolicy(models.Model):
 
     class Meta:
         verbose_name = _('Политика конфиденциальности')
-        verbose_name_plural = _('Политики конфиденциальности')
+        verbose_name_plural = _('Политика конфиденциальности')
 
     def __str__(self):
         return str(self._meta.verbose_name)
