@@ -19,8 +19,10 @@ class TeamListView(ListAPIView):
     serializer_class = TeamMemberSerializer
     permission_classes = [AllowAny]
 
-    def dispatch(self, request, *args, **kwargs):
-        lang = request.GET.get('lang') or get_language_from_request(request)
+    def initial(self, request, *args, **kwargs):
+        """Переключает локаль для всего цикла запроса-ответа DRF (включая рендеринг JSON)."""
+        raw_lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        lang = raw_lang.lower()
+        translation.activate(lang)
 
-        with translation.override(lang):
-            return super().dispatch(request, *args, **kwargs)
+        super().initial(request, *args, **kwargs)

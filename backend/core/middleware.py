@@ -56,12 +56,13 @@ class AdminLoginThrottleMiddleware:
 
 
 class FrontendLocaleNormalizeMiddleware(MiddlewareMixin):
-    def process_request(self, request):
-        accept_lang = request.headers.get('Accept-Language')
-        if accept_lang:
-            # Заменяем конкретно CamelCase сербского на нижний регистр
-            # 'sr-Latn' -> 'sr-latn', 'sr-Cyrl' -> 'sr-cyrl'
-            normalized = accept_lang.replace('sr-Latn', 'sr-latn').replace('sr-Cyrl', 'sr-cyrl')
+    """Мидлварь для нормализации CamelCase кодов сербского языка в Accept-Language."""
 
-            # Записываем обратно в META, откуда Django читает заголовки
+    def process_request(self, request):
+        accept_lang = request.META.get('HTTP_ACCEPT_LANGUAGE')
+
+        if accept_lang:
+            normalized = accept_lang.replace('sr-Latn', 'sr-latn').replace('sr-Cyrl', 'sr-cyrl')
+            normalized = normalized.replace('sr_latn', 'sr-latn').replace('sr_cyrl', 'sr-cyrl')
+
             request.META['HTTP_ACCEPT_LANGUAGE'] = normalized

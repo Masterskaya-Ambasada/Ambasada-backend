@@ -38,6 +38,14 @@ from api.schemas.project_schemas import (
 )
 
 
+def get_order_by_field(lang: str, default_field: str) -> str:
+    """Возвращает имя поля для сортировки с учетом текущего языкового суффикса."""
+    suffix = (lang or 'ru').lower().replace('-', '_')
+    if suffix in ['ru', 'en', 'sr_latn', 'sr_cyrl']:
+        return f'{default_field}_{suffix}'
+    return default_field
+
+
 @PROJECT_LIST_SCHEMA
 class ProjectListView(ListAPIView):
     """Возвращает список опубликованных проектов с фильтрацией и пагинацией."""
@@ -61,7 +69,11 @@ class ProjectListView(ListAPIView):
         return tags
 
     def get_queryset(self):
-        tag_queryset = Tag.objects.order_by('label', 'pk')
+        lang = self.request.GET.get('lang') or get_language_from_request(self.request)
+        order_field = get_order_by_field(lang, 'label')
+
+        tag_queryset = Tag.objects.order_by(order_field, 'pk')
+
         queryset = (
             Project.objects.filter(is_published=True)
             .select_related('project_type')
@@ -97,7 +109,10 @@ class ProjectDetailView(RetrieveAPIView):
             return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        tag_queryset = Tag.objects.order_by('label', 'pk')
+        lang = self.request.GET.get('lang') or get_language_from_request(self.request)
+        order_field = get_order_by_field(lang, 'label')
+
+        tag_queryset = Tag.objects.order_by(order_field, 'pk')
         button_queryset = ProjectBlockButton.objects.order_by('order', 'pk')
         gallery_queryset = ProjectGalleryImage.objects.order_by('order', 'pk')
         block_queryset = ProjectContentBlock.objects.prefetch_related(
@@ -123,10 +138,11 @@ class ProjectTagListView(APIView):
     def get(self, request, *args, **kwargs):
         """Возвращает локализованный список тегов опубликованных проектов."""
         lang = request.query_params.get('lang') or get_language_from_request(request)
+        order_field = get_order_by_field(lang, 'label')
 
         with translation.override(lang):
-            queryset = Tag.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
-            tags = [tag.label for tag in queryset]
+            queryset = Tag.objects.filter(projects__is_published=True).order_by(order_field, 'pk').distinct()
+            tags = [getattr(tag, order_field, '') or tag.label for tag in queryset]
             return Response(tags)
 
 
@@ -139,8 +155,9 @@ class ProjectTypeListView(APIView):
     def get(self, request, *args, **kwargs):
         """Возвращает локализованный список типов опубликованных проектов."""
         lang = request.query_params.get('lang') or get_language_from_request(request)
+        order_field = get_order_by_field(lang, 'label')
 
         with translation.override(lang):
-            queryset = ProjectType.objects.filter(projects__is_published=True).order_by('label', 'pk').distinct()
-            serializer = ProjectTypeSerializer(queryset, many=True)
+            queryset = ProjectType.objects.filter(projects__is_published=True).order_by(order_field, 'pk').distinct()
+            serializer = ProjectTypeSerializer(queryset, many=True, context={'request': request})
             return Response({PROJECT_TYPES_RESPONSE_KEY: serializer.data})

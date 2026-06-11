@@ -11,4 +11,4 @@ def test_format_locale_code_for_frontend_uses_script_title_case():
 
 def test_get_config_cache_key_normalizes_language_code():
     """Проверяет, что ключ кэша остается в формате внутренних кодов Django."""
-    assert get_config_cache_key('sr-Latn') == 'site_config:v1:sr-latn'
+    assert get_config_cache_key('sr-Latn') == 'site_config:v1.1:sr-latn'
