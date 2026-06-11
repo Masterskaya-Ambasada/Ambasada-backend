@@ -29,19 +29,22 @@ class ActionButtonSerializer(serializers.Serializer):
 
 
 class HomeProjectItemSerializer(serializers.ModelSerializer):
-    """Карточка проекта для главной страницы с динамической локализацией полей."""
+    """Сериализатор для превью-карточки проекта на главной странице с поддержкой динамической локализации."""
 
     id = serializers.CharField(source='slug', help_text=_('Уникальный строковый идентификатор проекта'))
     year = serializers.CharField()
     image = serializers.SerializerMethodField()
+
+    # 1. Переводим проблемные поля на явные методы
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+
     project_type = serializers.CharField(source='project_type.label', default='')
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='label')
     isFirst = serializers.SerializerMethodField()
     action_button = serializers.SerializerMethodField()
 
     class Meta:
-        """Метаданные сериализатора карточки проекта на главной."""
-
         model = Project
         fields = (
             'id',
@@ -56,17 +59,24 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
         )
 
     def __init__(self, *args, **kwargs):
-        """Динамически переключает источники локализованных полей под текущую локаль фронтенда."""
+        """Динамически переключает источники локализации для связанных полей справочников."""
         super().__init__(*args, **kwargs)
-        suffix = get_home_lang_suffix(self.context)
+        suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
 
-        if f'title_{suffix}' in self.fields:
-            self.fields['title'].source = f'title_{suffix}'
-        if f'description_{suffix}' in self.fields:
-            self.fields['description'].source = f'description_{suffix}'
+        if 'project_type' in self.fields:
+            self.fields['project_type'].source = f'project_type.label_{suffix}'
+        if 'tags' in self.fields:
+            self.fields['tags'].slug_field = f'label_{suffix}'
 
-        self.fields['project_type'].source = f'project_type.label_{suffix}'
-        self.fields['tags'].slug_field = f'label_{suffix}'
+    def get_title(self, obj) -> str:
+        """Возвращает локализованное название проекта с фолбэком на русский язык."""
+        suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
+        return getattr(obj, f'title_{suffix}', None) or getattr(obj, 'title_ru', obj.title)
+
+    def get_description(self, obj) -> str:
+        """Возвращает локализованное краткое описание проекта с фолбэком на русский язык."""
+        suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
+        return getattr(obj, f'description_{suffix}', None) or getattr(obj, 'description_ru', obj.description)
 
     @extend_schema_field(serializers.CharField(allow_null=True))
     def get_image(self, obj) -> str | None:
