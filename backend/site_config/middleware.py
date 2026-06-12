@@ -18,5 +18,8 @@ class CurrentUserMiddleware:
     def __call__(self, request):
         """Сохраняет пользователя из запроса в thread-local storage и передаёт запрос дальше."""
         _thread_locals.user = getattr(request, 'user', None)
-        response = self.get_response(request)
-        return response
+        try:
+            response = self.get_response(request)
+            return response
+        finally:
+            _thread_locals.user = None

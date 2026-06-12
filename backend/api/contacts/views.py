@@ -11,6 +11,8 @@ from rest_framework.views import APIView
 
 from api.contacts.serializers import ContactPageContentSerializer, ContactRequestSerializer
 from api.schemas.contact_schemas import contact_view_schemas
+from rest_framework.exceptions import ValidationError
+
 
 logger = logging.getLogger(__name__)
 
@@ -40,13 +42,16 @@ class ContactView(APIView):
                 logger.info('Пользователь успешно отправил запрос обратной связи.')
 
                 return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
-        except Exception as exc:
+        except ValidationError as exc:
             error_messages = []
             for errors in exc.detail.values():
                 for error in errors:
                     error_messages.append(str(error))
             error_text = ', '.join(error_messages)
             logger.error(f'Ошибка: {exc.__class__.__name__} ({error_text})')
+            raise
+        except Exception as exc:
+            logger.error(f'Непредвиденная ошибка: {exc.__class__.__name__}')
             raise
 
     def get(self, request, *args, **kwargs):

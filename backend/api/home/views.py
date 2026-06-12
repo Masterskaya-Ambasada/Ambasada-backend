@@ -31,9 +31,8 @@ class HomeAPIView(APIView):
 
         with translation.override(lang):
             config_data = get_full_config_cached(language=lang)
-            logger.warning(f'Данные конфигурации отсутствуют для языка {lang}')
-
             if not config_data:
+                logger.warning(f'Данные конфигурации отсутствуют для языка {lang}')
                 return Response(
                     {
                         'status': 404,

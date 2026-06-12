@@ -338,7 +338,7 @@ LOGGING = {
         'file': {
             'class': 'logging.FileHandler',
             'formatter': 'console',
-            # 'filters': ['require_debug_false'],
+            'filters': ['require_debug_false'],
             'level': 'INFO',  # 'WARNING',
             'filename': config('LOG_FILE_PATH', default='debug.log'),
         },
