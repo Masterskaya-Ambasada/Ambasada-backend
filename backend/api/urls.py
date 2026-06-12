@@ -11,6 +11,7 @@ from api.contacts.views import ContactView
 from api.home.views import HomeAPIView
 from api.projects.views import ProjectDetailView, ProjectListView, ProjectTagListView, ProjectTypeListView
 from api.schemas.auth_schemas import TOKEN_REFRESH_SCHEMA
+from api.security.views import SecurityPolicyView
 from api.site_config.views import InitView
 from api.users.views import TeamListView
 
@@ -59,6 +60,10 @@ project_urlpatterns = [
     path('<slug:project_slug>/', ProjectDetailView.as_view(), name='projects-detail'),
 ]
 
+# Эндпоинты политики конфиденциальности
+security_url_patterns = [path('politics/', SecurityPolicyView.as_view(), name='politics')]
+
+
 # Эндпоинты страницы "О нас"
 about_urlpatterns = [
     path('about/', AboutAPIView.as_view(), name='about'),
@@ -79,6 +84,7 @@ v1_urlpatterns = [
     path('contact/', include(contact_urlpatterns)),
     path('', include(about_urlpatterns)),
     path('', include(doc_urlpatterns)),
+    path('', include(security_url_patterns)),
 ]
 
 # Главный список путей

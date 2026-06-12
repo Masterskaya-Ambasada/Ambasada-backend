@@ -82,13 +82,16 @@ CORS_ALLOW_METHODS = [
 
 INSTALLED_APPS = [
     'modeltranslation',
+    'nested_admin',
+    'users',
+    # 3. Стандартные приложения Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Third-party
+    # 4. Сторонние библиотеки (Third-party)
     'rest_framework',
     'corsheaders',
     'django_filters',
@@ -96,16 +99,15 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'import_export',
     'tinymce',
-    'nested_admin',
     'django_jsonform',
-    # local
+    # 5. Остальные локальные приложения (Local apps)
     'projects',
-    'users',
     'about',
     'api',
     'site_config',
     'contacts',
     'home',
+    'security',
 ]
 
 MIDDLEWARE = [
@@ -237,7 +239,7 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
 MODELTRANSLATION_CLEAN_FIELDS = True
 
-LOCALE_PATHS = ['/var/www/django/locale' if APP_ENV == 'production' else str(BASE_DIR / 'locale')]
+LOCALE_PATHS = [str(BASE_DIR / 'locale')]
 
 TIME_ZONE = 'Europe/Moscow'
 

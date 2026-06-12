@@ -743,7 +743,6 @@ docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml up -d
 docker compose down
 docker compose up -d --force-recreate
 ```
-
 ---
 
 ## ✅ Чеклист перед коммитом

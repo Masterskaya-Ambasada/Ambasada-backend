@@ -21,7 +21,8 @@ class InitView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        lang = request.query_params.get('lang') or get_language_from_request(request)
+        raw_lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        lang = raw_lang.lower()
 
         data = get_site_config_cached(language=lang)
 

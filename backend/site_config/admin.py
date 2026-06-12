@@ -40,7 +40,7 @@ class SiteConfigAdminForm(forms.ModelForm):
             if 'cookie_message_ru' in self.fields:
                 self.fields[
                     'cookie_message_ru'
-                ].initial = '<p>Мы используем технические cookie для корректной работы сайта.</p>'
+                ].initial = 'Мы используем технические cookie для корректной работы сайта.'
             if 'cookie_button_text_ru' in self.fields:
                 self.fields['cookie_button_text_ru'].initial = 'Принять'
             if 'team_title_ru' in self.fields:
@@ -60,7 +60,7 @@ class SiteConfigAdminForm(forms.ModelForm):
             if 'cookie_message_en' in self.fields:
                 self.fields[
                     'cookie_message_en'
-                ].initial = '<p>We use technical cookies for the correct operation of the website.</p>'
+                ].initial = 'We use technical cookies for the correct operation of the website.'
             if 'cookie_button_text_en' in self.fields:
                 self.fields['cookie_button_text_en'].initial = 'Accept'
             if 'team_title_en' in self.fields:
@@ -78,9 +78,7 @@ class SiteConfigAdminForm(forms.ModelForm):
                     'i dajete saglasnost za obradu podataka o ličnosti.</p>'
                 )
             if 'cookie_message_sr_latn' in self.fields:
-                self.fields[
-                    'cookie_message_sr_latn'
-                ].initial = '<p>Koristimo tehničke kolačiće za ispravan rad veb sajta.</p>'
+                self.fields['cookie_message_sr_latn'].initial = 'Koristimo tehničke kolačiće za ispravan rad veb sajta.'
             if 'cookie_button_text_sr_latn' in self.fields:
                 self.fields['cookie_button_text_sr_latn'].initial = 'Prihvati'
             if 'team_title_sr_latn' in self.fields:
@@ -100,7 +98,7 @@ class SiteConfigAdminForm(forms.ModelForm):
             if 'cookie_message_sr_cyrl' in self.fields:
                 self.fields[
                     'cookie_message_sr_cyrl'
-                ].initial = '<p>Користимо техничке колачиће за један исправни рад веб сајта.</p>'
+                ].initial = 'Користимо техничке колачиће за један исправни рад веб сајта.'
             if 'cookie_button_text_sr_cyrl' in self.fields:
                 self.fields['cookie_button_text_sr_cyrl'].initial = 'Прихвати'
             if 'team_title_sr_cyrl' in self.fields:
@@ -130,10 +128,6 @@ class ConfigAdmin(BaseAdmin):
         'privacy_policy_en',
         'privacy_policy_sr_latn',
         'privacy_policy_sr_cyrl',
-        'cookie_message_ru',
-        'cookie_message_en',
-        'cookie_message_sr_latn',
-        'cookie_message_sr_cyrl',
     ]
 
     fieldsets = (

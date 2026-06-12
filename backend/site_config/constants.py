@@ -2,8 +2,8 @@ from django.utils.translation import gettext_lazy as _
 
 # --- СИСТЕМНЫЕ НАСТРОЙКИ И КЭШИРОВАНИЕ ---
 SITE_CONFIG_SINGLETON_PK = 1
-CACHE_KEY_SITE_CONFIG = 'site_config:v1'
-CACHE_KEY_FULL_CONFIG = 'site_config:v1_full'
+CACHE_KEY_SITE_CONFIG = 'site_config:v1.1'
+CACHE_KEY_FULL_CONFIG = 'site_config:v1.1_full'
 TIMEOUT_CACHE = 86400
 
 # --- МАКСИМАЛЬНЫЕ ДЛИНЫ ПОЛЕЙ ---
@@ -32,7 +32,13 @@ VALIDATION_SITE_DELETE_ERROR = _('Удаление системных настр
 
 HELP_SITE_NAME = _('Выводится во вкладке браузера и заголовках писем. До 100 симв.')
 HELP_SEO_DESCRIPTION = _('Описание сайта в поисковых системах Google и Яндекс. До 250 симв. Важно для SEO!')
-HELP_PRIVACY_POLICY = _('Полный текст политики для генерации отдельной страницы.')
+HELP_PRIVACY_POLICY = help_text = (
+    _(
+        'Краткий текст для форм обратной связи (рядом с кнопкой отправки). '
+        'Обязательно выделите слова "Политикой конфиденциальности" и вставьте '
+        'на них ссылку на саму страницу политики через редактор TinyMCE.'
+    ),
+)
 HELP_COOKIE_MESSAGE = _('Текст всплывающего уведомления об использовании файлов Cookie.')
 HELP_COOKIE_BUTTON_TEXT = _('Текст на кнопке согласия Cookie (например: "OK" или "Принять").')
 HELP_COPYRIGHT = _('Текст в самом низу страницы (футере). До 150 симв.')

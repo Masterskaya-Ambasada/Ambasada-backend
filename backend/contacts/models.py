@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from . import constants
+from .validators import custom_url_validator
 
 
 class ContactRequest(models.Model):
@@ -16,11 +17,6 @@ class ContactRequest(models.Model):
     )
     email = models.EmailField(
         verbose_name=_('Email'),
-    )
-    message = models.TextField(
-        max_length=constants.MAX_MESSAGE_LENGTH,
-        verbose_name=_('Сообщение'),
-        help_text=constants.HELP_REQUEST_MESSAGE,
     )
 
     message = models.TextField(
@@ -121,10 +117,11 @@ class ContactSocialLink(models.Model):
     """Ссылки на соцсети и мессенджеры проекта."""
 
     class SocialType(models.TextChoices):
-        TELEGRAM = 'telegram', _('Telegram')
-        INSTAGRAM = 'instagram', _('Instagram')
-        FACEBOOK = 'facebook', _('Facebook')
-        LINKEDIN = 'linkedin', _('LinkedIn')
+        TELEGRAM = 'telegram', 'Telegram'
+        INSTAGRAM = 'instagram', 'Instagram'
+        FACEBOOK = 'facebook', 'Facebook'
+        LINKEDIN = 'linkedin', 'LinkedIn'
+        EMAIL = 'email', 'Email'
 
     site_config = models.ForeignKey(
         'site_config.SiteConfig',
@@ -139,8 +136,10 @@ class ContactSocialLink(models.Model):
         verbose_name=_('Тип соцсети / мессенджера'),
         help_text=constants.HELP_SOCIAL_TYPE,
     )
-    url = models.URLField(
+    url = models.CharField(
         verbose_name=_('Ссылка'),
+        max_length=constants.CONTACT_SOCIAL_LINK_MAX_LENGTH_URL,
+        validators=[custom_url_validator],
         help_text=constants.HELP_SOCIAL_URL,
     )
     order = models.PositiveSmallIntegerField(

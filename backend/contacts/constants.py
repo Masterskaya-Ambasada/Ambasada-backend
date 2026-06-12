@@ -9,6 +9,7 @@ MAX_REASON_LENGTH = 250
 SOCIAL_TYPE_MAX_LENGTH = 32
 MIN_MESSAGE_LENGTH = 20
 DONATION_TEXT_PREVIEW_LENGTH = 50
+CONTACT_SOCIAL_LINK_MAX_LENGTH_URL = 500
 # =====================================================================
 # ДЕФОЛТНЫЕ ЗНАЧЕНИЯ
 # =====================================================================

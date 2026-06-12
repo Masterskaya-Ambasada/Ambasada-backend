@@ -7,6 +7,7 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from home.models import HomePageContent
 from projects.models import Project
+from security.models import SecurityPolicy
 
 from site_config.cache import clear_config_cache
 from site_config.models import SiteConfig
@@ -44,6 +45,7 @@ def invalidate_site_config_cache(sender, instance, **kwargs):
 @receiver([post_save, post_delete], sender=Project)
 @receiver([post_save, post_delete], sender=User)
 @receiver([post_save, post_delete], sender=ContactPageContent)
+@receiver([post_save, post_delete], sender=SecurityPolicy)
 def log_model_change(sender, instance, **kwargs):
     """Логгирование действий администратора (создание/изменение/удаление)."""
     current_user = get_current_user()
