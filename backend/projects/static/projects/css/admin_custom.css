@@ -145,3 +145,8 @@
 [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form > h3 { background-color: #252526 !important; color: #cbd5e1 !important; border-bottom-color: #2d2d2d !important; }
 [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module { border-color: #2d2d2d !important; background: #1e1e1e !important; }
 [data-theme="dark"] #content_blocks-group > .djn-fieldset > .djn-items > .djn-inline-form fieldset.module h2 { background: #2d2d2d !important; color: #e2e8f0 !important; border-bottom-color: #2d2d2d !important; }
+
+/* Служебное поле django-jsonform хранит JSON для отправки формы, но редактору его показывать не нужно. */
+textarea[data-django-jsonform] {
+    display: none !important;
+}

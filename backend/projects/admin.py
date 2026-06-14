@@ -16,8 +16,16 @@ from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInl
 from .admin_forms import ProjectContentBlockInlineFormSet
 from .constants import (
     ADMIN_EMPTY_VALUE,
+    BLOCK_BUTTON_ADMIN_HELP_TEXTS,
+    CONTENT_BLOCK_ADMIN_HELP_TEXTS,
+    CYRILLIC_TO_LATIN,
     DEFAULT_FRONTEND_URL,
     FRONTEND_PROJECT_PATH_TEMPLATE,
+    GALLERY_IMAGE_ADMIN_HELP_TEXTS,
+    PROJECT_ADMIN_HELP_TEXTS,
+    REFERENCE_ADMIN_HELP_TEXTS,
+    REFERENCE_TRANSLATED_FIELDS,
+    TRANSLATED_FIELD_SUFFIXES,
 )
 from .models import (
     Project,
@@ -32,48 +40,39 @@ from .resources_admin import (
     TagResource,
 )
 
-CYRILLIC_TO_LATIN = str.maketrans(
-    {
-        'а': 'a',
-        'б': 'b',
-        'в': 'v',
-        'г': 'g',
-        'д': 'd',
-        'е': 'e',
-        'ё': 'e',
-        'ж': 'zh',
-        'з': 'z',
-        'и': 'i',
-        'й': 'y',
-        'к': 'k',
-        'л': 'l',
-        'м': 'm',
-        'н': 'n',
-        'о': 'o',
-        'п': 'p',
-        'р': 'r',
-        'с': 's',
-        'т': 't',
-        'у': 'u',
-        'ф': 'f',
-        'х': 'kh',
-        'ц': 'ts',
-        'ч': 'ch',
-        'ш': 'sh',
-        'щ': 'sch',
-        'ъ': '',
-        'ы': 'y',
-        'ь': '',
-        'э': 'e',
-        'ю': 'yu',
-        'я': 'ya',
-    }
-)
+
+def get_admin_help_text(field_name: str, help_texts: dict[str, str]) -> str | None:
+    """Возвращает подсказку для обычного или переведенного поля modeltranslation."""
+    if field_name in help_texts:
+        return help_texts[field_name]
+    for suffix in TRANSLATED_FIELD_SUFFIXES:
+        if field_name.endswith(suffix):
+            return help_texts.get(field_name[: -len(suffix)])
+    return None
+
+
+def apply_admin_help_text(formfield, db_field_name: str, help_texts: dict[str, str]):
+    """Подставляет проектные подсказки в поля админки без изменения модели и миграций."""
+    if formfield is not None:
+        help_text = get_admin_help_text(db_field_name, help_texts)
+        if help_text is not None:
+            formfield.help_text = help_text
+    return formfield
 
 
 def make_slug_from_russian_title(title: str) -> str:
     """Создаёт URL-safe slug из русского названия проекта."""
     return slugify(title.lower().translate(CYRILLIC_TO_LATIN))
+
+
+class ProjectHelpTextMixin:
+    """Добавляет подробные подсказки к полям проектной админки."""
+
+    admin_help_texts = {}
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        return apply_admin_help_text(formfield, db_field.name, self.admin_help_texts)
 
 
 class ProjectAdminForm(forms.ModelForm):
@@ -88,8 +87,6 @@ class ProjectAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if 'slug' in self.fields:
             self.fields['slug'].required = False
-        if 'tags' in self.fields:
-            self.fields['tags'].help_text = ''
 
     def clean(self):
         """Валидирует данные формы и автоматически генерирует slug, если он не заполнен."""
@@ -100,26 +97,31 @@ class ProjectAdminForm(forms.ModelForm):
 
 
 @admin.register(Tag)
-class TagAdmin(BaseTranslatedAdmin, ImportExportMixin):
+class TagAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, ImportExportMixin):
     """Класс администрирования Тегов."""
 
+    admin_help_texts = REFERENCE_ADMIN_HELP_TEXTS
     resource_classes = [TagResource]
-    list_display = ['slug', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl']
+    fields = REFERENCE_TRANSLATED_FIELDS
+    list_display = REFERENCE_TRANSLATED_FIELDS
     search_fields = ['slug']
 
 
 @admin.register(ProjectType)
-class ProjectTypeAdmin(BaseTranslatedAdmin, ImportExportMixin):
+class ProjectTypeAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, ImportExportMixin):
     """Класс администрирования типов проектов."""
 
+    admin_help_texts = REFERENCE_ADMIN_HELP_TEXTS
     resource_classes = [ProjectTypeResource]
-    list_display = ['slug', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl']
+    fields = REFERENCE_TRANSLATED_FIELDS
+    list_display = REFERENCE_TRANSLATED_FIELDS
     search_fields = ['slug']
 
 
-class ProjectGalleryImageInline(BaseAdminMixin, NestedTabularInline):
+class ProjectGalleryImageInline(ProjectHelpTextMixin, BaseAdminMixin, NestedTabularInline):
     """Инлайн для картинок верхней карусели проекта."""
 
+    admin_help_texts = GALLERY_IMAGE_ADMIN_HELP_TEXTS
     model = ProjectGalleryImage
     extra = 0
     fk_name = 'project'
@@ -133,18 +135,20 @@ class ProjectGalleryImageInline(BaseAdminMixin, NestedTabularInline):
         return self.get_admin_image_preview(obj, 'image', width=220, height=140)
 
 
-class ProjectBlockButtonInline(NestedStackedInline):
+class ProjectBlockButtonInline(ProjectHelpTextMixin, NestedStackedInline):
     """Инлайн для кнопок внутри контентного блока (самый нижний уровень)."""
 
+    admin_help_texts = BLOCK_BUTTON_ADMIN_HELP_TEXTS
     model = ProjectBlockButton
     extra = 0
     fk_name = 'block'
     fields = ('order', 'label_ru', 'label_en', 'label_sr_latn', 'label_sr_cyrl', 'type', 'url')
 
 
-class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
+class ProjectContentBlockInline(ProjectHelpTextMixin, BaseAdminMixin, NestedStackedInline):
     """Инлайн для контентных блоков внутри проекта (средний уровень)."""
 
+    admin_help_texts = CONTENT_BLOCK_ADMIN_HELP_TEXTS
     model = ProjectContentBlock
     extra = 0
     fk_name = 'project'
@@ -205,9 +209,10 @@ class ProjectContentBlockInline(BaseAdminMixin, NestedStackedInline):
 
 
 @admin.register(Project)
-class ProjectAdmin(BaseTranslatedAdmin, NestedModelAdmin):
+class ProjectAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, NestedModelAdmin):
     """Класс администрирования проектов с вложенными blocks и кнопками."""
 
+    admin_help_texts = PROJECT_ADMIN_HELP_TEXTS
     form = ProjectAdminForm
     list_display = [
         'title',

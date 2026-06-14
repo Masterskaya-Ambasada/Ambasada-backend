@@ -40,6 +40,7 @@ from projects.constants import (
     PROJECT_MEDIA_DIRECTORY,
     PROJECT_SLUG_MAX_LENGTH,
     REFERENCE_SLUG_MAX_LENGTH,
+    STRING_LIST_HELP,
     TITLE_MAX_LENGTH,
     URL_MAX_LENGTH,
 )
@@ -576,9 +577,7 @@ class ProjectContentBlock(models.Model):
         schema=LIST_SCHEMA,
         default=list,
         blank=True,
-        help_text=_(
-            'Слева вводите тезисы, а справа отображается технический JSON-код для системы. Его можно не трогать.'
-        ),
+        help_text=_(STRING_LIST_HELP),
     )
     text = models.TextField(
         _('Текст'),
@@ -635,14 +634,10 @@ class ProjectContentBlock(models.Model):
         errors = {}
         text_field_name = _get_current_translation_field_name('text')
         string_list_field_name = _get_current_translation_field_name('string_list')
-        if not self.image:
-            errors['image'] = _('Добавьте основное изображение для выбранного варианта блока.')
         if not self.text:
             errors[text_field_name] = _('Заполните основной текст для выбранного варианта блока.')
         if self.variant == self.Variant.IMAGE_WITH_LIST and not self.string_list:
             errors[string_list_field_name] = _('Добавьте хотя бы один тезис для варианта "Изображение и список".')
-        if self.variant == self.Variant.TWO_IMAGES and not self.left_image:
-            errors['left_image'] = _('Добавьте второе изображение для варианта "Два изображения".')
         if errors:
             raise ValidationError(errors)
 

@@ -36,6 +36,25 @@ def test_projects_list_filters_by_project_type(
 
 
 @pytest.mark.django_db
+def test_projects_list_filters_by_translated_project_type(
+    api_client,
+    published_project,
+    second_published_project,
+):
+    """Проверяет фильтрацию списка проектов по переведенному названию типа проекта."""
+    published_project.project_type.label_sr_latn = 'Arhitektura'
+    published_project.project_type.save(update_fields=['label_sr_latn'])
+
+    url = reverse('api:projects-list')
+    response = api_client.get(url, {'lang': 'sr-latn', 'project_type': 'Arhitektura'})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data['items']) == 1
+    assert data['items'][0]['id'] == published_project.slug
+
+
+@pytest.mark.django_db
 def test_projects_list_filters_by_single_tag(
     api_client,
     published_project,
@@ -51,6 +70,26 @@ def test_projects_list_filters_by_single_tag(
 
 
 @pytest.mark.django_db
+def test_projects_list_filters_by_translated_tag(
+    api_client,
+    published_project,
+    second_published_project,
+    tag_urban,
+):
+    """Проверяет фильтрацию списка проектов по переведенному названию тега."""
+    tag_urban.label_sr_latn = 'Urbanizam'
+    tag_urban.save(update_fields=['label_sr_latn'])
+
+    url = reverse('api:projects-list')
+    response = api_client.get(url, {'lang': 'sr-latn', 'tag': 'Urbanizam'})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data['items']) == 1
+    assert data['items'][0]['id'] == published_project.slug
+
+
+@pytest.mark.django_db
 def test_projects_list_filters_by_multiple_tags(
     api_client,
     published_project,
@@ -59,6 +98,23 @@ def test_projects_list_filters_by_multiple_tags(
     """Проверяет фильтрацию списка проектов по нескольким тегам, переданным в query params."""
     url = reverse('api:projects-list')
     response = api_client.get(url + '?tag=urban&tag=social')
+    assert response.status_code == 200
+    data = response.json()
+    returned_ids = [item['id'] for item in data['items']]
+    assert published_project.slug in returned_ids
+    assert second_published_project.slug in returned_ids
+
+
+@pytest.mark.django_db
+def test_projects_list_filters_by_csv_tags(
+    api_client,
+    published_project,
+    second_published_project,
+):
+    """Проверяет фильтрацию по тегам, переданным одной CSV-строкой."""
+    url = reverse('api:projects-list')
+    response = api_client.get(url, {'tag': 'urban,social'})
+
     assert response.status_code == 200
     data = response.json()
     returned_ids = [item['id'] for item in data['items']]
@@ -94,9 +150,7 @@ def test_projects_list_returns_expected_card_fields(api_client, published_projec
     assert item['project_type'] == published_project.project_type.label
     assert item['tags'] == ['Social', 'Urban']
     assert item['year'] == str(published_project.year)
-    assert item['image'] == (
-        f'http://testserver/media/{published_project.cover_image.name}'
-    )
+    assert item['image'] == (f'http://testserver/media/{published_project.cover_image.name}')
 
 
 @pytest.mark.django_db
@@ -116,4 +170,13 @@ def test_projects_list_returns_custom_pagination_payload(
     assert data['pagination']['offset'] == 0
     assert data['pagination']['limit'] == 1
     assert data['pagination']['isNext'] is True
+    assert len(data['items']) == 1
+
+    response = api_client.get(url, {'limit': 1, 'offset': 1})
+    assert response.status_code == 200
+    data = response.json()
+    assert data['pagination']['totalItems'] == 2
+    assert data['pagination']['offset'] == 1
+    assert data['pagination']['limit'] == 1
+    assert data['pagination']['isNext'] is False
     assert len(data['items']) == 1
