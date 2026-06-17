@@ -5,10 +5,22 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import F
 from django.utils import timezone
+from site_config.constants import SITE_CONFIG_SINGLETON_PK
+from site_config.models import SiteConfig
 
 from contacts.models import ContactRequest
 
 MAX_NOTIFICATION_ERROR_LENGTH = 1000
+
+
+def get_contact_notification_recipient() -> str:
+    """Возвращает почту получателя уведомлений из админки или fallback из настроек."""
+    recipient = (
+        SiteConfig.objects.filter(pk=SITE_CONFIG_SINGLETON_PK)
+        .values_list('contact_notification_email', flat=True)
+        .first()
+    )
+    return (recipient or settings.ADMIN_EMAIL).strip()
 
 
 @shared_task(bind=True, max_retries=3)
@@ -37,7 +49,7 @@ def send_contact_request_notification_task(self, contact_request_id: int) -> Non
             subject=subject,
             message=message,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.ADMIN_EMAIL],
+            recipient_list=[get_contact_notification_recipient()],
             fail_silently=False,
         )
     except (SMTPException, OSError) as error:

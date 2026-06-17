@@ -134,8 +134,10 @@ class ConfigAdmin(BaseAdmin):
         (
             _('1. Основные и общие настройки'),
             {
-                'fields': ('site_name_sr_latn', 'site_name_sr_cyrl', 'team_button_link'),
-                'description': _('Глобальные названия проекта и сквозные ссылки.'),
+                'fields': ('site_name_sr_latn', 'site_name_sr_cyrl', 'team_button_link', 'contact_notification_email'),
+                'description': _(
+                    'Глобальные названия проекта, сквозные ссылки и почта получателя заявок с формы контактов.'
+                ),
             },
         ),
         (

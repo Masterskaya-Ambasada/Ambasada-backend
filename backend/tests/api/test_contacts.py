@@ -147,6 +147,28 @@ class TestContactViewPost:
         assert contact.notification_sent_at is not None
         assert contact.notification_error == ''
 
+    @override_settings(
+        DEFAULT_FROM_EMAIL='noreply@example.com',
+        ADMIN_EMAIL='admin@example.com',
+        EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+    )
+    def test_contact_request_notification_task_uses_email_from_site_config(
+        self,
+        mailoutbox,
+        contact_payload,
+        default_site_config,
+    ):
+        """Таска использует адрес получателя из настроек сайта, если он задан в админке."""
+        default_site_config.contact_notification_email = 'manager@example.com'
+        default_site_config.save(update_fields=['contact_notification_email'])
+
+        contact = ContactRequest.objects.create(**contact_payload)
+
+        send_contact_request_notification_task(contact.pk)
+
+        assert len(mailoutbox) == 1
+        assert mailoutbox[0].to == ['manager@example.com']
+
     def test_contact_request_notification_task_ignores_missing_request(self, mailoutbox):
         """Таска не падает, если заявка была удалена до отправки письма."""
         send_contact_request_notification_task(999999)

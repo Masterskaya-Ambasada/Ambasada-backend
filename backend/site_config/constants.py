@@ -14,6 +14,7 @@ COPYRIGHT_MAX_LENGTH = 150
 SOCIAL_TYPE_MAX_LENGTH = 20
 CONTACT_BUTTON_LABEL_MAX_LENGTH = 50
 CONTACT_LINK_MAX_LENGTH = 255
+CONTACT_NOTIFICATION_EMAIL_MAX_LENGTH = 254
 TEAM_TITLE_MAX_LENGTH = 100
 
 # --- ЗНАЧЕНИЯ ПО УМОЛЧАНИЮ (ДЕФОЛТЫ) ---
@@ -46,3 +47,7 @@ HELP_TEAM_TITLE = _('Заголовок блока со списком кома�
 HELP_MAIN_TEAM_BUTTON = _('Надпись на кнопке в блоке команды на Главной странице.')
 HELP_ABOUT_TEAM_BUTTON = _('Надпись на кнопке в блоке команды на странице "О нас".')
 HELP_TEAM_BUTTON_LINK = _('Ссылка для обеих кнопок команды. Например: /contacts или ссылка на якорный блок.')
+HELP_CONTACT_NOTIFICATION_EMAIL = _(
+    'Почта для уведомлений о новых заявках с формы контактов. '
+    'Если поле оставить пустым, используется резервный адрес из переменной окружения ADMIN_EMAIL.'
+)
