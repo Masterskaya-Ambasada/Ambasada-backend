@@ -45,6 +45,20 @@ class TestContactViewPost:
         assert contact.notification_status == ContactRequest.NotificationStatus.PENDING
         assert contact.notification_attempts == 0
 
+    def test_create_contact_request_success_without_trailing_slash(
+        self,
+        api_client,
+        contact_payload,
+    ):
+        """Форма может отправляться на /api/v1/contact без завершающего слэша."""
+        response = api_client.post(
+            '/api/v1/contact',
+            contact_payload,
+        )
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert ContactRequest.objects.count() == 1
+
     @patch('api.contacts.serializers.send_contact_request_notification_task.delay')
     def test_create_contact_request_schedules_notification(
         self,
@@ -183,8 +197,13 @@ class TestContactViewGet:
         self,
         api_client,
         contact_url,
+        default_site_config,
     ):
         """Возвращается активный donation_text."""
+        default_site_config.contact_phone = '+381111234567'
+        default_site_config.contact_address = 'Belgrade, Test 1'
+        default_site_config.save(update_fields=['contact_phone', 'contact_address'])
+
         ContactPageContent.objects.create(
             donation_text='Поддержите проект',
             is_active=True,
@@ -193,17 +212,43 @@ class TestContactViewGet:
         response = api_client.get(contact_url)
 
         assert response.status_code == status.HTTP_200_OK
+        assert response.data['phone'] == '+381111234567'
+        assert response.data['address'] == 'Belgrade, Test 1'
         assert response.data['donation_text'] == 'Поддержите проект'
 
     def test_get_empty_string_when_no_content(
         self,
         api_client,
         contact_url,
+        default_site_config,
     ):
         """Если активного блока нет."""
+        default_site_config.contact_phone = '+381111234567'
+        default_site_config.contact_address = 'Belgrade, Test 1'
+        default_site_config.save(update_fields=['contact_phone', 'contact_address'])
+
         response = api_client.get(contact_url)
 
         assert response.status_code == status.HTTP_200_OK
+        assert response.data['phone'] == '+381111234567'
+        assert response.data['address'] == 'Belgrade, Test 1'
+        assert response.data['donation_text'] == ''
+
+    def test_plural_contacts_endpoint_returns_contact_page_data(
+        self,
+        api_client,
+        default_site_config,
+    ):
+        """Фронтенд может получать данные страницы контактов по пути /api/v1/contacts/."""
+        default_site_config.contact_phone = '+381111234567'
+        default_site_config.contact_address = 'Belgrade, Test 1'
+        default_site_config.save(update_fields=['contact_phone', 'contact_address'])
+
+        response = api_client.get('/api/v1/contacts/')
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['phone'] == '+381111234567'
+        assert response.data['address'] == 'Belgrade, Test 1'
         assert response.data['donation_text'] == ''
 
 

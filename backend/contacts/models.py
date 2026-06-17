@@ -1,5 +1,5 @@
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.core.validators import EmailValidator, MaxLengthValidator, MinLengthValidator, URLValidator
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -207,6 +207,15 @@ class ContactSocialLink(models.Model):
             if not site_config:
                 raise ValidationError({NON_FIELD_ERRORS: constants.ERROR_MISSING_SITE_CONFIG})
             self.site_config = site_config
+
+        self.url = self.url.strip()
+        if self.social_type == self.SocialType.EMAIL:
+            normalized_email = self.url.removeprefix('mailto:')
+            EmailValidator()(normalized_email)
+            self.url = normalized_email
+            return
+
+        URLValidator(schemes=('http', 'https'))(self.url)
 
     def __str__(self):
         return f'{self.get_social_type_display()} - {self.url}'

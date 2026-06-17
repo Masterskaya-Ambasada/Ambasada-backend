@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from site_config.models import SiteConfig
 
 from api.contacts.serializers import (
     ContactPageContentSerializer,
@@ -42,15 +43,18 @@ class ContactView(APIView):
         lang_suffix = lang.replace('-', '_')
 
         content = ContactPageContent.objects.filter(is_active=True).first()
+        site_config = SiteConfig.objects.first()
+        donation_text = ''
 
-        if not content:
-            return Response({'donation_text': ''}, status=status.HTTP_200_OK)
-
-        serializer = ContactPageContentSerializer(content, context={'request': request, 'lang_suffix': lang_suffix})
+        if content:
+            serializer = ContactPageContentSerializer(content, context={'request': request, 'lang_suffix': lang_suffix})
+            donation_text = serializer.data.get('donation_text', '')
 
         return Response(
             {
-                'donation_text': serializer.data.get('donation_text', ''),
+                'phone': (site_config.contact_phone if site_config else '') or '',
+                'address': (site_config.contact_address if site_config else '') or '',
+                'donation_text': donation_text,
             },
             status=status.HTTP_200_OK,
         )
