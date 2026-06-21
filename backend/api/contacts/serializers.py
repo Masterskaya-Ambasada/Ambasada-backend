@@ -48,6 +48,8 @@ class ContactRequestSerializer(serializers.ModelSerializer):
 
 
 class ContactPageContentSerializer(serializers.ModelSerializer):
+    """Сериализатор контактных данных организации."""
+
     class Meta:
         model = ContactPageContent
         fields = (

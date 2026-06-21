@@ -78,6 +78,10 @@ class ContactSocialLinkAdmin(BaseAdmin):
 class ContactPageContentAdmin(BaseAdmin):
     """Контактные данные организации."""
 
+    readonly_fields = (
+        'created_at',
+        'updated_at',
+    )
     list_display = ('phone', 'address', 'is_active', 'updated_at')
     list_filter = ('is_active',)
     search_fields = ('phone', 'address')

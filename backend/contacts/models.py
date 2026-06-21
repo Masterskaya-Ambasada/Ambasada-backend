@@ -60,14 +60,13 @@ class ContactPageContent(models.Model):
     """Контактные данные организации."""
 
     phone = models.CharField(
-        max_length=20,
+        max_length=constants.MAX_PHONE_LENGTH,
         blank=True,
         validators=[phone_validator],
         verbose_name=_('Телефон'),
         help_text=_('Контактный телефон организации'),
     )
-    address = models.CharField(
-        max_length=300,
+    address = models.TextField(
         blank=True,
         verbose_name=_('Адрес'),
         help_text=_('Адрес организации'),

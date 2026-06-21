@@ -24,6 +24,7 @@ HELP_REQUEST_IS_PROCESSED = _('Показывает, обработано ли �
 ERROR_MESSAGE_MIN_LENGTH = _('Сообщение слишком короткое. Оно должно содержать не менее 20 символов.')
 ERROR_MESSAGE_MAX_LENGTH = _('Сообщение слишком длинное. Оно не может превышать 600 символов.')
 # Блок: ContactPageContent
+MAX_PHONE_LENGTH = 20
 HELP_CONTENT_IS_ACTIVE = _('Определяет активный блок контактных данных (должен быть только один)')
 
 # Блок: ContactSocialLink
