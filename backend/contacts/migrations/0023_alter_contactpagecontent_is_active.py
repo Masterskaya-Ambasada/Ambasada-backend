@@ -5,17 +5,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("contacts", "0022_alter_contactpagecontent_options_and_more"),
+        ('contacts', '0022_alter_contactpagecontent_options_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="contactpagecontent",
-            name="is_active",
+            model_name='contactpagecontent',
+            name='is_active',
             field=models.BooleanField(
                 default=True,
-                help_text="Определяет активный блок контактных данных (должен быть только один)",
-                verbose_name="Активно",
+                help_text='Определяет активный блок контактных данных (должен быть только один)',
+                verbose_name='Активно',
             ),
         ),
     ]
