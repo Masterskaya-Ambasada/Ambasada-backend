@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.forms.models import BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
 
-from contacts.models import ContactRequest, ContactSocialLink
+from contacts.models import ContactPageContent, ContactRequest, ContactSocialLink
 
 
 class IsActiveOnSiteFilter(admin.SimpleListFilter):
@@ -72,3 +72,12 @@ class ContactSocialLinkAdmin(BaseAdmin):
         """Инжектим перехватчик для списка соцсетей."""
         kwargs['formset'] = ContactSocialLinkFormSet
         return super().get_changelist_formset(request, **kwargs)
+
+
+@admin.register(ContactPageContent)
+class ContactPageContentAdmin(BaseAdmin):
+    """Контактные данные организации."""
+
+    list_display = ('phone', 'address', 'is_active', 'updated_at')
+    list_filter = ('is_active',)
+    search_fields = ('phone', 'address')
