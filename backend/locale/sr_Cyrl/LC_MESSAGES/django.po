@@ -417,10 +417,8 @@ msgid "Получение контента блока контактов"
 msgstr "Преузимање садржаја блока контаката"
 
 #: backend/api/schemas/contact_schemas.py:31
-#, fuzzy
-#| msgid "Возвращает данные страницы \"О нас\" со всеми секциями."
 msgid "Возвращает телефон и адрес организации."
-msgstr "Враћа податке странице „О нама“ са свим секцијама."
+msgstr "Враћа телефон и адресу организације."
 
 #: backend/api/schemas/home_shemas.py:6
 msgid "Данные главной страницы"
@@ -614,7 +612,7 @@ msgstr "Порука је предугачка. Не може имати виш�
 
 #: backend/contacts/constants.py:28
 msgid "Определяет активный блок контактных данных (должен быть только один)"
-msgstr ""
+msgstr "Одређује активни блок контакт података (може постојати само један)."
 
 #: backend/contacts/constants.py:31
 msgid "Выбор соцсети."
@@ -703,10 +701,8 @@ msgid "Дата обновления"
 msgstr "Датум ажурирања"
 
 #: backend/contacts/models.py:96 backend/contacts/models.py:97
-#, fuzzy
-#| msgid "Контентный блок"
 msgid "Контактные данные"
-msgstr "Блок садржаја"
+msgstr "Контакт подаци"
 
 #: backend/contacts/models.py:133 backend/site_config/models.py:101
 #: backend/site_config/models.py:102
