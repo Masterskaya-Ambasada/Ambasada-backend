@@ -11,6 +11,11 @@ from .validators import custom_url_validator, phone_validator
 class ContactRequest(models.Model):
     """Модель для формы обратной связи."""
 
+    class NotificationStatus(models.TextChoices):
+        PENDING = 'pending', _('Ожидает отправки')
+        SENT = 'sent', _('Отправлено')
+        FAILED = 'failed', _('Ошибка отправки')
+
     name = models.CharField(
         max_length=constants.MAX_NAME_LENGTH,
         verbose_name=_('Имя'),
@@ -45,6 +50,26 @@ class ContactRequest(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Дата создания'),
+    )
+
+    notification_status = models.CharField(
+        max_length=16,
+        choices=NotificationStatus.choices,
+        default=NotificationStatus.PENDING,
+        verbose_name=_('Статус email-уведомления'),
+    )
+    notification_sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_('Дата отправки email-уведомления'),
+    )
+    notification_attempts = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name=_('Попытки отправки email-уведомления'),
+    )
+    notification_error = models.TextField(
+        blank=True,
+        verbose_name=_('Ошибка отправки email-уведомления'),
     )
 
     class Meta:

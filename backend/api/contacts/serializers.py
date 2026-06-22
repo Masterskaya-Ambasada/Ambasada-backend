@@ -1,6 +1,8 @@
 import random
 
 from contacts.models import ContactPageContent, ContactRequest
+from contacts.tasks import send_contact_request_notification_task
+from django.db import transaction
 from django.utils import translation
 from django.utils.translation import get_language_from_request
 from rest_framework import serializers
@@ -57,7 +59,10 @@ class ContactRequestSerializer(serializers.ModelSerializer):
 
             return fake_instance
 
-        return super().create(validated_data)
+        contact_request = super().create(validated_data)
+        transaction.on_commit(lambda: send_contact_request_notification_task.delay(contact_request.pk))
+
+        return contact_request
 
 
 class ContactPageContentSerializer(serializers.ModelSerializer):
