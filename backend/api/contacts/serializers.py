@@ -1,7 +1,20 @@
 import random
 
 from contacts.models import ContactPageContent, ContactRequest
+from django.utils import translation
+from django.utils.translation import get_language_from_request
 from rest_framework import serializers
+
+
+def get_contacts_lang_suffix(context: dict) -> str:
+    """Определяет языковой суффикс на основе контекста запроса или активного потока."""
+    request = context.get('request')
+    if request:
+        lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        return lang.lower().replace('-', '_')
+
+    current_lang = translation.get_language() or 'ru'
+    return current_lang.lower().replace('-', '_')
 
 
 class ContactRequestSerializer(serializers.ModelSerializer):
@@ -48,7 +61,9 @@ class ContactRequestSerializer(serializers.ModelSerializer):
 
 
 class ContactPageContentSerializer(serializers.ModelSerializer):
-    """Сериализатор контактных данных организации."""
+    """Сериализатор контактных данных организации с поддержкой перевода."""
+
+    address = serializers.SerializerMethodField()
 
     class Meta:
         model = ContactPageContent
@@ -56,3 +71,8 @@ class ContactPageContentSerializer(serializers.ModelSerializer):
             'phone',
             'address',
         )
+
+    def get_address(self, obj) -> str:
+        """Возвращает локализованный адрес с фолбэком на русский язык."""
+        suffix = self.context.get('lang_suffix') or get_contacts_lang_suffix(self.context)
+        return getattr(obj, f'address_{suffix}', None) or getattr(obj, 'address_ru', getattr(obj, 'address', ''))

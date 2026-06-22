@@ -1,10 +1,25 @@
-from core.base_admin import BaseAdmin
+from core.base_admin import BaseAdmin, BaseTranslatedAdmin
 from django.contrib import admin
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.forms import Textarea, TextInput
 from django.forms.models import BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
 
 from contacts.models import ContactPageContent, ContactRequest, ContactSocialLink
+
+FIELD_OVERRIDES = {
+    models.CharField: {'widget': TextInput(attrs={'style': 'width: 100%; max-width: 400px; border-radius: 4px;'})},
+    models.TextField: {
+        'widget': Textarea(
+            attrs={
+                'rows': 4,
+                'style': ('width: 100%; max-width: 400px; ' 'border-radius: 4px; resize: vertical;'),
+            }
+        )
+    },
+    models.URLField: {'widget': TextInput(attrs={'style': 'width: 100%; max-width: 400px; border-radius: 4px;'})},
+}
 
 
 class IsActiveOnSiteFilter(admin.SimpleListFilter):
@@ -75,13 +90,37 @@ class ContactSocialLinkAdmin(BaseAdmin):
 
 
 @admin.register(ContactPageContent)
-class ContactPageContentAdmin(BaseAdmin):
+class ContactPageContentAdmin(BaseTranslatedAdmin):
     """Контактные данные организации."""
 
+    formfield_overrides = FIELD_OVERRIDES
     readonly_fields = (
         'created_at',
         'updated_at',
     )
-    list_display = ('phone', 'address', 'is_active', 'updated_at')
+    list_display = ('phone', 'address_ru', 'is_active', 'updated_at')
     list_filter = ('is_active',)
-    search_fields = ('phone', 'address')
+    search_fields = ('phone', 'address_ru', 'address_en', 'address_sr_cyrl', 'address_sr_latn')
+
+    fieldsets = (
+        (
+            _('Основная информация'),
+            {'fields': ('phone', 'is_active', 'created_at', 'updated_at')},
+        ),
+        (
+            _('Переводы (Русский)'),
+            {'fields': ('address_ru',), 'classes': ('collapse',)},
+        ),
+        (
+            _('Переводы (Английский)'),
+            {'fields': ('address_en',), 'classes': ('collapse',)},
+        ),
+        (
+            _('Переводы (Сербский - Латиница)'),
+            {'fields': ('address_sr_latn',), 'classes': ('collapse',)},
+        ),
+        (
+            _('Переводы (Сербский - Кириллица)'),
+            {'fields': ('address_sr_cyrl',), 'classes': ('collapse',)},
+        ),
+    )

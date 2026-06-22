@@ -44,6 +44,6 @@ class ContactView(APIView):
                 status=status.HTTP_200_OK,
             )
 
-        serializer = ContactPageContentSerializer(content)
+        serializer = ContactPageContentSerializer(content, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
