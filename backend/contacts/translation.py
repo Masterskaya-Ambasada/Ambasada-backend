@@ -5,6 +5,6 @@ from .models import ContactPageContent
 
 @register(ContactPageContent)
 class ContactPageContentTranslationOptions(TranslationOptions):
-    """Настройки перевода полей конфигурации сайта."""
+    """Настройки перевода контента контактной страницы."""
 
-    fields = ('donation_text',)
+    fields = ('address',)

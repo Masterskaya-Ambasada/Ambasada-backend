@@ -179,21 +179,23 @@ class TestContactViewPost:
 class TestContactViewGet:
     """Тесты GET."""
 
-    def test_get_active_donation_text(
+    def test_get_active_contact_page_content(
         self,
         api_client,
         contact_url,
     ):
-        """Возвращается активный donation_text."""
+        """Возвращается активные контактные данные."""
         ContactPageContent.objects.create(
-            donation_text='Поддержите проект',
+            phone='+381111234567',
+            address='Belgrade, Serbia',
             is_active=True,
         )
 
         response = api_client.get(contact_url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['donation_text'] == 'Поддержите проект'
+        assert response.data['phone'] == '+381111234567'
+        assert response.data['address'] == 'Belgrade, Serbia'
 
     def test_get_empty_string_when_no_content(
         self,
@@ -204,7 +206,8 @@ class TestContactViewGet:
         response = api_client.get(contact_url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['donation_text'] == ''
+        assert response.data['phone'] == ""
+        assert response.data['address'] == ""
 
 
 class TestContactPageContentModel:
@@ -217,12 +220,14 @@ class TestContactPageContentModel:
         Так в базе остаётся только один активный объект контента контактов.
         """
         first = ContactPageContent.objects.create(
-            donation_text='Первый блок',
+            phone='+111111111',
+            address='First address',
             is_active=True,
         )
 
         second = ContactPageContent.objects.create(
-            donation_text='Второй блок',
+            phone='+222222222',
+            address='Second address',
             is_active=True,
         )
 

@@ -3,8 +3,20 @@ import random
 from contacts.models import ContactPageContent, ContactRequest
 from contacts.tasks import send_contact_request_notification_task
 from django.db import transaction
+from django.utils import translation
 from django.utils.translation import get_language_from_request
 from rest_framework import serializers
+
+
+def get_contacts_lang_suffix(context: dict) -> str:
+    """Определяет языковой суффикс на основе контекста запроса или активного потока."""
+    request = context.get('request')
+    if request:
+        lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
+        return lang.lower().replace('-', '_')
+
+    current_lang = translation.get_language() or 'ru'
+    return current_lang.lower().replace('-', '_')
 
 
 class ContactRequestSerializer(serializers.ModelSerializer):
@@ -54,22 +66,18 @@ class ContactRequestSerializer(serializers.ModelSerializer):
 
 
 class ContactPageContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для страницы контактов с безопасной локализацией."""
+    """Сериализатор контактных данных организации с поддержкой перевода."""
 
-    donation_text = serializers.SerializerMethodField()
+    address = serializers.SerializerMethodField()
 
     class Meta:
         model = ContactPageContent
-        fields = ('donation_text',)
+        fields = (
+            'phone',
+            'address',
+        )
 
-    def get_donation_text(self, obj):
-        suffix = self.context.get('lang_suffix')
-
-        if not suffix:
-            request = self.context.get('request')
-            lang = 'ru'
-            if request:
-                lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
-            suffix = lang.lower().replace('-', '_')
-
-        return getattr(obj, f'donation_text_{suffix}', '') or obj.donation_text or ''
+    def get_address(self, obj) -> str:
+        """Возвращает локализованный адрес с фолбэком на русский язык."""
+        suffix = self.context.get('lang_suffix') or get_contacts_lang_suffix(self.context)
+        return getattr(obj, f'address_{suffix}', None) or getattr(obj, 'address_ru', getattr(obj, 'address', ''))
