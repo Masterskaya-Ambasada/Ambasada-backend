@@ -16,12 +16,7 @@ class ContactRequest(models.Model):
         SENT = 'sent', _('Отправлено')
         FAILED = 'failed', _('Ошибка отправки')
 
-    name = models.CharField(
-        max_length=constants.MAX_NAME_LENGTH,
-        verbose_name=_('Имя'),
-        blank=True,
-        null=True
-    )
+    name = models.CharField(max_length=constants.MAX_NAME_LENGTH, verbose_name=_('Имя'), blank=True, null=True)
     email = models.EmailField(
         verbose_name=_('Email'),
     )
