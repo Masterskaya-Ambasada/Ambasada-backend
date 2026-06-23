@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from site_config.models import SiteConfig
 
 from api.contacts.serializers import (
     ContactPageContentSerializer,
@@ -38,9 +37,6 @@ class ContactView(APIView):
     def get(self, request, *args, **kwargs):
         """Возвращает активный блок контактных данных организации."""
         content = ContactPageContent.objects.filter(is_active=True).first()
-        site_config = SiteConfig.objects.first()
-        donation_text = ''
-
         if not content:
             return Response(
                 {'phone': '', 'address': ''},

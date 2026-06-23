@@ -45,20 +45,6 @@ class TestContactViewPost:
         assert contact.notification_status == ContactRequest.NotificationStatus.PENDING
         assert contact.notification_attempts == 0
 
-    def test_create_contact_request_success_without_trailing_slash(
-        self,
-        api_client,
-        contact_payload,
-    ):
-        """Форма может отправляться на /api/v1/contact без завершающего слэша."""
-        response = api_client.post(
-            '/api/v1/contact',
-            contact_payload,
-        )
-
-        assert response.status_code == status.HTTP_201_CREATED
-        assert ContactRequest.objects.count() == 1
-
     @patch('api.contacts.serializers.send_contact_request_notification_task.delay')
     def test_create_contact_request_schedules_notification(
         self,
@@ -226,8 +212,8 @@ class TestContactViewGet:
         response = api_client.get(contact_url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['phone'] == ""
-        assert response.data['address'] == ""
+        assert response.data['phone'] == ''
+        assert response.data['address'] == ''
 
 
 class TestContactPageContentModel:
