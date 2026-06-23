@@ -37,6 +37,7 @@ class ContactView(APIView):
     def get(self, request, *args, **kwargs):
         """Возвращает активный блок контактных данных организации."""
         content = ContactPageContent.objects.filter(is_active=True).first()
+
         if not content:
             return Response(
                 {'phone': '', 'address': ''},

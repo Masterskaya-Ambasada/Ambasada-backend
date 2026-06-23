@@ -183,7 +183,6 @@ class TestContactViewGet:
         self,
         api_client,
         contact_url,
-        default_site_config,
     ):
         """Возвращается активные контактные данные."""
         ContactPageContent.objects.create(
@@ -202,13 +201,8 @@ class TestContactViewGet:
         self,
         api_client,
         contact_url,
-        default_site_config,
     ):
         """Если активного блока нет."""
-        default_site_config.contact_phone = '+381111234567'
-        default_site_config.contact_address = 'Belgrade, Test 1'
-        default_site_config.save(update_fields=['contact_phone', 'contact_address'])
-
         response = api_client.get(contact_url)
 
         assert response.status_code == status.HTTP_200_OK

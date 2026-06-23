@@ -3,11 +3,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .constants import (
-    CONTACT_ADDRESS_MAX_LENGTH,
     CONTACT_BUTTON_LABEL_MAX_LENGTH,
     CONTACT_LINK_MAX_LENGTH,
     CONTACT_NOTIFICATION_EMAIL_MAX_LENGTH,
-    CONTACT_PHONE_MAX_LENGTH,
     COOKIE_BUTTON_TEXT_MAX_LENGTH,
     COPYRIGHT_MAX_LENGTH,
     DEFAULT_ABOUT_TEAM_BUTTON_LABEL,
@@ -18,9 +16,7 @@ from .constants import (
     DEFAULT_TEAM_BUTTON_LINK,
     DEFAULT_TEAM_TITLE,
     HELP_ABOUT_TEAM_BUTTON,
-    HELP_CONTACT_ADDRESS,
     HELP_CONTACT_NOTIFICATION_EMAIL,
-    HELP_CONTACT_PHONE,
     HELP_COOKIE_BUTTON_TEXT,
     HELP_COOKIE_MESSAGE,
     HELP_COPYRIGHT,
@@ -101,20 +97,6 @@ class SiteConfig(models.Model):
         default=DEFAULT_TEAM_BUTTON_LINK,
         verbose_name=_('Кнопка команды (ссылка)'),
         help_text=HELP_TEAM_BUTTON_LINK,
-    )
-    contact_phone = models.CharField(
-        max_length=CONTACT_PHONE_MAX_LENGTH,
-        blank=True,
-        default='',
-        verbose_name=_('Телефон для страницы контактов'),
-        help_text=HELP_CONTACT_PHONE,
-    )
-    contact_address = models.CharField(
-        max_length=CONTACT_ADDRESS_MAX_LENGTH,
-        blank=True,
-        default='',
-        verbose_name=_('Адрес для страницы контактов'),
-        help_text=HELP_CONTACT_ADDRESS,
     )
     contact_notification_email = models.EmailField(
         max_length=CONTACT_NOTIFICATION_EMAIL_MAX_LENGTH,

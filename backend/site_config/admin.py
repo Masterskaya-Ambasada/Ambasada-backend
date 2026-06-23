@@ -139,12 +139,10 @@ class ConfigAdmin(BaseAdmin):
             },
         ),
         (
-            _('2. Контакты и уведомления'),
+            _('2. Уведомления формы контактов'),
             {
-                'fields': ('contact_phone', 'contact_address', 'contact_notification_email'),
-                'description': _(
-                    'Данные для страницы "Связаться с нами" и почта получателя уведомлений о новых заявках.'
-                ),
+                'fields': ('contact_notification_email',),
+                'description': _('Почта получателя уведомлений о новых заявках с формы контактов.'),
             },
         ),
         (
