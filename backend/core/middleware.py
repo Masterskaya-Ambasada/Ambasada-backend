@@ -17,8 +17,8 @@ class AdminLoginThrottleMiddleware:
     """
 
     MAX_ATTEMPTS = int(getattr(settings, 'ADMIN_LOGIN_MAX_ATTEMPTS', 10))
-    WINDOW_SECONDS = int(getattr(settings, 'ADMIN_LOGIN_WINDOW_SECONDS', 60))  # attempt counting window
-    BLOCK_SECONDS = int(getattr(settings, 'ADMIN_LOGIN_BLOCK_SECONDS', 300))  # blocking time after exceeding
+    WINDOW_SECONDS = int(getattr(settings, 'ADMIN_LOGIN_WINDOW_SECONDS', 5))  # ВЕРНУТЬ ЗНАЧЕНИЕ 60 ПОСЛЕ ТЕСТИРОВАНИЯ
+    BLOCK_SECONDS = int(getattr(settings, 'ADMIN_LOGIN_BLOCK_SECONDS', 5))  # ВЕРНУТЬ ЗНАЧЕНИЕ 200 ПОСЛЕ ТЕСТИРОВАНИЯ
 
     def __init__(self, get_response):
         """Инициализация middleware."""

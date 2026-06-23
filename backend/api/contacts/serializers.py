@@ -35,15 +35,11 @@ class ContactRequestSerializer(serializers.ModelSerializer):
             'name',
             'email',
             'message',
-            'reason',
             'contact_preference',
         ]
 
     def validate_name(self, value):
-        """Разрешаем только буквы (включая кириллицу), цифры, пробелы и дефисы.
-
-        При наличии спецсимволов возвращает 400 Bad Request.
-        """
+        """Разрешаем только буквы (включая кириллицу), цифры, пробелы и дефисы."""
         if not re.match(r'^[a-zA-Zа-яА-ЯёЁ0-9\s-]+$', value):
             raise serializers.ValidationError('Имя содержит недопустимые спецсимволы.')
         return value
