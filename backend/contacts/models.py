@@ -5,11 +5,16 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from . import constants
-from .validators import custom_url_validator
+from .validators import custom_url_validator, phone_validator
 
 
 class ContactRequest(models.Model):
     """Модель для формы обратной связи."""
+
+    class NotificationStatus(models.TextChoices):
+        PENDING = 'pending', _('Ожидает отправки')
+        SENT = 'sent', _('Отправлено')
+        FAILED = 'failed', _('Ошибка отправки')
 
     name = models.CharField(
         max_length=constants.MAX_NAME_LENGTH,
@@ -47,6 +52,26 @@ class ContactRequest(models.Model):
         verbose_name=_('Дата создания'),
     )
 
+    notification_status = models.CharField(
+        max_length=16,
+        choices=NotificationStatus.choices,
+        default=NotificationStatus.PENDING,
+        verbose_name=_('Статус email-уведомления'),
+    )
+    notification_sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_('Дата отправки email-уведомления'),
+    )
+    notification_attempts = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name=_('Попытки отправки email-уведомления'),
+    )
+    notification_error = models.TextField(
+        blank=True,
+        verbose_name=_('Ошибка отправки email-уведомления'),
+    )
+
     class Meta:
         verbose_name = _('Запрос обратной связи')
         verbose_name_plural = _('Запросы обратной связи')
@@ -57,12 +82,19 @@ class ContactRequest(models.Model):
 
 
 class ContactPageContent(models.Model):
-    """Сингл активный блок пожертвований."""
+    """Контактные данные организации."""
 
-    donation_text = models.TextField(
+    phone = models.CharField(
+        max_length=constants.MAX_PHONE_LENGTH,
         blank=True,
-        verbose_name=_('Текстовый блок для пожертвований'),
-        help_text=constants.HELP_CONTENT_DONATION_TEXT,
+        validators=[phone_validator],
+        verbose_name=_('Телефон'),
+        help_text=_('Контактный телефон организации'),
+    )
+    address = models.TextField(
+        blank=True,
+        verbose_name=_('Адрес'),
+        help_text=_('Адрес организации'),
     )
     is_active = models.BooleanField(
         default=True,
@@ -86,24 +118,20 @@ class ContactPageContent(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = _('Редактируемая ссылка на пожертвования')
-        verbose_name_plural = _('Редактируемые ссылки на пожертвования')
+        verbose_name = _('Контактные данные')
+        verbose_name_plural = _('Контактные данные')
         ordering = ('-updated_at',)
         constraints = [
             models.UniqueConstraint(
                 fields=['is_active'],
                 condition=Q(is_active=True),
                 name='unique_active_contact_page_content',
-                violation_error_message=constants.ERROR_MULTIPLE_ACTIVE_DONATIONS,
+                violation_error_message=constants.ERROR_MULTIPLE_ACTIVE_CONTACTS,
             )
         ]
 
     def __str__(self):
-        return (
-            self.donation_text[: constants.DONATION_TEXT_PREVIEW_LENGTH]
-            if self.donation_text
-            else str(self._meta.verbose_name)
-        )
+        return str(self._meta.verbose_name)
 
 
 def get_default_site_config():
