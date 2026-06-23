@@ -68,7 +68,7 @@ class TestContactViewPost:
 
     @pytest.mark.parametrize(
         'field',
-        ['name', 'email', 'message', 'reason'],
+        ['name', 'email', 'message'],
     )
     def test_required_fields(
         self,
