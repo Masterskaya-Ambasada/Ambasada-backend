@@ -1,5 +1,4 @@
 from contacts.models import ContactPageContent
-from django.utils.translation import get_language_from_request
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -37,24 +36,17 @@ class ContactView(APIView):
         return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
-        """Возвращает текст пожертвований."""
-        raw_lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
-        lang = raw_lang.lower()
-        lang_suffix = lang.replace('-', '_')
-
+        """Возвращает активный блок контактных данных организации."""
         content = ContactPageContent.objects.filter(is_active=True).first()
         site_config = SiteConfig.objects.first()
         donation_text = ''
 
-        if content:
-            serializer = ContactPageContentSerializer(content, context={'request': request, 'lang_suffix': lang_suffix})
-            donation_text = serializer.data.get('donation_text', '')
+        if not content:
+            return Response(
+                {'phone': '', 'address': ''},
+                status=status.HTTP_200_OK,
+            )
 
-        return Response(
-            {
-                'phone': (site_config.contact_phone if site_config else '') or '',
-                'address': (site_config.contact_address if site_config else '') or '',
-                'donation_text': donation_text,
-            },
-            status=status.HTTP_200_OK,
-        )
+        serializer = ContactPageContentSerializer(content, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -28,14 +28,13 @@ contact_view_schemas = extend_schema_view(
     ),
     get=extend_schema(
         summary=_('Получение контента блока контактов'),
-        description=_('Возвращает данные для страницы "Связаться с нами" и активный текстовый блок.'),
+        description=_('Возвращает телефон и адрес организации.'),
         responses={
             200: inline_serializer(
                 name='ContactGetResponse',
                 fields={
                     'phone': serializers.CharField(),
                     'address': serializers.CharField(),
-                    'donation_text': serializers.CharField(),
                 },
             ),
         },

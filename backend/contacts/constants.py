@@ -8,7 +8,7 @@ MAX_MESSAGE_LENGTH = 500
 MAX_REASON_LENGTH = 250
 SOCIAL_TYPE_MAX_LENGTH = 32
 MIN_MESSAGE_LENGTH = 20
-DONATION_TEXT_PREVIEW_LENGTH = 50
+# DONATION_TEXT_PREVIEW_LENGTH = 50
 CONTACT_SOCIAL_LINK_MAX_LENGTH_URL = 500
 # =====================================================================
 # ДЕФОЛТНЫЕ ЗНАЧЕНИЯ
@@ -24,8 +24,8 @@ HELP_REQUEST_IS_PROCESSED = _('Показывает, обработано ли �
 ERROR_MESSAGE_MIN_LENGTH = _('Сообщение слишком короткое. Оно должно содержать не менее 20 символов.')
 ERROR_MESSAGE_MAX_LENGTH = _('Сообщение слишком длинное. Оно не может превышать 600 символов.')
 # Блок: ContactPageContent
-HELP_CONTENT_DONATION_TEXT = _('Редактируемый текст с возможностью добавить внешнюю ссылку')
-HELP_CONTENT_IS_ACTIVE = _('Может быть активен только один блок пожертвований')
+MAX_PHONE_LENGTH = 20
+HELP_CONTENT_IS_ACTIVE = _('Определяет активный блок контактных данных (должен быть только один)')
 
 # Блок: ContactSocialLink
 HELP_SOCIAL_TYPE = _('Выбор соцсети.')
@@ -38,7 +38,7 @@ HELP_SOCIAL_IS_ACTIVE = _('Если включено — отображаетс�
 # =====================================================================
 # ОШИБКИ ВАЛИДАЦИИ И ОГРАНИЧЕНИЙ (VALIDATION & CONSTRAINT ERRORS)
 # =====================================================================
-ERROR_MULTIPLE_ACTIVE_DONATIONS = _('Может быть только один активный блок пожертвований')
+ERROR_MULTIPLE_ACTIVE_CONTACTS = _('Может быть только один активный блок контактов')
 ERROR_DUPLICATE_SOCIAL_TYPE = _('Для данного сайта уже добавлена ссылка этого типа соцсети')
 ERROR_DUPLICATE_SOCIAL_ORDER = _('Этот порядок отображения уже занят для данного сайта')
 ERROR_MISSING_SITE_CONFIG = _('Сначала создайте настройки сайта')
