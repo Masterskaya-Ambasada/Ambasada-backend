@@ -65,7 +65,7 @@ class TestContactViewPost:
 
         assert response.status_code == status.HTTP_201_CREATED
         mock_delay.assert_called_once_with(contact.pk)
-    @pytest.mark.skip()
+
     @pytest.mark.parametrize(
         'field',
         ['name', 'email', 'message'],

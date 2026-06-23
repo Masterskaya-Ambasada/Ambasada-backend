@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 # =====================================================================
 # ОГРАНИЧЕНИЯ ДЛИНЫ ПОЛЕЙ
 # =====================================================================
-MAX_NAME_LENGTH = 250
+MAX_NAME_LENGTH = 100
 MAX_MESSAGE_LENGTH = 600
 MAX_REASON_LENGTH = 250
 SOCIAL_TYPE_MAX_LENGTH = 32
