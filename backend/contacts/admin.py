@@ -57,7 +57,6 @@ class ContactRequestAdmin(BaseAdmin):
         'name',
         'email',
         'message',
-        'reason',
         'created_at',
         'notification_status',
         'notification_sent_at',

@@ -16,7 +16,10 @@ class ContactRequest(models.Model):
         SENT = 'sent', _('Отправлено')
         FAILED = 'failed', _('Ошибка отправки')
 
-    name = models.CharField(max_length=constants.MAX_NAME_LENGTH, verbose_name=_('Имя'), default='No name')
+    name = models.CharField(
+        max_length=constants.MAX_NAME_LENGTH,
+        verbose_name=_('Имя'),
+    )
     email = models.EmailField(
         verbose_name=_('Email'),
     )
@@ -33,10 +36,6 @@ class ContactRequest(models.Model):
                 message=constants.ERROR_MESSAGE_MAX_LENGTH,
             ),
         ],
-    )
-    reason = models.CharField(
-        max_length=constants.MAX_REASON_LENGTH,
-        verbose_name=_('Причина обращения'),
     )
     is_processed = models.BooleanField(
         default=False,

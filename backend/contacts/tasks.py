@@ -38,10 +38,7 @@ def send_contact_request_notification_task(self, contact_request_id: int) -> Non
 
     subject = f'Новая заявка №{contact_request.pk}'
     message = (
-        f'Имя: {contact_request.name}\n'
-        f'Email: {contact_request.email}\n'
-        f'Причина обращения: {contact_request.reason}\n\n'
-        f'Сообщение:\n{contact_request.message}'
+        f'Имя: {contact_request.name}\n' f'Email: {contact_request.email}\n' f'Сообщение:\n{contact_request.message}'
     )
 
     try:
