@@ -314,7 +314,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': config('THROTTLE_RATE_ANON', default='120/hour'),
         'user': config('THROTTLE_RATE_USER', default='600/hour'),
-        'contact': config('THROTTLE_RATE_CONTACT', default='5/hour'),  # форма обратной связи
+        'contact': config('THROTTLE_RATE_CONTACT', default='30/hour'),  # форма обратной связи
         'auth': config('THROTTLE_RATE_AUTH', default='10/minute'),  # вход в Admin — защита от brute-force
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
