@@ -34,7 +34,7 @@ INIT_VIEW_SCHEMA = extend_schema(
                             name='SocialLink',
                             fields={
                                 'social_type': serializers.CharField(),
-                                'url': serializers.URLField(),
+                                'url': serializers.CharField(),
                             },
                         ),
                         help_text=_('Ссылки на социальные сети'),
