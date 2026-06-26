@@ -206,8 +206,8 @@ class TestContactViewGet:
         response = api_client.get(contact_url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['phone'] == ""
-        assert response.data['address'] == ""
+        assert response.data['phone'] == ''
+        assert response.data['address'] == ''
 
 
 class TestContactPageContentModel:
