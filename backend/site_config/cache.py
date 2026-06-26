@@ -25,8 +25,8 @@ def format_locale_code_for_frontend(code: str) -> str:
 def format_social_url_for_frontend(social_type: str, url: str) -> str:
     """Возвращает URL соцсети в формате, который ожидает фронтенд."""
     normalized_url = url.strip()
-    if social_type == 'email' and normalized_url and not normalized_url.startswith('mailto:'):
-        return f'mailto:{normalized_url}'
+    if social_type == 'email':
+        return normalized_url.removeprefix('mailto:')
     return normalized_url
 
 

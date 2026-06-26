@@ -72,8 +72,8 @@ class InitViewTests(APITestCase):
             with transaction.atomic():
                 SiteConfig.objects.create(site_name='Second')
 
-    def test_init_formats_plain_email_social_link_for_frontend(self):
-        """Обычный email из админки в Init API возвращается как mailto-ссылка для фронтенда."""
+    def test_init_returns_plain_email_social_link_for_frontend(self):
+        """Обычный email из админки в Init API возвращается без mailto-префикса."""
         config = SiteConfig.objects.create(site_name='Test Site')
         ContactSocialLink.objects.create(
             site_config=config,
@@ -85,4 +85,4 @@ class InitViewTests(APITestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['socials'][0]['url'], 'mailto:hello@example.com')
+        self.assertEqual(response.data['socials'][0]['url'], 'hello@example.com')
