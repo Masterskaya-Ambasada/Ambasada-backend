@@ -34,13 +34,8 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source='slug', help_text=_('Уникальный строковый идентификатор проекта'))
     year = serializers.CharField()
     image = serializers.SerializerMethodField()
-
-    # Переводим локализуемые текстовые поля на явные методы
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
-
-    # Переводим связанные поля на методы, так как динамическое переопределение source/slug_field
-    # ломается внутри ListSerializer (когда используется many=True)
     project_type = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
 
@@ -86,7 +81,6 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
         suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
         field_name = f'label_{suffix}'
 
-        # Рекомендуется использовать prefetch_related('tags') в queryset, чтобы избежать N+1 запросов
         return [
             getattr(tag, field_name, None) or getattr(tag, 'label_ru', getattr(tag, 'label', ''))
             for tag in obj.tags.all()
