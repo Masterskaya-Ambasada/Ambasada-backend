@@ -44,6 +44,10 @@ class InitViewTests(APITestCase):
         self.assertIn('languages', response.data)
         self.assertIn('socials', response.data)
         self.assertIn('copyright', response.data)
+        self.assertIn('team_title', response.data)
+        self.assertIn('main_team_button_label', response.data)
+        self.assertIn('about_team_button_label', response.data)
+        self.assertNotIn('team_button_link', response.data)
 
     def test_empty_relations(self):
         """Проверка корректного возврата данных при отсутствии связанных записей в БД."""

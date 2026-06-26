@@ -410,7 +410,7 @@ msgstr ""
 
 #: backend/api/schemas/contact_schemas.py:31
 msgid "Возвращает телефон и адрес организации."
-msgstr ""
+msgstr "Возвращает телефон и адрес организации."
 
 #: backend/api/schemas/home_shemas.py:6
 msgid "Данные главной страницы"
@@ -531,10 +531,12 @@ msgid ""
 "Возвращает локализованный текст политики конфиденциальности в формате HTML. "
 "Локализация зависит от переданного заголовка `Accept-Language`."
 msgstr ""
+"Возвращает локализованный текст политики конфиденциальности в формате HTML. "
+"Локализация зависит от переданного заголовка `Accept-Language`."
 
 #: backend/api/schemas/security_schemas.py:15
 msgid "Политика конфиденциальности не найдена"
-msgstr ""
+msgstr "Политика конфиденциальности не найдена"
 
 #: backend/api/schemas/users_schemas.py:8
 msgid "Список участников команды"
@@ -596,7 +598,7 @@ msgstr ""
 
 #: backend/contacts/constants.py:28
 msgid "Определяет активный блок контактных данных (должен быть только один)"
-msgstr ""
+msgstr "Определяет активный блок контактных данных (должен быть только один)."
 
 #: backend/contacts/constants.py:31
 msgid "Выбор соцсети."
@@ -665,7 +667,7 @@ msgstr ""
 
 #: backend/contacts/models.py:67
 msgid "Контактный телефон организации"
-msgstr ""
+msgstr "Контактный телефон организации"
 
 #: backend/contacts/models.py:71
 msgid "Адрес"
@@ -673,7 +675,7 @@ msgstr ""
 
 #: backend/contacts/models.py:72
 msgid "Адрес организации"
-msgstr ""
+msgstr "Адрес организации"
 
 #: backend/contacts/models.py:76
 msgid "Активно"
@@ -685,7 +687,7 @@ msgstr ""
 
 #: backend/contacts/models.py:96 backend/contacts/models.py:97
 msgid "Контактные данные"
-msgstr ""
+msgstr "Контактные данные"
 
 #: backend/contacts/models.py:133 backend/site_config/models.py:101
 #: backend/site_config/models.py:102
@@ -1369,31 +1371,31 @@ msgstr ""
 
 #: backend/security/admin.py:32 backend/security/models.py:9
 msgid "Текст политики"
-msgstr ""
+msgstr "Текст политики"
 
 #: backend/security/apps.py:9
 msgid "Полтика конфиденциальности"
-msgstr ""
+msgstr "Политика конфиденциальности"
 
 #: backend/security/constants.py:3
 msgid "Основной текст документа (поддерживает HTML)"
-msgstr ""
+msgstr "Основной текст документа (поддерживает HTML)"
 
 #: backend/security/models.py:10
 msgid "Дата последнего обновления"
-msgstr ""
+msgstr "Дата последнего обновления"
 
 #: backend/security/models.py:13 backend/security/models.py:14
 msgid "Политика конфиденциальности"
-msgstr ""
+msgstr "Политика конфиденциальности"
 
 #: backend/security/models.py:22
 msgid "Может существовать только одна запись политики конфиденциальности."
-msgstr ""
+msgstr "Может существовать только одна запись политики конфиденциальности."
 
 #: backend/security/models.py:34
 msgid "Текст политики..."
-msgstr ""
+msgstr "Текст политики..."
 
 #: backend/site_config/admin.py:135
 msgid "1. Основные и общие настройки"
