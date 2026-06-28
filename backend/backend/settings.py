@@ -271,6 +271,23 @@ MEDIA_ROOT = (
     else str(BASE_DIR / 'media')
 )
 
+# Email
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='webmaster@localhost')
+ADMIN_EMAIL = config('ADMIN_EMAIL', default=DEFAULT_FROM_EMAIL) or DEFAULT_FROM_EMAIL
+
+# Celery
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default=config('REDIS_URL', default='redis://redis:6379/0'))
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default=CELERY_BROKER_URL)
+CELERY_TIMEZONE = config('CELERY_TIMEZONE', default=TIME_ZONE)
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = config('CELERY_TASK_TIME_LIMIT', default=300, cast=int)
+
 # REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -298,7 +315,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': config('THROTTLE_RATE_ANON', default='120/hour'),
         'user': config('THROTTLE_RATE_USER', default='600/hour'),
-        'contact': config('THROTTLE_RATE_CONTACT', default='5/hour'),  # форма обратной связи
+        'contact': config('THROTTLE_RATE_CONTACT', default='30/hour'),  # форма обратной связи
         'auth': config('THROTTLE_RATE_AUTH', default='10/minute'),  # вход в Admin — защита от brute-force
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',

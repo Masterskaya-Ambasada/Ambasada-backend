@@ -1,6 +1,6 @@
 import pytest
-from django.db.utils import IntegrityError
 from contacts.models import ContactSocialLink
+from django.db.utils import IntegrityError
 from site_config.models import SiteConfig
 
 
@@ -13,7 +13,7 @@ def site_config(db):
             'site_name': 'Test site',
             'seo_description': 'SEO text',
             'copyright': '2026',
-        }
+        },
     )
     return config
 
@@ -42,8 +42,8 @@ def test_contact_social_link_admin_add_shows_order_error(client, admin_user, sit
                 '_save': 'Сохранить',
             },
         )
-    
-    assert "unique_site_config_social_order" in str(exc_info.value)
+
+    assert 'unique_site_config_social_order' in str(exc_info.value)
     assert ContactSocialLink.objects.count() == 1
 
 
@@ -72,5 +72,27 @@ def test_contact_social_link_admin_add_shows_social_type_error(client, admin_use
             },
         )
 
-    assert "unique_site_config_social_type" in str(exc_info.value)
+    assert 'unique_site_config_social_type' in str(exc_info.value)
     assert ContactSocialLink.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_contact_social_link_admin_accepts_plain_email(client, admin_user, site_config):
+    """В админке для типа Email можно сохранить обычный адрес без mailto-префикса."""
+    client.force_login(admin_user)
+
+    response = client.post(
+        '/admin/contacts/contactsociallink/add/',
+        data={
+            'site_config': site_config.pk,
+            'social_type': ContactSocialLink.SocialType.EMAIL,
+            'url': 'hello@example.com',
+            'order': '3',
+            'is_active': 'on',
+            '_save': 'Сохранить',
+        },
+    )
+
+    assert response.status_code == 302
+    saved_link = ContactSocialLink.objects.get(social_type=ContactSocialLink.SocialType.EMAIL)
+    assert saved_link.url == 'hello@example.com'

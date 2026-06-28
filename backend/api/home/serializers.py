@@ -34,13 +34,11 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source='slug', help_text=_('Уникальный строковый идентификатор проекта'))
     year = serializers.CharField()
     image = serializers.SerializerMethodField()
-
-    # 1. Переводим проблемные поля на явные методы
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    project_type = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
 
-    project_type = serializers.CharField(source='project_type.label', default='')
-    tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='label')
     isFirst = serializers.SerializerMethodField()
     action_button = serializers.SerializerMethodField()
 
@@ -58,16 +56,6 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
             'action_button',
         )
 
-    def __init__(self, *args, **kwargs):
-        """Динамически переключает источники локализации для связанных полей справочников."""
-        super().__init__(*args, **kwargs)
-        suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
-
-        if 'project_type' in self.fields:
-            self.fields['project_type'].source = f'project_type.label_{suffix}'
-        if 'tags' in self.fields:
-            self.fields['tags'].slug_field = f'label_{suffix}'
-
     def get_title(self, obj) -> str:
         """Возвращает локализованное название проекта с фолбэком на русский язык."""
         suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
@@ -77,6 +65,26 @@ class HomeProjectItemSerializer(serializers.ModelSerializer):
         """Возвращает локализованное краткое описание проекта с фолбэком на русский язык."""
         suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
         return getattr(obj, f'description_{suffix}', None) or getattr(obj, 'description_ru', obj.description)
+
+    @extend_schema_field(serializers.CharField(default=''))
+    def get_project_type(self, obj) -> str:
+        """Возвращает локализованный тип проекта."""
+        if not getattr(obj, 'project_type', None):
+            return ''
+        suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
+        pt = obj.project_type
+        return getattr(pt, f'label_{suffix}', None) or getattr(pt, 'label_ru', getattr(pt, 'label', ''))
+
+    @extend_schema_field(serializers.ListField(child=serializers.CharField()))
+    def get_tags(self, obj) -> list[str]:
+        """Возвращает список локализованных тегов проекта."""
+        suffix = self.context.get('lang_suffix') or get_home_lang_suffix(self.context)
+        field_name = f'label_{suffix}'
+
+        return [
+            getattr(tag, field_name, None) or getattr(tag, 'label_ru', getattr(tag, 'label', ''))
+            for tag in obj.tags.all()
+        ]
 
     @extend_schema_field(serializers.CharField(allow_null=True))
     def get_image(self, obj) -> str | None:

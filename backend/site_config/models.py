@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from .constants import (
     CONTACT_BUTTON_LABEL_MAX_LENGTH,
     CONTACT_LINK_MAX_LENGTH,
+    CONTACT_NOTIFICATION_EMAIL_MAX_LENGTH,
     COOKIE_BUTTON_TEXT_MAX_LENGTH,
     COPYRIGHT_MAX_LENGTH,
     DEFAULT_ABOUT_TEAM_BUTTON_LABEL,
@@ -15,6 +16,7 @@ from .constants import (
     DEFAULT_TEAM_BUTTON_LINK,
     DEFAULT_TEAM_TITLE,
     HELP_ABOUT_TEAM_BUTTON,
+    HELP_CONTACT_NOTIFICATION_EMAIL,
     HELP_COOKIE_BUTTON_TEXT,
     HELP_COOKIE_MESSAGE,
     HELP_COPYRIGHT,
@@ -95,6 +97,13 @@ class SiteConfig(models.Model):
         default=DEFAULT_TEAM_BUTTON_LINK,
         verbose_name=_('Кнопка команды (ссылка)'),
         help_text=HELP_TEAM_BUTTON_LINK,
+    )
+    contact_notification_email = models.EmailField(
+        max_length=CONTACT_NOTIFICATION_EMAIL_MAX_LENGTH,
+        blank=True,
+        default='',
+        verbose_name=_('Почта для уведомлений о заявках'),
+        help_text=HELP_CONTACT_NOTIFICATION_EMAIL,
     )
 
     class Meta:

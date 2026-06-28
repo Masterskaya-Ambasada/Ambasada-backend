@@ -1,3 +1,4 @@
+from contacts.models import ContactSocialLink
 from django.conf import settings
 from django.core.cache import cache
 from django.db import IntegrityError, transaction
@@ -44,6 +45,10 @@ class InitViewTests(APITestCase):
         self.assertIn('languages', response.data)
         self.assertIn('socials', response.data)
         self.assertIn('copyright', response.data)
+        self.assertIn('team_title', response.data)
+        self.assertIn('main_team_button_label', response.data)
+        self.assertIn('about_team_button_label', response.data)
+        self.assertNotIn('team_button_link', response.data)
 
     def test_empty_relations(self):
         """Проверка корректного возврата данных при отсутствии связанных записей в БД."""
@@ -66,3 +71,18 @@ class InitViewTests(APITestCase):
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 SiteConfig.objects.create(site_name='Second')
+
+    def test_init_returns_plain_email_social_link_for_frontend(self):
+        """Обычный email из админки в Init API возвращается без mailto-префикса."""
+        config = SiteConfig.objects.create(site_name='Test Site')
+        ContactSocialLink.objects.create(
+            site_config=config,
+            social_type=ContactSocialLink.SocialType.EMAIL,
+            url='hello@example.com',
+            order=1,
+        )
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['socials'][0]['url'], 'hello@example.com')

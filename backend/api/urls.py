@@ -81,7 +81,7 @@ v1_urlpatterns = [
     path('auth/', include(auth_urlpatterns)),
     path('users/', include(user_urlpatterns)),
     path('projects/', include(project_urlpatterns)),
-    path('contact/', include(contact_urlpatterns)),
+    path('contacts/', include(contact_urlpatterns)),
     path('', include(about_urlpatterns)),
     path('', include(doc_urlpatterns)),
     path('', include(security_url_patterns)),

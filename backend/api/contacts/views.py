@@ -1,8 +1,6 @@
 import logging
 
 from contacts.models import ContactPageContent
-from django.utils import translation
-from django.utils.translation import get_language_from_request
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -33,14 +31,11 @@ class ContactView(APIView):
     def post(self, request, *args, **kwargs):
         """Создаёт запрос обратной связи со встроенной валидацией антиспама."""
         try:
-            lang = request.query_params.get('lang') or get_language_from_request(request)
-            with translation.override(lang):
-                serializer = self.get_serializer(data=request.data, context={'request': request})
-                serializer.is_valid(raise_exception=True)
-                self.perform_create(serializer)
-                logger.info('Пользователь успешно отправил запрос обратной связи.')
-
-                return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
+            serializer = self.get_serializer(data=request.data, context={'request': request})
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            logger.info('Пользователь успешно отправил запрос обратной связи.')
+            return Response({'detail': _('Получено')}, status=status.HTTP_201_CREATED)
         except ValidationError as exc:
             error_messages = []
             for errors in exc.detail.values():
@@ -54,22 +49,16 @@ class ContactView(APIView):
             raise
 
     def get(self, request, *args, **kwargs):
-        """Возвращает текст пожертвований."""
-        raw_lang = request.query_params.get('lang') or get_language_from_request(request) or 'ru'
-        lang = raw_lang.lower()
-        lang_suffix = lang.replace('-', '_')
-
+        """Возвращает активный блок контактных данных организации."""
         content = ContactPageContent.objects.filter(is_active=True).first()
 
         if not content:
             logger.warning('Объект ContactPageContent не найден.')
-            return Response({'donation_text': ''}, status=status.HTTP_200_OK)
+            return Response(
+                {'phone': '', 'address': ''},
+                status=status.HTTP_200_OK,
+            )
 
-        serializer = ContactPageContentSerializer(content, context={'request': request, 'lang_suffix': lang_suffix})
+        serializer = ContactPageContentSerializer(content, context={'request': request})
 
-        return Response(
-            {
-                'donation_text': serializer.data.get('donation_text', ''),
-            },
-            status=status.HTTP_200_OK,
-        )
+        return Response(serializer.data, status=status.HTTP_200_OK)

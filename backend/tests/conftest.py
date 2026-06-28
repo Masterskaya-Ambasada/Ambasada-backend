@@ -377,8 +377,7 @@ def contact_payload():
     return {
         'name': 'Иван',
         'email': 'ivan@example.com',
-        'message': 'Здравствуйте! Я пишу вам по поводу проекта Ambasada.',
-        'reason': 'question',
+        'message': 'Здравствуйте! Я пишу вам по поводу проекта Ambasada.'
     }
 # =========================================================
 # HOME PAGE CONTENT
