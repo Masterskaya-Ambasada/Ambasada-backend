@@ -2,23 +2,14 @@
 
 from csp.decorators import csp_update
 from django.urls import include, path
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from api.about.views import AboutAPIView
 from api.auth.views import AmbasadaTokenObtainPairView
 from api.contacts.views import ContactView
 from api.home.views import HomeAPIView
-from api.projects.views import (
-    ProjectDetailView,
-    ProjectListView,
-    ProjectTagListView,
-    ProjectTypeListView,
-)
+from api.projects.views import ProjectDetailView, ProjectListView, ProjectTagListView, ProjectTypeListView
 from api.schemas.auth_schemas import TOKEN_REFRESH_SCHEMA
 from api.security.views import SecurityPolicyView
 from api.site_config.views import InitView

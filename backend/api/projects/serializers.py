@@ -5,18 +5,10 @@ from django.utils.encoding import force_str
 from django.utils.translation import get_language_from_request
 from drf_spectacular.utils import extend_schema_field
 from projects.constants import CONTENT_BLOCK_INDEX_WIDTH
-from projects.models import (
-    Project,
-    ProjectBlockButton,
-    ProjectContentBlock,
-    ProjectType,
-)
+from projects.models import Project, ProjectBlockButton, ProjectContentBlock, ProjectType
 from rest_framework import serializers
 
-from api.projects.constants import (
-    PROJECT_ACTION_BUTTON_LABEL,
-    PROJECT_ACTION_BUTTON_LINK_TEMPLATE,
-)
+from api.projects.constants import PROJECT_ACTION_BUTTON_LABEL, PROJECT_ACTION_BUTTON_LINK_TEMPLATE
 
 
 def get_lang_suffix(context: dict) -> str:

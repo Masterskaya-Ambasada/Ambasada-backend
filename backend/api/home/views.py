@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import get_user_model
 from django.utils.translation import get_language_from_request
 from django.utils.translation import gettext_lazy as _
@@ -10,6 +12,8 @@ from site_config.cache import get_full_config_cached
 from api.schemas.home_shemas import HOME_VIEW_SCHEMA
 
 from .serializers import HomePageRootSerializer
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -28,6 +32,7 @@ class HomeAPIView(APIView):
         config_data = get_full_config_cached(language=lang)
 
         if not config_data:
+            logger.warning(f'Данные конфигурации отсутствуют для языка {lang}')
             return Response(
                 {
                     'status': 404,
@@ -38,6 +43,7 @@ class HomeAPIView(APIView):
             )
 
         team_members = User.objects.public()[:6]
+        logger.info(f'Получено {team_members.count() if team_members else 0} членов команды')
 
         projects = (
             Project.objects.filter(is_published=True)
@@ -45,7 +51,7 @@ class HomeAPIView(APIView):
             .prefetch_related('tags')
             .order_by('-year', '-id')[:4]
         )
-
+        logger.info(f'Получено {projects.count() if projects else 0} опубликованных проектов')
         first_project_id = projects[0].id if projects.exists() else None
 
         page_data = {
