@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from api.contacts.serializers import ContactPageContentSerializer, ContactRequestSerializer
@@ -19,8 +20,15 @@ class ContactView(APIView):
     """API для формы обратной связи и получения контактного блока."""
 
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
     throttle_scope = 'contact'
     serializer_class = ContactRequestSerializer
+
+    def get_throttlers(self):
+        # Лимит только на отправку формы (POST); GET контактного блока — без лимита.
+        if self.request.method == 'POST':
+            return super().get_throttlers()
+        return []
 
     def get_serializer(self, *args, **kwargs):
         return self.serializer_class(*args, **kwargs)
