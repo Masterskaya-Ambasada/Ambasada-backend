@@ -22,6 +22,14 @@ def format_locale_code_for_frontend(code: str) -> str:
     return f'{language}-{script.capitalize()}'
 
 
+def format_social_url_for_frontend(social_type: str, url: str) -> str:
+    """Возвращает URL соцсети в формате, который ожидает фронтенд."""
+    normalized_url = url.strip()
+    if social_type == 'email':
+        return normalized_url.removeprefix('mailto:')
+    return normalized_url
+
+
 def get_config_cache_key(language=None) -> str:
     """Генерирует ключ кэша для Init запроса с учетом языка."""
     lang = (language or get_language() or settings.LANGUAGE_CODE).lower()
@@ -64,7 +72,7 @@ def get_site_config_cached(language=None) -> dict | None:
         'socials': [
             {
                 'social_type': s.get_social_type_display(),
-                'url': s.url,
+                'url': format_social_url_for_frontend(s.social_type, s.url),
             }
             for s in config.socials.all()
             if getattr(s, 'is_active', True)

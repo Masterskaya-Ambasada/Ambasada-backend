@@ -1,10 +1,5 @@
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import (
-    OpenApiResponse,
-    extend_schema,
-    extend_schema_view,
-    inline_serializer,
-)
+from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view, inline_serializer
 from rest_framework import serializers
 
 from api.contacts.serializers import ContactRequestSerializer

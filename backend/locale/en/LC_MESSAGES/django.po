@@ -417,10 +417,8 @@ msgid "Получение контента блока контактов"
 msgstr "Get contacts block content"
 
 #: backend/api/schemas/contact_schemas.py:31
-#, fuzzy
-#| msgid "Возвращает данные страницы \"О нас\" со всеми секциями."
 msgid "Возвращает телефон и адрес организации."
-msgstr "Returns \"About Us\" page data with all sections."
+msgstr "Returns the organization phone number and address."
 
 #: backend/api/schemas/home_shemas.py:6
 msgid "Данные главной страницы"
@@ -614,7 +612,7 @@ msgstr "The message is too long. It cannot exceed 600 characters."
 
 #: backend/contacts/constants.py:28
 msgid "Определяет активный блок контактных данных (должен быть только один)"
-msgstr "Specifies the active contact data block (there must be only one"
+msgstr "Specifies the active contact data block (there must be only one)."
 
 #: backend/contacts/constants.py:31
 msgid "Выбор соцсети."

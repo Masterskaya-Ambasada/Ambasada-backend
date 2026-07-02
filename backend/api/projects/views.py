@@ -1,16 +1,11 @@
 from __future__ import annotations
 
+import logging
+
 from django.db.models import Prefetch, Q
 from django.utils import translation
 from django.utils.translation import get_language_from_request
-from projects.models import (
-    Project,
-    ProjectBlockButton,
-    ProjectContentBlock,
-    ProjectGalleryImage,
-    ProjectType,
-    Tag,
-)
+from projects.models import Project, ProjectBlockButton, ProjectContentBlock, ProjectGalleryImage, ProjectType, Tag
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -25,17 +20,15 @@ from api.projects.constants import (
     TAG_QUERY_VALUE_SEPARATOR,
 )
 from api.projects.pagination import ProjectLimitOffsetPagination
-from api.projects.serializers import (
-    ProjectCardSerializer,
-    ProjectDetailSerializer,
-    ProjectTypeSerializer,
-)
+from api.projects.serializers import ProjectCardSerializer, ProjectDetailSerializer, ProjectTypeSerializer
 from api.schemas.project_schemas import (
     PROJECT_DETAIL_SCHEMA,
     PROJECT_LIST_SCHEMA,
     PROJECT_TAGS_SCHEMA,
     PROJECT_TYPES_SCHEMA,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def get_order_by_field(lang: str, default_field: str) -> str:
@@ -143,6 +136,8 @@ class ProjectTagListView(APIView):
         with translation.override(lang):
             queryset = Tag.objects.filter(projects__is_published=True).order_by(order_field, 'pk').distinct()
             tags = [getattr(tag, order_field, '') or tag.label for tag in queryset]
+            if not tags:
+                logger.warning('Для опубликованных проектов не найдено тегов.')
             return Response(tags)
 
 
@@ -160,4 +155,6 @@ class ProjectTypeListView(APIView):
         with translation.override(lang):
             queryset = ProjectType.objects.filter(projects__is_published=True).order_by(order_field, 'pk').distinct()
             serializer = ProjectTypeSerializer(queryset, many=True, context={'request': request})
+            if not queryset.exists():
+                logger.warning('Для опубликованных проектов не найдены типы.')
             return Response({PROJECT_TYPES_RESPONSE_KEY: serializer.data})

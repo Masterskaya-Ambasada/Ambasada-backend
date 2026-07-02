@@ -134,14 +134,19 @@ class ConfigAdmin(BaseAdmin):
         (
             _('1. Основные и общие настройки'),
             {
-                'fields': ('site_name_sr_latn', 'site_name_sr_cyrl', 'team_button_link', 'contact_notification_email'),
-                'description': _(
-                    'Глобальные названия проекта, сквозные ссылки и почта получателя заявок с формы контактов.'
-                ),
+                'fields': ('site_name_sr_latn', 'site_name_sr_cyrl', 'team_button_link'),
+                'description': _('Глобальные названия проекта и сквозные ссылки.'),
             },
         ),
         (
-            _('2. Локализация: Русский (RU)'),
+            _('2. Уведомления формы контактов'),
+            {
+                'fields': ('contact_notification_email',),
+                'description': _('Почта получателя уведомлений о новых заявках с формы контактов.'),
+            },
+        ),
+        (
+            _('3. Локализация: Русский (RU)'),
             {
                 'fields': (
                     'copyright_ru',
@@ -158,7 +163,7 @@ class ConfigAdmin(BaseAdmin):
             },
         ),
         (
-            _('3. Локализация: Английский (EN)'),
+            _('4. Локализация: Английский (EN)'),
             {
                 'fields': (
                     'copyright_en',
@@ -175,7 +180,7 @@ class ConfigAdmin(BaseAdmin):
             },
         ),
         (
-            _('4. Локализация: Сербский Латиница (SR-Latn)'),
+            _('5. Локализация: Сербский Латиница (SR-Latn)'),
             {
                 'fields': (
                     'copyright_sr_latn',
@@ -192,7 +197,7 @@ class ConfigAdmin(BaseAdmin):
             },
         ),
         (
-            _('5. Локализация: Сербский Кириллица (SR-Cyrl)'),
+            _('6. Локализация: Сербский Кириллица (SR-Cyrl)'),
             {
                 'fields': (
                     'copyright_sr_cyrl',

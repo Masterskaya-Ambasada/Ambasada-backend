@@ -19,7 +19,9 @@ INIT_VIEW_SCHEMA = extend_schema(
                     'cookie_message': serializers.CharField(),
                     'cookie_button_text': serializers.CharField(),
                     'copyright': serializers.CharField(),
-                    'team_button_link': serializers.CharField(),
+                    'team_title': serializers.CharField(),
+                    'main_team_button_label': serializers.CharField(),
+                    'about_team_button_label': serializers.CharField(),
                     'legal_links': serializers.DictField(
                         child=serializers.CharField(),
                         help_text=_('Дополнительные юридические ссылки (Record<string, string>)'),
@@ -32,7 +34,7 @@ INIT_VIEW_SCHEMA = extend_schema(
                             name='SocialLink',
                             fields={
                                 'social_type': serializers.CharField(),
-                                'url': serializers.URLField(),
+                                'url': serializers.CharField(),
                             },
                         ),
                         help_text=_('Ссылки на социальные сети'),
@@ -50,7 +52,9 @@ INIT_VIEW_SCHEMA = extend_schema(
                         'cookie_message': '<p>Мы используем технические cookie...</p>',
                         'cookie_button_text': 'Принять',
                         'copyright': '© 2026 Ambasada za Urbanizam',
-                        'team_button_link': '/contacts',
+                        'team_title': 'Команда',
+                        'main_team_button_label': 'Присоединиться к команде',
+                        'about_team_button_label': 'Подробнее о сообществе',
                         'legal_links': {},
                         'languages': [
                             {'code': 'ru', 'label': 'Russian'},
