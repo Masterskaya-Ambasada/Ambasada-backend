@@ -3,7 +3,6 @@ from datetime import timedelta
 from pathlib import Path
 
 from decouple import Config, RepositoryEnv
-from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -220,10 +219,10 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ru'
 
 LANGUAGES = [
-    ('ru', _('Russian')),
-    ('en', _('English')),
-    ('sr-latn', _('Serbian (Latin)')),
-    ('sr-cyrl', _('Serbian (Cyrillic)')),
+    ('ru', 'Русский'),
+    ('en', 'English'),
+    ('sr-latn', 'Srpski'),
+    ('sr-cyrl', 'Српски'),
 ]
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
