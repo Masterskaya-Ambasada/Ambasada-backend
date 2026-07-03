@@ -56,3 +56,30 @@ class TestContactThrottling:
         assert throttled_count > 0, 'POST requests should be throttled after limit (5/hour)'
         # И хотя бы несколько должны пройти до throttling
         assert success_count > 0, 'At least some POST requests should pass before throttling'
+
+    def test_get_works_after_post_throttle_exceeded(self, monkeypatch):
+        """GET контактного блока доступен даже после превышения лимита на POST."""
+        # conftest отключает ScopedRateThrottle глобально — возвращаем реальный лимит.
+        monkeypatch.undo()
+        factory = APIRequestFactory()
+        view = ContactView.as_view()
+
+        payload = {
+            'name': 'Test User',
+            'email': 'test@example.com',
+            'message': 'This is a test message that is long enough to pass validation',
+        }
+
+        # Исчерпываем POST-лимит (5/hour).
+        for _ in range(6):
+            request = factory.post('/api/v1/contacts/', payload)
+            request.META['REMOTE_ADDR'] = '127.0.0.1'
+            view(request)
+
+        # GET с того же IP должен работать — он не подпадает под лимит формы.
+        request = factory.get('/api/v1/contacts/')
+        request.META['REMOTE_ADDR'] = '127.0.0.1'
+        response = view(request)
+        assert (
+            response.status_code == 200
+        ), f'GET after POST throttle exceeded should return 200, got {response.status_code}'

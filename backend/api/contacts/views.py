@@ -24,10 +24,10 @@ class ContactView(APIView):
     throttle_scope = 'contact'
     serializer_class = ContactRequestSerializer
 
-    def get_throttlers(self):
+    def get_throttles(self):
         # Лимит только на отправку формы (POST); GET контактного блока — без лимита.
         if self.request.method == 'POST':
-            return super().get_throttlers()
+            return super().get_throttles()
         return []
 
     def get_serializer(self, *args, **kwargs):
