@@ -1,6 +1,5 @@
 import pytest
 from contacts.models import ContactSocialLink
-from django.db.utils import IntegrityError
 from site_config.models import SiteConfig
 
 
@@ -20,7 +19,7 @@ def site_config(db):
 
 @pytest.mark.django_db
 def test_contact_social_link_admin_add_shows_order_error(client, admin_user, site_config):
-    """Проверяет, что дубль order в базе вызывает IntegrityError."""
+    """Проверяет, что дубль order отображается как ошибка формы."""
     ContactSocialLink.objects.create(
         site_config=site_config,
         social_type=ContactSocialLink.SocialType.TELEGRAM,
@@ -29,27 +28,26 @@ def test_contact_social_link_admin_add_shows_order_error(client, admin_user, sit
     )
     client.force_login(admin_user)
 
-    # Ожидаем, что база выбросит ошибку уникальности order
-    with pytest.raises(IntegrityError) as exc_info:
-        client.post(
-            '/admin/contacts/contactsociallink/add/',
-            data={
-                'site_config': site_config.pk,
-                'social_type': ContactSocialLink.SocialType.INSTAGRAM,
-                'url': 'https://instagram.com/example',
-                'order': '1',
-                'is_active': 'on',
-                '_save': 'Сохранить',
-            },
-        )
+    response = client.post(
+        '/admin/contacts/contactsociallink/add/',
+        data={
+            'social_type': ContactSocialLink.SocialType.INSTAGRAM,
+            'url': 'https://instagram.com/example',
+            'order': '1',
+            'is_active': 'on',
+            '_save': 'Сохранить',
+        },
+    )
 
-    assert 'unique_site_config_social_order' in str(exc_info.value)
+    assert response.status_code == 200
     assert ContactSocialLink.objects.count() == 1
+    errors = response.content.decode()
+    assert 'уже занят' in errors
 
 
 @pytest.mark.django_db
 def test_contact_social_link_admin_add_shows_social_type_error(client, admin_user, site_config):
-    """Проверяет, что дубль соцсети в базе вызывает IntegrityError."""
+    """Проверяет, что дубль social_type отображается как ошибка формы."""
     ContactSocialLink.objects.create(
         site_config=site_config,
         social_type=ContactSocialLink.SocialType.TELEGRAM,
@@ -58,22 +56,21 @@ def test_contact_social_link_admin_add_shows_social_type_error(client, admin_use
     )
     client.force_login(admin_user)
 
-    # Ожидаем, что база выбросит ошибку уникальности social_type
-    with pytest.raises(IntegrityError) as exc_info:
-        client.post(
-            '/admin/contacts/contactsociallink/add/',
-            data={
-                'site_config': site_config.pk,
-                'social_type': ContactSocialLink.SocialType.TELEGRAM,
-                'url': 'https://t.me/another',
-                'order': '2',
-                'is_active': 'on',
-                '_save': 'Сохранить',
-            },
-        )
+    response = client.post(
+        '/admin/contacts/contactsociallink/add/',
+        data={
+            'social_type': ContactSocialLink.SocialType.TELEGRAM,
+            'url': 'https://t.me/another',
+            'order': '2',
+            'is_active': 'on',
+            '_save': 'Сохранить',
+        },
+    )
 
-    assert 'unique_site_config_social_type' in str(exc_info.value)
+    assert response.status_code == 200
     assert ContactSocialLink.objects.count() == 1
+    errors = response.content.decode()
+    assert 'уже существует' in errors
 
 
 @pytest.mark.django_db
@@ -84,7 +81,6 @@ def test_contact_social_link_admin_accepts_plain_email(client, admin_user, site_
     response = client.post(
         '/admin/contacts/contactsociallink/add/',
         data={
-            'site_config': site_config.pk,
             'social_type': ContactSocialLink.SocialType.EMAIL,
             'url': 'hello@example.com',
             'order': '3',
@@ -96,3 +92,60 @@ def test_contact_social_link_admin_accepts_plain_email(client, admin_user, site_
     assert response.status_code == 302
     saved_link = ContactSocialLink.objects.get(social_type=ContactSocialLink.SocialType.EMAIL)
     assert saved_link.url == 'hello@example.com'
+
+
+@pytest.mark.django_db
+def test_contact_social_link_order_range_validation(client, admin_user, site_config):
+    """Проверяет, что order за пределами 1-6 отклоняется формой."""
+    client.force_login(admin_user)
+
+    response = client.post(
+        '/admin/contacts/contactsociallink/add/',
+        data={
+            'social_type': ContactSocialLink.SocialType.FACEBOOK,
+            'url': 'https://facebook.com/example',
+            'order': '0',
+            'is_active': 'on',
+            '_save': 'Сохранить',
+        },
+    )
+
+    assert response.status_code == 200
+    assert ContactSocialLink.objects.count() == 0
+
+    response = client.post(
+        '/admin/contacts/contactsociallink/add/',
+        data={
+            'social_type': ContactSocialLink.SocialType.FACEBOOK,
+            'url': 'https://facebook.com/example',
+            'order': '7',
+            'is_active': 'on',
+            '_save': 'Сохранить',
+        },
+    )
+
+    assert response.status_code == 200
+    assert ContactSocialLink.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_contact_social_link_admin_add_success(client, admin_user, site_config):
+    """Проверяет успешное добавление новой записи соцсети."""
+    client.force_login(admin_user)
+
+    response = client.post(
+        '/admin/contacts/contactsociallink/add/',
+        data={
+            'social_type': ContactSocialLink.SocialType.LINKEDIN,
+            'url': 'https://linkedin.com/company/example',
+            'order': '1',
+            'is_active': 'on',
+            '_save': 'Сохранить',
+        },
+    )
+
+    assert response.status_code == 302
+    assert ContactSocialLink.objects.count() == 1
+    link = ContactSocialLink.objects.first()
+    assert link.social_type == ContactSocialLink.SocialType.LINKEDIN
+    assert link.site_config == site_config

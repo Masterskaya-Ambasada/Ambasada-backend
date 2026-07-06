@@ -1,5 +1,12 @@
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.core.validators import EmailValidator, MaxLengthValidator, MinLengthValidator, URLValidator
+from django.core.validators import (
+    EmailValidator,
+    MaxLengthValidator,
+    MaxValueValidator,
+    MinLengthValidator,
+    MinValueValidator,
+    URLValidator,
+)
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -167,7 +174,12 @@ class ContactSocialLink(models.Model):
     )
     order = models.PositiveSmallIntegerField(
         default=constants.DEFAULT_ORDER_VALUE_CONTACT_SOCIAL_LINK,
+        validators=[
+            MinValueValidator(constants.SOCIAL_ORDER_MIN_VALUE),
+            MaxValueValidator(constants.SOCIAL_ORDER_MAX_VALUE),
+        ],
         verbose_name=_('Порядок отображения'),
+        help_text=constants.HELP_SOCIAL_ORDER,
     )
     is_active = models.BooleanField(
         default=True,

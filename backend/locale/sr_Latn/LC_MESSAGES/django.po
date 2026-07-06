@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-22 09:25+0300\n"
+"POT-Creation-Date: 2026-07-06 18:40+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,31 +32,36 @@ msgid "📋 Параграфы секции \"О нас\""
 msgstr "📋 Paragrafi sekcije „O nama“"
 
 #: backend/about/admin.py:61 backend/about/admin.py:135
-#: backend/projects/admin.py:173 backend/projects/admin.py:236
+#: backend/contacts/admin.py:198 backend/projects/admin.py:173
+#: backend/projects/admin.py:236
 msgid "Основная информация"
 msgstr "Osnovne informacije"
 
 #: backend/about/admin.py:63 backend/about/admin.py:99
 #: backend/about/admin.py:136 backend/about/admin.py:183
-#: backend/projects/admin.py:177 backend/projects/admin.py:250
+#: backend/contacts/admin.py:202 backend/projects/admin.py:177
+#: backend/projects/admin.py:250
 msgid "Переводы (Русский)"
 msgstr "Prevodi (Ruski)"
 
 #: backend/about/admin.py:67 backend/about/admin.py:103
 #: backend/about/admin.py:137 backend/about/admin.py:194
-#: backend/projects/admin.py:181 backend/projects/admin.py:251
+#: backend/contacts/admin.py:206 backend/projects/admin.py:181
+#: backend/projects/admin.py:251
 msgid "Переводы (Английский)"
 msgstr "Prevodi (Engleski)"
 
 #: backend/about/admin.py:71 backend/about/admin.py:107
 #: backend/about/admin.py:139 backend/about/admin.py:206
-#: backend/projects/admin.py:185 backend/projects/admin.py:253
+#: backend/contacts/admin.py:210 backend/projects/admin.py:185
+#: backend/projects/admin.py:253
 msgid "Переводы (Сербский - Латиница)"
 msgstr "Prevodi (Srpski - Latinica)"
 
 #: backend/about/admin.py:78 backend/about/admin.py:114
 #: backend/about/admin.py:143 backend/about/admin.py:218
-#: backend/projects/admin.py:192 backend/projects/admin.py:257
+#: backend/contacts/admin.py:214 backend/projects/admin.py:192
+#: backend/projects/admin.py:257
 msgid "Переводы (Сербский - Кириллица)"
 msgstr "Prevodi (Srpski - Ćirilica)"
 
@@ -299,7 +304,7 @@ msgstr "Novo"
 msgid "Без описания"
 msgstr "Bez opisa"
 
-#: backend/api/about/views.py:33
+#: backend/api/about/views.py:38
 msgid "Информация о сообществе не найдена"
 msgstr "Informacije o zajednici nisu pronađene"
 
@@ -313,7 +318,7 @@ msgid ""
 msgstr ""
 "Neispravan imejl ili lozinka. Molimo proverite podatke i pokušajte ponovo."
 
-#: backend/api/contacts/views.py:35
+#: backend/api/contacts/views.py:38
 msgid "Получено"
 msgstr "Primljeno"
 
@@ -329,49 +334,49 @@ msgstr "Link za preusmeravanje"
 msgid "Уникальный строковый идентификатор проекта"
 msgstr "Jedinstveni tekstualni identifikator projekta"
 
-#: backend/api/home/serializers.py:106 backend/api/projects/constants.py:19
+#: backend/api/home/serializers.py:114 backend/api/projects/constants.py:19
 msgid "Перейти к проекту"
 msgstr "Idi na projekat"
 
-#: backend/api/home/serializers.py:172
+#: backend/api/home/serializers.py:180
 msgid "Подробнее"
 msgstr "Saznaj više"
 
-#: backend/api/home/serializers.py:195
+#: backend/api/home/serializers.py:203
 msgid "Наша команда"
 msgstr "Naš tim"
 
-#: backend/api/home/serializers.py:216 backend/site_config/constants.py:26
+#: backend/api/home/serializers.py:224 backend/site_config/constants.py:27
 msgid "Присоединиться к команде"
 msgstr "Pridruži se timu"
 
-#: backend/api/home/serializers.py:239 backend/home/constants.py:25
+#: backend/api/home/serializers.py:247 backend/home/constants.py:25
 msgid "Наши проекты"
 msgstr "Naši projekti"
 
-#: backend/api/home/serializers.py:257
+#: backend/api/home/serializers.py:265
 msgid "Все проекты"
 msgstr "Svi projekti"
 
-#: backend/api/home/views.py:35
+#: backend/api/home/views.py:40
 msgid "Контент главной страницы не сконфигурирован."
 msgstr "Sadržaj glavne stranice nije konfigurisan."
 
-#: backend/api/schemas/about_schemas.py:14
+#: backend/api/schemas/about_schemas.py:9
 msgid "Получение страницы \"О сообществе\""
 msgstr "Preuzimanje stranice „O zajednici“"
 
-#: backend/api/schemas/about_schemas.py:15
+#: backend/api/schemas/about_schemas.py:10
 msgid "Возвращает данные страницы \"О нас\" со всеми секциями."
 msgstr "Vraća podatke stranice „O nama“ sa svim sekcijama."
 
-#: backend/api/schemas/about_schemas.py:18
+#: backend/api/schemas/about_schemas.py:13
 #: backend/api/schemas/home_shemas.py:104
-#: backend/api/schemas/init_schemas.py:42
+#: backend/api/schemas/init_schemas.py:44
 msgid "Успешный ответ"
 msgstr "Uspešan odgovor"
 
-#: backend/api/schemas/about_schemas.py:108
+#: backend/api/schemas/about_schemas.py:103
 msgid "Страница не найдена"
 msgstr "Stranica nije pronađena"
 
@@ -394,11 +399,11 @@ msgstr "Osvežavanje access tokena"
 msgid "Принимает валидный refresh токен и возвращает новый access токен."
 msgstr "Prihvata validan refresh token i vraća novi access token."
 
-#: backend/api/schemas/contact_schemas.py:14
+#: backend/api/schemas/contact_schemas.py:9
 msgid "Создание запроса обратной связи"
 msgstr "Kreiranje zahteva za povratnu informaciju"
 
-#: backend/api/schemas/contact_schemas.py:16
+#: backend/api/schemas/contact_schemas.py:11
 msgid ""
 "Принимает данные формы и сохраняет их. Поле `contact_preference` — "
 "техническое антиспам-поле (honeypot). Если поле заполнено, запрос считается "
@@ -408,15 +413,15 @@ msgstr ""
 "polje protiv spama (honeypot). Ako je ovo polje popunjeno, zahtev se smatra "
 "spamom i ignoriše se."
 
-#: backend/api/schemas/contact_schemas.py:26
+#: backend/api/schemas/contact_schemas.py:21
 msgid "Ошибка валидации формы"
 msgstr "Greška u validaciji forme"
 
-#: backend/api/schemas/contact_schemas.py:30
+#: backend/api/schemas/contact_schemas.py:25
 msgid "Получение контента блока контактов"
 msgstr "Preuzimanje sadržaja bloka kontakata"
 
-#: backend/api/schemas/contact_schemas.py:31
+#: backend/api/schemas/contact_schemas.py:26
 msgid "Возвращает телефон и адрес организации."
 msgstr "Vraća telefon i adresu organizacije."
 
@@ -440,19 +445,19 @@ msgstr ""
 "Vraća globalna podešavanja strogo prema InitResponse interfejsu: naziv, SEO, "
 "jezike, autorska prava (copyright), pravne tekstove i društvene mreže."
 
-#: backend/api/schemas/init_schemas.py:25
+#: backend/api/schemas/init_schemas.py:27
 msgid "Дополнительные юридические ссылки (Record<string, string>)"
 msgstr "Dodatni pravni linkovi (Record<string, string>)"
 
-#: backend/api/schemas/init_schemas.py:28
+#: backend/api/schemas/init_schemas.py:30
 msgid "Список доступных языков"
 msgstr "Lista dostupnih jezika"
 
-#: backend/api/schemas/init_schemas.py:38
+#: backend/api/schemas/init_schemas.py:40
 msgid "Ссылки на социальные сети"
 msgstr "Linkovi ka društvenim mrežama"
 
-#: backend/api/schemas/init_schemas.py:78
+#: backend/api/schemas/init_schemas.py:82
 msgid "Конфигурация сайта не найдена"
 msgstr "Konfiguracija sajta nije pronađena"
 
@@ -562,186 +567,219 @@ msgid ""
 "фронтенде."
 msgstr "Vraća listu javnih profila korisnika za prikaz na frontend-u."
 
-#: backend/backend/settings.py:223
-msgid "Russian"
-msgstr "Ruski"
-
-#: backend/backend/settings.py:224
-msgid "English"
-msgstr "Engleski"
-
-#: backend/backend/settings.py:225
-msgid "Serbian (Latin)"
-msgstr "Srpski (Latinica)"
-
-#: backend/backend/settings.py:226
-msgid "Serbian (Cyrillic)"
-msgstr "Srpski (Ćirilica)"
-
-#: backend/contacts/admin.py:13
+#: backend/contacts/admin.py:29
 msgid "Отображение на сайте"
 msgstr "Prikaz na sajtu"
 
-#: backend/contacts/admin.py:18
+#: backend/contacts/admin.py:34
 msgid "Показываются на сайте"
 msgstr "Prikazuju se na sajtu"
 
-#: backend/contacts/admin.py:19
+#: backend/contacts/admin.py:35
 msgid "Скрыты с сайта"
 msgstr "Skriveni su sa sajta"
+
+#: backend/contacts/admin.py:90 backend/contacts/constants.py:47
+msgid "Сначала создайте настройки сайта"
+msgstr "Prvo kreirajte podešavanja sajta"
+
+#: backend/contacts/admin.py:99
+msgid "Ссылка на «{}» уже существует"
+msgstr "Link na «{}» već postoji"
+
+#: backend/contacts/admin.py:108
+msgid "Порядок отображения «{}» уже занят другой записью"
+msgstr "Redosled prikaza «{}» je već zauzet drugim zapisom"
+
+#: backend/contacts/admin.py:141
+msgid ""
+"Порядок отображения «{}» уже занят записью «{}». Выберите другой порядок."
+msgstr "Redosled prikaza «{}» je zauzet zapisom «{}». Izaberite drugi redosled."
 
 #: backend/contacts/apps.py:7
 msgid "Обратная связь и соцсети"
 msgstr "Povratne informacije i društvene mreže"
 
-#: backend/contacts/constants.py:22
+#: backend/contacts/constants.py:24
 msgid "Текст сообщения"
 msgstr "Tekst poruke"
 
-#: backend/contacts/constants.py:23
+#: backend/contacts/constants.py:25
 msgid "Показывает, обработано ли обращение"
 msgstr "Pokazuje da li je zahtev obrađen"
 
-#: backend/contacts/constants.py:24
+#: backend/contacts/constants.py:26
 msgid "Сообщение слишком короткое. Оно должно содержать не менее 20 символов."
 msgstr "Poruka je isuviše kratka. Mora da sadrži najmanje 20 karaktera."
 
-#: backend/contacts/constants.py:25
+#: backend/contacts/constants.py:27
 msgid "Сообщение слишком длинное. Оно не может превышать 600 символов."
 msgstr "Poruka je isuviše dugačka. Ne može da sadrži više od 600 karaktera."
 
-#: backend/contacts/constants.py:28
+#: backend/contacts/constants.py:30
 msgid "Определяет активный блок контактных данных (должен быть только один)"
 msgstr "Određuje blok aktivnih kontakt podataka (može postojati samo jedan)"
 
-#: backend/contacts/constants.py:31
+#: backend/contacts/constants.py:33
 msgid "Выбор соцсети."
 msgstr "Izbor društvene mreže."
 
-#: backend/contacts/constants.py:32
-msgid "Например: https://t.me/example"
-msgstr "Na primer: https://t.me/example"
+#: backend/contacts/constants.py:35
+msgid ""
+"Для соцсетей указывайте полную ссылку, например: https://t.me/example. Для "
+"типа Email можно ввести обычный адрес, например: hello@example.com."
+msgstr ""
 
-#: backend/contacts/constants.py:33
+#: backend/contacts/constants.py:38
 msgid "Если включено — отображается на сайте. Иначе скрывается без удаления"
 msgstr ""
 "Ako je uključeno — prikazuje se na sajtu. U suprotnom se skriva bez brisanja"
 
-#: backend/contacts/constants.py:38
+#: backend/contacts/constants.py:39
+msgid ""
+"Число от 1 до 6. Порядок определяет последовательность отображения иконок на "
+"сайте"
+msgstr ""
+
+#: backend/contacts/constants.py:44
 #, fuzzy
 #| msgid "Может быть только один активный блок пожертвований"
 msgid "Может быть только один активный блок контактов"
 msgstr "Može postojati samo jedan aktivni blok za donacije"
 
-#: backend/contacts/constants.py:39
+#: backend/contacts/constants.py:45
 msgid "Для данного сайта уже добавлена ссылка этого типа соцсети"
 msgstr "Za ovaj sajt je već dodat link ovog tipa društvene mreže"
 
-#: backend/contacts/constants.py:40
+#: backend/contacts/constants.py:46
 msgid "Этот порядок отображения уже занят для данного сайта"
 msgstr "Ovaj redosled prikaza je već zauzet za ovaj sajt"
 
-#: backend/contacts/constants.py:41
-msgid "Сначала создайте настройки сайта"
-msgstr "Prvo kreirajte podešavanja sajta"
+#: backend/contacts/models.py:22
+msgid "Ожидает отправки"
+msgstr ""
 
-#: backend/contacts/models.py:16 backend/users/models.py:116
+#: backend/contacts/models.py:23
+msgid "Отправлено"
+msgstr ""
+
+#: backend/contacts/models.py:24
+msgid "Ошибка отправки"
+msgstr ""
+
+#: backend/contacts/models.py:28 backend/users/models.py:116
 msgid "Имя"
 msgstr "Ime"
 
-#: backend/contacts/models.py:19
+#: backend/contacts/models.py:31
 msgid "Email"
 msgstr "Imejl"
 
-#: backend/contacts/models.py:23
+#: backend/contacts/models.py:34
 msgid "Сообщение"
 msgstr "Poruka"
 
-#: backend/contacts/models.py:38
-msgid "Причина обращения"
-msgstr "Razlog obraćanja"
-
-#: backend/contacts/models.py:42
+#: backend/contacts/models.py:49
 msgid "Обработано"
 msgstr "Obrađeno"
 
-#: backend/contacts/models.py:47 backend/contacts/models.py:81
-#: backend/contacts/models.py:159
+#: backend/contacts/models.py:54 backend/contacts/models.py:108
+#: backend/contacts/models.py:191
 msgid "Дата создания"
 msgstr "Datum kreiranja"
 
-#: backend/contacts/models.py:51
+#: backend/contacts/models.py:61
+#, fuzzy
+#| msgid "Дата обновления"
+msgid "Статус email-уведомления"
+msgstr "Datum ažuriranja"
+
+#: backend/contacts/models.py:66
+#, fuzzy
+#| msgid "Дата последнего обновления"
+msgid "Дата отправки email-уведомления"
+msgstr "Datum poslednjeg ažuriranja"
+
+#: backend/contacts/models.py:70
+msgid "Попытки отправки email-уведомления"
+msgstr ""
+
+#: backend/contacts/models.py:74
+msgid "Ошибка отправки email-уведомления"
+msgstr ""
+
+#: backend/contacts/models.py:78
 msgid "Запрос обратной связи"
 msgstr "Zahtev za povratnu informaciju"
 
-#: backend/contacts/models.py:52
+#: backend/contacts/models.py:79
 msgid "Запросы обратной связи"
 msgstr "Zahtevi za povratne informacije"
 
-#: backend/contacts/models.py:66
+#: backend/contacts/models.py:93
 msgid "Телефон"
 msgstr "Telefon"
 
-#: backend/contacts/models.py:67
+#: backend/contacts/models.py:94
 msgid "Контактный телефон организации"
 msgstr "Kontakt telefon organizacije"
 
-#: backend/contacts/models.py:71
+#: backend/contacts/models.py:98
 msgid "Адрес"
 msgstr "Adresa"
 
-#: backend/contacts/models.py:72
+#: backend/contacts/models.py:99
 msgid "Адрес организации"
 msgstr "Adresa organizacije"
 
-#: backend/contacts/models.py:76
+#: backend/contacts/models.py:103
 msgid "Активно"
 msgstr "Aktivno"
 
-#: backend/contacts/models.py:85
+#: backend/contacts/models.py:112
 msgid "Дата обновления"
 msgstr "Datum ažuriranja"
 
-#: backend/contacts/models.py:96 backend/contacts/models.py:97
+#: backend/contacts/models.py:123 backend/contacts/models.py:124
 #, fuzzy
 #| msgid "Контентный блок"
 msgid "Контактные данные"
 msgstr "Kontakt podaci"
 
-#: backend/contacts/models.py:133 backend/site_config/models.py:101
-#: backend/site_config/models.py:102
+#: backend/contacts/models.py:160 backend/site_config/models.py:110
+#: backend/site_config/models.py:111
 msgid "Настройки сайта"
 msgstr "Podešavanja sajta"
 
-#: backend/contacts/models.py:139
+#: backend/contacts/models.py:166
 msgid "Тип соцсети / мессенджера"
 msgstr "Tip društvene mreže / mesindžera"
 
-#: backend/contacts/models.py:143 backend/projects/admin.py:312
+#: backend/contacts/models.py:170 backend/projects/admin.py:312
 msgid "Ссылка"
 msgstr "Link"
 
-#: backend/contacts/models.py:150 backend/users/models.py:167
+#: backend/contacts/models.py:181 backend/users/models.py:167
 msgid "Порядок отображения"
 msgstr "Redosled prikaza"
 
-#: backend/contacts/models.py:154
+#: backend/contacts/models.py:186
 msgid "Показывать на сайте"
 msgstr "Prikaži na sajtu"
 
-#: backend/contacts/models.py:163
+#: backend/contacts/models.py:195
 msgid "Ссылка на соцсеть / мессенджер"
 msgstr "Link ka društvenoj mreži / mesindžeru"
 
-#: backend/contacts/models.py:164
+#: backend/contacts/models.py:196
 msgid "Ссылки на соцсети / мессенджеры"
 msgstr "Linkovi ka društvenim mrežama / mesindžerima"
 
-#: backend/contacts/validators.py:5
-msgid "Введите правильный URL-адрес, mailto: или tel:"
-msgstr "Unesite ispravnu URL adresu, mailto: ili tel:"
+#: backend/contacts/validators.py:6
+msgid "Введите корректную ссылку, mailto:, tel: или email-адрес."
+msgstr ""
 
-#: backend/contacts/validators.py:9
+#: backend/contacts/validators.py:10
 msgid "Введите корректный номер телефона"
 msgstr "Molimo unesite važeći broj telefona"
 
@@ -780,7 +818,7 @@ msgstr "1. Zajedničke medijske datoteke i linkovi"
 msgid "Изображения и целевые ссылки, общие для всех версий."
 msgstr "Slike i ciljni linkovi, zajednički za sve verzije."
 
-#: backend/home/admin.py:105 backend/site_config/admin.py:142
+#: backend/home/admin.py:105
 msgid "2. Локализация: Русский (RU)"
 msgstr "2. Lokalizacija: Ruski (RU)"
 
@@ -788,7 +826,7 @@ msgstr "2. Lokalizacija: Ruski (RU)"
 msgid "Контент экрана на русском языке."
 msgstr "Sadržaj ekrana na ruskom jeziku."
 
-#: backend/home/admin.py:121 backend/site_config/admin.py:159
+#: backend/home/admin.py:121
 msgid "3. Локализация: Английский (EN)"
 msgstr "3. Lokalizacija: Engleski (EN)"
 
@@ -796,7 +834,7 @@ msgstr "3. Lokalizacija: Engleski (EN)"
 msgid "Контент экрана на английском языке."
 msgstr "Sadržaj ekrana na engleskom jeziku."
 
-#: backend/home/admin.py:137 backend/site_config/admin.py:176
+#: backend/home/admin.py:137
 msgid "4. Локализация: Сербский Латиница (SR-Latn)"
 msgstr "4. Lokalizacija: Srpski Latinica (SR-Latn)"
 
@@ -804,7 +842,7 @@ msgstr "4. Lokalizacija: Srpski Latinica (SR-Latn)"
 msgid "Контент экрана на сербской латинице."
 msgstr "Sadržaj ekrana na srpskoj latinici."
 
-#: backend/home/admin.py:153 backend/site_config/admin.py:193
+#: backend/home/admin.py:153
 msgid "5. Локализация: Сербский Кириллица (SR-Cyrl)"
 msgstr "5. Lokalizacija: Srpski Ćirilica (SR-Cyrl)"
 
@@ -1504,19 +1542,53 @@ msgstr "1. Osnovna i opšta podešavanja"
 msgid "Глобальные названия проекта и сквозные ссылки."
 msgstr "Globalni nazivi projekta i zajednički linkovi."
 
-#: backend/site_config/admin.py:155
+#: backend/site_config/admin.py:142
+#, fuzzy
+#| msgid "Получение контента блока контактов"
+msgid "2. Уведомления формы контактов"
+msgstr "Preuzimanje sadržaja bloka kontakata"
+
+#: backend/site_config/admin.py:145
+msgid "Почта получателя уведомлений о новых заявках с формы контактов."
+msgstr "Imejl primaoca za obaveštenja o novim prijavama sa kontakt forme."
+
+#: backend/site_config/admin.py:149
+#, fuzzy
+#| msgid "2. Локализация: Русский (RU)"
+msgid "3. Локализация: Русский (RU)"
+msgstr "2. Lokalizacija: Ruski (RU)"
+
+#: backend/site_config/admin.py:162
 msgid "Переводы интерфейса, SEO-теги и тексты на русском."
 msgstr "Prevodi interfejsa, SEO tagovi i tekstovi na ruskom."
 
-#: backend/site_config/admin.py:172
+#: backend/site_config/admin.py:166
+#, fuzzy
+#| msgid "3. Локализация: Английский (EN)"
+msgid "4. Локализация: Английский (EN)"
+msgstr "3. Lokalizacija: Engleski (EN)"
+
+#: backend/site_config/admin.py:179
 msgid "Переводы интерфейса, SEO-теги и тексты на английском."
 msgstr "Prevodi interfejsa, SEO tagovi i tekstovi na engleskom."
 
-#: backend/site_config/admin.py:189
+#: backend/site_config/admin.py:183
+#, fuzzy
+#| msgid "4. Локализация: Сербский Латиница (SR-Latn)"
+msgid "5. Локализация: Сербский Латиница (SR-Latn)"
+msgstr "4. Lokalizacija: Srpski Latinica (SR-Latn)"
+
+#: backend/site_config/admin.py:196
 msgid "Переводы интерфейса и тексты на сербской латинице."
 msgstr "Prevodi interfejsa i tekstovi na srpskoj latinici."
 
-#: backend/site_config/admin.py:206
+#: backend/site_config/admin.py:200
+#, fuzzy
+#| msgid "5. Локализация: Сербский Кириллица (SR-Cyrl)"
+msgid "6. Локализация: Сербский Кириллица (SR-Cyrl)"
+msgstr "5. Lokalizacija: Srpski Ćirilica (SR-Cyrl)"
+
+#: backend/site_config/admin.py:213
 msgid "Переводы интерфейса и тексты на сербской кириллице."
 msgstr "Prevodi interfejsa i tekstovi na srpskoj ćirilici."
 
@@ -1524,35 +1596,35 @@ msgstr "Prevodi interfejsa i tekstovi na srpskoj ćirilici."
 msgid "Конфигурация настроек сайта"
 msgstr "Konfiguracija podešavanja sajta"
 
-#: backend/site_config/constants.py:21
+#: backend/site_config/constants.py:22
 msgid "Мы используем технические cookie для корректной работы сайта."
 msgstr "Koristimo tehničke kolačiće (cookie) za ispravan rad sajta."
 
-#: backend/site_config/constants.py:25
+#: backend/site_config/constants.py:26
 msgid "Команда"
 msgstr "Tim"
 
-#: backend/site_config/constants.py:27
+#: backend/site_config/constants.py:28
 msgid "Присоединиться"
 msgstr "Pridruži se"
 
-#: backend/site_config/constants.py:31
+#: backend/site_config/constants.py:32
 msgid "Удаление системных настроек сайта запрещено."
 msgstr "Brisanje sistemskih podešavanja sajta je zabranjeno."
 
-#: backend/site_config/constants.py:33
+#: backend/site_config/constants.py:34
 msgid "Выводится во вкладке браузера и заголовках писем. До 100 симв."
 msgstr ""
 "Prikazuje se u kartici veb pregledača i u naslovima imejlova. Do 100 karakt."
 
-#: backend/site_config/constants.py:34
+#: backend/site_config/constants.py:35
 msgid ""
 "Описание сайта в поисковых системах Google и Яндекс. До 250 симв. Важно для "
 "SEO!"
 msgstr ""
 "Opis sajta za pretraživače Google i Yandex. Do 250 karakt. Važno za SEO!"
 
-#: backend/site_config/constants.py:37
+#: backend/site_config/constants.py:38
 msgid ""
 "Краткий текст для форм обратной связи (рядом с кнопкой отправки). "
 "Обязательно выделите слова \"Политикой конфиденциальности\" и вставьте на "
@@ -1562,36 +1634,36 @@ msgstr ""
 "Obavezno istaknite reči „Politikom privatnosti“ i umetnite na njih link ka "
 "samoj stranici politike kroz TinyMCE uređivač."
 
-#: backend/site_config/constants.py:42
+#: backend/site_config/constants.py:43
 msgid "Текст всплывающего уведомления об использовании файлов Cookie."
 msgstr "Tekst iskačućeg obaveštenja (pop-up) o korišćenju kolačića (cookie)."
 
-#: backend/site_config/constants.py:43
+#: backend/site_config/constants.py:44
 msgid "Текст на кнопке согласия Cookie (например: \"OK\" или \"Принять\")."
 msgstr ""
 "Tekst na dugmetu za prihvatanje kolačića (na primer: „OK“ ili „Prihvati“)."
 
-#: backend/site_config/constants.py:44
+#: backend/site_config/constants.py:45
 msgid "Текст в самом низу страницы (футере). До 150 симв."
 msgstr "Tekst na samom dnu stranice (u podnožju/footer-u). Do 150 karakt."
 
-#: backend/site_config/constants.py:45
+#: backend/site_config/constants.py:46
 msgid "Заголовок блока со списком команды на странице \"О нас\"."
 msgstr "Naslov bloka sa listom tima na stranici „O nama“."
 
-#: backend/site_config/constants.py:46
+#: backend/site_config/constants.py:47
 #, fuzzy
 #| msgid "Нажпись на кнопке в блоке команды на Главной странице."
 msgid "Надпись на кнопке в блоке команды на Главной странице."
 msgstr "Natpis na dugmetu u bloku tima na Glavnoj stranici."
 
-#: backend/site_config/constants.py:47
+#: backend/site_config/constants.py:48
 #, fuzzy
 #| msgid "Нажпись на кнопке в блоке команды на странице \"О нас\"."
 msgid "Надпись на кнопке в блоке команды на странице \"О нас\"."
 msgstr "Natpis na dugmetu u bloku tima na stranici „O nama“."
 
-#: backend/site_config/constants.py:48
+#: backend/site_config/constants.py:49
 msgid ""
 "Ссылка для обеих кнопок команды. Например: /contacts или ссылка на якорный "
 "блок."
@@ -1599,45 +1671,55 @@ msgstr ""
 "Link za oba dugmeta tima. Na primer: /contacts ili link ka sidru (anchor "
 "block)."
 
-#: backend/site_config/models.py:41
+#: backend/site_config/constants.py:51
+msgid ""
+"Почта для уведомлений о новых заявках с формы контактов. Если поле оставить "
+"пустым, используется резервный адрес из переменной окружения ADMIN_EMAIL."
+msgstr ""
+
+#: backend/site_config/models.py:43
 msgid "Название сайта"
 msgstr "Naziv sajta"
 
-#: backend/site_config/models.py:46
+#: backend/site_config/models.py:48
 msgid "SEO описание"
 msgstr "SEO opis"
 
-#: backend/site_config/models.py:50
+#: backend/site_config/models.py:52
 msgid "Согласие на обработку персональных данных"
 msgstr "Pristanak na obradu podataka o ličnosti"
 
-#: backend/site_config/models.py:57
+#: backend/site_config/models.py:59
 msgid "Текст cookie-сообщения"
 msgstr "Tekst cookie obaveštenja"
 
-#: backend/site_config/models.py:63
+#: backend/site_config/models.py:65
 msgid "Текст кнопки cookie"
 msgstr "Tekst cookie dugmeta"
 
-#: backend/site_config/models.py:70
+#: backend/site_config/models.py:72
 msgid "Копирайт"
 msgstr "Autorska prava (copyright)"
 
-#: backend/site_config/models.py:78
+#: backend/site_config/models.py:80
 msgid "Заголовок секции \"Команда\""
 msgstr "Naslov sekcije „Tim“"
 
-#: backend/site_config/models.py:84
+#: backend/site_config/models.py:86
 msgid "Главная: Кнопка команды (текст)"
 msgstr "Glavna: Dugme tima (tekst)"
 
-#: backend/site_config/models.py:90
+#: backend/site_config/models.py:92
 msgid "О нас: Кнопка команды (текст)"
 msgstr "O nama: Dugme tima (tekst)"
 
-#: backend/site_config/models.py:96
+#: backend/site_config/models.py:98
 msgid "Кнопка команды (ссылка)"
 msgstr "Dugme tima (link)"
+
+#: backend/site_config/models.py:105
+msgid "Почта для уведомлений о заявках"
+msgstr "E-pošta za obaveštenja o zahtevima"
 
 #: backend/users/admin.py:52
 msgid "Персональная информация (Русский)"
@@ -1796,6 +1878,27 @@ msgstr "Korisnik"
 #: backend/users/models.py:180
 msgid "Пользователи и команда"
 msgstr "Korisnici i tim"
+
+#~ msgid "Russian"
+#~ msgstr "Ruski"
+
+#~ msgid "English"
+#~ msgstr "Engleski"
+
+#~ msgid "Serbian (Latin)"
+#~ msgstr "Srpski (Latinica)"
+
+#~ msgid "Serbian (Cyrillic)"
+#~ msgstr "Srpski (Ćirilica)"
+
+#~ msgid "Например: https://t.me/example"
+#~ msgstr "Na primer: https://t.me/example"
+
+#~ msgid "Причина обращения"
+#~ msgstr "Razlog obraćanja"
+
+#~ msgid "Введите правильный URL-адрес, mailto: или tel:"
+#~ msgstr "Unesite ispravnu URL adresu, mailto: ili tel:"
 
 #~ msgid "Возвращает активный текстовый блок для пожертвований."
 #~ msgstr "Vraća aktivni tekstualni blok za donacije."
