@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-06 18:40+0300\n"
+"POT-Creation-Date: 2026-07-07 01:24+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-
 #: backend/about/admin.py:42
 msgid "Параграф с таким порядковым номером уже добавлен."
 msgstr ""
@@ -33,35 +32,35 @@ msgid "📋 Параграфы секции \"О нас\""
 msgstr ""
 
 #: backend/about/admin.py:61 backend/about/admin.py:135
-#: backend/contacts/admin.py:198 backend/projects/admin.py:173
+#: backend/contacts/admin.py:256 backend/projects/admin.py:173
 #: backend/projects/admin.py:236
 msgid "Основная информация"
 msgstr ""
 
 #: backend/about/admin.py:63 backend/about/admin.py:99
 #: backend/about/admin.py:136 backend/about/admin.py:183
-#: backend/contacts/admin.py:202 backend/projects/admin.py:177
+#: backend/contacts/admin.py:260 backend/projects/admin.py:177
 #: backend/projects/admin.py:250
 msgid "Переводы (Русский)"
 msgstr ""
 
 #: backend/about/admin.py:67 backend/about/admin.py:103
 #: backend/about/admin.py:137 backend/about/admin.py:194
-#: backend/contacts/admin.py:206 backend/projects/admin.py:181
+#: backend/contacts/admin.py:264 backend/projects/admin.py:181
 #: backend/projects/admin.py:251
 msgid "Переводы (Английский)"
 msgstr ""
 
 #: backend/about/admin.py:71 backend/about/admin.py:107
 #: backend/about/admin.py:139 backend/about/admin.py:206
-#: backend/contacts/admin.py:210 backend/projects/admin.py:185
+#: backend/contacts/admin.py:268 backend/projects/admin.py:185
 #: backend/projects/admin.py:253
 msgid "Переводы (Сербский - Латиница)"
 msgstr ""
 
 #: backend/about/admin.py:78 backend/about/admin.py:114
 #: backend/about/admin.py:143 backend/about/admin.py:218
-#: backend/contacts/admin.py:214 backend/projects/admin.py:192
+#: backend/contacts/admin.py:272 backend/projects/admin.py:192
 #: backend/projects/admin.py:257
 msgid "Переводы (Сербский - Кириллица)"
 msgstr ""
@@ -314,7 +313,7 @@ msgid ""
 "Неверный логин или пароль. Пожалуйста, проверьте данные и попробуйте снова."
 msgstr ""
 
-#: backend/api/contacts/views.py:38
+#: backend/api/contacts/views.py:46
 msgid "Получено"
 msgstr ""
 
@@ -415,7 +414,7 @@ msgstr ""
 
 #: backend/api/schemas/contact_schemas.py:26
 msgid "Возвращает телефон и адрес организации."
-msgstr "Возвращает телефон и адрес организации."
+msgstr ""
 
 #: backend/api/schemas/home_shemas.py:6
 msgid "Данные главной страницы"
@@ -536,12 +535,10 @@ msgid ""
 "Возвращает локализованный текст политики конфиденциальности в формате HTML. "
 "Локализация зависит от переданного заголовка `Accept-Language`."
 msgstr ""
-"Возвращает локализованный текст политики конфиденциальности в формате HTML. "
-"Локализация зависит от переданного заголовка `Accept-Language`."
 
 #: backend/api/schemas/security_schemas.py:15
 msgid "Политика конфиденциальности не найдена"
-msgstr "Политика конфиденциальности не найдена"
+msgstr ""
 
 #: backend/api/schemas/users_schemas.py:8
 msgid "Список участников команды"
@@ -573,13 +570,16 @@ msgstr ""
 msgid "Ссылка на «{}» уже существует"
 msgstr ""
 
-#: backend/contacts/admin.py:108
+#: backend/contacts/admin.py:109
 msgid "Порядок отображения «{}» уже занят другой записью"
 msgstr ""
 
-#: backend/contacts/admin.py:141
-msgid ""
-"Порядок отображения «{}» уже занят записью «{}». Выберите другой порядок."
+#: backend/contacts/admin.py:143
+msgid "Порядок отображения «{}» уже используется в этой форме."
+msgstr ""
+
+#: backend/contacts/admin.py:170 backend/contacts/admin.py:199
+msgid "Порядок отображения «{}» уже занят записью «{}»."
 msgstr ""
 
 #: backend/contacts/apps.py:7
@@ -604,7 +604,7 @@ msgstr ""
 
 #: backend/contacts/constants.py:30
 msgid "Определяет активный блок контактных данных (должен быть только один)"
-msgstr "Определяет активный блок контактных данных (должен быть только один)."
+msgstr ""
 
 #: backend/contacts/constants.py:33
 msgid "Выбор соцсети."
@@ -622,7 +622,7 @@ msgstr ""
 
 #: backend/contacts/constants.py:39
 msgid ""
-"Число от 1 до 6. Порядок определяет последовательность отображения иконок на "
+"Число от 1 до 5. Порядок определяет последовательность отображения иконок на "
 "сайте"
 msgstr ""
 
@@ -676,10 +676,8 @@ msgid "Статус email-уведомления"
 msgstr ""
 
 #: backend/contacts/models.py:66
-#, fuzzy
-#| msgid "Дата последнего обновления"
 msgid "Дата отправки email-уведомления"
-msgstr "Дата последнего обновления"
+msgstr ""
 
 #: backend/contacts/models.py:70
 msgid "Попытки отправки email-уведомления"
@@ -703,7 +701,7 @@ msgstr ""
 
 #: backend/contacts/models.py:94
 msgid "Контактный телефон организации"
-msgstr "Контактный телефон организации"
+msgstr ""
 
 #: backend/contacts/models.py:98
 msgid "Адрес"
@@ -711,7 +709,7 @@ msgstr ""
 
 #: backend/contacts/models.py:99
 msgid "Адрес организации"
-msgstr "Адрес организации"
+msgstr ""
 
 #: backend/contacts/models.py:103
 msgid "Активно"
@@ -723,7 +721,7 @@ msgstr ""
 
 #: backend/contacts/models.py:123 backend/contacts/models.py:124
 msgid "Контактные данные"
-msgstr "Контактные данные"
+msgstr ""
 
 #: backend/contacts/models.py:160 backend/site_config/models.py:110
 #: backend/site_config/models.py:111
@@ -747,11 +745,11 @@ msgid "Показывать на сайте"
 msgstr ""
 
 #: backend/contacts/models.py:195
-msgid "Ссылка на соцсеть / мессенджер"
+msgid "ссылку"
 msgstr ""
 
 #: backend/contacts/models.py:196
-msgid "Ссылки на соцсети / мессенджеры"
+msgid "Ссылки на соцсети и Email"
 msgstr ""
 
 #: backend/contacts/validators.py:6
@@ -1407,31 +1405,31 @@ msgstr ""
 
 #: backend/security/admin.py:32 backend/security/models.py:9
 msgid "Текст политики"
-msgstr "Текст политики"
+msgstr ""
 
 #: backend/security/apps.py:9
 msgid "Полтика конфиденциальности"
-msgstr "Политика конфиденциальности"
+msgstr ""
 
 #: backend/security/constants.py:3
 msgid "Основной текст документа (поддерживает HTML)"
-msgstr "Основной текст документа (поддерживает HTML)"
+msgstr ""
 
 #: backend/security/models.py:10
 msgid "Дата последнего обновления"
-msgstr "Дата последнего обновления"
+msgstr ""
 
 #: backend/security/models.py:13 backend/security/models.py:14
 msgid "Политика конфиденциальности"
-msgstr "Политика конфиденциальности"
+msgstr ""
 
 #: backend/security/models.py:22
 msgid "Может существовать только одна запись политики конфиденциальности."
-msgstr "Может существовать только одна запись политики конфиденциальности."
+msgstr ""
 
 #: backend/security/models.py:34
 msgid "Текст политики..."
-msgstr "Текст политики..."
+msgstr ""
 
 #: backend/site_config/admin.py:135
 msgid "1. Основные и общие настройки"

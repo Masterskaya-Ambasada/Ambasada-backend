@@ -102,12 +102,13 @@ class ContactSocialLinkForm(forms.ModelForm):
                 }
             )
 
-        if qs.filter(order=order).exists():
-            raise ValidationError(
-                {
-                    'order': _('Порядок отображения «{}» уже занят другой записью').format(order),
-                }
-            )
+        if not self.prefix:
+            if qs.filter(order=order).exists():
+                raise ValidationError(
+                    {
+                        'order': _('Порядок отображения «{}» уже занят другой записью').format(order),
+                    }
+                )
 
         return cleaned_data
 
@@ -116,7 +117,7 @@ class ContactSocialLinkFormSet(BaseModelFormSet):
     """Перехватчик ошибок для списка социальных сетей."""
 
     def clean(self):
-        """Проверяет уникальность порядка отображения среди всех записей в списке и в БД."""
+        """Проверяет уникальность порядка среди всех записей в списке и в БД."""
         super().clean()
 
         for form in self.forms:
@@ -125,20 +126,77 @@ class ContactSocialLinkFormSet(BaseModelFormSet):
                 form._errors.pop('__all__')
                 raise ValidationError(error_msg)
 
+        all_orders = {}
         for form in self.forms:
-            if form.is_valid() and form.has_changed() and 'order' in form.changed_data:
-                new_order = form.cleaned_data['order']
+            if not form.is_valid():
+                continue
+            order = form.cleaned_data.get('order')
+            if order is None:
+                continue
+            pk = form.instance.pk
+            all_orders[pk] = (form, order)
+
+        # Проверяем дубликаты order внутри формы
+        seen = {}
+        for pk, (form, order) in all_orders.items():
+            if order in seen:
+                raise ValidationError(_('Порядок отображения «{}» уже используется в этой форме.').format(order))
+            seen[order] = (form, pk)
+
+        for pk, (form, new_order) in all_orders.items():
+            if not form.has_changed() or 'order' not in form.changed_data:
+                continue
+
+            if pk:
                 conflict = (
                     ContactSocialLink.objects.filter(
                         order=new_order,
                         site_config=form.instance.site_config,
                     )
-                    .exclude(pk=form.instance.pk)
+                    .exclude(pk=pk)
                     .first()
                 )
-                if conflict:
+            else:
+                conflict = ContactSocialLink.objects.filter(
+                    order=new_order,
+                    site_config=form.instance.site_config,
+                ).first()
+
+            if conflict:
+                if conflict.pk in all_orders and conflict.pk != pk:
+                    form._swap_conflict = True
+                else:
                     raise ValidationError(
-                        _('Порядок отображения «{}» уже занят записью «{}». ' 'Выберите другой порядок.').format(
+                        _('Порядок отображения «{}» уже занят записью «{}».').format(
+                            new_order, conflict.get_social_type_display()
+                        )
+                    )
+            seen[order] = (form, pk)
+
+        for pk, (form, new_order) in all_orders.items():
+            if not form.has_changed() or 'order' not in form.changed_data:
+                continue
+
+            if pk:
+                conflict = (
+                    ContactSocialLink.objects.filter(
+                        order=new_order,
+                        site_config=form.instance.site_config,
+                    )
+                    .exclude(pk=pk)
+                    .first()
+                )
+            else:
+                conflict = ContactSocialLink.objects.filter(
+                    order=new_order,
+                    site_config=form.instance.site_config,
+                ).first()
+
+            if conflict:
+                conflict_swapping = conflict.pk in all_orders and conflict.pk != pk
+                if not conflict_swapping:
+                    raise ValidationError(
+                        _('Порядок отображения «{}» уже занят записью «{}».').format(
                             new_order, conflict.get_social_type_display()
                         )
                     )

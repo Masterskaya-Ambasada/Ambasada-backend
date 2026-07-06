@@ -192,19 +192,14 @@ class ContactSocialLink(models.Model):
     )
 
     class Meta:
-        verbose_name = _('Ссылка на соцсеть / мессенджер')
-        verbose_name_plural = _('Ссылки на соцсети / мессенджеры')
+        verbose_name = _('ссылку')
+        verbose_name_plural = _('Ссылки на соцсети и Email')
         ordering = ('order', 'id')
         constraints = [
             models.UniqueConstraint(
                 fields=['site_config', 'social_type'],
                 name='unique_site_config_social_type',
                 violation_error_message=constants.ERROR_DUPLICATE_SOCIAL_TYPE,
-            ),
-            models.UniqueConstraint(
-                fields=['site_config', 'order'],
-                name='unique_site_config_social_order',
-                violation_error_message=constants.ERROR_DUPLICATE_SOCIAL_ORDER,
             ),
         ]
 

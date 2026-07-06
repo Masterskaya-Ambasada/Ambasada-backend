@@ -96,7 +96,7 @@ def test_contact_social_link_admin_accepts_plain_email(client, admin_user, site_
 
 @pytest.mark.django_db
 def test_contact_social_link_order_range_validation(client, admin_user, site_config):
-    """Проверяет, что order за пределами 1-6 отклоняется формой."""
+    """Проверяет, что order за пределами 1-5 отклоняется формой."""
     client.force_login(admin_user)
 
     response = client.post(
@@ -118,7 +118,7 @@ def test_contact_social_link_order_range_validation(client, admin_user, site_con
         data={
             'social_type': ContactSocialLink.SocialType.FACEBOOK,
             'url': 'https://facebook.com/example',
-            'order': '7',
+            'order': '6',
             'is_active': 'on',
             '_save': 'Сохранить',
         },
@@ -149,3 +149,49 @@ def test_contact_social_link_admin_add_success(client, admin_user, site_config):
     link = ContactSocialLink.objects.first()
     assert link.social_type == ContactSocialLink.SocialType.LINKEDIN
     assert link.site_config == site_config
+
+
+@pytest.mark.django_db
+def test_contact_social_link_admin_swap_orders(client, admin_user, site_config):
+    """Проверяет, что обмен порядков между записями работает без ошибок."""
+    link1 = ContactSocialLink.objects.create(
+        site_config=site_config,
+        social_type=ContactSocialLink.SocialType.TELEGRAM,
+        url='https://t.me/example',
+        order=1,
+    )
+    link2 = ContactSocialLink.objects.create(
+        site_config=site_config,
+        social_type=ContactSocialLink.SocialType.INSTAGRAM,
+        url='https://instagram.com/example',
+        order=2,
+    )
+
+    client.force_login(admin_user)
+
+    response = client.post(
+        '/admin/contacts/contactsociallink/',
+        data={
+            'form-0-id': str(link1.pk),
+            'form-0-social_type': ContactSocialLink.SocialType.TELEGRAM,
+            'form-0-url': 'https://t.me/example',
+            'form-0-order': '2',
+            'form-0-is_active': 'on',
+            'form-1-id': str(link2.pk),
+            'form-1-social_type': ContactSocialLink.SocialType.INSTAGRAM,
+            'form-1-url': 'https://instagram.com/example',
+            'form-1-order': '1',
+            'form-1-is_active': 'on',
+            'form-TOTAL_FORMS': '2',
+            'form-INITIAL_FORMS': '2',
+            'form-MIN_NUM_FORMS': '0',
+            'form-MAX_NUM_FORMS': '1000',
+            '_save': 'Сохранить',
+        },
+    )
+
+    assert response.status_code == 302
+    link1.refresh_from_db()
+    link2.refresh_from_db()
+    assert link1.order == 2
+    assert link2.order == 1
