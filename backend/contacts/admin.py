@@ -3,7 +3,7 @@ from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.forms import Textarea, TextInput
+from django.forms import NumberInput, Textarea, TextInput
 from django.forms.models import BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
 
@@ -136,7 +136,6 @@ class ContactSocialLinkFormSet(BaseModelFormSet):
             pk = form.instance.pk
             all_orders[pk] = (form, order)
 
-        # Проверяем дубликаты order внутри формы
         seen = {}
         for pk, (form, order) in all_orders.items():
             if order in seen:
@@ -213,6 +212,21 @@ class ContactSocialLinkAdmin(BaseAdmin):
     list_filter = ('social_type', IsActiveOnSiteFilter)
     search_fields = ('url',)
     ordering = ('order',)
+    formfield_overrides = FIELD_OVERRIDES
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+
+        if db_field.name == 'order' and formfield:
+            formfield.widget = NumberInput(
+                attrs={
+                    'min': 1,
+                    'max': 5,
+                    'style': 'width: 100px; border-radius: 4px;',
+                }
+            )
+
+        return formfield
 
     def get_changelist_formset(self, request, **kwargs):
         """Инжектим перехватчик для списка соцсетей."""
