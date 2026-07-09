@@ -13,7 +13,9 @@ from rest_framework.views import APIView
 
 from api.projects.constants import (
     PATH_PARAM_PROJECT_SLUG,
+    PROJECT_LIST_YEAR_ORDERING_MAP,
     PROJECT_TYPES_RESPONSE_KEY,
+    QUERY_PARAM_ORDERING,
     QUERY_PARAM_PROJECT_TYPE,
     QUERY_PARAM_SEARCH,
     QUERY_PARAM_TAG,
@@ -61,6 +63,13 @@ class ProjectListView(ListAPIView):
                     tags.append(normalized_tag)
         return tags
 
+    def _apply_ordering(self, queryset):
+        ordering = (self.request.query_params.get(QUERY_PARAM_ORDERING) or '').strip()
+        ordering_fields = PROJECT_LIST_YEAR_ORDERING_MAP.get(ordering)
+        if not ordering_fields:
+            return queryset
+        return queryset.order_by(*ordering_fields)
+
     def get_queryset(self):
         lang = self.request.GET.get('lang') or get_language_from_request(self.request)
         order_field = get_order_by_field(lang, 'label')
@@ -84,7 +93,7 @@ class ProjectListView(ListAPIView):
         search = (self.request.query_params.get(QUERY_PARAM_SEARCH) or '').strip()
         if search:
             queryset = queryset.filter(title__icontains=search)
-        return queryset.distinct()
+        return self._apply_ordering(queryset).distinct()
 
 
 @PROJECT_DETAIL_SCHEMA

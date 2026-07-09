@@ -218,8 +218,6 @@ class ProjectContentBlockSerializer(serializers.ModelSerializer):
     def to_representation(self, instance: ProjectContentBlock) -> dict:
         """Удаляет из ответа поля, не относящиеся к выбранному варианту контент-блока."""
         data = super().to_representation(instance)
-        if instance.variant != ProjectContentBlock.Variant.IMAGE_WITH_LIST:
-            data.pop('string_list', None)
         if instance.variant != ProjectContentBlock.Variant.TWO_IMAGES:
             data.pop('left_image', None)
         if instance.variant != ProjectContentBlock.Variant.IMAGE_WITH_BUTTONS:

@@ -6,6 +6,7 @@ SUPPORTED_LANGUAGE_CODES = ('ru', 'en', 'sr-latn', 'sr-cyrl')
 QUERY_PARAM_PROJECT_TYPE = 'project_type'
 QUERY_PARAM_TAG = 'tag'
 QUERY_PARAM_SEARCH = 'search'
+QUERY_PARAM_ORDERING = 'ordering'
 TAG_QUERY_VALUE_SEPARATOR = ','
 PATH_PARAM_PROJECT_SLUG = 'project_slug'
 
@@ -16,5 +17,9 @@ PAGINATION_TOTAL_ITEMS_KEY = 'totalItems'
 PAGINATION_OFFSET_KEY = 'offset'
 PAGINATION_LIMIT_KEY = 'limit'
 PAGINATION_IS_NEXT_KEY = 'isNext'
+PROJECT_LIST_YEAR_ORDERING_MAP = {
+    'year': ('year', 'pk'),
+    '-year': ('-year', '-pk'),
+}
 PROJECT_ACTION_BUTTON_LABEL = _('Перейти к проекту')
 PROJECT_ACTION_BUTTON_LINK_TEMPLATE = '/projects/{slug}'
