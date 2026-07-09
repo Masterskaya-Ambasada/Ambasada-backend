@@ -154,6 +154,22 @@ def test_projects_list_returns_expected_card_fields(api_client, published_projec
 
 
 @pytest.mark.django_db
+def test_projects_list_orders_by_year(api_client, published_project, second_published_project):
+    """Проверяет сортировку списка проектов по году в обоих направлениях."""
+    url = reverse('api:projects-list')
+
+    response = api_client.get(url, {'ordering': 'year'})
+    assert response.status_code == 200
+    data = response.json()
+    assert [item['id'] for item in data['items']] == [second_published_project.slug, published_project.slug]
+
+    response = api_client.get(url, {'ordering': '-year'})
+    assert response.status_code == 200
+    data = response.json()
+    assert [item['id'] for item in data['items']] == [published_project.slug, second_published_project.slug]
+
+
+@pytest.mark.django_db
 def test_projects_list_returns_custom_pagination_payload(
     api_client,
     published_project,

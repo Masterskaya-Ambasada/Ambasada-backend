@@ -13,6 +13,7 @@ from api.projects.constants import (
     ACCEPT_LANGUAGE_HEADER,
     PATH_PARAM_PROJECT_SLUG,
     PROJECT_TYPES_RESPONSE_KEY,
+    QUERY_PARAM_ORDERING,
     QUERY_PARAM_PROJECT_TYPE,
     QUERY_PARAM_SEARCH,
     QUERY_PARAM_TAG,
@@ -35,6 +36,15 @@ PROJECT_DETAIL_PATH_PARAMETER = OpenApiParameter(
     location=OpenApiParameter.PATH,
     required=True,
     description=_('Slug проекта. Например: belgrade-navigation.'),
+)
+
+PROJECT_ORDERING_PARAMETER = OpenApiParameter(
+    name=QUERY_PARAM_ORDERING,
+    type=OpenApiTypes.STR,
+    location=OpenApiParameter.QUERY,
+    required=False,
+    enum=['year', '-year'],
+    description=_('Сортировка по году проекта: year по возрастанию, -year по убыванию.'),
 )
 
 PROJECT_TAG_LIST_RESPONSE_SCHEMA = {
@@ -60,6 +70,7 @@ PROJECT_LIST_SCHEMA = extend_schema_view(
         ),
         parameters=[
             PROJECT_LANGUAGE_PARAMETER,
+            PROJECT_ORDERING_PARAMETER,
             OpenApiParameter(
                 name=QUERY_PARAM_PROJECT_TYPE,
                 type=OpenApiTypes.STR,
