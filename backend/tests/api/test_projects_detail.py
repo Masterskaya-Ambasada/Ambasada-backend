@@ -89,7 +89,8 @@ def test_project_detail_hides_variant_specific_fields_for_two_images_block(
     block = response.json()['content_blocks'][1]
     assert block['variant'] == 2
     assert 'left_image' in block
-    assert 'string_list' not in block
+    assert 'string_list' in block
+    assert block['string_list'] == ['Hidden list item']
     assert 'buttons' not in block
 
 
@@ -112,8 +113,28 @@ def test_project_detail_hides_variant_specific_fields_for_buttons_block(
     assert block['variant'] == 3
     assert 'buttons' in block
     assert len(block['buttons']) == 2
-    assert 'string_list' not in block
+    assert 'string_list' in block
+    assert block['string_list'] == ['Hidden list item']
     assert 'left_image' not in block
+
+
+@pytest.mark.django_db
+def test_project_detail_returns_empty_string_list_for_buttons_block_by_default(
+    api_client,
+    published_project,
+    list_block,
+    two_images_block,
+    buttons_block,
+):
+    """Проверяет, что обязательное поле string_list приходит пустым массивом для блока с кнопками."""
+    url = reverse('api:projects-detail', kwargs={'project_slug': published_project.slug})
+    response = api_client.get(url)
+
+    assert response.status_code == 200
+    block = response.json()['content_blocks'][2]
+    assert block['variant'] == 3
+    assert 'string_list' in block
+    assert block['string_list'] == []
 
 
 @pytest.mark.django_db

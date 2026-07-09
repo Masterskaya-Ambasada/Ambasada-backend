@@ -166,6 +166,7 @@ PROJECT_DETAIL_SCHEMA = extend_schema_view(
                                     'index': '001',
                                     'title': 'Исследование',
                                     'image': None,
+                                    'string_list': [],
                                     'text': '<p>Основной текст блока</p>',
                                     'accented_text': '<p>Акцентный текст блока</p>',
                                     'buttons': [
