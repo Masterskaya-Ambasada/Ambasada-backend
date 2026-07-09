@@ -271,6 +271,8 @@ class ProjectAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, NestedModelAdmin):
             attrs['class'] = ' '.join(widget_classes)
             attrs['rows'] = 3
             attrs['style'] = f"{attrs.get('style', '')} resize: vertical; min-height: 72px;".strip()
+            if db_field.max_length:
+                attrs['maxlength'] = db_field.max_length
             formfield.widget = forms.Textarea(attrs=attrs)
         return formfield
 

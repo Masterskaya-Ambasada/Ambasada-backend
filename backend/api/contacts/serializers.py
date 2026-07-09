@@ -1,5 +1,4 @@
 import random
-import re
 
 from contacts.models import ContactPageContent, ContactRequest
 from contacts.tasks import send_contact_request_notification_task
@@ -37,12 +36,6 @@ class ContactRequestSerializer(serializers.ModelSerializer):
             'message',
             'contact_preference',
         ]
-
-    def validate_name(self, value):
-        """Разрешаем только буквы (включая кириллицу), цифры, пробелы и дефисы."""
-        if not re.match(r'^[a-zA-Zа-яА-ЯёЁ0-9\s-]+$', value):
-            raise serializers.ValidationError('Имя содержит недопустимые спецсимволы.')
-        return value
 
     def validate(self, attrs):
         """Проверяет хонейпот и маркирует внутреннее состояние запроса."""
