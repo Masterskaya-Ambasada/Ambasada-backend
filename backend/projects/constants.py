@@ -147,5 +147,7 @@ PROJECT_BLOCKS_DIRECTORY = 'blocks'
 PROJECT_BLOCK_FALLBACK_SLUG = 'project'
 
 ADMIN_EMPTY_VALUE = '-empty-'
-DEFAULT_FRONTEND_URL = 'http://localhost:3000'
+ADMIN_LIST_PER_PAGE = 10
+DEFAULT_FRONTEND_URL = 'https://azu.rassokha.pro'
+LOCAL_FRONTEND_HOSTS = {'localhost', '127.0.0.1', '0.0.0.0', '::1'}
 FRONTEND_PROJECT_PATH_TEMPLATE = '{frontend_url}/projects/{slug}/'

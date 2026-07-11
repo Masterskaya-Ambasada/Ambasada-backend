@@ -15,7 +15,7 @@ from projects.admin import (
     TagAdmin,
 )
 from projects.admin_forms import ProjectContentBlockInlineFormSet
-from projects.constants import REFERENCE_TRANSLATED_FIELDS
+from projects.constants import ADMIN_LIST_PER_PAGE, DEFAULT_FRONTEND_URL, REFERENCE_TRANSLATED_FIELDS
 from projects.models import Project, ProjectBlockButton, ProjectContentBlock, ProjectType, Tag
 from projects.resources_admin import ProjectTypeResource, TagResource
 
@@ -271,6 +271,29 @@ def test_project_admin_view_on_site_uses_frontend_url_from_settings(published_pr
 
     assert f'https://ambasada.example/projects/{published_project.slug}/' in link
     assert 'localhost:3000' not in link
+
+
+@pytest.mark.django_db
+@override_settings(FRONTEND_URL='http://localhost:3000')
+def test_project_admin_view_on_site_falls_back_from_local_frontend_url(published_project):
+    """Проверяет, что публичная ссылка в админке не ведёт на локальный фронтенд."""
+    project_admin = ProjectAdmin(Project, admin.site)
+
+    link = str(project_admin.get_view_on_site(published_project))
+
+    assert f'{DEFAULT_FRONTEND_URL}/projects/{published_project.slug}/' in link
+    assert 'localhost:3000' not in link
+
+
+def test_project_reference_admins_use_ten_items_per_page():
+    """Проверяет размер страницы для списков проектов, тегов и типов проектов."""
+    project_admin = ProjectAdmin(Project, admin.site)
+    tag_admin = TagAdmin(Tag, admin.site)
+    project_type_admin = ProjectTypeAdmin(ProjectType, admin.site)
+
+    assert project_admin.list_per_page == ADMIN_LIST_PER_PAGE
+    assert tag_admin.list_per_page == ADMIN_LIST_PER_PAGE
+    assert project_type_admin.list_per_page == ADMIN_LIST_PER_PAGE
 
 
 @pytest.mark.django_db
