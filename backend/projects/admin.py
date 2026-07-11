@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
+from urllib.parse import urlparse
 
 from core.base_admin import BaseAdminMixin, BaseTranslatedAdmin, ImportExportMixin
 from django import forms
@@ -16,12 +17,14 @@ from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInl
 from .admin_forms import ProjectContentBlockInlineFormSet
 from .constants import (
     ADMIN_EMPTY_VALUE,
+    ADMIN_LIST_PER_PAGE,
     BLOCK_BUTTON_ADMIN_HELP_TEXTS,
     CONTENT_BLOCK_ADMIN_HELP_TEXTS,
     CYRILLIC_TO_LATIN,
     DEFAULT_FRONTEND_URL,
     FRONTEND_PROJECT_PATH_TEMPLATE,
     GALLERY_IMAGE_ADMIN_HELP_TEXTS,
+    LOCAL_FRONTEND_HOSTS,
     PROJECT_ADMIN_HELP_TEXTS,
     REFERENCE_ADMIN_HELP_TEXTS,
     REFERENCE_TRANSLATED_FIELDS,
@@ -65,6 +68,15 @@ def make_slug_from_russian_title(title: str) -> str:
     return slugify(title.lower().translate(CYRILLIC_TO_LATIN))
 
 
+def get_admin_frontend_url() -> str:
+    """Возвращает публичный URL фронтенда для ссылок из админки."""
+    frontend_url = (getattr(settings, 'FRONTEND_URL', '') or DEFAULT_FRONTEND_URL).rstrip('/')
+    hostname = urlparse(frontend_url).hostname
+    if hostname in LOCAL_FRONTEND_HOSTS:
+        return DEFAULT_FRONTEND_URL
+    return frontend_url
+
+
 class ProjectHelpTextMixin:
     """Добавляет подробные подсказки к полям проектной админки."""
 
@@ -104,6 +116,7 @@ class TagAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, ImportExportMixin):
     resource_classes = [TagResource]
     fields = REFERENCE_TRANSLATED_FIELDS
     list_display = REFERENCE_TRANSLATED_FIELDS
+    list_per_page = ADMIN_LIST_PER_PAGE
     search_fields = ['slug']
 
 
@@ -115,6 +128,7 @@ class ProjectTypeAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, ImportExportMi
     resource_classes = [ProjectTypeResource]
     fields = REFERENCE_TRANSLATED_FIELDS
     list_display = REFERENCE_TRANSLATED_FIELDS
+    list_per_page = ADMIN_LIST_PER_PAGE
     search_fields = ['slug']
 
 
@@ -225,6 +239,7 @@ class ProjectAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, NestedModelAdmin):
     ]
     list_editable = ('is_published',)
     list_filter = ['project_type', 'year', 'is_published']
+    list_per_page = ADMIN_LIST_PER_PAGE
     ordering = ('-is_published', '-year')
     readonly_fields = ('cover_image_preview',)
     filter_horizontal = ('tags',)
@@ -302,7 +317,7 @@ class ProjectAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, NestedModelAdmin):
     def get_view_on_site(self, obj):
         """Генерирует HTML-ссылку для быстрого перехода из админки на страницу проекта на фронтенде."""
         if obj.slug:
-            frontend_url = getattr(settings, 'FRONTEND_URL', DEFAULT_FRONTEND_URL).rstrip('/')
+            frontend_url = get_admin_frontend_url()
             absolute_url = FRONTEND_PROJECT_PATH_TEMPLATE.format(frontend_url=frontend_url, slug=obj.slug)
             return format_html(
                 '<a href="{}" target="_blank" rel="noopener noreferrer">🔗 {}</a>',

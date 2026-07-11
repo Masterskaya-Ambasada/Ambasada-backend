@@ -54,7 +54,7 @@ CORS_ALLOWED_ORIGINS = config(
     default='http://localhost:3000',
 )
 
-FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000').rstrip('/')
+FRONTEND_URL = config('FRONTEND_URL', default='https://azu.rassokha.pro').rstrip('/')
 
 CORS_ALLOW_CREDENTIALS = False
 
