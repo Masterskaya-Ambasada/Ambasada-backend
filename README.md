@@ -10,7 +10,7 @@
 
 ## 📋 Общее описание
 
-Backend обеспечивает REST API для работы с проектами, командой, контактами и контентом сайта. Система поддерживает 3 языка, реализует кэширование через Redis и обеспечивает безопасность через JWT авторизацию, rate limiting и CSP защиту.
+Backend обеспечивает REST API для работы с проектами, командой, контактами и контентом сайта. Система поддерживает 3 языка (русский, английский, сербский; у сербского два начертания — латиница и кириллица), реализует кэширование через Redis, фоновые задачи через Celery и обеспечивает безопасность через JWT авторизацию, rate limiting и CSP защиту.
 
 ### 🎯 Ключевые возможности
 
@@ -57,7 +57,8 @@ Backend обеспечивает REST API для работы с проекта�
 - **Caddy**: Reverse proxy, HTTPS termination, rate limiting, static files serving
 - **Django/Gunicorn**: Application server, business logic
 - **PostgreSQL**: Primary database storage
-- **Redis**: Кэширование данных эндпоинтов init/home с автоматической инвалидацией через сигналы
+- **Redis**: Кэширование данных эндпоинтов init/home с автоматической инвалидацией через сигналы; брокер для Celery
+- **Celery**: Фоновые задачи (отправка уведомлений о заявках из формы контактов)
 - **Media/CDN**: Static files and user uploaded content
 
 ---
@@ -230,6 +231,7 @@ ambasada-backend/
 │   │   ├── home/              # Эндпоинты главной страницы
 │   │   ├── projects/          # CRUD проектов
 │   │   ├── schemas/           # OpenAPI схемы
+│   │   ├── security/          # Эндпоинт политики конфиденциальности
 │   │   ├── site_config/       # Инициализация API
 │   │   ├── users/             # Команда проекта
 │   │   ├── urls.py            # Маршруты API v1
@@ -238,13 +240,17 @@ ambasada-backend/
 │   ├── backend/               # Основные настройки Django
 │   │   ├── settings.py        # Конфигурация (ENV переменные)
 │   │   ├── urls.py            # Главный routes файл
-│   │   └── wsgi.py            # WSGI приложение
+│   │   ├── wsgi.py            # WSGI приложение
+│   │   ├── asgi.py            # ASGI приложение
+│   │   └── celery.py          # Конфигурация Celery
 │   ├── contacts/              # Приложение контактов
 │   │   ├── models.py          # Модели: Contact, ContactSocialLink
+│   │   ├── tasks.py           # Celery задачи (уведомления о заявках)
 │   │   └── admin.py           # Кастомная админка
 │   ├── core/                  # Общие утилиты проекта
 │   │   ├── middleware.py      # Кастомный middleware (throttle)
-│   │   └── validators.py      # Валидаторы файлов, текста
+│   │   ├── validators.py      # Валидаторы файлов, текста
+│   │   └── base_admin.py      # Базовый админ-класс (BaseTranslatedAdmin)
 │   ├── home/                  # Приложение главной страницы
 │   │   ├── models.py          # Модели: HomePageContent
 │   │   ├── admin.py           # Админ-панель
@@ -257,10 +263,17 @@ ambasada-backend/
 │   ├── projects/              # Приложение проектов
 │   │   ├── models.py          # Модели: Project, ProjectTag, ProjectType
 │   │   ├── validators.py      # Валидаторы slug, полей
+│   │   ├── admin_forms.py     # Формы админки проектов
+│   │   ├── resources_admin.py # Админ-ресурсы проектов
 │   │   └── admin.py           # Кастомная админка
+│   ├── security/              # Политика конфиденциальности
+│   │   ├── models.py          # Модель: SecurityPolicy
+│   │   ├── admin.py           # Админ-панель
+│   │   └── migrations/        # Миграции БД
 │   ├── site_config/           # Конфигурация сайта
 │   │   ├── models.py          # Модели: SiteConfig
 │   │   ├── cache.py           # Функции кэширования init/home
+│   │   ├── middleware.py      # Middleware
 │   │   └── signals.py         # Сигналы для инвалидации кэша
 │   ├── tests/                 # Тесты проекта
 │   │   ├── api/               # API тесты
@@ -268,7 +281,10 @@ ambasada-backend/
 │   │   ├── contacts/          # Тесты контактов
 │   │   ├── home/              # Тесты home
 │   │   ├── projects/          # Тесты проектов
+│   │   ├── security/          # Тесты политики конфиденциальности
+│   │   ├── site_config/       # Тесты кэширования/инициализации
 │   │   ├── users/             # Тесты пользователей
+│   │   ├── test_admin_login_throttle.py  # Тесты throttle админки
 │   │   └── conftest.py        # Pytest конфигурация
 │   └── users/                 # Приложение пользователей
 │       ├── models.py          # Кастомный User (extends AbstractUser)
@@ -293,8 +309,11 @@ ambasada-backend/
 ├── docker-compose.yml         # Основной compose файл (dev)
 ├── docker-compose.override.yml # Локальные override
 ├── Dockerfile                 # Alias для docker/django/Dockerfile
-├── pyproject.toml            # Poetry зависимости
-└── README.md                 # Этот файл
+├── pyproject.toml             # Poetry зависимости и конфигурация
+├── poetry.lock                # Зафиксированные версии зависимостей
+├── pytest.ini                 # Конфигурация pytest
+├── CLAUDE.md                  # Инструкции для Claude Code
+└── README.md                  # Этот файл
 ```
 
 ### Описание модулей
@@ -307,6 +326,7 @@ ambasada-backend/
 | **home** | Главная страница | Контент, кэширование, сигналы |
 | **projects** | Управление проектами | CRUD, категории, публикация |
 | **users** | Пользователи | Профили, команда проекта |
+| **security** | Политика конфиденциальности | Текст политики, эндпоинт `/politics/` |
 | **site_config** | Настройки сайта | Init endpoint, Redis-кэширование |
 | **core** | Общие утилиты | Middleware, валидаторы |
 | **backend** | Django конфигурация | Settings, URLs, WSGI |
@@ -315,52 +335,76 @@ ambasada-backend/
 
 ## 🌍 Переменные окружения
 
-### Ключевые переменные
+Все переменные с комментариями и значениями по умолчанию собраны в `.env.example`. Скопируйте его и отредактируйте:
+
+```bash
+cp .env.example .env
+```
+
+### Основные (development)
 
 ```env
-# Основные настройки
+# Django core
 DEBUG=True
 APP_ENV=development
 SECRET_KEY=your-secret-key-here
 DJANGO_SETTINGS_MODULE=backend.settings
+ALLOWED_HOSTS=localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=http://localhost:8000
+FRONTEND_URL=https://azu.rassokha.pro      # URL фронтенда (CORS, ссылки в письмах)
+CORS_ALLOWED_ORIGINS=http://localhost:3000  # домен фронтенда
 
 # База данных
-ENABLE_POSTGRES_DB=True  # False для SQLite
+ENABLE_POSTGRES_DB=True                      # False → SQLite
 POSTGRES_DB=db
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_HOST=db
-
-# CORS (разрешите ваш фронтенд)
-CORS_ALLOWED_ORIGINS=http://localhost:3000
+POSTGRES_PORT=5432
 ```
 
-### Полный список переменных
+### Дополнительные группы переменных
 
-📖 **Полный список всех переменных окружения с комментариями находится в `.env.example`**
+| Группа | Переменные | Назначение |
+|--------|------------|------------|
+| **Redis & Кэш** | `REDIS_URL`, `CACHE_LOCATION` | Кэш эндпоинтов `init`/`home` |
+| **Celery** | `CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND`, `CELERY_TIMEZONE` | Брокер фоновых задач (уведомления о заявках) |
+| **Email** | `EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USE_TLS`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL`, `ADMIN_EMAIL` | SMTP и уведомления о новых заявках |
+| **Caddy** | `CADDY_DOMAIN_NAME`, `CADDY_LETSENCRYPT_EMAIL` | Домен и сертификаты Let's Encrypt |
+| **JWT / Безопасность** | `JWT_ACCESS_TOKEN_MINUTES`, `JWT_REFRESH_TOKEN_DAYS` | Время жизни токенов авторизации |
+| **Throttling** | `THROTTLE_RATE_ANON`, `THROTTLE_RATE_USER`, `THROTTLE_RATE_CONTACT`, `THROTTLE_RATE_AUTH` | Rate limits API |
+| **Логирование** | `LOG_FILE_PATH` | Путь к файлу логов |
+| **Суперпользователь** | `DJANGO_SUPERUSER_EMAIL`, `DJANGO_SUPERUSER_PASSWORD`, `DJANGO_SUPERUSER_FIRST_NAME`, `DJANGO_SUPERUSER_LAST_NAME` | Автосоздание admin в production |
+| **Gunicorn** | `GUNICORN_MAX_REQUESTS`, `GUNICORN_MAX_REQUESTS_JITTER` | Параметры production-сервера |
+| **Защита админки** | `ADMIN_LOGIN_MAX_ATTEMPTS`, `ADMIN_LOGIN_WINDOW_SECONDS`, `ADMIN_LOGIN_BLOCK_SECONDS` | Brute-force защита входа в admin |
+| **Caddy rate limit** | `CADDY_RATE_STATIC_EVENTS/WINDOW`, `CADDY_RATE_DYNAMIC_EVENTS/WINDOW` | Лимиты reverse proxy |
+| **Cookies** | `SESSION_COOKIE_NAME`, `CSRF_COOKIE_NAME` | Имена security-cookies |
+| **Пагинация** | `PAGE_SIZE`, `MAX_PAGE_SIZE` | Размер страницы API (дефолты в `settings.py`) |
+| **Production paths** | `PRODUCTION_MEDIA_ROOT` | Путь к медиа в production |
+
+📖 **Полный список с комментариями — в `.env.example`.** Переменные без явного значения используют разумные дефолты из `settings.py`.
 
 <details>
-<summary><b>📋 Дополнительные переменные для production</b></summary>
+<summary><b>📋 Переменные для production</b></summary>
 
-Для production окружения дополнительно required:
+Для production обязательно меняются:
 
 ```env
-# Production settings
+# Режим production
 DEBUG=False
 APP_ENV=production
-SECRET_KEY=<strong-secret-key>
+SECRET_KEY=<сгенерированный сложный ключ>
 
-# Production hosts
-ALLOWED_HOSTS=ambasada.rs,www.ambasada.rs
-CSRF_TRUSTED_ORIGINS=https://ambasada.rs,https://www.ambasada.rs
-CORS_ALLOWED_ORIGINS=https://ambasada.rs,https://www.ambasada.rs
+# Хосты и CORS (замените на свой домен)
+ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+CORS_ALLOWED_ORIGINS=https://yourdomain.com
+FRONTEND_URL=https://yourdomain.com
 
-# Production logging
-LOG_LEVEL=WARNING
-LOG_OUTPUT=file
+# Логирование в файл
 LOG_FILE_PATH=/code/logs/django.log
 
-# Production cache
+# Redis/кэш (пример)
 REDIS_URL=redis://redis:6379/0
 CACHE_LOCATION=redis://redis:6379/1
 ```
@@ -425,13 +469,14 @@ docker compose exec -it web python backend/manage.py shell
 
 #### Контент
 - `GET /api/v1/about/` — Страница "О нас"
-- `POST /api/v1/contact/` — Форма обратной связи (anti-spam защита)
+- `POST /api/v1/contacts/` — Форма обратной связи (anti-spam защита)
+- `GET /api/v1/politics/` — Политика конфиденциальности
 
 #### Проекты
 - `GET /api/v1/projects/` — Список проектов
 - `GET /api/v1/projects/{slug}/` — Детали проекта
 - `GET /api/v1/projects/tags/` — Теги проектов
-- `GET /api/v1/projects/types/` — Типы проектов
+- `GET /api/v1/projects/categories/` — Категории проектов
 
 #### Пользователи
 - `GET /api/v1/users/team/` — Список команды
@@ -445,7 +490,7 @@ docker compose exec -it web python backend/manage.py shell
 Для всех эндпоинтов явно прописаны схемы в `backend/api/schemas/`:
 - `init_schemas.py`, `home_shemas.py` (опечатка в имени файла - legacy), `about_schemas.py`
 - `contact_schemas.py`, `project_schemas.py`
-- `auth_schemas.py`, `users_schemas.py`
+- `auth_schemas.py`, `users_schemas.py`, `security_schemas.py`
 
 ### Кэширование API
 
@@ -824,7 +869,7 @@ docker compose up -d --force-recreate
 ---
 
 **Версия**: 1.0.0  
-**Последнее обновление**: 2026-06-05  
+**Последнее обновление**: 2026-07-12  
 **Python**: 3.12+  
 **Django**: 6.0+  
 **License**: Private  
