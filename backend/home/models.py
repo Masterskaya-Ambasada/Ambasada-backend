@@ -147,3 +147,39 @@ class HomePageContent(models.Model):
 
     def __str__(self):
         return str(self._meta.verbose_name)
+
+
+class HomePageProject(models.Model):
+    """Проект, выбранный для показа в блоке проектов на главной странице."""
+
+    home_page = models.ForeignKey(
+        HomePageContent,
+        on_delete=models.CASCADE,
+        related_name='project_items',
+        verbose_name=_('Контент главной страницы'),
+    )
+    project = models.ForeignKey(
+        'projects.Project',
+        on_delete=models.CASCADE,
+        related_name='home_page_items',
+        verbose_name=_('Проект'),
+    )
+    order = models.PositiveSmallIntegerField(
+        _('Порядок отображения'),
+        default=0,
+        help_text=_('Меньшее число показывает проект выше в блоке на главной странице.'),
+    )
+
+    class Meta:
+        verbose_name = _('Проект на главной странице')
+        verbose_name_plural = _('Проекты на главной странице')
+        ordering = ('order', 'pk')
+        constraints = [
+            models.UniqueConstraint(
+                fields=('home_page', 'project'),
+                name='unique_home_page_project',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.order}: {self.project}'

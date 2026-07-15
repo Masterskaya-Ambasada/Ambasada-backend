@@ -5,7 +5,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from .models import HomePageContent
+from .constants import HOME_PROJECTS_PREVIEW_LIMIT
+from .models import HomePageContent, HomePageProject
 
 HOME_IMAGE_PREVIEW_FIELDS = ('image_left', 'image_right', 'about_image')
 
@@ -70,6 +71,17 @@ class HomePageContentAdminForm(forms.ModelForm):
                     self.fields[field_name].initial = default_value
 
 
+class HomePageProjectInline(admin.TabularInline):
+    """Инлайн для ручной сортировки проектов на главной странице."""
+
+    model = HomePageProject
+    extra = 0
+    max_num = HOME_PROJECTS_PREVIEW_LIMIT
+    fields = ('order', 'project')
+    ordering = ('order', 'pk')
+    autocomplete_fields = ('project',)
+
+
 @admin.register(HomePageContent)
 class HomePageContentAdmin(BaseAdmin):
     """Администрирование контента главной страницы (Singleton)."""
@@ -83,6 +95,7 @@ class HomePageContentAdmin(BaseAdmin):
         'image_right_preview',
         'about_image_preview',
     )
+    inlines = (HomePageProjectInline,)
 
     fieldsets = (
         (
