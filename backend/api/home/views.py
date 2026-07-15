@@ -3,6 +3,8 @@ import logging
 from django.contrib.auth import get_user_model
 from django.utils.translation import get_language_from_request
 from django.utils.translation import gettext_lazy as _
+from home.constants import HOME_PAGE_SINGLETON_PK, HOME_PROJECTS_PREVIEW_LIMIT
+from home.models import HomePageProject
 from projects.models import Project
 from rest_framework import status
 from rest_framework.response import Response
@@ -16,6 +18,26 @@ from .serializers import HomePageRootSerializer
 logger = logging.getLogger(__name__)
 
 User = get_user_model()
+
+
+def get_home_preview_projects() -> list[Project]:
+    """Возвращает проекты для главной страницы в порядке, заданном менеджером."""
+    configured_projects = HomePageProject.objects.filter(home_page_id=HOME_PAGE_SINGLETON_PK)
+    if configured_projects.exists():
+        project_items = (
+            configured_projects.filter(project__is_published=True)
+            .select_related('project', 'project__project_type')
+            .prefetch_related('project__tags')
+            .order_by('order', 'pk')[:HOME_PROJECTS_PREVIEW_LIMIT]
+        )
+        return [item.project for item in project_items]
+
+    return list(
+        Project.objects.filter(is_published=True)
+        .select_related('project_type')
+        .prefetch_related('tags')
+        .order_by('-year', '-id')[:HOME_PROJECTS_PREVIEW_LIMIT]
+    )
 
 
 @HOME_VIEW_SCHEMA
@@ -45,14 +67,9 @@ class HomeAPIView(APIView):
         team_members = User.objects.public()[:6]
         logger.info(f'Получено {team_members.count() if team_members else 0} членов команды')
 
-        projects = (
-            Project.objects.filter(is_published=True)
-            .select_related('project_type')
-            .prefetch_related('tags')
-            .order_by('-year', '-id')[:4]
-        )
-        logger.info(f'Получено {projects.count() if projects else 0} опубликованных проектов')
-        first_project_id = projects[0].id if projects.exists() else None
+        projects = get_home_preview_projects()
+        logger.info(f'Получено {len(projects)} опубликованных проектов')
+        first_project_id = projects[0].id if projects else None
 
         page_data = {
             'config': config_data,

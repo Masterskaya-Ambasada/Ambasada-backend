@@ -241,6 +241,7 @@ class ProjectAdmin(ProjectHelpTextMixin, BaseTranslatedAdmin, NestedModelAdmin):
     list_filter = ['project_type', 'year', 'is_published']
     list_per_page = ADMIN_LIST_PER_PAGE
     ordering = ('-is_published', '-year')
+    search_fields = ('title', 'slug')
     readonly_fields = ('cover_image_preview',)
     filter_horizontal = ('tags',)
 

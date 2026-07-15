@@ -2,6 +2,7 @@ from django.utils.translation import gettext_lazy as _
 
 # --- СИСТЕМНЫЕ НАСТРОЙКИ СИНГЛТОНА ---
 HOME_PAGE_SINGLETON_PK = 1
+HOME_PROJECTS_PREVIEW_LIMIT = 4
 
 # --- МАКСИМАЛЬНЫЕ ДЛИНЫ ПОЛЕЙ ---
 TITLE_MAX_LENGTH = 150
