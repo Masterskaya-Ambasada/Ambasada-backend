@@ -81,7 +81,7 @@ class AboutPageSerializer(serializers.ModelSerializer):
 
         cached_config = get_site_config_cached(language=lang) or {}
 
-        values = self.context.get('values', list(instance.values.all()))[:4]
+        values = self.context.get('values', list(instance.values.all()))
         images = self.context.get('images', instance.gallery_images.all())
         members = self.context.get('members', User.objects.public())
 
